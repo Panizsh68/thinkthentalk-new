@@ -16,5 +16,5 @@ export const ippanelConfig = registerAs<IppanelConfig>('ippanel', () => ({
     'https://api2.ippanel.com',
   apiKey: process.env.IPPANEL_API_KEY ?? '',
   fromNumber: process.env.IPPANEL_FROM_NUMBER ?? '',
-  otpPatternCode: process.env.IPPANEL_OTP_PATTERN_CODE ?? 'otp',
+  otpPatternCode: process.env.IPPANEL_OTP_PATTERN_CODE ?? 'hijid9771y36ega',
 }));

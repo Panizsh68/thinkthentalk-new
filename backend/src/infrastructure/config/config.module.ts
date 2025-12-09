@@ -79,7 +79,7 @@ const envFilePath = [`.env.${nodeEnv}`, '.env'];
           then: Joi.required(),
           otherwise: Joi.allow(''),
         }),
-        IPPANEL_OTP_PATTERN_CODE: Joi.string().default('otp'),
+        IPPANEL_OTP_PATTERN_CODE: Joi.string().default('hijid9771y36ega'),
         SMTP_HOST: Joi.string().allow(''),
         SMTP_PORT: Joi.number().port().default(587),
         SMTP_USER: Joi.string().allow(''),
