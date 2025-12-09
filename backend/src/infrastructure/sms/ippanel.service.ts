@@ -297,9 +297,6 @@ export class IppanelService {
   }
 
   private buildPatternHeaders(): Record<string, string> {
-    return {
-      Authorization: this.apiKey,
-      'Content-Type': 'application/json',
-    };
+    return this.buildAuthHeaders();
   }
 }
