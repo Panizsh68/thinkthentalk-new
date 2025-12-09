@@ -54,13 +54,13 @@ export class IppanelService {
   constructor(private readonly configService: ConfigService) {
     const configuredBaseUrl = this.configService.get<string>('ippanel.baseUrl') ?? 'https://edge.ippanel.com/v1';
     const configuredPatternBaseUrl =
-      this.configService.get<string>('ippanel.patternBaseUrl') ?? 'https://edge.ippanel.com/v1';
+      this.configService.get<string>('ippanel.patternBaseUrl') ?? 'https://api2.ippanel.com';
     this.baseUrl = configuredBaseUrl.replace(/\/+$/, '');
     this.patternBaseUrl = configuredPatternBaseUrl.replace(/\/+$/, '');
     this.apiKey = this.configService.get<string>('ippanel.apiKey') ?? 'YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=';
     this.defaultFrom = this.configService.get<string>('ippanel.fromNumber') ?? '+983000505';
     this.defaultPatternCode = this.configService.get<string>('ippanel.otpPatternCode') ?? 'hijid9771y36ega';
-    this.patternUrl = `${this.patternBaseUrl}/sms/pattern/send`;
+    this.patternUrl = `${this.patternBaseUrl}/api/send`;
     this.textUrl = `${this.baseUrl}/api/send/webservice`;
     this.httpClient = axios.create({ baseURL: this.baseUrl, timeout: 10_000 });
     this.patternClient = axios.create({ baseURL: this.patternBaseUrl, timeout: 10_000 });
@@ -89,10 +89,11 @@ export class IppanelService {
     }
 
     const payload = {
-      pattern_code: options?.code ?? this.defaultPatternCode,
-      originator: options?.from ?? this.defaultFrom,
-      recipient,
-      values: params,
+      sending_type: 'pattern',
+      from_number: options?.from ?? this.defaultFrom,
+      code: options?.code ?? this.defaultPatternCode,
+      recipients: [recipient],
+      params,
     };
 
     try {
@@ -189,13 +190,14 @@ export class IppanelService {
   }
 
   private mapResponse(data: IppanelSendResponse): IppanelSendResult {
+    const meta: any = (data as any)?.meta ?? {};
     const statusCode =
       data?.status?.code ??
-      (typeof (data as any)?.meta?.status === 'number' ? ((data as any).meta.status as number) : undefined);
+      (typeof meta?.status === 'number' ? (meta.status as number) : undefined);
     const statusMessage =
       data?.status?.message ??
       (typeof data?.status === 'string' ? data.status : undefined) ??
-      (typeof (data as any)?.meta?.message === 'string' ? ((data as any).meta.message as string) : undefined);
+      (typeof meta?.message === 'string' ? (meta.message as string) : undefined);
     const bulkId = data?.data?.bulk_id ?? (typeof data?.bulk_id === 'string' ? data.bulk_id : undefined);
     const inferredMessageIds =
       data?.data?.message_ids ??
@@ -206,7 +208,11 @@ export class IppanelService {
         ? ((data?.data as any).message_outbox_ids as Array<string | number>).map((id) => String(id))
         : undefined);
     const messageIds = inferredMessageIds;
-    const success = typeof statusCode === 'number' ? statusCode < 400 : true;
+    const metaStatus = typeof meta?.status === 'boolean' ? (meta.status as boolean) : undefined;
+    const success =
+      metaStatus === true ||
+      (typeof statusCode === 'number' ? statusCode < 400 : false) ||
+      messageIds !== undefined;
 
     return {
       success,
@@ -297,6 +303,10 @@ export class IppanelService {
   }
 
   private buildPatternHeaders(): Record<string, string> {
-    return this.buildAuthHeaders();
+    return {
+      Authorization: this.apiKey,
+      apikey: this.apiKey,
+      'Content-Type': 'application/json',
+    };
   }
 }
