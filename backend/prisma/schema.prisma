@@ -1,0 +1,363 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum TicketType {
+  EARLY_BIRD
+  STANDARD
+  SUPPORTER
+}
+
+enum Currency {
+  IRR
+  TOMAN
+}
+
+enum RegistrationStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+enum EventType {
+  ONLINE
+  OFFLINE
+}
+
+enum AdminRole {
+  ADMIN
+  EVENT_MANAGER
+  FINANCE
+}
+
+enum ResourceAccessLevel {
+  PUBLIC
+  REGISTERED_ONLY
+}
+
+model User {
+  id             String   @id @default(cuid())
+  firstNameFa    String
+  lastNameFa     String
+  firstNameEn    String?
+  lastNameEn     String?
+  gender         Gender?
+  age            Int?
+  educationLevel String?
+  fieldOfStudy   String?
+  isEmployed     Boolean?
+  jobTitle       String?
+  mobile         String   @unique
+  email          String?
+  languageLevel  String?
+  avatarUrl      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  registrations         Registration[]
+  evaluationSubmissions EvaluationSubmission[]
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  role         AdminRole
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  archivedEvents Event[] @relation("AdminArchivedEvents")
+  deletedEvents  Event[] @relation("AdminDeletedEvents")
+  eventAudits    EventAudit[]
+}
+
+model Event {
+  id                    String    @id @default(cuid())
+  title                 String
+  summaryFa             String    @db.Text
+  summaryEn             String    @db.Text
+  descriptionFa         String    @db.Text
+  descriptionEn         String    @db.Text
+  type                  EventType
+  address               String?
+  city                  String?
+  startDateTime         DateTime
+  endDateTime           DateTime?
+  capacityTotal         Int
+  capacityRemaining     Int
+  showRemainingCapacity Boolean
+  posterUrl             String?
+  categories            Json      @default("[]")
+  publicDiscountIds     Json      @default("[]")
+  isArchived            Boolean   @default(false)
+  archivedAt            DateTime?
+  archivedById          String?
+  deletedAt             DateTime?
+  deletedById           String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  ticketConfigs         EventTicketConfig[]
+  resources             EventResource[]
+  discounts             DiscountOnEvent[]
+  registrations         Registration[]
+  payments              Payment[]
+  evaluationForms       EvaluationForm[]
+  evaluationSubmissions EvaluationSubmission[]
+  archivedBy            AdminUser? @relation("AdminArchivedEvents", fields: [archivedById], references: [id])
+  deletedBy             AdminUser? @relation("AdminDeletedEvents", fields: [deletedById], references: [id])
+  audits                EventAudit[]
+
+  @@index([startDateTime])
+  @@index([isArchived])
+  @@index([deletedAt])
+}
+
+model EventTicketConfig {
+  id               String     @id @default(cuid())
+  eventId          String
+  type             TicketType
+  price            Decimal
+  currency         Currency
+  quantityTotal    Int
+  quantitySold     Int
+  earlyBirdEndDate DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+model EventResource {
+  id          String              @id @default(cuid())
+  eventId     String
+  titleFa     String
+  titleEn     String
+  description String?
+  accessLevel ResourceAccessLevel
+  url         String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+model EventAudit {
+  id              String     @id @default(cuid())
+  eventId         String?
+  eventIdSnapshot String?
+  action          String
+  byUserId        String?
+  meta            Json?
+  createdAt       DateTime   @default(now())
+
+  event  Event?     @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  byUser AdminUser? @relation(fields: [byUserId], references: [id], onDelete: SetNull)
+
+  @@index([eventId])
+  @@index([byUserId])
+}
+
+model Discount {
+  id             String       @id @default(cuid())
+  name           String
+  code           String?      @unique
+  type           DiscountType
+  value          Decimal
+  maxUses        Int?
+  usedCount      Int          @default(0)
+  maxUsesPerUser Int?
+  minAmount      Decimal?
+  startDate      DateTime
+  endDate        DateTime
+  isActive       Boolean
+  isPublic       Boolean
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  events DiscountOnEvent[]
+
+  @@index([code])
+}
+
+model DiscountOnEvent {
+  eventId    String
+  discountId String
+
+  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  discount Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, discountId])
+}
+
+model Registration {
+  id         String             @id @default(cuid())
+  userId     String
+  eventId    String
+  ticketType TicketType
+  status     RegistrationStatus
+  formData   Json?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  payment Payment? @relation("RegistrationPayment")
+
+  @@index([userId])
+  @@index([eventId])
+  @@index([status])
+}
+
+model Payment {
+  id                   String        @id @default(cuid())
+  registrationId       String        @unique
+  eventId              String
+  ticketType           TicketType
+  amount               Decimal
+  currency             Currency
+  status               PaymentStatus
+  gatewayTransactionId String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  registration Registration @relation("RegistrationPayment", fields: [registrationId], references: [id], onDelete: Cascade)
+  event        Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([registrationId])
+  @@index([eventId])
+  @@index([status])
+}
+
+model AdminAuditLog {
+  id           String   @id @default(cuid())
+  adminId      String
+  action       String
+  resourceType String
+  resourceId   String
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([adminId])
+  @@index([resourceType])
+}
+
+enum EvaluationQuestionType {
+  RATING
+  TEXT
+}
+
+model EvaluationForm {
+  id        String   @id @default(cuid())
+  eventId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event       Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  questions   EvaluationQuestion[]
+  submissions EvaluationSubmission[]
+
+  @@index([eventId])
+}
+
+model EvaluationQuestion {
+  id        String                 @id @default(cuid())
+  formId    String
+  type      EvaluationQuestionType
+  label     String
+  required  Boolean
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+
+  form EvaluationForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([formId])
+}
+
+model EvaluationSubmission {
+  id               String   @id @default(cuid())
+  evaluationFormId String
+  userId           String
+  eventId          String
+  answers          Json
+  submittedAt      DateTime @default(now())
+
+  form  EvaluationForm @relation(fields: [evaluationFormId], references: [id], onDelete: Cascade)
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([evaluationFormId])
+  @@index([userId])
+  @@index([eventId])
+}
+
+model Sponsor {
+  id               String   @id @default(cuid())
+  name             String
+  productOrTagline String
+  logoUrl          String
+  websiteUrl       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  photoUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ContactMessageStatus {
+  NEW
+  SEEN
+  ARCHIVED
+}
+
+model ContactMessage {
+  id          String               @id @default(uuid())
+  name        String?
+  email       String
+  message     String               @db.Text
+  source      String               @default("public-web")
+  ipAddress   String?
+  userAgent   String?
+  language    String               @default("en")
+  status      ContactMessageStatus @default(NEW)
+  processedAt DateTime?
+  emailSent   Boolean              @default(false)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

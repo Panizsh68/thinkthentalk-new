@@ -1,0 +1,79 @@
+
+'use client';
+import Link from 'next/link';
+import { User, LogIn } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
+import { Button } from './ui/button';
+import { LanguageSwitcher } from './language-switcher';
+import { useLanguage } from '@/lib/i18n/language-provider';
+import { MobileNav } from './mobile-nav';
+import { Logo } from './icons/logo';
+import { useAuth } from '@/lib/auth/auth-provider';
+import { useEffect, useState } from 'react';
+
+// New component to safely render client-side controls
+function HeaderControls() {
+  const { t } = useLanguage();
+  const { isAuthenticated } = useAuth();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
+  return (
+     <div className="flex items-center gap-2">
+        <LanguageSwitcher />
+        <ThemeToggle />
+        {isAuthenticated ? (
+            <Button variant="ghost" size="icon" asChild data-testid="user-account-button">
+              <Link href="/dashboard" aria-label={t('nav.myAccount')}>
+                  <User />
+              </Link>
+          </Button>
+        ) : (
+          <Button variant="ghost" size="icon" asChild data-testid="login-button">
+              <Link href="/login" aria-label={t('actions.login')}>
+              <LogIn />
+              </Link>
+          </Button>
+        )}
+      <MobileNav />
+    </div>
+  );
+}
+
+
+export function AppHeader() {
+  const { t } = useLanguage();
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
+        <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2" data-testid="nav-logo-link">
+            <Logo className="h-8 w-auto text-primary" />
+            <span className="hidden font-bold sm:inline-block">
+                Think Then Talk
+            </span>
+            </Link>
+
+            <nav className="hidden items-center gap-6 text-sm md:flex" aria-label="Main navigation">
+              <Link href="/" className="font-medium text-foreground/80 transition-colors hover:text-foreground" data-testid="nav-link-home">{t('nav.home')}</Link>
+              <Link href="/events" className="font-medium text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-events">{t('nav.events')}</Link>
+              <Link href="/faq" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-faq">{t('nav.faq')}</Link>
+              <Link href="/about" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-about">{t('nav.about')}</Link>
+              <Link href="/contact" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-contact">{t('nav.contact')}</Link>
+            </nav>
+        </div>
+
+        <HeaderControls />
+
+      </div>
+    </header>
+  );
+}

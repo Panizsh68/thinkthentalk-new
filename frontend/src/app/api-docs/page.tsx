@@ -1,0 +1,11 @@
+'use client';
+
+import dynamic from 'next/dynamic';
+import 'swagger-ui-react/swagger-ui.css';
+
+// SwaggerUI depends on browser globals, so disable SSR for this component.
+const SwaggerUI = dynamic(async () => import('swagger-ui-react'), { ssr: false });
+
+export default function ApiDocsPage() {
+  return <SwaggerUI url="/swagger.json" />;
+}

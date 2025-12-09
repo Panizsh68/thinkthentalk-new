@@ -1,0 +1,379 @@
+{
+  "nav": {
+    "home": "Home",
+    "events": "Events",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "myAccount": "My Account"
+  },
+  "actions": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "retry": "Retry",
+    "download": "Download",
+    "view": "View",
+    "addToCalendar": "Add to Calendar",
+    "clearFilters": "Clear Filters",
+    "backToEvents": "Back to Events",
+    "back": "Back",
+    "next": "Next",
+    "finishRegistration": "Complete Registration",
+    "reset": "Start Over",
+    "retryPayment": "Retry Payment",
+    "backToSummary": "Back to Summary",
+    "viewEvent": "View Event",
+    "viewReceipt": "View Receipt",
+    "leaveFeedback": "Leave Feedback",
+    "submitFeedback": "Submit Feedback",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "language": {
+    "en": "English",
+    "fa": "فارسی"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Browse our upcoming events and join us.",
+    "noEvents": "No events available at the moment.",
+    "noEventsFound": "No events found matching your criteria."
+  },
+  "event": {
+    "online": "Online",
+    "offline": "In-person",
+    "limitedSeats": "Limited seats",
+    "spotsLeft": "{count} spots left",
+    "upcoming": "Upcoming",
+    "finished": "Finished",
+    "viewDetails": "View Details",
+    "fromPrice": "From {price} {currency}",
+    "tickets": "Tickets",
+    "selectTicket": "Select your ticket to register.",
+    "free": "Free",
+    "resourcesTitle": "Resources",
+    "resourcePublic": "Public",
+    "resourceRegisteredOnly": "For participants only",
+    "resourceAvailableAfterRegistration": "Available after registration",
+    "eventHasFinished": "This event has already taken place.",
+    "alreadyRegistered": "Already Registered"
+  },
+  "tickets": {
+    "early_bird": "Early Bird",
+    "standard": "Standard",
+    "supporter": "Supporter",
+    "soldOut": "Sold Out",
+    "expired": "Offer Expired",
+    "earlyBirdEnds": "Ends {date}"
+  },
+  "filters": {
+    "showPast": "Show Past Events",
+    "eventType": "Event Type",
+    "all": "All",
+    "city": "City",
+    "allCities": "All Cities",
+    "category": "Category",
+    "allCategories": "All Categories"
+  },
+  "errors": {
+    "fetchEvents": "There was an error fetching event data. Please try again.",
+    "fetchEvent": "There was an error fetching the event details. Please try again.",
+    "eventNotFound": "Event not found.",
+    "genericTitle": "An error occurred",
+    "fetchRegistrations": "Could not load your registrations. Please try again."
+  },
+  "auth": {
+    "loginTitle": "Login or Sign Up",
+    "loginSubtitle": "Enter your mobile number to receive a verification code.",
+    "mobileLabel": "Mobile Number",
+    "sendOtpButton": "Send Code",
+    "otpTitle": "Enter Verification Code",
+    "otpSubtitle": "A code has been sent to",
+    "otpLabel": "Verification Code",
+    "verifyButton": "Login",
+    "otpSentTitle": "Code Sent",
+    "otpSentDescription": "Check your messages for the verification code",
+    "loginSuccessTitle": "Login Successful!",
+    "errors": {
+      "invalidMobile": "Please enter a valid 11-digit mobile number (e.g., 09123456789).",
+      "otpRequired": "Please enter the 6-digit code."
+    }
+  },
+  "registration": {
+    "title": "Event Registration",
+    "confirmReset": "Are you sure you want to start over? All your entered data for this registration will be lost.",
+    "steps": {
+      "personal": "Personal Info",
+      "personalSubtitle": "Please enter your information as it appears on your official documents.",
+      "education": "Education & Job",
+      "educationSubtitle": "Please provide your educational and professional background.",
+      "language": "Language & Referral",
+      "languageSubtitle": "Help us understand your language proficiency and how you found us.",
+      "contact": "Contact Info",
+      "contactSubtitle": "Please provide your contact information.",
+      "rules": "Rules & Terms",
+      "rulesSubtitle": "Please review and accept the terms to continue.",
+      "summary": "Summary & Review",
+      "summarySubtitle": "Please review your information before proceeding to payment."
+    },
+    "summary": {
+      "eventDetails": "Event Details",
+      "eventTitle": "Event",
+      "eventDate": "Date",
+      "ticketType": "Ticket Type",
+      "price": "Price",
+      "edit": "Edit",
+      "yes": "Yes",
+      "no": "No",
+      "paymentButton": "Continue to Payment"
+    },
+    "fields": {
+      "firstNameFa": "First Name (Persian)",
+      "lastNameFa": "Last Name (Persian)",
+      "firstNameEn": "First Name (English)",
+      "lastNameEn": "Last Name (English)",
+      "age": "Age",
+      "gender": "Gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "educationLevel": "Education Level",
+      "fieldOfStudy": "Field of Study",
+      "isEmployed": "I am currently employed",
+      "jobTitle": "Job Title",
+      "educationLevels": {
+        "high-school": "High School",
+        "associate": "Associate Degree",
+        "bachelor": "Bachelor's Degree",
+        "master": "Master's Degree",
+        "phd": "PhD",
+        "other": "Other"
+      },
+      "languageLevel": "English Language Level",
+      "languageLevelsList": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "native": "Native/Fluent"
+      },
+      "referralSource": "How did you hear about us?",
+      "referralSources": {
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "website": "Website",
+        "friends": "Friends/Acquaintance",
+        "other": "Other"
+      },
+      "referrerName": "Referrer's Name (Optional)",
+      "otherReferralSource": "Please specify",
+      "email": "Email",
+      "acceptRules": "I have read and accept the {terms} and {privacy}.",
+      "termsLink": "Terms of Service",
+      "privacyLink": "Privacy Policy"
+    },
+    "placeholders": {
+      "firstNameFa": "e.g., سارا",
+      "lastNameFa": "e.g., محمدی",
+      "firstNameEn": "e.g., Sara",
+      "lastNameEn": "e.g., Mohammadi",
+      "age": "e.g., 28",
+      "educationLevel": "Select your education level",
+      "fieldOfStudy": "e.g., Computer Science",
+      "jobTitle": "e.g., Software Engineer",
+      "languageLevel": "Select your language level",
+      "referralSource": "Select a source",
+      "referrerName": "e.g., John Doe",
+      "otherReferralSource": "e.g., LinkedIn",
+      "email": "e.g., user@example.com"
+    },
+    "descriptions": {
+      "mobileReadOnly": "Your mobile number is tied to your account and cannot be changed.",
+      "emailOptional": "Optional. We'll use this for event updates."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "positiveNumber": "Please enter a valid age.",
+      "invalidEmail": "Please enter a valid email address.",
+      "rulesRequired": "You must accept the terms and policies to continue."
+    },
+    "errors": {
+      "notAuthenticated": "You must be logged in to register for an event.",
+      "missingInfo": "Event or ticket information is missing. Please try again from the event page.",
+      "incompleteSteps": "Please complete all previous steps before proceeding."
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "payment": {
+    "verifying": "Verifying your payment, please wait...",
+    "invalidRequestTitle": "Invalid Payment Request",
+    "invalidRequestDescription": "Could not verify payment. The link may be invalid or expired.",
+    "successTitle": "Payment Successful!",
+    "successDescription": "Your registration is complete. You will receive a confirmation email shortly with all the details.",
+    "browseMoreEvents": "Browse More Events",
+    "viewMyRegistrations": "View My Registrations",
+    "failedTitle": "Payment Failed",
+    "failedDescription": "Your payment could not be processed. Please try again or go back to review your registration details.",
+    "alreadyProcessedTitle": "Payment Already Processed",
+    "alreadyProcessedDescription": "This payment has already been finalized with a status of:",
+    "finalizing": "Finalizing...",
+    "statusTitle": "Payment Status",
+    "statusDescription": "Finalizing your event registration.",
+    "receiptTitle": "Registration Confirmed",
+    "paymentId": "Payment ID",
+    "howToJoinTitle": "How to Join",
+    "howToJoinDescription": "The link to join the online event will be sent to you via SMS and email one day before the event."
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "View and edit your profile information. This information will be used to pre-fill event registrations.",
+    "mobileReadOnly": "Your mobile number is your unique identifier and cannot be changed.",
+    "saveButton": "Save Changes",
+    "updateSuccessTitle": "Profile Updated",
+    "updateSuccessDescription": "Your information has been saved successfully.",
+    "languageSectionTitle": "Language"
+  },
+  "dashboard": {
+    "myRegistrations": "My Registrations",
+    "myRegistrationsSubtitle": "Here are the events you've registered for.",
+    "noRegistrations": "You haven't registered for any events yet.",
+    "browseEvents": "Browse Events",
+    "table": {
+      "event": "Event",
+      "date": "Date",
+      "ticket": "Ticket",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+  "evaluation": {
+    "title": "Event Feedback",
+    "subtitle": "Thank you for attending {eventName}. Please share your feedback.",
+    "textPlaceholder": "Your feedback here...",
+    "alreadySubmittedTitle": "Feedback Submitted",
+    "alreadySubmittedDescription": "Thank you, you have already submitted your feedback for this event.",
+    "errors": {
+      "notAuthenticated": "Please Login",
+      "loginPrompt": "You must be logged in to submit feedback for this event.",
+      "notEligibleTitle": "Not Eligible for Evaluation",
+      "notEligibleDescription": "You are not eligible to submit feedback. You must have a paid registration and the event must be over.",
+      "formNotFound": "Could not load the evaluation form. It may not be available for this event."
+    },
+    "validation": {
+      "required": "This field is required."
+    }
+  },
+  "admin": {
+    "events": {
+      "title": "Events Management",
+      "subtitle": "Create, edit, and manage events.",
+      "createNew": "Create New Event",
+      "table": {
+        "title": "Title",
+        "date": "Date",
+        "type": "Type",
+        "status": "Status",
+        "capacity": "Capacity"
+      },
+      "create": {
+        "title": "Create New Event",
+        "subtitle": "Fill in the details to create a new event.",
+        "successTitle": "Event Created",
+        "successDescription": "The event '{eventName}' has been successfully created."
+      },
+      "edit": {
+        "title": "Edit Event",
+        "subtitle": "You are editing the event: {eventName}",
+        "successTitle": "Event Updated",
+        "successDescription": "The event '{eventName}' has been successfully updated."
+      },
+      "form": {
+        "basicInfo": "Basic Information",
+        "title": "Event Title",
+        "categories": "Categories",
+        "categoriesDesc": "Comma-separated list of categories (e.g., Tech, Communication).",
+        "content": "Content",
+        "summary": "Summary",
+        "description": "Description",
+        "locationAndDate": "Location & Date",
+        "address": "Address",
+        "startDateTime": "Start Date & Time",
+        "endDateTime": "End Date & Time",
+        "endDateTimeOptional": "Optional. Leave empty if the event has no fixed end time.",
+        "pickDate": "Pick a date",
+        "capacity": "Capacity & Tickets",
+        "capacityTotal": "Total Capacity",
+        "showRemainingCapacity": "Show Remaining Capacity",
+        "showRemainingCapacityDesc": "Display the number of available spots on the event page.",
+        "saveChanges": "Save Changes",
+        "createEvent": "Create Event"
+      },
+      "validation": {
+        "nonNegative": "Capacity must be a non-negative number."
+      }
+    },
+    "tickets": {
+      "title": "Manage Tickets",
+      "subtitle": "Configure ticket types for the event: {eventName}",
+      "enable": "Enable",
+      "price": "Price (Toman)",
+      "quantity": "Total Quantity",
+      "endDate": "Sale End Date",
+      "endDateDesc": "Optional. After this date, early bird tickets cannot be purchased.",
+      "saveChanges": "Save Ticket Settings",
+      "saveSuccessTitle": "Tickets Updated",
+      "saveSuccessDescription": "Ticket settings for {eventName} have been saved."
+    },
+    "resources": {
+      "title": "Manage Resources",
+      "subtitle": "Add or edit resources for: {eventName}",
+      "addNew": "Add New Resource",
+      "noResources": "No resources have been added to this event yet.",
+      "table": {
+        "title": "Title",
+        "accessLevel": "Access Level",
+        "actions": "Actions"
+      },
+      "form": {
+        "addTitle": "Add New Resource",
+        "editTitle": "Edit Resource",
+        "resourceTitle": "Resource Title",
+        "description": "Description (Optional)",
+        "url": "File URL",
+        "accessLevel": "Access Level",
+        "accessPublic": "Public (visible to everyone)",
+        "accessRegistered": "Registered Only (visible after paid registration)",
+        "save": "Save Resource",
+        "add": "Add Resource",
+        "cancel": "Cancel"
+      },
+      "deleteConfirmTitle": "Are you sure?",
+      "deleteConfirmText": "This action cannot be undone. This will permanently delete the resource.",
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "filters": {
+      "title": "Filters",
+      "status": {
+        "placeholder": "Filter by status...",
+        "all": "All Statuses",
+        "upcoming": "Upcoming",
+        "past": "Past"
+      },
+      "type": {
+        "placeholder": "Filter by type..."
+      }
+    },
+    "actions": {
+      "edit": "Edit Event",
+      "manageTickets": "Manage Tickets",
+      "manageResources": "Manage Resources"
+    }
+  }
+}

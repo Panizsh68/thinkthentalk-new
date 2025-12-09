@@ -1,0 +1,2505 @@
+openapi: 3.0.3
+info:
+  title: Think Then Talk API
+  description: The complete API specification for the Think Then Talk event platform.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+tags:
+  - name: Auth
+    description: User and Admin Authentication
+  - name: Users
+    description: User profile management
+  - name: Events
+    description: Public operations for events
+  - name: Registrations
+    description: User-facing registration and payment flow
+  - name: Payments
+    description: Operations related to payment processing
+  - name: Discounts
+    description: Operations for managing and validating discount codes
+  - name: Content Management
+    description: Admin operations for managing site content like Sponsors and Team members
+  - name: Feedback
+    description: Operations for managing event feedback forms and viewing responses
+  - name: Messaging
+    description: Admin tools for bulk messaging
+  - name: Admin
+    description: General admin utilities like statistics and exports
+paths:
+  /auth/request-otp:
+    post:
+      tags:
+        - Auth
+      summary: Request an OTP
+      description: Initiates the login process by sending a one-time password to the user's mobile number.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestOtpBody'
+      responses:
+        '200':
+          description: OTP sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Invalid mobile number format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/verify-otp:
+    post:
+      tags:
+        - Auth
+      summary: Verify OTP
+      description: Verifies the OTP and logs the user in. Token is returned in the Authorization header.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOtpBody'
+      responses:
+        '200':
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid OTP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Get My Profile
+      description: Retrieves the profile of the currently authenticated user.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Not authenticated.
+    patch:
+      tags:
+        - Users
+      summary: Update My Profile
+      description: Updates the profile of the currently authenticated user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserProfileBody'
+      responses:
+        '200':
+          description: Profile updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid data provided.
+        '401':
+          description: Not authenticated.
+  /admin/login:
+    post:
+      tags:
+        - Auth
+      summary: Admin Login
+      description: Authenticates an admin user via email and password. Token is returned in the Authorization header.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginBody'
+      responses:
+        '200':
+          description: Admin login successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/AdminUser'
+        '401':
+          description: Invalid credentials.
+        '429':
+          description: Too many requests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /events:
+    get:
+      tags:
+        - Events
+      summary: List Events
+      description: Returns a list of events, with optional filters.
+      parameters:
+        - name: showPastEvents
+          in: query
+          schema:
+            type: boolean
+          description: Whether to include events that have already passed.
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - ONLINE
+              - OFFLINE
+          description: Filter by event type.
+        - name: city
+          in: query
+          schema:
+            type: string
+          description: Filter by city for offline events.
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by a specific category.
+        - name: "categories[]"
+          in: "query"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+          style: "form"
+          explode: true
+          description: "Filter by multiple categories. Example: ?categories[]=design&categories[]=tech"
+        - name: "dateRange[from]"
+          in: "query"
+          schema:
+            type: "string"
+            format: "date-time"
+          description: "Filter events starting from this date/time (inclusive)."
+        - name: "dateRange[to]"
+          in: "query"
+          schema:
+            type: "string"
+            format: "date-time"
+          description: "Filter events up to this date/time (inclusive)."
+      responses:
+        '200':
+          description: A list of events.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /events/{eventId}:
+    get:
+      tags:
+        - Events
+      summary: Get Event Details
+      description: Returns the full details for a single event.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found.
+  /admin/events:
+    get:
+      tags:
+        - Admin
+      summary: List All Events (Admin)
+      description: Retrieves a list of all events for the admin panel, including past events.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Page number for pagination (optional, default 1)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Items per page (optional, default 20)
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Sort field (optional, e.g., 'startDateTime')
+        - name: sortOrder
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: "Sort order (optional, 'asc' or 'desc')"
+      responses:
+        '200':
+          description: A list of all events.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Admin
+      summary: Create Event (Admin)
+      description: Creates a new event.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventFormData'
+      responses:
+        '201':
+          description: Event created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/events/{eventId}':
+    get:
+      tags:
+        - Admin
+      summary: Get Event (Admin)
+      description: Retrieves a single event for editing in the admin panel.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Admin
+      summary: Update Event (Admin)
+      description: Updates the core details of an event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEventFormData'
+      responses:
+        '200':
+          description: Event updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/events/{eventId}/tickets':
+    patch:
+      tags:
+        - Admin
+      summary: Update Event Tickets (Admin)
+      description: Updates the ticket configuration for a specific event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventTicketConfig'
+      responses:
+        '200':
+          description: Ticket configuration updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/events/{eventId}/resources':
+    patch:
+      tags:
+        - Admin
+      summary: Update Event Resources (Admin)
+      description: Updates the list of downloadable or linkable resources for an event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventResource'
+      responses:
+        '200':
+          description: Resources updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /registrations/me:
+    get:
+      tags:
+        - Registrations
+      summary: Get My Registrations
+      description: Returns a list of all registrations for the currently authenticated user.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of user's registrations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRegistration'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payments:
+    post:
+      tags:
+        - Payments
+      summary: Create Registration and Payment
+      description: Creates a new event registration for the authenticated user and initiates a payment record. The frontend calls this single endpoint to start the checkout process.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentBody'
+      responses:
+        '201':
+          description: Registration initiated, payment record created. Returns a payment object to redirect the user to the payment gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Invalid input data (e.g., validation error on formData) or event capacity is full.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/payments/{paymentId}':
+    get:
+      tags:
+        - Payments
+      summary: Get Payment Details
+      description: Retrieves the details and status of a single payment record. Used by the frontend on the callback page to check the status.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          description: Payment record not found.
+    post:
+      tags:
+        - Payments
+      summary: Verify Payment Status
+      description: Endpoint for the frontend to confirm payment status after returning from the payment gateway.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - SUCCESS
+                    - FAILED
+      responses:
+        '200':
+          description: Payment status updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          description: Payment record not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/registrations:
+    get:
+      tags:
+        - Admin
+      summary: List All Registrations (Admin)
+      description: Retrieves a detailed list of all user registrations for the admin panel.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Page number (default: 1)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Items per page (default: 20)
+      responses:
+        '200':
+          description: A list of registrations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRegistrationDetails'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/registrations/{registrationId}':
+    get:
+      tags:
+        - Admin
+      summary: Get Registration Details (Admin)
+      description: Retrieves full details for a single registration.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: registrationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Registration details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistrationDetails'
+        '404':
+          description: Registration not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Admin
+      summary: Update Registration (Admin)
+      description: Manually updates a registration's status or the user's submitted form data.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: registrationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Send only the fields you want to update. Both fields are optional.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - PAID
+                    - PENDING
+                    - FAILED
+                    - CANCELLED
+                formData:
+                  $ref: '#/components/schemas/RegistrationFormData'
+      responses:
+        '200':
+          description: Registration updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistrationDetails'
+        '404':
+          description: Registration not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/payments:
+    get:
+      tags:
+        - Admin
+      summary: List All Payments (Admin)
+      description: Retrieves a list of all payment records for financial overview.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by event ID
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - SUCCESS
+              - FAILED
+          description: Filter by payment status
+      responses:
+        '200':
+          description: A list of payments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /discounts/validate:
+    post:
+      tags:
+        - Discounts
+      summary: Validate a Discount Code
+      description: Checks if a discount code is valid for a given event and price, and returns the discount details if it is.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateDiscountBody'
+      responses:
+        '200':
+          description: Discount code is valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discount'
+        '400':
+          description: Discount is not valid for one or more reasons (e.g., expired, not applicable, etc.).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/discounts:
+    get:
+      tags:
+        - Admin
+      summary: List Discounts (Admin)
+      description: Retrieves a list of all discounts for the admin panel.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of all discounts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Discount'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Admin
+      summary: Create Discount (Admin)
+      description: Creates a new discount code or automatic offer.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountFormData'
+      responses:
+        '201':
+          description: Discount created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discount'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid discount data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/discounts/{discountId}':
+    patch:
+      tags:
+        - Admin
+      summary: Update Discount (Admin)
+      description: Updates an existing discount.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: discountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountFormData'
+      responses:
+        '200':
+          description: Discount updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discount'
+        '404':
+          description: Discount not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid discount data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Admin
+      summary: Delete Discount (Admin)
+      description: Deletes a discount.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: discountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Discount deleted successfully.
+        '404':
+          description: Discount not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sponsors:
+    get:
+      tags:
+        - Content Management
+      summary: List Public Sponsors
+      description: Retrieves the list of sponsors for public display.
+      responses:
+        '200':
+          description: A list of sponsors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sponsor'
+  /admin/sponsors:
+    get:
+      tags:
+        - Content Management
+      summary: List All Sponsors (Admin)
+      description: Retrieves all sponsors for the admin panel.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of all sponsors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sponsor'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Content Management
+      summary: Create Sponsor (Admin)
+      description: Adds a new sponsor.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorFormData'
+      responses:
+        '201':
+          description: Sponsor created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sponsor'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/sponsors/{sponsorId}':
+    patch:
+      tags:
+        - Content Management
+      summary: Update Sponsor (Admin)
+      description: Updates an existing sponsor's details.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sponsorId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorFormData'
+      responses:
+        '200':
+          description: Sponsor updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sponsor'
+        '404':
+          description: Sponsor not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Content Management
+      summary: Delete Sponsor (Admin)
+      description: Deletes a sponsor.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sponsorId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Sponsor deleted.
+        '404':
+          description: Sponsor not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /team:
+    get:
+      tags:
+        - Content Management
+      summary: List Public Team Members
+      description: Retrieves the list of team members for public display.
+      responses:
+        '200':
+          description: A list of team members.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamMember'
+  /admin/team:
+    get:
+      tags:
+        - Content Management
+      summary: List All Team Members (Admin)
+      description: Retrieves all team members for the admin panel.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of all team members.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamMember'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Content Management
+      summary: Create Team Member (Admin)
+      description: Adds a new team member.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMemberFormData'
+      responses:
+        '201':
+          description: Team member created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/team/{memberId}':
+    patch:
+      tags:
+        - Content Management
+      summary: Update Team Member (Admin)
+      description: Updates an existing team member's details.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMemberFormData'
+      responses:
+        '200':
+          description: Team member updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+        '404':
+          description: Team member not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Content Management
+      summary: Delete Team Member (Admin)
+      description: Deletes a team member.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Team member deleted.
+        '404':
+          description: Team member not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/events/{eventId}/evaluation':
+    get:
+      tags:
+        - Feedback
+      summary: Get Evaluation Form
+      description: Retrieves the evaluation form for a specific event, for the current authenticated user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The evaluation form structure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationForm'
+        '403':
+          description: User is not eligible to submit feedback for this event.
+        '404':
+          description: Event or form not found.
+  '/evaluations/{evaluationId}/submit':
+    post:
+      tags:
+        - Feedback
+      summary: Submit Evaluation
+      description: Submits the user's answers for an evaluation form.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: evaluationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answers:
+                  $ref: '#/components/schemas/EvaluationAnswers'
+      responses:
+        '200':
+          description: Submission successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Invalid answers or form already submitted.
+  '/admin/events/{eventId}/evaluation':
+    patch:
+      tags:
+        - Feedback
+      summary: Save Evaluation Form (Admin)
+      description: Creates or updates the questions for an event's evaluation form.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EvaluationQuestion'
+      responses:
+        '200':
+          description: Form saved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationForm'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/events/{eventId}/evaluation/responses':
+    get:
+      tags:
+        - Feedback
+      summary: Get Evaluation Responses (Admin)
+      description: Retrieves all submitted responses for an event's evaluation form.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of evaluation responses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvaluationResponse'
+        '404':
+          description: Event not found.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/messaging/send:
+    post:
+      tags:
+        - Messaging
+      summary: Send Bulk Message (Admin)
+      description: Sends a bulk message via specified channels to a list of registered users.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                registrationIds:
+                  type: array
+                  items:
+                    type: string
+                subject:
+                  type: string
+                body:
+                  type: string
+                channels:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - sms
+                      - email
+      responses:
+        '200':
+          description: Message queued for delivery.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/stats:
+    get:
+      tags:
+        - Admin
+      summary: Admin dashboard statistics
+      description: Provides high-level metrics for the admin dashboard.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dashboard statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  upcomingEvents:
+                    type: integer
+                  totalRegistrations:
+                    type: integer
+                  paidRegistrations:
+                    type: integer
+                  totalRevenue:
+                    type: number
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/registrations/export:
+    get:
+      tags:
+        - Admin
+      summary: 'Note: This endpoint is not currently called by the frontend; it is a planned/optional backend feature.'
+      description: 'Note: This endpoint is not currently called by the frontend; it is a planned/optional backend feature.'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - PAID
+              - PENDING
+              - FAILED
+              - CANCELLED
+      responses:
+        '200':
+          description: A CSV file of registrations.
+          content:
+            text/csv:
+              schema:
+                type: string
+  /admin/payments/export:
+    get:
+      tags:
+        - Admin
+      summary: 'Note: This endpoint is not currently called by the frontend; it is a planned/optional backend feature.'
+      description: 'Note: This endpoint is not currently called by the frontend; it is a planned/optional backend feature.'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - SUCCESS
+              - PENDING
+              - FAILED
+      responses:
+        '200':
+          description: A CSV file of payments.
+          content:
+            text/csv:
+              schema:
+                type: string
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+      required:
+        - message
+    RequestOtpBody:
+      type: object
+      properties:
+        mobile:
+          type: string
+          description: The user's 11-digit mobile number.
+          example: '09123456789'
+      required:
+        - mobile
+    VerifyOtpBody:
+      type: object
+      properties:
+        mobile:
+          type: string
+          example: '09123456789'
+        otp:
+          type: string
+          description: The 6-digit one-time password.
+          example: '123456'
+      required:
+        - mobile
+        - otp
+    AdminLoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required:
+        - email
+        - password
+    ValidateDiscountBody:
+      type: object
+      required:
+        - code
+        - eventId
+        - ticketPrice
+      properties:
+        code:
+          type: string
+          description: The discount code to validate.
+        eventId:
+          type: string
+          description: The ID of the event the code is being applied to.
+        ticketPrice:
+          type: number
+          description: The original price of the ticket before discount.
+    CreatePaymentBody:
+      type: object
+      description: The data required to initiate a payment for a registration.
+      properties:
+        eventId:
+          type: string
+        ticketType:
+          $ref: '#/components/schemas/TicketType'
+        amount:
+          type: number
+        currency:
+          type: string
+          enum:
+            - TOMAN
+            - IRR
+        formData:
+          $ref: '#/components/schemas/RegistrationFormData'
+      required:
+        - eventId
+        - ticketType
+        - amount
+        - currency
+        - formData
+    TicketType:
+      type: string
+      enum:
+        - EARLY_BIRD
+        - STANDARD
+        - SUPPORTER
+    User:
+      type: object
+      required:
+        - id
+        - firstNameFa
+        - lastNameFa
+        - mobile
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the user.
+        firstNameFa:
+          type: string
+          description: User's first name in Persian.
+        lastNameFa:
+          type: string
+          description: User's last name in Persian.
+        firstNameEn:
+          type: string
+        lastNameEn:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        age:
+          type: number
+          format: int32
+        educationLevel:
+          type: string
+        fieldOfStudy:
+          type: string
+        isEmployed:
+          type: boolean
+        jobTitle:
+          type: string
+        mobile:
+          type: string
+          description: The user's primary mobile number (unique).
+        email:
+          type: string
+          format: email
+        languageLevel:
+          type: string
+    UpdateUserProfileBody:
+      type: object
+      description: Schema for partially updating a user's profile. All fields are optional.
+      properties:
+        firstNameFa:
+          type: string
+          description: User's first name in Persian.
+        lastNameFa:
+          type: string
+          description: User's last name in Persian.
+        firstNameEn:
+          type: string
+        lastNameEn:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        age:
+          type: number
+          format: int32
+        educationLevel:
+          type: string
+        fieldOfStudy:
+          type: string
+        isEmployed:
+          type: boolean
+        jobTitle:
+          type: string
+        mobile:
+          type: string
+          description: The user's primary mobile number (unique).
+        email:
+          type: string
+          format: email
+        languageLevel:
+          type: string
+    RegistrationFormData:
+      type: object
+      description: The full set of data collected during user registration for an event.
+      required:
+        - firstNameFa
+        - lastNameFa
+        - mobile
+        - isEmployed
+        - acceptedRules
+      properties:
+        firstNameFa:
+          type: string
+        lastNameFa:
+          type: string
+        firstNameEn:
+          type: string
+        lastNameEn:
+          type: string
+        age:
+          type: number
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        mobile:
+          type: string
+          description: User's mobile number used during registration.
+        email:
+          type: string
+          format: email
+        educationLevel:
+          type: string
+        fieldOfStudy:
+          type: string
+        isEmployed:
+          type: boolean
+        jobTitle:
+          type: string
+        languageLevel:
+          type: string
+        referralSource:
+          type: string
+        referrerName:
+          type: string
+        otherReferralSource:
+          type: string
+        acceptedRules:
+          type: boolean
+    AdminUser:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - role
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - EVENT_MANAGER
+            - FINANCE
+    AdminUserWithPassword:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AdminUser'
+        - type: object
+          required:
+            - password
+          properties:
+            password:
+              type: string
+              format: password
+    Discount:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - value
+        - usedCount
+        - startDate
+        - endDate
+        - isActive
+        - isPublic
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        type:
+          type: string
+          enum:
+            - PERCENT
+            - FIXED
+        value:
+          type: number
+        applicableEventIds:
+          type: array
+          items:
+            type: string
+        maxUses:
+          type: integer
+        usedCount:
+          type: integer
+        maxUsesPerUser:
+          type: integer
+        minAmount:
+          type: number
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+        isPublic:
+          type: boolean
+    DiscountFormData:
+      type: object
+      required:
+        - name
+        - type
+        - value
+        - startDate
+        - endDate
+        - isActive
+        - isPublic
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        type:
+          type: string
+          enum:
+            - PERCENT
+            - FIXED
+        value:
+          type: number
+        applicableEventIds:
+          type: array
+          items:
+            type: string
+        maxUses:
+          type: integer
+        maxUsesPerUser:
+          type: integer
+        minAmount:
+          type: number
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+        isPublic:
+          type: boolean
+    EvaluationAnswers:
+      type: object
+      description: A map of question IDs to their answers.
+      additionalProperties:
+        oneOf:
+          - type: string
+          - type: number
+    EvaluationForm:
+      type: object
+      required:
+        - id
+        - eventId
+        - questions
+        - submitted
+      properties:
+        id:
+          type: string
+        eventId:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvaluationQuestion'
+        submitted:
+          type: boolean
+          description: Indicates if the current user has already submitted this form.
+    EvaluationQuestion:
+      type: object
+      required:
+        - id
+        - type
+        - label
+        - required
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - RATING
+            - TEXT
+        label:
+          type: string
+        required:
+          type: boolean
+    EvaluationResponse:
+      type: object
+      required:
+        - submission
+        - user
+        - questions
+      properties:
+        submission:
+          $ref: '#/components/schemas/EvaluationSubmission'
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            mobile:
+              type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvaluationQuestion'
+    EvaluationSubmission:
+      type: object
+      required:
+        - id
+        - evaluationId
+        - userId
+        - eventId
+        - answers
+        - submittedAt
+      properties:
+        id:
+          type: string
+        evaluationId:
+          type: string
+        userId:
+          type: string
+        eventId:
+          type: string
+        answers:
+          $ref: '#/components/schemas/EvaluationAnswers'
+        submittedAt:
+          type: string
+          format: date-time
+    Event:
+      type: object
+      required:
+        - id
+        - title
+        - summary
+        - description
+        - type
+        - startDateTime
+        - capacityTotal
+        - capacityRemaining
+        - showRemainingCapacity
+        - categories
+        - tickets
+        - resources
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        summary:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        description:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        type:
+          type: string
+          enum:
+            - ONLINE
+            - OFFLINE
+        address:
+          type: string
+        city:
+          type: string
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        capacityTotal:
+          type: integer
+        capacityRemaining:
+          type: integer
+        showRemainingCapacity:
+          type: boolean
+        categories:
+          type: array
+          items:
+            type: string
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTicketConfig'
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventResource'
+        publicDiscountIds:
+          type: array
+          items:
+            type: string
+        posterUrl:
+          type: string
+          format: uri
+    EventFormData:
+      type: object
+      required:
+        - title
+        - summary
+        - description
+        - type
+        - startDateTime
+        - capacityTotal
+        - showRemainingCapacity
+      properties:
+        title:
+          type: string
+        categories:
+          type: string
+        summary:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        description:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        type:
+          type: string
+          enum:
+            - ONLINE
+            - OFFLINE
+        city:
+          type: string
+        address:
+          type: string
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        capacityTotal:
+          type: integer
+        showRemainingCapacity:
+          type: boolean
+        publicDiscountIds:
+          type: array
+          items:
+            type: string
+        posterUrl:
+          type: string
+          format: uri
+    UpdateEventFormData:
+      type: object
+      description: Schema for partially updating an event. All fields are optional.
+      properties:
+        title:
+          type: string
+        categories:
+          type: string
+        summary:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        description:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        type:
+          type: string
+          enum:
+            - ONLINE
+            - OFFLINE
+        city:
+          type: string
+        address:
+          type: string
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        capacityTotal:
+          type: integer
+        showRemainingCapacity:
+          type: boolean
+        publicDiscountIds:
+          type: array
+          items:
+            type: string
+        posterUrl:
+          type: string
+          format: uri
+    EventResource:
+      type: object
+      required:
+        - id
+        - title
+        - accessLevel
+        - url
+      properties:
+        id:
+          type: string
+        title:
+          type: object
+          properties:
+            fa:
+              type: string
+            en:
+              type: string
+        description:
+          type: string
+        accessLevel:
+          type: string
+          enum:
+            - PUBLIC
+            - REGISTERED_ONLY
+        url:
+          type: string
+          format: uri
+    EventTicketConfig:
+      type: object
+      required:
+        - type
+        - price
+        - currency
+        - quantityTotal
+        - quantitySold
+      properties:
+        type:
+          $ref: '#/components/schemas/TicketType'
+        price:
+          type: number
+        currency:
+          type: string
+          enum:
+            - IRR
+            - TOMAN
+        quantityTotal:
+          type: integer
+        quantitySold:
+          type: integer
+        earlyBirdEndDate:
+          type: string
+          format: date-time
+    Payment:
+      type: object
+      required:
+        - id
+        - registrationId
+        - eventId
+        - ticketType
+        - amount
+        - currency
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        registrationId:
+          type: string
+        eventId:
+          type: string
+        ticketType:
+          $ref: '#/components/schemas/TicketType'
+        amount:
+          type: number
+        currency:
+          type: string
+          enum:
+            - TOMAN
+            - IRR
+        status:
+          type: string
+          enum:
+            - PENDING
+            - SUCCESS
+            - FAILED
+        gatewayTransactionId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Registration:
+      type: object
+      required:
+        - id
+        - userId
+        - eventId
+        - ticketType
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        eventId:
+          type: string
+        ticketType:
+          $ref: '#/components/schemas/TicketType'
+        status:
+          type: string
+          enum:
+            - PENDING
+            - PAID
+            - CANCELLED
+        paymentId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Sponsor:
+      type: object
+      required:
+        - id
+        - name
+        - productOrTagline
+        - logoUrl
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        productOrTagline:
+          type: string
+        logoUrl:
+          type: string
+          format: uri
+        websiteUrl:
+          type: string
+          format: uri
+    SponsorFormData:
+      type: object
+      required:
+        - name
+        - productOrTagline
+        - logoUrl
+      properties:
+        name:
+          type: string
+        productOrTagline:
+          type: string
+        logoUrl:
+          type: string
+          format: uri
+        websiteUrl:
+          type: string
+          format: uri
+    TeamMember:
+      type: object
+      required:
+        - id
+        - name
+        - role
+        - photoUrl
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        photoUrl:
+          type: string
+          format: uri
+    TeamMemberFormData:
+      type: object
+      required:
+        - name
+        - role
+        - photoUrl
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        photoUrl:
+          type: string
+          format: uri
+    UserRegistration:
+      type: object
+      required:
+        - id
+        - userId
+        - eventId
+        - paymentId
+        - ticketType
+        - status
+        - createdAt
+        - event
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        eventId:
+          type: string
+        paymentId:
+          type: string
+        ticketType:
+          $ref: '#/components/schemas/TicketType'
+        status:
+          type: string
+          enum:
+            - PAID
+            - PENDING
+            - FAILED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        event:
+          type: object
+          properties:
+            title:
+              type: string
+            startDateTime:
+              type: string
+              format: date-time
+    UserRegistrationDetails:
+      type: object
+      required:
+        - id
+        - userId
+        - eventId
+        - paymentId
+        - ticketType
+        - status
+        - createdAt
+        - user
+        - formData
+        - event
+        - payment
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        eventId:
+          type: string
+        paymentId:
+          type: string
+        ticketType:
+          $ref: '#/components/schemas/TicketType'
+        status:
+          type: string
+          enum:
+            - PAID
+            - PENDING
+            - FAILED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+        formData:
+          $ref: '#/components/schemas/RegistrationFormData'
+        event:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            startDateTime:
+              type: string
+              format: date-time
+        payment:
+          type: object
+          properties:
+            id:
+              type: string
+            amount:
+              type: number
+            currency:
+              type: string
+              enum:
+                - TOMAN
+                - IRR
+            status:
+              type: string
+              enum:
+                - PENDING
+                - SUCCESS
+                - FAILED
+            gatewayTransactionId:
+              type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,296 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useAdminEventQuery, useUpdateEventResourcesMutation } from '@/hooks/use-event-queries';
+import { useLanguage } from '@/lib/i18n/language-provider';
+import type { EventResource } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
+import { useParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Loader2, PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+
+const getResourceSchema = (t: (key: string) => string) => z.object({
+  id: z.string().optional(),
+  title: z.object({
+    fa: z.string().min(1, t('registration.validation.required')),
+    en: z.string().optional(),
+  }),
+  description: z.string().optional(),
+  accessLevel: z.enum(['PUBLIC', 'REGISTERED_ONLY']),
+  url: z.string().url({ message: "Please enter a valid URL." }),
+});
+
+type ResourceFormValues = z.infer<ReturnType<typeof getResourceSchema>>;
+
+export default function ManageResourcesPage() {
+  const params = useParams<{ eventId: string }>();
+  const { eventId } = params;
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const { data: event, isLoading: isLoadingEvent, error } = useAdminEventQuery(eventId);
+  const { mutate: updateResources, isPending: isSaving } = useUpdateEventResourcesMutation();
+  
+  const [resources, setResources] = useState<Partial<EventResource>[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingResource, setEditingResource] = useState<Partial<EventResource> | null>(null);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [resourceToDeleteId, setResourceToDeleteId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (event?.resources) {
+      setResources(event.resources);
+    }
+  }, [event]);
+
+  const form = useForm<ResourceFormValues>({
+    resolver: zodResolver(getResourceSchema(t)),
+    defaultValues: {
+      title: { fa: '', en: '' },
+      description: '',
+      accessLevel: 'PUBLIC',
+      url: '',
+    },
+  });
+
+  const handleOpenDialog = (resource: Partial<EventResource> | null = null) => {
+    setEditingResource(resource);
+    if (resource) {
+      form.reset({
+        id: resource.id,
+        title: resource.title || { fa: '', en: '' },
+        description: resource.description || '',
+        accessLevel: resource.accessLevel || 'PUBLIC',
+        url: resource.url || '',
+      });
+    } else {
+      form.reset({
+        id: `temp-${Date.now()}`,
+        title: { fa: '', en: '' },
+        description: '',
+        accessLevel: 'PUBLIC',
+        url: '',
+      });
+    }
+    setIsDialogOpen(true);
+  };
+  
+  const onSubmit = (data: ResourceFormValues) => {
+    let updatedResources;
+    if (editingResource) {
+      updatedResources = resources.map(r => r.id === editingResource.id ? data : r);
+    } else {
+      updatedResources = [...resources, data];
+    }
+    
+    updateResources({ eventId, resources: updatedResources }, {
+        onSuccess: (updatedEvent) => {
+            setResources(updatedEvent.resources);
+            toast({ title: editingResource ? 'Resource updated' : 'Resource added' });
+            setIsDialogOpen(false);
+        },
+        onError: (err) => {
+             toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+        }
+    })
+  };
+  
+  const handleDeleteConfirm = () => {
+    if (!resourceToDeleteId) return;
+
+    const updatedResources = resources.filter(r => r.id !== resourceToDeleteId);
+    
+    updateResources({ eventId, resources: updatedResources }, {
+        onSuccess: (updatedEvent) => {
+            setResources(updatedEvent.resources);
+            toast({ title: 'Resource deleted' });
+            setIsDeleteAlertOpen(false);
+            setResourceToDeleteId(null);
+        },
+        onError: (err) => {
+             toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+        }
+    });
+  }
+
+  if (isLoadingEvent) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+  }
+
+  if (error) {
+    return <p className="text-destructive">{t('errors.fetchEvent')}</p>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t('admin.resources.title')}</h1>
+          <p className="mt-2 text-muted-foreground">{t('admin.resources.subtitle', { eventName: event?.title || '' })}</p>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+             <Button onClick={() => handleOpenDialog()}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                {t('admin.resources.addNew')}
+             </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-2xl">
+             <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <DialogHeader>
+                        <DialogTitle>{editingResource ? t('admin.resources.form.editTitle') : t('admin.resources.form.addTitle')}</DialogTitle>
+                    </DialogHeader>
+                    
+                    <Tabs defaultValue="fa">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="fa">{t('language.fa')}</TabsTrigger>
+                            <TabsTrigger value="en">{t('language.en')}</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="fa" className="pt-4">
+                            <FormField control={form.control} name="title.fa" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('admin.resources.form.resourceTitle')}</FormLabel>
+                                    <FormControl><Input {...field} dir="rtl" /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        </TabsContent>
+                         <TabsContent value="en" className="pt-4">
+                            <FormField control={form.control} name="title.en" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('admin.resources.form.resourceTitle')}</FormLabel>
+                                    <FormControl><Input {...field} dir="ltr" /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        </TabsContent>
+                    </Tabs>
+
+                    <FormField control={form.control} name="description" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('admin.resources.form.description')}</FormLabel>
+                            <FormControl><Textarea {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                    <FormField control={form.control} name="url" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('admin.resources.form.url')}</FormLabel>
+                            <FormControl><Input {...field} dir="ltr" /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                    <FormField control={form.control} name="accessLevel" render={({ field }) => (
+                        <FormItem className="space-y-3">
+                            <FormLabel>{t('admin.resources.form.accessLevel')}</FormLabel>
+                            <FormControl>
+                                <RadioGroup onValueChange={field.onChange} value={field.value} className="flex flex-col space-y-1">
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl><RadioGroupItem value="PUBLIC" /></FormControl>
+                                        <FormLabel className="font-normal">{t('admin.resources.form.accessPublic')}</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl><RadioGroupItem value="REGISTERED_ONLY" /></FormControl>
+                                        <FormLabel className="font-normal">{t('admin.resources.form.accessRegistered')}</FormLabel>
+                                    </FormItem>
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+
+                    <DialogFooter>
+                        <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>{t('admin.resources.form.cancel')}</Button>
+                        <Button type="submit" disabled={isSaving}>
+                            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {editingResource ? t('admin.resources.form.save') : t('admin.resources.form.add')}
+                        </Button>
+                    </DialogFooter>
+                </form>
+             </Form>
+          </DialogContent>
+        </Dialog>
+      </div>
+      
+      <Card>
+        <CardContent className="pt-6">
+          {resources.length > 0 ? (
+             <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>{t('admin.resources.table.title')}</TableHead>
+                        <TableHead>{t('admin.resources.table.accessLevel')}</TableHead>
+                        <TableHead className="text-right">{t('admin.resources.table.actions')}</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {resources.map(resource => (
+                        <TableRow key={resource.id}>
+                            <TableCell className="font-medium">{resource.title?.fa || resource.title?.en}</TableCell>
+                            <TableCell>
+                                <Badge variant={resource.accessLevel === 'PUBLIC' ? 'outline' : 'secondary'}>
+                                    {t(`event.resource${resource.accessLevel === 'PUBLIC' ? 'Public' : 'RegisteredOnly'}`)}
+                                </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                                <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(resource)}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => { setResourceToDeleteId(resource.id!); setIsDeleteAlertOpen(true); }}>
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+             </Table>
+          ) : (
+            <div className="text-center text-muted-foreground py-8">
+              <p>{t('admin.resources.noResources')}</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+            <AlertDialogTitle>{t('admin.resources.deleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('admin.resources.deleteConfirmText')}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setResourceToDeleteId(null)}>{t('admin.resources.form.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm} disabled={isSaving} className="bg-destructive hover:bg-destructive/90">
+                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {t('admin.resources.delete')}
+            </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

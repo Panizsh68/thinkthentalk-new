@@ -1,0 +1,379 @@
+{
+  "nav": {
+    "home": "خانه",
+    "events": "رویدادها",
+    "about": "درباره ما",
+    "contact": "تماس با ما",
+    "faq": "سوالات متداول",
+    "privacy": "سیاست حفظ حریم خصوصی",
+    "terms": "شرایط خدمات",
+    "myAccount": "حساب من"
+  },
+  "actions": {
+    "login": "ورود",
+    "logout": "خروج",
+    "register": "ثبت نام",
+    "retry": "تلاش مجدد",
+    "download": "دانلود",
+    "view": "مشاهده",
+    "addToCalendar": "افزودن به تقویم",
+    "clearFilters": "پاک کردن فیلترها",
+    "backToEvents": "بازگشت به رویدادها",
+    "back": "بازگشت",
+    "next": "بعدی",
+    "finishRegistration": "تکمیل ثبت‌نام",
+    "reset": "شروع مجدد",
+    "retryPayment": "تلاش مجدد برای پرداخت",
+    "backToSummary": "بازگشت به خلاصه",
+    "viewEvent": "مشاهده رویداد",
+    "viewReceipt": "مشاهده رسید",
+    "leaveFeedback": "ثبت بازخورد",
+    "submitFeedback": "ارسال بازخورد",
+    "backToDashboard": "بازگشت به داشبورد"
+  },
+  "language": {
+    "en": "English",
+    "fa": "فارسی"
+  },
+  "events": {
+    "title": "رویدادها",
+    "subtitle": "رویدادهای پیش رو را ببینید و به ما بپیوندید",
+    "noEvents": "در حال حاضر رویدادی موجود نیست.",
+    "noEventsFound": "رویدادی با معیارهای شما یافت نشد."
+  },
+  "event": {
+    "online": "آنلاین",
+    "offline": "حضوری",
+    "limitedSeats": "ظرفیت محدود",
+    "spotsLeft": "{count} جای خالی",
+    "upcoming": "پیش رو",
+    "finished": "پایان یافته",
+    "viewDetails": "مشاهده جزئیات",
+    "fromPrice": "از {price} {currency}",
+    "tickets": "بلیت‌ها",
+    "selectTicket": "برای ثبت‌نام، بلیت خود را انتخاب کنید.",
+    "free": "رایگان",
+    "resourcesTitle": "منابع",
+    "resourcePublic": "عمومی",
+    "resourceRegisteredOnly": "فقط برای شرکت‌کنندگان",
+    "resourceAvailableAfterRegistration": "پس از ثبت‌نام در دسترس است",
+    "eventHasFinished": "این رویداد قبلا برگزار شده است.",
+    "alreadyRegistered": "قبلا ثبت‌نام کرده‌اید"
+  },
+  "tickets": {
+    "early_bird": "پیش‌فروش",
+    "standard": "استاندارد",
+    "supporter": "حمایتی",
+    "soldOut": "تمام شد",
+    "expired": "مهلت تمام شد",
+    "earlyBirdEnds": "پایان در {date}"
+  },
+  "filters": {
+    "showPast": "نمایش رویدادهای گذشته",
+    "eventType": "نوع رویداد",
+    "all": "همه",
+    "city": "شهر",
+    "allCities": "همه شهرها",
+    "category": "دسته بندی",
+    "allCategories": "همه دسته بندی ها"
+  },
+  "errors": {
+    "fetchEvents": "در دریافت اطلاعات رویدادها خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+    "fetchEvent": "در دریافت جزئیات رویداد خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+    "eventNotFound": "رویداد مورد نظر یافت نشد.",
+    "genericTitle": "خطایی رخ داد",
+    "fetchRegistrations": "بارگیری ثبت‌نام‌های شما با مشکل مواجه شد. لطفاً دوباره تلاش کنید."
+  },
+  "auth": {
+    "loginTitle": "ورود یا ثبت نام",
+    "loginSubtitle": "برای دریافت کد تایید، شماره موبایل خود را وارد کنید.",
+    "mobileLabel": "شماره موبایل",
+    "sendOtpButton": "ارسال کد",
+    "otpTitle": "کد تایید را وارد کنید",
+    "otpSubtitle": "کد به شماره زیر ارسال شد:",
+    "otpLabel": "کد تایید",
+    "verifyButton": "ورود",
+    "otpSentTitle": "کد ارسال شد",
+    "otpSentDescription": "پیامک‌های خود را برای کد تایید بررسی کنید",
+    "loginSuccessTitle": "ورود موفقیت‌آمیز بود!",
+    "errors": {
+      "invalidMobile": "لطفاً یک شماره موبایل معتبر ۱۱ رقمی وارد کنید (مثال: ۰۹۱۲۳۴۵۶۷۸۹).",
+      "otpRequired": "لطفاً کد ۶ رقمی را وارد کنید."
+    }
+  },
+  "registration": {
+    "title": "ثبت‌نام در رویداد",
+    "confirmReset": "آیا از شروع مجدد مطمئن هستید؟ تمام اطلاعات وارد شده برای این ثبت‌نام حذف خواهد شد.",
+    "steps": {
+      "personal": "اطلاعات فردی",
+      "personalSubtitle": "لطفا اطلاعات خود را مطابق با مدارک شناسایی وارد کنید.",
+      "education": "تحصیلات و شغل",
+      "educationSubtitle": "لطفاً سوابق تحصیلی و حرفه‌ای خود را ارائه دهید.",
+      "language": "زبان و نحوه آشنایی",
+      "languageSubtitle": "به ما کمک کنید تا سطح زبان شما و نحوه آشنایی‌تان با ما را بدانیم.",
+      "contact": "اطلاعات تماس",
+      "contactSubtitle": "لطفا اطلاعات تماس خود را وارد نمایید.",
+      "rules": "قوانین و مقررات",
+      "rulesSubtitle": "لطفا برای ادامه، قوانین و مقررات را مطالعه و تایید کنید.",
+      "summary": "خلاصه و بازبینی",
+      "summarySubtitle": "لطفاً قبل از رفتن به مرحله پرداخت، اطلاعات خود را بازبینی کنید."
+    },
+    "summary": {
+      "eventDetails": "جزئیات رویداد",
+      "eventTitle": "رویداد",
+      "eventDate": "تاریخ",
+      "ticketType": "نوع بلیت",
+      "price": "قیمت",
+      "edit": "ویرایش",
+      "yes": "بله",
+      "no": "خیر",
+      "paymentButton": "ادامه برای پرداخت"
+    },
+    "fields": {
+      "firstNameFa": "نام (فارسی)",
+      "lastNameFa": "نام خانوادگی (فارسی)",
+      "firstNameEn": "نام (انگلیسی)",
+      "lastNameEn": "نام خانوادگی (انگلیسی)",
+      "age": "سن",
+      "gender": "جنسیت",
+      "genderMale": "مرد",
+      "genderFemale": "زن",
+      "genderOther": "دیگر",
+      "educationLevel": "مقطع تحصیلی",
+      "fieldOfStudy": "رشته تحصیلی",
+      "isEmployed": "شاغل هستم",
+      "jobTitle": "عنوان شغلی",
+      "educationLevels": {
+        "high-school": "دیپلم",
+        "associate": "کاردانی",
+        "bachelor": "کارشناسی",
+        "master": "کارشناسی ارشد",
+        "phd": "دکتری",
+        "other": "دیگر"
+      },
+      "languageLevel": "سطح زبان انگلیسی",
+      "languageLevelsList": {
+        "beginner": "مبتدی",
+        "intermediate": "متوسط",
+        "advanced": "پیشرفته",
+        "native": "بومی/مسلط"
+      },
+      "referralSource": "چگونه با ما آشنا شدید؟",
+      "referralSources": {
+        "instagram": "اینستاگرام",
+        "telegram": "تلگرام",
+        "website": "وب‌سایت",
+        "friends": "دوستان/آشنایان",
+        "other": "غیره"
+      },
+      "referrerName": "نام معرف (اختیاری)",
+      "otherReferralSource": "لطفاً مشخص کنید",
+      "email": "ایمیل",
+      "acceptRules": "من {terms} و {privacy} را خوانده و می‌پذیرم.",
+      "termsLink": "شرایط خدمات",
+      "privacyLink": "سیاست حفظ حریم خصوصی"
+    },
+    "placeholders": {
+      "firstNameFa": "مثال: سارا",
+      "lastNameFa": "مثال: محمدی",
+      "firstNameEn": "مثال: Sara",
+      "lastNameEn": "مثال: Mohammadi",
+      "age": "مثال: ۲۸",
+      "educationLevel": "مقطع تحصیلی خود را انتخاب کنید",
+      "fieldOfStudy": "مثال: مهندسی کامپیوتر",
+      "jobTitle": "مثال: مهندس نرم‌افزار",
+      "languageLevel": "سطح زبان خود را انتخاب کنید",
+      "referralSource": "یک گزینه را انتخاب کنید",
+      "referrerName": "مثال: علی رضایی",
+      "otherReferralSource": "مثال: لینکدین",
+      "email": "مثال: user@example.com"
+    },
+    "descriptions": {
+      "mobileReadOnly": "شماره موبایل شما به حساب کاربری‌تان متصل است و قابل تغییر نیست.",
+      "emailOptional": "اختیاری. برای اطلاع‌رسانی‌های رویداد استفاده خواهد شد."
+    },
+    "validation": {
+      "required": "این فیلد الزامی است.",
+      "positiveNumber": "لطفا سن معتبر وارد کنید.",
+      "invalidEmail": "لطفا یک آدرس ایمیل معتبر وارد کنید.",
+      "rulesRequired": "برای ادامه باید شرایط و قوانین را بپذیرید."
+    },
+    "errors": {
+      "notAuthenticated": "برای ثبت‌نام در رویداد باید وارد حساب کاربری خود شوید.",
+      "missingInfo": "اطلاعات رویداد یا بلیت ناقص است. لطفاً از صفحه رویداد دوباره تلاش کنید.",
+      "incompleteSteps": "لطفاً قبل از ادامه، تمام مراحل قبلی را تکمیل کنید."
+    },
+    "status": {
+      "paid": "پرداخت شده",
+      "pending": "در انتظار پرداخت",
+      "failed": "ناموفق",
+      "cancelled": "لغو شده"
+    }
+  },
+  "payment": {
+    "verifying": "در حال تایید پرداخت شما، لطفا منتظر بمانید...",
+    "invalidRequestTitle": "درخواست پرداخت نامعتبر",
+    "invalidRequestDescription": "پرداخت قابل تایید نیست. ممکن است لینک نامعتبر یا منقضی شده باشد.",
+    "successTitle": "پرداخت موفقیت‌آمیز بود!",
+    "successDescription": "ثبت‌نام شما تکمیل شد. به زودی یک ایمیل تاییدیه حاوی تمام جزئیات دریافت خواهید کرد.",
+    "browseMoreEvents": "مرور رویدادهای بیشتر",
+    "viewMyRegistrations": "مشاهده ثبت‌نام‌های من",
+    "failedTitle": "پرداخت ناموفق بود",
+    "failedDescription": "پرداخت شما پردازش نشد. لطفاً دوباره تلاش کنید یا برای بازبینی اطلاعات ثبت‌نام خود به عقب بازگردید.",
+    "alreadyProcessedTitle": "پرداخت قبلا پردازش شده است",
+    "alreadyProcessedDescription": "این پرداخت قبلاً با وضعیت زیر نهایی شده است:",
+    "finalizing": "در حال نهایی‌سازی...",
+    "statusTitle": "وضعیت پرداخت",
+    "statusDescription": "در حال نهایی‌سازی ثبت‌نام رویداد شما.",
+    "receiptTitle": "ثبت‌نام تایید شد",
+    "paymentId": "شناسه پرداخت",
+    "howToJoinTitle": "نحوه شرکت در رویداد",
+    "howToJoinDescription": "لینک شرکت در رویداد آنلاین یک روز قبل از رویداد از طریق پیامک و ایمیل برای شما ارسال خواهد شد."
+  },
+  "profile": {
+    "title": "پروفایل من",
+    "subtitle": "اطلاعات پروفایل خود را مشاهده و ویرایش کنید. این اطلاعات برای پیش‌فرض کردن فرم‌های ثبت‌نام رویداد استفاده خواهد شد.",
+    "mobileReadOnly": "شماره موبایل شناسه منحصر به فرد شماست و قابل تغییر نیست.",
+    "saveButton": "ذخیره تغییرات",
+    "updateSuccessTitle": "پروفایل به‌روزرسانی شد",
+    "updateSuccessDescription": "اطلاعات شما با موفقیت ذخیره شد.",
+    "languageSectionTitle": "زبان"
+  },
+  "dashboard": {
+    "myRegistrations": "ثبت‌نام‌های من",
+    "myRegistrationsSubtitle": "در اینجا رویدادهایی که برای آن‌ها ثبت‌نام کرده‌اید، آمده است.",
+    "noRegistrations": "شما هنوز برای هیچ رویدادی ثبت‌نام نکرده‌اید.",
+    "browseEvents": "مرور رویدادها",
+    "table": {
+      "event": "رویداد",
+      "date": "تاریخ",
+      "ticket": "بلیت",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    }
+  },
+  "evaluation": {
+    "title": "بازخورد رویداد",
+    "subtitle": "از حضور شما در رویداد {eventName} سپاسگزاریم. لطفاً بازخورد خود را با ما در میان بگذارید.",
+    "textPlaceholder": "بازخورد شما...",
+    "alreadySubmittedTitle": "بازخورد قبلا ارسال شده است",
+    "alreadySubmittedDescription": "با تشکر، شما قبلاً بازخورد خود را برای این رویداد ارسال کرده‌اید.",
+    "errors": {
+      "notAuthenticated": "لطفا وارد شوید",
+      "loginPrompt": "برای ارسال بازخورد برای این رویداد باید وارد شوید.",
+      "notEligibleTitle": "واجد شرایط ارزیابی نیستید",
+      "notEligibleDescription": "شما واجد شرایط ارسال بازخورد نیستید. باید ثبت نام شما پرداخت شده باشد و رویداد به پایان رسیده باشد.",
+      "formNotFound": "فرم ارزیابی بارگیری نشد. ممکن است برای این رویداد در دسترس نباشد."
+    },
+    "validation": {
+      "required": "این فیلد الزامی است."
+    }
+  },
+  "admin": {
+    "events": {
+      "title": "مدیریت رویدادها",
+      "subtitle": "ایجاد، ویرایش و مدیریت رویدادها.",
+      "createNew": "ایجاد رویداد جدید",
+      "table": {
+        "title": "عنوان",
+        "date": "تاریخ",
+        "type": "نوع",
+        "status": "وضعیت",
+        "capacity": "ظرفیت"
+      },
+      "create": {
+        "title": "ایجاد رویداد جدید",
+        "subtitle": "برای ایجاد یک رویداد جدید، جزئیات را پر کنید.",
+        "successTitle": "رویداد ایجاد شد",
+        "successDescription": "رویداد '{eventName}' با موفقیت ایجاد شد."
+      },
+      "edit": {
+        "title": "ویرایش رویداد",
+        "subtitle": "شما در حال ویرایش رویداد هستید: {eventName}",
+        "successTitle": "رویداد به‌روزرسانی شد",
+        "successDescription": "رویداد '{eventName}' با موفقیت به‌روزرسانی شد."
+      },
+      "form": {
+        "basicInfo": "اطلاعات پایه",
+        "title": "عنوان رویداد",
+        "categories": "دسته‌بندی‌ها",
+        "categoriesDesc": "لیست دسته‌بندی‌ها با کاما جدا شود (مثال: تکنولوژی، ارتباطات).",
+        "content": "محتوا",
+        "summary": "خلاصه",
+        "description": "توضیحات",
+        "locationAndDate": "مکان و تاریخ",
+        "address": "آدرس",
+        "startDateTime": "تاریخ و زمان شروع",
+        "endDateTime": "تاریخ و زمان پایان",
+        "endDateTimeOptional": "اختیاری. اگر رویداد زمان پایان مشخصی ندارد، آن را خالی بگذارید.",
+        "pickDate": "یک تاریخ انتخاب کنید",
+        "capacity": "ظرفیت و بلیت‌ها",
+        "capacityTotal": "ظرفیت کل",
+        "showRemainingCapacity": "نمایش ظرفیت باقی‌مانده",
+        "showRemainingCapacityDesc": "تعداد جای خالی موجود را در صفحه رویداد نمایش دهید.",
+        "saveChanges": "ذخیره تغییرات",
+        "createEvent": "ایجاد رویداد"
+      },
+      "validation": {
+        "nonNegative": "ظرفیت باید یک عدد غیرمنفی باشد."
+      }
+    },
+    "tickets": {
+      "title": "مدیریت بلیت‌ها",
+      "subtitle": "انواع بلیت را برای رویداد پیکربندی کنید: {eventName}",
+      "enable": "فعال",
+      "price": "قیمت (تومان)",
+      "quantity": "تعداد کل",
+      "endDate": "تاریخ پایان فروش",
+      "endDateDesc": "اختیاری. پس از این تاریخ، بلیت‌های پیش‌فروش قابل خریداری نیستند.",
+      "saveChanges": "ذخیره تنظیمات بلیت",
+      "saveSuccessTitle": "بلیت‌ها به‌روزرسانی شدند",
+      "saveSuccessDescription": "تنظیمات بلیت برای {eventName} ذخیره شد."
+    },
+    "resources": {
+      "title": "مدیریت منابع",
+      "subtitle": "افزودن یا ویرایش منابع برای: {eventName}",
+      "addNew": "افزودن منبع جدید",
+      "noResources": "هنوز هیچ منبعی به این رویداد اضافه نشده است.",
+      "table": {
+        "title": "عنوان",
+        "accessLevel": "سطح دسترسی",
+        "actions": "عملیات"
+      },
+      "form": {
+        "addTitle": "افزودن منبع جدید",
+        "editTitle": "ویرایش منبع",
+        "resourceTitle": "عنوان منبع",
+        "description": "توضیحات (اختیاری)",
+        "url": "آدرس فایل (URL)",
+        "accessLevel": "سطح دسترسی",
+        "accessPublic": "عمومی (قابل مشاهده برای همه)",
+        "accessRegistered": "فقط ثبت‌نام‌شدگان (قابل مشاهده پس از پرداخت موفق)",
+        "save": "ذخیره منبع",
+        "add": "افزودن منبع",
+        "cancel": "لغو"
+      },
+      "deleteConfirmTitle": "آیا مطمئن هستید؟",
+      "deleteConfirmText": "این عملیات قابل بازگشت نیست. این کار منبع را برای همیشه حذف خواهد کرد.",
+      "delete": "حذف",
+      "edit": "ویرایش"
+    },
+    "filters": {
+      "title": "فیلترها",
+      "status": {
+        "placeholder": "فیلتر بر اساس وضعیت...",
+        "all": "همه وضعیت‌ها",
+        "upcoming": "پیش رو",
+        "past": "گذشته"
+      },
+      "type": {
+        "placeholder": "فیلتر بر اساس نوع..."
+      }
+    },
+    "actions": {
+      "edit": "ویرایش رویداد",
+      "manageTickets": "مدیریت بلیت‌ها",
+      "manageResources": "مدیریت منابع"
+    }
+  }
+}
