@@ -14,6 +14,7 @@ export type Payment = {
   currency: 'TOMAN' | 'IRR';
   status: PaymentStatus;
   gatewayTransactionId?: string;
+  redirectUrl?: string;
   createdAt: string;
   updatedAt: string;
 };

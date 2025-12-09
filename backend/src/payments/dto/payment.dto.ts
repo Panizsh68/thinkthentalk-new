@@ -36,6 +36,11 @@ export class PaymentDto {
   @IsString()
   gatewayTransactionId?: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  redirectUrl?: string;
+
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt!: string;
 

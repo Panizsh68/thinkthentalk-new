@@ -16,7 +16,10 @@ import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 function PaymentCallbackContent() {
   const searchParams = useSearchParams();
   const paymentId = searchParams.get('paymentId');
-  const status = searchParams.get('status') as 'SUCCESS' | 'FAILED' | null;
+  const statusParam = searchParams.get('status') || searchParams.get('Status');
+  const normalizedStatus = statusParam
+    ? ((statusParam.toUpperCase() === 'OK' || statusParam.toUpperCase() === 'SUCCESS') ? 'SUCCESS' : 'FAILED')
+    : null;
   const { t, language } = useLanguage();
 
   const { data: payment, isLoading: isLoadingPayment, error: paymentError } = usePaymentQuery(paymentId);
@@ -24,10 +27,16 @@ function PaymentCallbackContent() {
   const { mutate: verifyPayment, isPending: isVerifying } = useVerifyPaymentMutation();
 
   useEffect(() => {
-    if (paymentId && status && payment && payment.status === 'PENDING') {
-        verifyPayment({ paymentId, status });
+    if (paymentId && normalizedStatus && payment && payment.status === 'PENDING') {
+        verifyPayment({ paymentId, status: normalizedStatus });
     }
-  }, [paymentId, status, payment, verifyPayment]);
+  }, [paymentId, normalizedStatus, payment, verifyPayment]);
+
+  useEffect(() => {
+    if (!normalizedStatus && payment?.status === 'PENDING' && payment.redirectUrl) {
+      window.location.href = payment.redirectUrl;
+    }
+  }, [normalizedStatus, payment]);
 
   const isLoading = isVerifying || isLoadingPayment || (payment?.eventId && isLoadingEvent);
 
@@ -47,6 +56,31 @@ function PaymentCallbackContent() {
         <h2 className="text-2xl font-semibold">{t('payment.invalidRequestTitle')}</h2>
         <p className="text-muted-foreground">{t('payment.invalidRequestDescription')}</p>
         <Button asChild><Link href="/events">{t('actions.backToEvents')}</Link></Button>
+      </div>
+    );
+  }
+
+  if (!payment) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 text-center text-destructive" data-testid="payment-error">
+        <AlertTriangle className="h-12 w-12" />
+        <h2 className="text-2xl font-semibold">{t('payment.invalidRequestTitle')}</h2>
+        <p className="text-muted-foreground">{t('payment.invalidRequestDescription')}</p>
+        <Button asChild><Link href="/events">{t('actions.backToEvents')}</Link></Button>
+      </div>
+    );
+  }
+
+  if (!normalizedStatus && payment?.status === 'PENDING') {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 text-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">{t('payment.finalizing')}</p>
+        {payment.redirectUrl && (
+          <Button onClick={() => { window.location.href = payment.redirectUrl!; }}>
+            {t('registration.summary.paymentButton')}
+          </Button>
+        )}
       </div>
     );
   }
@@ -112,11 +146,11 @@ function PaymentCallbackContent() {
                     {t('actions.backToSummary')}
                 </Link>
             </Button>
-            <Button asChild>
-                <Link href={`/payment/mock-gateway?paymentId=${payment.id}`}>
-                    {t('actions.retryPayment')}
-                </Link>
-            </Button>
+            {payment.redirectUrl && (
+              <Button onClick={() => { window.location.href = payment.redirectUrl!; }}>
+                {t('actions.retryPayment')}
+              </Button>
+            )}
         </div>
       </div>
     );

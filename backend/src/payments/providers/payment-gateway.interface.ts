@@ -2,6 +2,7 @@ export interface RequestPaymentInput {
   amount: number;
   description: string;
   callbackUrl: string;
+  currency?: 'IRR' | 'TOMAN';
   metadata?: Record<string, unknown>;
 }
 

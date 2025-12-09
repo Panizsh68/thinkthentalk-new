@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Currency, PaymentStatus, TicketType, Prisma, RegistrationStatus } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { CreatePaymentBodyDto } from './dto/create-payment-body.dto';
 import { PaymentDto } from './dto/payment.dto';
 import { ZarinpalGateway } from './providers/zarinpal.gateway';
+import type { RequestPaymentResult } from './providers/payment-gateway.interface';
 import { VerifyPaymentStatusDto } from './dto/verify-payment-status.dto';
 import { parseLocalizedText } from '../events/utils/localized-text.helper';
 
@@ -12,6 +14,7 @@ export class PaymentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly zarinpalGateway: ZarinpalGateway,
+    private readonly configService: ConfigService,
   ) {}
 
   async listAdminPayments(filters: { eventId?: string; status?: PaymentStatus }): Promise<PaymentDto[]> {
@@ -63,6 +66,11 @@ export class PaymentsService {
       throw new BadRequestException('Ticket type is sold out');
     }
 
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, mobile: true },
+    });
+
     const totalAmount =
       ticketConfig.price.toNumber ? ticketConfig.price.toNumber() : (ticketConfig.price as any);
     if (dto.amount !== totalAmount) {
@@ -104,13 +112,55 @@ export class PaymentsService {
       return { registration, payment };
     });
 
-    // Placeholder gateway call
     const eventTitle = parseLocalizedText(event.title);
-    const requestResult = await this.zarinpalGateway.requestPayment({
-      amount: dto.amount,
-      description: `Payment for event ${eventTitle.en}`,
-      callbackUrl: '',
-    });
+    const callbackBase = this.configService.get<string>('ZARINPAL_CALLBACK_URL');
+    if (!callbackBase) {
+      throw new BadRequestException('Payment gateway is not configured');
+    }
+
+    let callbackUrl: string;
+    try {
+      const url = new URL(callbackBase);
+      url.searchParams.set('paymentId', result.payment.id);
+      callbackUrl = url.toString();
+    } catch {
+      throw new BadRequestException('Payment gateway callback URL is invalid');
+    }
+
+    let requestResult: RequestPaymentResult;
+    try {
+      requestResult = await this.zarinpalGateway.requestPayment({
+        amount: dto.amount,
+        currency: dto.currency,
+        description: `Payment for event ${eventTitle.en ?? eventTitle.fa ?? ''}`,
+        callbackUrl,
+        metadata: {
+          email: user?.email,
+          mobile: user?.mobile,
+          order_id: result.payment.id,
+        },
+      });
+    } catch (error) {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.payment.update({
+          where: { id: result.payment.id },
+          data: { status: PaymentStatus.FAILED },
+        });
+        await tx.registration.update({
+          where: { id: result.registration.id },
+          data: { status: RegistrationStatus.FAILED },
+        });
+        await tx.event.update({
+          where: { id: dto.eventId },
+          data: { capacityRemaining: { increment: 1 } },
+        });
+        await tx.eventTicketConfig.update({
+          where: { id: ticketConfig.id },
+          data: { quantitySold: { decrement: 1 } },
+        });
+      });
+      throw new BadRequestException('Could not initiate payment. Please try again.');
+    }
 
     const updatedPayment = await this.prisma.payment.update({
       where: { id: result.payment.id },
@@ -119,7 +169,7 @@ export class PaymentsService {
       },
     });
 
-    return this.toPaymentDto(updatedPayment);
+    return this.toPaymentDto(updatedPayment, { redirectUrl: requestResult.url });
   }
 
   async verifyPaymentStatus(
@@ -195,7 +245,13 @@ export class PaymentsService {
     gatewayTransactionId?: string | null;
     createdAt: Date;
     updatedAt: Date;
-  }): PaymentDto {
+  }, options?: { redirectUrl?: string }): PaymentDto {
+    const redirectUrl =
+      options?.redirectUrl ??
+      (payment.status === PaymentStatus.PENDING && payment.gatewayTransactionId
+        ? this.zarinpalGateway.getPaymentUrl(payment.gatewayTransactionId)
+        : undefined);
+
     return {
       id: payment.id,
       registrationId: payment.registrationId,
@@ -205,6 +261,7 @@ export class PaymentsService {
       currency: payment.currency,
       status: payment.status,
       gatewayTransactionId: payment.gatewayTransactionId ?? undefined,
+      redirectUrl,
       createdAt: payment.createdAt.toISOString(),
       updatedAt: payment.updatedAt.toISOString(),
     };

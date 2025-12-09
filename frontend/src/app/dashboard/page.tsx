@@ -16,8 +16,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { isEventPast } from '@/lib/event-helpers';
-import { formatEventDateTimeForCard } from '@/lib/event-helpers';
+import { formatEventDateTimeForCard, getRegistrationWizardUrl, isEventPast } from '@/lib/event-helpers';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 
 export default function UserDashboardPage() {
@@ -108,7 +107,7 @@ export default function UserDashboardPage() {
                         )}
                          {reg.status === 'FAILED' && (
                            <Button size="sm" asChild>
-                              <Link href={`/payment/mock-gateway?paymentId=${reg.paymentId}`}>{t('actions.retryPayment')}</Link>
+                              <Link href={getRegistrationWizardUrl(reg.eventId, reg.ticketType, 5)}>{t('actions.retryPayment')}</Link>
                            </Button>
                         )}
                       </TableCell>

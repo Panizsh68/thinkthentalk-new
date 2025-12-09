@@ -16,6 +16,7 @@ export class ZarinpalGateway implements PaymentGateway {
   private readonly merchantId: string;
   private readonly callbackUrl: string;
   private readonly sandbox: boolean;
+  private readonly startPayBase: string;
 
   constructor(private readonly configService: ConfigService) {
     this.merchantId = this.configService.get<string>('ZARINPAL_MERCHANT_ID') ?? '';
@@ -28,6 +29,10 @@ export class ZarinpalGateway implements PaymentGateway {
       ? 'https://sandbox.zarinpal.com/pg/v4'
       : 'https://api.zarinpal.com/pg/v4';
 
+    this.startPayBase = this.sandbox
+      ? 'https://sandbox.zarinpal.com/pg/StartPay'
+      : 'https://www.zarinpal.com/pg/StartPay';
+
     this.http = axios.create({
       baseURL,
       timeout: 15_000,
@@ -35,19 +40,44 @@ export class ZarinpalGateway implements PaymentGateway {
   }
 
   async requestPayment(input: RequestPaymentInput): Promise<RequestPaymentResult> {
-    if (!this.merchantId || !this.callbackUrl) {
+    const callbackUrl = input.callbackUrl || this.callbackUrl;
+    if (!this.merchantId || !callbackUrl) {
       throw new Error('Zarinpal merchant configuration missing');
     }
 
     try {
-      // Placeholder structure; actual API payload will be added later
-      // const response = await this.http.post('/payment/request.json', {...});
-      // const { authority, url } = response.data.data;
-      // return { authority, url };
+      const payload: any = {
+        merchant_id: this.merchantId,
+        amount: Math.round(input.amount),
+        description: input.description || 'Event payment',
+        callback_url: callbackUrl,
+        metadata: input.metadata ?? {},
+      };
+
+      if (input.currency) {
+        payload.currency = input.currency === 'TOMAN' ? 'IRT' : 'IRR';
+      }
+
+      const response = await this.http.post('/payment/request.json', payload);
+      const { data, errors } = response.data ?? {};
+
+      if (errors) {
+        this.logger.error(`Zarinpal requestPayment error: ${JSON.stringify(errors)}`);
+        throw new Error('Payment provider unavailable');
+      }
+
+      if (!data || data.code !== 100 || !data.authority) {
+        this.logger.error(`Zarinpal requestPayment unexpected response: ${JSON.stringify(data)}`);
+        throw new Error('Payment provider unavailable');
+      }
+
+      const authority = data.authority as string;
+      const url = this.getPaymentUrl(authority);
+
       this.logger.debug(
-        `Requesting Zarinpal payment for amount=${input.amount}, callback=${this.callbackUrl}`,
+        `Requesting Zarinpal payment for amount=${input.amount}, callback=${callbackUrl}, authority=${authority}`,
       );
-      return { authority: 'PLACEHOLDER', url: 'https://example.com' };
+      return { authority, url };
     } catch (error) {
       this.logger.error('Zarinpal requestPayment failed', error);
       throw new Error('Payment provider unavailable');
@@ -60,16 +90,36 @@ export class ZarinpalGateway implements PaymentGateway {
     }
 
     try {
-      // const response = await this.http.post('/payment/verify.json', {...});
-      // const { ref_id } = response.data.data;
-      // return { success: true, referenceId: String(ref_id) };
+      const payload = {
+        merchant_id: this.merchantId,
+        amount: Math.round(input.amount),
+        authority: input.authority,
+      };
+
+      const response = await this.http.post('/payment/verify.json', payload);
+      const { data, errors } = response.data ?? {};
+
+      if (errors) {
+        this.logger.error(`Zarinpal verifyPayment error: ${JSON.stringify(errors)}`);
+        return { success: false };
+      }
+
+      if (data && (data.code === 100 || data.code === 101)) {
+        return { success: true, referenceId: String(data.ref_id) };
+      }
+
+      this.logger.warn(`Zarinpal verifyPayment failed with code=${data?.code}`);
       this.logger.debug(
         `Verifying Zarinpal payment for amount=${input.amount}, authority=${input.authority}`,
       );
-      return { success: true, referenceId: 'PLACEHOLDER_REF' };
+      return { success: false };
     } catch (error) {
       this.logger.error('Zarinpal verifyPayment failed', error);
       return { success: false };
     }
+  }
+
+  getPaymentUrl(authority: string): string {
+    return `${this.startPayBase}/${authority}`;
   }
 }

@@ -14,8 +14,7 @@ import { useLanguage } from '@/lib/i18n/language-provider';
 import type { UserRegistration } from '@/lib/types';
 import Link from 'next/link';
 import { MessageSquareQuote } from 'lucide-react';
-import { isEventPast } from '@/lib/event-helpers';
-import { formatEventDateTimeForCard } from '@/lib/event-helpers';
+import { formatEventDateTimeForCard, getRegistrationWizardUrl, isEventPast } from '@/lib/event-helpers';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 
 interface RegistrationCardProps {
@@ -74,7 +73,9 @@ export function RegistrationCard({ registration }: RegistrationCardProps) {
             )}
             {registration.status === 'FAILED' && (
             <Button size="sm" asChild>
-                <Link href={`/payment/mock-gateway?paymentId=${registration.paymentId}`}>{t('actions.retryPayment')}</Link>
+                <Link href={getRegistrationWizardUrl(registration.eventId, registration.ticketType, 5)}>
+                  {t('actions.retryPayment')}
+                </Link>
             </Button>
             )}
         </div>

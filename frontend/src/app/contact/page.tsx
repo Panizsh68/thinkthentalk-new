@@ -206,10 +206,10 @@ export default function ContactPage() {
             </CardHeader>
             <CardContent>
               <a
-                href="mailto:thinkthentalk@gmail.com"
+                href="mailto:thinkthentalkcommunity@gmail.com"
                 className="font-semibold text-primary underline-offset-4 hover:underline"
               >
-                thinkthentalk@gmail.com
+                thinkthentalkcommunity@gmail.com
               </a>
             </CardContent>
           </Card>
@@ -221,7 +221,7 @@ export default function ContactPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <a
-                href="https://instagram.com/thinkthentalk"
+                href="https://instagram.com/thinkthentalk_community"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-md border px-3 py-2 transition hover:bg-muted"
@@ -230,7 +230,7 @@ export default function ContactPage() {
                 <span className="font-medium">{t('contact.social.instagram')}</span>
               </a>
               <a
-                href="https://t.me/thinkthentalk"
+                href="https://t.me/ThinkThenTalkCommunity"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-md border px-3 py-2 transition hover:bg-muted"

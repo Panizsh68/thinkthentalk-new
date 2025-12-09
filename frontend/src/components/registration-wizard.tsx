@@ -185,6 +185,10 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
       formData: formData,
     }, {
       onSuccess: (payment) => {
+        if (payment.redirectUrl) {
+          window.location.href = payment.redirectUrl;
+          return;
+        }
         router.push(`/payment/mock-gateway?paymentId=${payment.id}`);
       },
       onError: (error) => {
