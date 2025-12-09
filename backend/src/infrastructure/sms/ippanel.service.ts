@@ -96,6 +96,11 @@ export class IppanelService {
       params,
     };
 
+    this.logger.log(
+      `IPPanel pattern request -> url=${this.patternUrl}, code=${payload.code}, from=${payload.from_number}, recipient=${recipient}`,
+    );
+    this.logger.debug(`IPPanel pattern payload: ${JSON.stringify(payload)}`);
+
     try {
       const response = await this.executeWithRetry(async () => {
         return this.patternClient.post<IppanelSendResponse>(this.patternUrl, payload, {

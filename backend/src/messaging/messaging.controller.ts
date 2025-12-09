@@ -51,12 +51,9 @@ export class MessagingController {
     patternCode?: string;
   }> {
     const otp = query.otp ?? this.generateOtp();
-    const patternOptions = query.patternCode ? { code: query.patternCode } : undefined;
-    const result = await this.ippanelService.sendPatternSms(
-      query.mobile,
-      { code: otp },
-      patternOptions,
-    );
+    const patternCode = query.patternCode;
+    const patternOptions = patternCode ? { code: patternCode } : undefined;
+    const result = await this.ippanelService.sendPatternSms(query.mobile, { code: otp }, patternOptions);
 
     return {
       success: result.success,
@@ -65,7 +62,7 @@ export class MessagingController {
       statusMessage: result.statusMessage,
       bulkId: result.bulkId,
       messageIds: result.messageIds ?? [],
-      patternCode: patternOptions?.code,
+      patternCode: patternOptions?.code ?? 'DEFAULT',
     };
   }
 
