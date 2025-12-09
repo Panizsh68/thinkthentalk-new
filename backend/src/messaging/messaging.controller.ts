@@ -49,6 +49,7 @@ export class MessagingController {
     bulkId?: string;
     messageIds?: string[];
     patternCode?: string;
+    endpoint?: string;
   }> {
     const otp = query.otp ?? this.generateOtp();
     const patternCode = query.patternCode;
@@ -62,7 +63,8 @@ export class MessagingController {
       statusMessage: result.statusMessage,
       bulkId: result.bulkId,
       messageIds: result.messageIds ?? [],
-      patternCode: patternOptions?.code ?? 'DEFAULT',
+      patternCode: result.usedPatternCode ?? patternOptions?.code ?? 'DEFAULT',
+      endpoint: result.requestUrl,
     };
   }
 

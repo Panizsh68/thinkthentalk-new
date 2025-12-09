@@ -26,6 +26,8 @@ export interface IppanelSendResult {
   statusMessage?: string;
   bulkId?: string;
   messageIds?: string[];
+  usedPatternCode?: string;
+  requestUrl?: string;
   raw?: unknown;
 }
 
@@ -114,7 +116,7 @@ export class IppanelService {
           result.success
         }, messageIds=${result.messageIds?.join(',') ?? 'n/a'})`,
       );
-      return result;
+      return { ...result, usedPatternCode: payload.code, requestUrl: this.patternUrl };
     } catch (error) {
       if (this.isPatternRejection(error)) {
         const rejection = this.mapErrorResponse(error);
@@ -123,7 +125,7 @@ export class IppanelService {
             rejection.statusMessage ?? 'unknown'
           })`,
         );
-        return rejection;
+        return { ...rejection, usedPatternCode: payload.code, requestUrl: this.patternUrl };
       }
       this.handleProviderError('pattern SMS', error);
     }
