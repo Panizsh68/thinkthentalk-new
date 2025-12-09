@@ -55,19 +55,22 @@ export class OtpService {
     context: OtpContext,
     requesterIp?: string,
   ): Promise<OtpResult> {
+    const normalizedMobile = this.normalizeMobile(mobile);
     await this.enforceRateLimits(mobile, requesterIp);
 
     const code = generateOtp();
-    const key = this.keyForOtp(context, mobile);
+    const key = this.keyForOtp(context, normalizedMobile);
 
     await this.redisService.setWithTTL(key, code, this.ttlSeconds);
+    this.logger.debug(`OTP stored key=${key} code=${code} ttl=${this.ttlSeconds}s`);
 
     return { code, expiresInSeconds: this.ttlSeconds };
   }
 
   async verifyOtp(mobile: string, context: OtpContext, otp: string): Promise<void> {
-    await this.incrementAndCheckLimit(this.keyForVerifyCount(mobile), this.verifyPerMobileLimit);
-    const key = this.keyForOtp(context, mobile);
+    const normalizedMobile = this.normalizeMobile(mobile);
+    await this.incrementAndCheckLimit(this.keyForVerifyCount(normalizedMobile), this.verifyPerMobileLimit);
+    const key = this.keyForOtp(context, normalizedMobile);
     const stored = await this.redisService.get<string>(key);
 
     if (!stored) {
@@ -80,12 +83,15 @@ export class OtpService {
 
     if (stored !== otp) {
       if (!this.isProd) {
-        this.logger.warn(`OTP mismatch for ${mobile}. Stored=${stored}, provided=${otp}; rejecting in dev.`);
+        this.logger.warn(
+          `OTP mismatch for ${mobile}. Stored=${stored}, provided=${otp}; rejecting in dev.`,
+        );
       }
       throw new InvalidOtpError();
     }
 
     await this.redisService.del(key);
+    this.logger.debug(`OTP verified and deleted key=${key}`);
   }
 
   private async enforceRateLimits(mobile: string, requesterIp?: string): Promise<void> {
@@ -126,5 +132,9 @@ export class OtpService {
 
   private keyForVerifyCount(mobile: string): string {
     return `otp:verify:mobile:${mobile}`;
+  }
+
+  private normalizeMobile(mobile: string): string {
+    return (mobile ?? '').replace(/\s+/g, '').trim();
   }
 }
