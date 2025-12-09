@@ -62,9 +62,11 @@ export class IppanelService {
     this.patternBaseUrl = configuredPatternBaseUrl.replace(/\/+$/, '');
     this.apiKey = this.configService.get<string>('ippanel.apiKey') ?? 'YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=';
     this.defaultFrom = this.configService.get<string>('ippanel.fromNumber') ?? '+983000505';
+    const configuredPatternCode = this.configService.get<string>('ippanel.otpPatternCode')?.trim();
     this.defaultPatternCode =
-      this.configService.get<string>('ippanel.otpPatternCode')?.trim() ||
-      this.hardcodedOtpPatternCode;
+      configuredPatternCode && configuredPatternCode.toLowerCase() !== 'otp'
+        ? configuredPatternCode
+        : this.hardcodedOtpPatternCode;
     this.patternUrl = `${this.patternBaseUrl}/api/send`;
     this.textUrl = `${this.baseUrl}/api/send/webservice`;
     this.httpClient = axios.create({ baseURL: this.baseUrl, timeout: 10_000 });
@@ -96,7 +98,7 @@ export class IppanelService {
     const payload = {
       sending_type: 'pattern',
       from_number: options?.from ?? this.defaultFrom,
-      code: options?.code ?? this.defaultPatternCode ?? this.hardcodedOtpPatternCode,
+      code: options?.code?.trim() ?? this.defaultPatternCode ?? this.hardcodedOtpPatternCode,
       recipients: [recipient],
       params,
     };
