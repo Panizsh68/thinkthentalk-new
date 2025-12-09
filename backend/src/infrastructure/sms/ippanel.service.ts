@@ -52,6 +52,7 @@ export class IppanelService {
   private readonly textUrl: string;
   private readonly defaultFrom: string;
   private readonly defaultPatternCode: string;
+  private readonly hardcodedOtpPatternCode = 'hijid9771y36ega';
 
   constructor(private readonly configService: ConfigService) {
     const configuredBaseUrl = this.configService.get<string>('ippanel.baseUrl') ?? 'https://edge.ippanel.com/v1';
@@ -61,7 +62,9 @@ export class IppanelService {
     this.patternBaseUrl = configuredPatternBaseUrl.replace(/\/+$/, '');
     this.apiKey = this.configService.get<string>('ippanel.apiKey') ?? 'YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=';
     this.defaultFrom = this.configService.get<string>('ippanel.fromNumber') ?? '+983000505';
-    this.defaultPatternCode = this.configService.get<string>('ippanel.otpPatternCode') ?? 'hijid9771y36ega';
+    this.defaultPatternCode =
+      this.configService.get<string>('ippanel.otpPatternCode')?.trim() ||
+      this.hardcodedOtpPatternCode;
     this.patternUrl = `${this.patternBaseUrl}/api/send`;
     this.textUrl = `${this.baseUrl}/api/send/webservice`;
     this.httpClient = axios.create({ baseURL: this.baseUrl, timeout: 10_000 });
@@ -93,7 +96,7 @@ export class IppanelService {
     const payload = {
       sending_type: 'pattern',
       from_number: options?.from ?? this.defaultFrom,
-      code: options?.code ?? this.defaultPatternCode,
+      code: options?.code ?? this.defaultPatternCode ?? this.hardcodedOtpPatternCode,
       recipients: [recipient],
       params,
     };
