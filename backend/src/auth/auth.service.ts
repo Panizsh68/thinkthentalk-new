@@ -48,9 +48,8 @@ export class AuthService {
     const patternResult = await this.ippanelService.sendPatternSms(mobile, { code: result.code });
     if (!patternResult.success) {
       this.logger.warn(
-        `IPPanel pattern send failed (status=${patternResult.statusCode ?? 'n/a'}); falling back to text SMS.`,
+        `IPPanel pattern send failed (status=${patternResult.statusCode ?? 'n/a'}).`,
       );
-      await this.ippanelService.sendTextSms(mobile, `Your OTP code is: ${result.code}`);
     }
   }
 

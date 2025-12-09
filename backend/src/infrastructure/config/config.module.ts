@@ -68,6 +68,7 @@ const envFilePath = [`.env.${nodeEnv}`, '.env'];
           }),
         ZARINPAL_SANDBOX: Joi.boolean().default(true),
         IPPANEL_BASE_URL: Joi.string().uri().default('https://edge.ippanel.com/v1'),
+        IPPANEL_PATTERN_BASE_URL: Joi.string().uri().default('https://edge.ippanel.com/v1').optional(),
         IPPANEL_API_KEY: Joi.string().when('NODE_ENV', {
           is: 'production',
           then: Joi.required(),

@@ -1,0 +1,16 @@
+module.exports = {
+  apps: [
+    {
+      name: "think-backend",
+      script: "dist/src/main.js",
+      env_file: ".env.production", // اگر نمی‌خوای از env_file استفاده کنی می‌تونی این خط رو حذف کنی
+      env_production: {
+        NODE_ENV: "production",
+        PORT: 3000, // این همون پورتیه که می‌خوای
+
+        // اگه می‌خوای مطمئن باشی Prisma اوکیه، اینو هم اینجا ست کن:
+        DATABASE_URL: "mysql://thinkuser:123@127.0.0.1:3306/think_then_talk_prod",
+      },
+    },
+  ],
+};

@@ -7,9 +7,15 @@ interface IppanelSendResponse {
     code?: number;
     message?: string;
   };
+  meta?: {
+    status?: number;
+    message?: string;
+    [key: string]: unknown;
+  };
   data?: {
     bulk_id?: string;
     message_ids?: string[];
+    message_id?: string;
   };
   [key: string]: unknown;
 }
@@ -36,19 +42,28 @@ interface SendTextOptions {
 export class IppanelService {
   private readonly logger = new Logger(IppanelService.name);
   private readonly httpClient: AxiosInstance;
+  private readonly patternClient: AxiosInstance;
   private readonly apiKey: string;
+  private readonly baseUrl: string;
+  private readonly patternBaseUrl: string;
+  private readonly patternUrl: string;
+  private readonly textUrl: string;
   private readonly defaultFrom: string;
   private readonly defaultPatternCode: string;
 
   constructor(private readonly configService: ConfigService) {
-    const baseUrl = this.configService.get<string>('ippanel.baseUrl') ?? 'https://edge.ippanel.com/v1';
-    this.apiKey = this.configService.get<string>('ippanel.apiKey') ?? '';
-    this.defaultFrom = this.configService.get<string>('ippanel.fromNumber') ?? '';
-    this.defaultPatternCode = this.configService.get<string>('ippanel.otpPatternCode') ?? 'otp';
-    this.httpClient = axios.create({
-      baseURL: baseUrl,
-      timeout: 10_000,
-    });
+    const configuredBaseUrl = this.configService.get<string>('ippanel.baseUrl') ?? 'https://edge.ippanel.com/v1';
+    const configuredPatternBaseUrl =
+      this.configService.get<string>('ippanel.patternBaseUrl') ?? 'https://edge.ippanel.com/v1';
+    this.baseUrl = configuredBaseUrl.replace(/\/+$/, '');
+    this.patternBaseUrl = configuredPatternBaseUrl.replace(/\/+$/, '');
+    this.apiKey = this.configService.get<string>('ippanel.apiKey') ?? 'YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=';
+    this.defaultFrom = this.configService.get<string>('ippanel.fromNumber') ?? '+983000505';
+    this.defaultPatternCode = this.configService.get<string>('ippanel.otpPatternCode') ?? 'hijid9771y36ega';
+    this.patternUrl = `${this.patternBaseUrl}/sms/pattern/send`;
+    this.textUrl = `${this.baseUrl}/api/send/webservice`;
+    this.httpClient = axios.create({ baseURL: this.baseUrl, timeout: 10_000 });
+    this.patternClient = axios.create({ baseURL: this.patternBaseUrl, timeout: 10_000 });
   }
 
   async sendPatternSms(
@@ -63,26 +78,27 @@ export class IppanelService {
         statusMessage: 'IPPanel API key missing',
       };
     }
-    const payload = {
-      sending_type: 'pattern',
-      from_number: options?.from ?? this.defaultFrom,
-      code: options?.code ?? this.defaultPatternCode,
-      recipients: this.normalizeRecipients(to),
-      params,
-    };
-
-    if (!payload.recipients.length) {
+    const recipients = this.normalizeRecipients(to);
+    const recipient = recipients[0];
+    if (!recipient) {
       this.logger.warn('Attempted to send IPPanel pattern SMS with no recipients.');
       throw new BadRequestException('At least one recipient is required');
     }
+    if (recipients.length > 1) {
+      this.logger.warn(`Pattern SMS received ${recipients.length} recipients; using only the first.`);
+    }
+
+    const payload = {
+      pattern_code: options?.code ?? this.defaultPatternCode,
+      originator: options?.from ?? this.defaultFrom,
+      recipient,
+      values: params,
+    };
 
     try {
       const response = await this.executeWithRetry(async () => {
-        return this.httpClient.post<IppanelSendResponse>('/api/send', payload, {
-          headers: {
-            Authorization: this.apiKey,
-            'Content-Type': 'application/json',
-          },
+        return this.patternClient.post<IppanelSendResponse>(this.patternUrl, payload, {
+          headers: this.buildPatternHeaders(),
         });
       }, 'pattern SMS');
 
@@ -127,7 +143,7 @@ export class IppanelService {
 
     try {
       const response = await this.executeWithRetry(async () => {
-        return this.httpClient.get<IppanelSendResponse>('/api/send/webservice', {
+        return this.httpClient.get<IppanelSendResponse>(this.textUrl, {
           params: {
             apikey: this.apiKey,
             from: options?.from ?? this.defaultFrom,
@@ -173,12 +189,19 @@ export class IppanelService {
   }
 
   private mapResponse(data: IppanelSendResponse): IppanelSendResult {
-    const statusCode = data?.status?.code;
-    const statusMessage = data?.status?.message ?? (typeof data?.status === 'string' ? data.status : undefined);
+    const statusCode =
+      data?.status?.code ??
+      (typeof (data as any)?.meta?.status === 'number' ? ((data as any).meta.status as number) : undefined);
+    const statusMessage =
+      data?.status?.message ??
+      (typeof data?.status === 'string' ? data.status : undefined) ??
+      (typeof (data as any)?.meta?.message === 'string' ? ((data as any).meta.message as string) : undefined);
     const bulkId = data?.data?.bulk_id ?? (typeof data?.bulk_id === 'string' ? data.bulk_id : undefined);
     const inferredMessageIds =
       data?.data?.message_ids ??
       (Array.isArray((data as any)?.message_ids) ? ((data as any).message_ids as string[]) : undefined) ??
+      (typeof data?.data?.message_id === 'string' ? [data.data.message_id] : undefined) ??
+      (typeof (data as any)?.message_id === 'string' ? ([(data as any).message_id] as string[]) : undefined) ??
       (Array.isArray((data?.data as any)?.message_outbox_ids)
         ? ((data?.data as any).message_outbox_ids as Array<string | number>).map((id) => String(id))
         : undefined);
@@ -246,7 +269,7 @@ export class IppanelService {
       return {
         success: false,
         statusCode: error.response?.status,
-        statusMessage: this.extractStatusMessage(data),
+        statusMessage: this.extractStatusMessage(data) ?? error.response?.statusText,
         raw: data,
       };
     }
@@ -263,5 +286,20 @@ export class IppanelService {
       return metaMessage;
     }
     return data?.status?.message;
+  }
+
+  private buildAuthHeaders(): Record<string, string> {
+    return {
+      Authorization: `AccessKey ${this.apiKey}`,
+      apikey: this.apiKey,
+      'Content-Type': 'application/json',
+    };
+  }
+
+  private buildPatternHeaders(): Record<string, string> {
+    return {
+      Authorization: this.apiKey,
+      'Content-Type': 'application/json',
+    };
   }
 }
