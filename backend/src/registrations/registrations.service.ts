@@ -9,6 +9,7 @@ import {
 import { UpdateRegistrationDto } from './dto/update-registration.dto';
 import { UpdateRegistrationAdminDto } from './dto/update-registration-admin.dto';
 import { BadRequestException } from '@nestjs/common';
+import { RegistrationStatus } from '@prisma/client';
 
 @Injectable()
 export class RegistrationsService {
@@ -29,7 +30,10 @@ export class RegistrationsService {
   async exportAdminRegistrations(
     filters: AdminRegistrationFilter,
   ): Promise<UserRegistrationDetailsDto[]> {
-    const entities = await this.registrationsRepository.findAllAdminRegistrations(filters);
+    const entities = await this.registrationsRepository.findAllAdminRegistrations({
+      ...filters,
+      status: RegistrationStatus.PAID,
+    });
     return entities.map(userRegistrationDetailsEntityToDto) as any;
   }
 

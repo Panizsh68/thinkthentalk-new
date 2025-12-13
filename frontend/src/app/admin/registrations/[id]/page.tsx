@@ -99,6 +99,10 @@ export default function RegistrationDetailPage() {
     { field: 'firstNameFa', oldValue: 'کاربر', newValue: 'کاربر تستی', user: 'admin@thinkthentalk.com', date: new Date(Date.now() - 24 * 60 * 60 * 1000) },
   ];
 
+  const payment = registration.payment;
+  const paymentAmount = payment ? getFormattedPrice(payment.amount, payment.currency, t) : '—';
+  const gatewayId = payment?.gatewayTransactionId || 'N/A';
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
@@ -135,11 +139,11 @@ export default function RegistrationDetailPage() {
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">{t('registration.summary.price')}</span>
-              <span className="font-bold">{getFormattedPrice(registration.payment.amount, registration.payment.currency, t)}</span>
+              <span className="font-bold">{paymentAmount}</span>
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">{t('admin.registrations.details.gatewayId')}</span>
-              <span className="font-mono text-xs">{registration.payment.gatewayTransactionId || 'N/A'}</span>
+              <span className="font-mono text-xs">{gatewayId}</span>
             </div>
           </CardContent>
           <CardFooter>
@@ -192,4 +196,3 @@ export default function RegistrationDetailPage() {
     </div>
   );
 }
-

@@ -71,7 +71,7 @@ export class AuthService {
     const payload = { sub: user.id, type: 'USER' as const };
     const token = await this.jwtService.signAsync(payload);
 
-    this.logger.log(`Issued user token for ${mobile}: ${token}`);
+    this.logger.log(`Issued user token for ${mobile}`);
     return { token, user: toUserDto(user) };
   }
 
@@ -95,7 +95,7 @@ export class AuthService {
     const payload = { sub: admin.id, type: 'ADMIN' as const, role: admin.role };
     const token = await this.jwtService.signAsync(payload);
 
-    this.logger.log(`Issued admin token for ${email}: ${token}`);
+    this.logger.log(`Issued admin token for ${email}`);
     return { token, user: toAdminUserDto(admin) };
   }
 

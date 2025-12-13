@@ -1,17 +1,23 @@
 import {
   Controller,
   Post,
+  Get,
   Delete,
   Param,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  UseGuards,
   Body,
+  NotFoundException,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import type { Express } from 'express';
+import type { Response } from 'express';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 import {
   ApiTags,
   ApiOperation,
@@ -22,6 +28,7 @@ import {
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 import { StorageService } from '../infrastructure/storage/storage.service';
 import { FileCategory, StoredFile } from '../infrastructure/storage/storage.types';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -29,11 +36,14 @@ import { ErrorResponseDto } from '../common/dto/error-response.dto';
 
 @ApiTags('Upload')
 @ApiBearerAuth('bearerAuth')
-@UseGuards(JwtAuthGuard)
 @Controller({ path: 'upload' })
 export class UploadController {
-  constructor(private readonly storageService: StorageService) { }
+  constructor(
+    private readonly storageService: StorageService,
+    private readonly configService: ConfigService,
+  ) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post('event-poster')
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
@@ -89,10 +99,18 @@ export class UploadController {
     };
   }
 
-  @Post('user-avatar')
+  /*
+   * Temporarily disabled user-avatar upload until the feature is needed again.
+   * @Post('user-avatar')
+   * ...
+   * async uploadUserAvatar(...) { ... }
+   */
+
+  @UseGuards(JwtAuthGuard)
+  @Post('event-resource')
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB for avatars
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB for resource files
   }))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -102,44 +120,49 @@ export class UploadController {
         file: {
           type: 'string',
           format: 'binary',
-          description: 'User avatar image (JPG, PNG, WebP)',
+          description: 'Event resource file (PDF, DOCX, XLSX, ZIP, PNG, JPG, etc.)',
         },
       },
     },
   })
   @ApiOperation({
-    summary: 'Upload user avatar',
-    description: 'Upload avatar image for user profile.',
+    summary: 'Upload event resource file',
+    description: 'Upload a downloadable resource for an event. Returns a URL to attach to the event resources list.',
   })
   @ApiCreatedResponse({
-    description: 'Avatar uploaded successfully',
+    description: 'Resource uploaded successfully',
     schema: {
       type: 'object',
       properties: {
         id: { type: 'string' },
         url: { type: 'string' },
         filename: { type: 'string' },
+        originalName: { type: 'string' },
+        size: { type: 'number' },
       },
     },
   })
   @ApiBadRequestResponse({ description: 'Invalid file', type: ErrorResponseDto })
   @ApiUnauthorizedResponse({ description: 'Not authenticated', type: ErrorResponseDto })
-  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File): Promise<Partial<StoredFile>> {
+  async uploadEventResource(@UploadedFile() file: Express.Multer.File): Promise<Partial<StoredFile>> {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
 
     const stored = await this.storageService.uploadFile(file, {
-      category: FileCategory.USER_AVATAR,
+      category: FileCategory.EVENT_RESOURCE,
     });
 
     return {
       id: stored.id,
       url: stored.url,
       filename: stored.filename,
+      originalName: stored.originalName,
+      size: stored.size,
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('team-member')
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
@@ -191,6 +214,29 @@ export class UploadController {
     };
   }
 
+  @Get('files/:category/:filename')
+  async serveUploadedFile(
+    @Param('category') category: string,
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    const uploadsDir = this.configService.get<string>('UPLOADS_DIR')
+      ? path.resolve(this.configService.get<string>('UPLOADS_DIR') as string)
+      : path.join(process.cwd(), 'uploads');
+
+    const safeCategory = category.replace(/\.\./g, '');
+    const filePath = path.join(uploadsDir, safeCategory, filename);
+
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw new NotFoundException('File not found');
+    }
+
+    res.sendFile(filePath);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('sponsor-logo')
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
@@ -242,6 +288,7 @@ export class UploadController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':category/:filename')
   @ApiOperation({
     summary: 'Delete uploaded file',

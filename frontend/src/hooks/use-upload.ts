@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import {
   uploadEventPoster,
-  uploadUserAvatar,
   uploadTeamMember,
   uploadSponsorLogo,
+  uploadEventResource,
   deleteUploadedFile,
   UploadResponse,
 } from '@/lib/api/upload';
@@ -19,21 +19,6 @@ export function useUploadEventPoster() {
         throw new Error('File size exceeds 50MB limit');
       }
       return uploadEventPoster(file);
-    },
-  });
-}
-
-/**
- * Hook for uploading user avatar
- */
-export function useUploadUserAvatar() {
-  return useMutation({
-    mutationFn: async (file: File) => {
-      if (!file) throw new Error('No file selected');
-      if (file.size > 10 * 1024 * 1024) {
-        throw new Error('File size exceeds 10MB limit');
-      }
-      return uploadUserAvatar(file);
     },
   });
 }
@@ -64,6 +49,21 @@ export function useUploadSponsorLogo() {
         throw new Error('File size exceeds 5MB limit');
       }
       return uploadSponsorLogo(file);
+    },
+  });
+}
+
+/**
+ * Hook for uploading event resource file
+ */
+export function useUploadEventResource() {
+  return useMutation({
+    mutationFn: async (file: File) => {
+      if (!file) throw new Error('No file selected');
+      if (file.size > 20 * 1024 * 1024) {
+        throw new Error('File size exceeds 20MB limit');
+      }
+      return uploadEventResource(file);
     },
   });
 }

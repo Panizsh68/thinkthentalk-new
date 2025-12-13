@@ -1,7 +1,7 @@
 
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createPayment, getPaymentById, verifyPayment } from '@/lib/api/payments';
+import { createPayment, getPaymentById, getPaymentPublic, verifyPayment } from '@/lib/api/payments';
 import { getAdminPayments } from '@/lib/api/admin-payments';
 import type { CreatePaymentBodyDto, AdminPaymentsQueryDto } from '@/lib/types';
 
@@ -13,6 +13,9 @@ export const paymentKeys = {
   adminList: (filters: AdminPaymentsQueryDto) => [...paymentKeys.adminLists(), filters] as const,
   details: () => [...paymentKeys.all, 'detail'] as const,
   detail: (id: string) => [...paymentKeys.details(), id] as const,
+  publicDetails: () => [...paymentKeys.all, 'public-detail'] as const,
+  publicDetail: (id: string, status?: string, authority?: string | null) =>
+    [...paymentKeys.publicDetails(), id, status ?? null, authority ?? null] as const,
 };
 
 export function useCreatePaymentMutation() {
@@ -29,6 +32,17 @@ export function usePaymentQuery(paymentId: string | null) {
   return useQuery({
     queryKey: paymentKeys.detail(paymentId || ''),
     queryFn: () => getPaymentById(paymentId!),
+    enabled: !!paymentId,
+  });
+}
+
+export function usePaymentPublicQuery(
+  paymentId: string | null,
+  params?: { status?: 'SUCCESS' | 'FAILED'; authority?: string | null },
+) {
+  return useQuery({
+    queryKey: paymentKeys.publicDetail(paymentId || '', params?.status, params?.authority ?? null),
+    queryFn: () => getPaymentPublic(paymentId!, params),
     enabled: !!paymentId,
   });
 }

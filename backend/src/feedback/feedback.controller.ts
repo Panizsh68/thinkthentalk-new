@@ -51,7 +51,7 @@ export class FeedbackController {
   @ApiBody({ schema: { type: 'object', properties: { answers: { $ref: '#/components/schemas/EvaluationAnswers' } } } })
   @ApiOkResponse({
     description: 'Submission successful.',
-    schema: { type: 'object', properties: { success: { type: 'boolean' } } },
+    schema: { type: 'object', properties: { success: { type: 'boolean' }, eventId: { type: 'string' } } },
   })
   @ApiBadRequestResponse({ description: 'Invalid answers or form already submitted.', type: ErrorResponseDto })
   @ApiNotFoundResponse({ description: 'Event or form not found.', type: ErrorResponseDto })

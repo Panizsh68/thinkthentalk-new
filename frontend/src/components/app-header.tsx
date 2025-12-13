@@ -13,9 +13,10 @@ import { useEffect, useState } from 'react';
 
 // New component to safely render client-side controls
 function HeaderControls() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { isAuthenticated } = useAuth();
   const [isClient, setIsClient] = useState(false);
+  const languageLabel = language === 'fa' ? 'فارسی' : 'English';
 
   useEffect(() => {
     setIsClient(true);
@@ -27,6 +28,9 @@ function HeaderControls() {
 
   return (
      <div className="flex items-center gap-2">
+        <span className="text-xs font-medium px-2 py-1 rounded-full border border-border/60">
+          {languageLabel}
+        </span>
         <LanguageSwitcher />
         <ThemeToggle />
         {isAuthenticated ? (

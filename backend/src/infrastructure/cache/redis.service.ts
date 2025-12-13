@@ -19,7 +19,8 @@ export class RedisService {
 
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
     try {
-      await this.cacheManager.set(key, value, ttlSeconds ?? undefined);
+      const ttlMs = this.toMilliseconds(ttlSeconds);
+      await this.cacheManager.set(key, value, ttlMs);
     } catch (error) {
       this.logger.error(`Failed to set key "${key}" in cache`, error);
     }
@@ -117,5 +118,11 @@ export class RedisService {
       this.logger.error('Redis health check failed', error);
       return false;
     }
+  }
+
+  private toMilliseconds(ttlSeconds?: number): number | undefined {
+    if (ttlSeconds === undefined || ttlSeconds === null) return undefined;
+    if (ttlSeconds <= 0) return 0;
+    return ttlSeconds * 1000;
   }
 }

@@ -5,6 +5,7 @@ import { EvaluationFormDto } from './dto/evaluation-form.dto';
 import { EvaluationQuestionDto } from './dto/evaluation-question.dto';
 import { EvaluationResponseDto } from './dto/evaluation-response.dto';
 import { EvaluationSubmissionDto } from './dto/evaluation-submission.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class FeedbackService {
@@ -45,8 +46,8 @@ export class FeedbackService {
   async submitEvaluation(
     evaluationId: string,
     userId: string,
-    answers: Record<string, string | number>,
-  ): Promise<{ success: boolean }> {
+    answers: Record<string, string | number | boolean>,
+  ): Promise<{ success: boolean; eventId: string }> {
     const form = await this.prisma.evaluationForm.findUnique({
       where: { id: evaluationId },
       include: { questions: true },
@@ -80,7 +81,34 @@ export class FeedbackService {
       },
     });
 
-    return { success: true };
+    return { success: true, eventId: form.eventId };
+  }
+
+  async getEvaluationFormForAdmin(eventId: string): Promise<EvaluationFormDto> {
+    const event = await this.prisma.event.findUnique({ where: { id: eventId } });
+    if (!event) {
+      throw new NotFoundException('Event not found.');
+    }
+
+    let form = await this.prisma.evaluationForm.findFirst({
+      where: { eventId },
+      include: { questions: true },
+    });
+
+    // Create the form record on first access so admins can start adding questions right away.
+    if (!form) {
+      form = await this.prisma.evaluationForm.create({
+        data: { eventId },
+        include: { questions: true },
+      });
+    }
+
+    return {
+      id: form.id,
+      eventId: form.eventId,
+      submitted: false,
+      questions: form.questions.map(this.toQuestionDto),
+    };
   }
 
   async saveEvaluationForm(
@@ -90,6 +118,18 @@ export class FeedbackService {
     if (!questions || !Array.isArray(questions)) {
       throw new BadRequestException('Invalid data.');
     }
+
+    const event = await this.prisma.event.findUnique({ where: { id: eventId } });
+    if (!event) {
+      throw new NotFoundException('Event not found.');
+    }
+
+    const normalizedQuestions = questions.map((q) => ({
+      id: q.id || randomUUID(),
+      type: q.type,
+      label: q.label,
+      required: q.required,
+    }));
 
     let form = await this.prisma.evaluationForm.findFirst({ where: { eventId } });
 
@@ -102,7 +142,7 @@ export class FeedbackService {
     await this.prisma.$transaction([
       this.prisma.evaluationQuestion.deleteMany({ where: { formId: form.id } }),
       this.prisma.evaluationQuestion.createMany({
-        data: questions.map((q) => ({
+        data: normalizedQuestions.map((q) => ({
           id: q.id,
           formId: form.id,
           type: q.type,
@@ -112,17 +152,10 @@ export class FeedbackService {
       }),
     ]);
 
-    const savedQuestions = questions.map((q) => ({
-      id: q.id,
-      type: q.type,
-      label: q.label,
-      required: q.required,
-    }));
-
     return {
       id: form.id,
       eventId: form.eventId,
-      questions: savedQuestions,
+      questions: normalizedQuestions,
       submitted: false,
     };
   }
@@ -157,7 +190,7 @@ export class FeedbackService {
 
   private validateAnswers(
     questions: EvaluationQuestionDto[],
-    answers: Record<string, string | number>,
+    answers: Record<string, string | number | boolean>,
   ) {
     for (const q of questions) {
       const ans = answers[q.id];
@@ -169,6 +202,9 @@ export class FeedbackService {
           throw new BadRequestException('Invalid answers.');
         }
         if (q.type === EvaluationQuestionType.TEXT && typeof ans !== 'string') {
+          throw new BadRequestException('Invalid answers.');
+        }
+        if ((q as any).type === 'YES_NO' && typeof ans !== 'boolean') {
           throw new BadRequestException('Invalid answers.');
         }
       }
@@ -197,4 +233,47 @@ export class FeedbackService {
     answers: s.answers as any,
     submittedAt: s.submittedAt.toISOString(),
   });
+
+  async getEventRating(eventId: string): Promise<{ average: number | null; count: number }> {
+    const form = await this.prisma.evaluationForm.findFirst({
+      where: { eventId },
+      include: { questions: true },
+    });
+
+    if (!form) {
+      return { average: null, count: 0 };
+    }
+
+    const ratingQuestionIds = form.questions
+      .filter((q) => q.type === EvaluationQuestionType.RATING)
+      .map((q) => q.id);
+
+    if (ratingQuestionIds.length === 0) {
+      return { average: null, count: 0 };
+    }
+
+    const submissions = await this.prisma.evaluationSubmission.findMany({
+      where: { evaluationFormId: form.id },
+      select: { answers: true },
+    });
+
+    let total = 0;
+    let count = 0;
+
+    for (const sub of submissions) {
+      const answers = sub.answers as Record<string, unknown>;
+      ratingQuestionIds.forEach((id) => {
+        const value = answers[id];
+        if (typeof value === 'number') {
+          total += value;
+          count += 1;
+        }
+      });
+    }
+
+    return {
+      average: count > 0 ? total / count : null,
+      count,
+    };
+  }
 }

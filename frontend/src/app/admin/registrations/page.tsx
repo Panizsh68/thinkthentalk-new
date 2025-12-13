@@ -28,6 +28,32 @@ type RegistrationFilters = {
   dateRange?: { from?: Date; to?: Date };
 };
 
+const isPlaceholder = (value?: string | null) => {
+  if (!value) return true;
+  const normalized = value.trim().toLowerCase();
+  return ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'].includes(normalized);
+};
+
+const getDisplayName = (reg: UserRegistrationDetails) => {
+  const pairs: Array<{ first?: string | null; last?: string | null }> = [
+    reg.formData ? { first: (reg.formData as any).firstNameFa, last: (reg.formData as any).lastNameFa } : {},
+    reg.user ? { first: reg.user.firstNameFa, last: reg.user.lastNameFa } : {},
+    reg.formData ? { first: (reg.formData as any).firstNameEn, last: (reg.formData as any).lastNameEn } : {},
+    reg.user ? { first: reg.user.firstNameEn, last: reg.user.lastNameEn } : {},
+  ];
+
+  for (const pair of pairs) {
+    const first = pair.first;
+    const last = pair.last;
+    const hasName = (!isPlaceholder(first) && first) || (!isPlaceholder(last) && last);
+    if (hasName) {
+      return `${first ?? ''} ${last ?? ''}`.trim();
+    }
+  }
+
+  return reg.user?.mobile ?? '';
+};
+
 
 export default function AdminRegistrationsPage() {
   const { t, language } = useLanguage();
@@ -46,6 +72,11 @@ export default function AdminRegistrationsPage() {
         return eventMatch && statusMatch && fromMatch && toMatch;
     });
   }, [registrations, filters]);
+
+  const paidRegistrationsCount = useMemo(
+    () => filteredRegistrations.filter((reg) => reg.status === 'PAID').length,
+    [filteredRegistrations],
+  );
 
   const handleFilterChange = (key: keyof RegistrationFilters, value: any) => {
     setFilters(prev => {
@@ -69,27 +100,102 @@ export default function AdminRegistrationsPage() {
   }
 
   const handleExport = () => {
-    const dataToExport = filteredRegistrations.map(reg => ({
-        id: reg.id,
-        userName: `${reg.user.firstNameFa || ''} ${reg.user.lastNameFa || ''}`.trim() || reg.user.mobile,
-        mobile: reg.user.mobile,
-        event: getLocalizedTextValue(reg.event.title, language),
-        ticketType: t(`tickets.${reg.ticketType.toLowerCase()}`),
-        status: t(`registration.status.${reg.status.toLowerCase()}`),
-        registrationDate: format(new Date(reg.createdAt), 'yyyy-MM-dd HH:mm'),
-    }));
+    const paidRegistrations = filteredRegistrations.filter((reg) => reg.status === 'PAID');
+    if (paidRegistrations.length === 0) {
+      return;
+    }
+
+    const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+    const pick = (formValue: any, userValue: any) => {
+      const candidates = [formValue, userValue];
+      for (const value of candidates) {
+        if (value === null || value === undefined) continue;
+        const str = String(value).trim();
+        if (!str) continue;
+        if (placeholders.includes(str.toLowerCase())) continue;
+        return str;
+      }
+      return '';
+    };
+
+    const dataToExport = paidRegistrations.map((reg) => {
+      const form = (reg.formData as any) ?? {};
+      const user = reg.user ?? {};
+      const eventTitle = getLocalizedTextValue(reg.event.title, language);
+      const eventStart = reg.event.startDateTime
+        ? new Date(reg.event.startDateTime).toISOString()
+        : '';
+
+      return {
+        registrationId: reg.id,
+        userId: reg.userId,
+        eventId: reg.event.id,
+        eventTitle,
+        eventStart,
+        ticketType: reg.ticketType,
+        registrationStatus: reg.status,
+        paymentStatus: reg.payment?.status ?? '',
+        paymentAmount: reg.payment?.amount ?? '',
+        paymentId: reg.payment?.id ?? '',
+        gatewayTransactionId: reg.payment?.gatewayTransactionId ?? '',
+        createdAt: new Date(reg.createdAt).toISOString(),
+        firstNameFa: pick(form.firstNameFa, user.firstNameFa),
+        lastNameFa: pick(form.lastNameFa, user.lastNameFa),
+        firstNameEn: pick(form.firstNameEn, user.firstNameEn),
+        lastNameEn: pick(form.lastNameEn, user.lastNameEn),
+        gender: form.gender ?? user.gender ?? '',
+        age: form.age ?? user.age ?? '',
+        mobile: pick(form.mobile, user.mobile),
+        email: pick(form.email, user.email),
+        educationLevel: pick(form.educationLevel, user.educationLevel),
+        fieldOfStudy: pick(form.fieldOfStudy, user.fieldOfStudy),
+        isEmployed: (form.isEmployed ?? user.isEmployed ?? '') as any,
+        jobTitle: pick(form.jobTitle, user.jobTitle),
+        languageLevel: pick(form.languageLevel, user.languageLevel),
+        referralSource: form.referralSource ?? '',
+        referrerName: form.referrerName ?? '',
+        otherReferralSource: form.otherReferralSource ?? '',
+        acceptedRules: form.acceptedRules ?? '',
+      };
+    });
 
     const headers = {
-        id: t('admin.export.registrationId'),
-        userName: t('admin.export.user'),
-        mobile: t('admin.export.mobile'),
-        event: t('admin.export.event'),
-        ticketType: t('admin.export.ticketType'),
-        status: t('admin.export.status'),
-        registrationDate: t('admin.export.registrationDate'),
+      registrationId: t('admin.export.registrationId'),
+      userId: 'User ID',
+      eventId: t('admin.export.event'),
+      eventTitle: t('admin.export.event'),
+      eventStart: t('admin.registrations.table.date'),
+      ticketType: t('admin.export.ticketType'),
+      registrationStatus: t('admin.export.status'),
+      paymentStatus: t('admin.export.status'),
+      paymentAmount: t('admin.export.amount'),
+      paymentId: t('admin.export.paymentId'),
+      gatewayTransactionId: 'Gateway ID',
+      createdAt: t('admin.export.registrationDate'),
+      firstNameFa: t('registration.fields.firstNameFa'),
+      lastNameFa: t('registration.fields.lastNameFa'),
+      firstNameEn: t('registration.fields.firstNameEn'),
+      lastNameEn: t('registration.fields.lastNameEn'),
+      gender: t('registration.fields.gender'),
+      age: t('registration.fields.age'),
+      mobile: t('admin.export.mobile'),
+      email: t('registration.fields.email'),
+      educationLevel: t('registration.fields.educationLevel'),
+      fieldOfStudy: t('registration.fields.fieldOfStudy'),
+      isEmployed: t('registration.fields.isEmployed'),
+      jobTitle: t('registration.fields.jobTitle'),
+      languageLevel: t('registration.fields.languageLevel'),
+      referralSource: t('registration.fields.referralSource'),
+      referrerName: t('registration.fields.referrerName'),
+      otherReferralSource: t('registration.fields.otherReferralSource'),
+      acceptedRules: t('registration.fields.acceptRules'),
     };
-    
-    exportToCsv(dataToExport, headers, `registrations_${new Date().toISOString().split('T')[0]}.csv`);
+
+    exportToCsv(
+      dataToExport,
+      headers,
+      `registrations_paid_${new Date().toISOString().split('T')[0]}.csv`,
+    );
   }
 
   return (
@@ -99,7 +205,7 @@ export default function AdminRegistrationsPage() {
           <h1 className="text-2xl font-bold">{t('admin.registrations.title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('admin.registrations.subtitle')}</p>
         </div>
-        <Button onClick={handleExport} disabled={filteredRegistrations.length === 0}>
+        <Button onClick={handleExport} disabled={paidRegistrationsCount === 0}>
             <Download className="mr-2 h-4 w-4" />
             {t('admin.export.exportCsv')}
         </Button>
@@ -224,7 +330,7 @@ const getStatusVariant = (status: 'PAID' | 'PENDING' | 'FAILED' | 'CANCELLED') =
 
 function RegistrationTableRow({ registration: reg }: { registration: UserRegistrationDetails }) {
     const { t, language } = useLanguage();
-    const userName = reg.user.firstNameFa ? `${reg.user.firstNameFa} ${reg.user.lastNameFa}` : reg.user.mobile;
+    const userName = getDisplayName(reg);
     const formattedDate = getFormattedDateTime(new Date(reg.createdAt), language, 'card');
     return (
         <TableRow>
@@ -245,7 +351,7 @@ function RegistrationTableRow({ registration: reg }: { registration: UserRegistr
 
 function RegistrationCardAdmin({ registration: reg }: { registration: UserRegistrationDetails }) {
     const { t, language } = useLanguage();
-    const userName = reg.user.firstNameFa ? `${reg.user.firstNameFa} ${reg.user.lastNameFa}` : reg.user.mobile;
+    const userName = getDisplayName(reg);
     const formattedDate = getFormattedDateTime(new Date(reg.createdAt), language, 'card');
     
     return (

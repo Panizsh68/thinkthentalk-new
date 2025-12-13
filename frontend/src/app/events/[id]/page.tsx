@@ -3,6 +3,7 @@
 
 import React, { useMemo } from 'react';
 import { useEventQuery } from '@/hooks/use-event-queries';
+import { useEventRatingQuery } from '@/hooks/use-evaluation-queries';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { Badge } from '@/components/ui/badge';
 import { isEventPast, formatEventDate } from '@/lib/event-helpers';
-import { Calendar, MapPin, Users, Lock, Download, FileText, ArrowLeft } from 'lucide-react';
+import { Calendar, MapPin, Users, Lock, Download, FileText, ArrowLeft, Star } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { TicketSelector } from '@/components/ticket-selector';
@@ -31,6 +32,7 @@ export default function EventDetailPage() {
   const eventId = routeParams.id;
 
   const { data: event, isLoading: isLoadingEvent, error, refetch } = useEventQuery(eventId);
+  const { data: rating } = useEventRatingQuery(eventId);
   const { isAuthenticated, currentUser } = useAuth();
   const { data: registrations, isLoading: isLoadingRegistrations } = useUserRegistrationsQuery(currentUser?.id);
 
@@ -124,6 +126,7 @@ export default function EventDetailPage() {
   const cityLabel = event.city ? getLocalizedTextValue(event.city, language) : t('event.cityUnknown');
   const summaryParagraphs = renderParagraphs(eventSummary);
   const descriptionParagraphs = renderParagraphs(eventDescription);
+  const ratingValue = rating?.average ? rating.average.toFixed(1) : null;
 
   return (
     <>
@@ -159,6 +162,16 @@ export default function EventDetailPage() {
                         <span className="font-medium">
                             {formattedDate}
                         </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Star className="h-5 w-5 text-yellow-500" />
+                        {ratingValue ? (
+                          <span className="font-medium">
+                            {ratingValue} / 5 ({rating?.count ?? 0})
+                          </span>
+                        ) : (
+                          <span className="text-sm">{t('event.noRatings')}</span>
+                        )}
                     </div>
                     <div className="flex items-center gap-2">
                         <MapPin className="h-5 w-5" />

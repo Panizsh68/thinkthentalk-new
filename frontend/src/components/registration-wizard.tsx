@@ -17,7 +17,7 @@ import { useEventQuery } from '@/hooks/use-event-queries';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
 import { useCreatePaymentMutation } from '@/hooks/use-payment-queries';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import type { EventTicketConfig } from '@/lib/types';
 
@@ -44,8 +44,10 @@ const steps = [
 export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventId?: string; ticketType?: string, jumpToStep?: number }) {
   const { t } = useLanguage();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
-  const { isAuthenticated, currentUser } = useAuth();
+  const { isAuthenticated, currentUser, isLoading: isAuthLoading } = useAuth();
   const { data: event, isLoading: isLoadingEvent } = useEventQuery(eventId!);
   const { mutate: createPayment, isPending: isCreatingPayment } = useCreatePaymentMutation();
 
@@ -70,8 +72,15 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
     }
   }, [currentUser, event, ticketType, init, isInitialized, jumpToStep]);
 
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      const currentUrl = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`;
+      router.replace(`/login?redirect=${encodeURIComponent(currentUrl)}`);
+    }
+  }, [isAuthenticated, isAuthLoading, pathname, searchParams, router]);
+
   if (!isAuthenticated) {
-    return <p>{t('registration.errors.notAuthenticated')}</p>;
+    return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
 
   if (isLoadingEvent || !isInitialized) {
@@ -189,6 +198,12 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
           window.location.href = payment.redirectUrl;
           return;
         }
+
+        if (payment.status === 'SUCCESS') {
+          router.push(`/payment/callback?paymentId=${payment.id}&Status=OK`);
+          return;
+        }
+
         router.push(`/payment/mock-gateway?paymentId=${payment.id}`);
       },
       onError: (error) => {

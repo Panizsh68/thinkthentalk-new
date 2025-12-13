@@ -8,6 +8,20 @@ import {
   UpdateUserProfileDto,
 } from './user.repository';
 
+const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+const cleanName = (value?: string | null): string | undefined => {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  return placeholders.includes(trimmed.toLowerCase()) ? undefined : trimmed;
+};
+
+const cleanString = (value?: string | null): string | undefined => {
+  if (value === null || value === undefined) return undefined;
+  const trimmed = value.toString().trim();
+  return trimmed || undefined;
+};
+
 @Injectable()
 export class PrismaUserRepository extends IUserRepository {
   constructor(private readonly prisma: PrismaService) {
@@ -30,33 +44,33 @@ export class PrismaUserRepository extends IUserRepository {
     const user = await this.prisma.user.upsert({
       where: { mobile: dto.mobile },
       update: {
-        firstNameFa: dto.firstNameFa ?? undefined,
-        lastNameFa: dto.lastNameFa ?? undefined,
-        firstNameEn: dto.firstNameEn ?? undefined,
-        lastNameEn: dto.lastNameEn ?? undefined,
+        firstNameFa: cleanName(dto.firstNameFa),
+        lastNameFa: cleanName(dto.lastNameFa),
+        firstNameEn: cleanName(dto.firstNameEn),
+        lastNameEn: cleanName(dto.lastNameEn),
         gender: dto.gender ?? undefined,
         age: dto.age ?? undefined,
-        educationLevel: dto.educationLevel ?? undefined,
-        fieldOfStudy: dto.fieldOfStudy ?? undefined,
+        educationLevel: cleanString(dto.educationLevel),
+        fieldOfStudy: cleanString(dto.fieldOfStudy),
         isEmployed: dto.isEmployed ?? undefined,
-        jobTitle: dto.jobTitle ?? undefined,
-        email: dto.email ?? undefined,
-        languageLevel: dto.languageLevel ?? undefined,
+        jobTitle: cleanString(dto.jobTitle),
+        email: cleanString(dto.email),
+        languageLevel: cleanString(dto.languageLevel),
       },
       create: {
         mobile: dto.mobile,
-        firstNameFa: dto.firstNameFa ?? 'نام',
-        lastNameFa: dto.lastNameFa ?? 'نام خانوادگی',
-        firstNameEn: dto.firstNameEn,
-        lastNameEn: dto.lastNameEn,
+        firstNameFa: cleanName(dto.firstNameFa) ?? 'نام',
+        lastNameFa: cleanName(dto.lastNameFa) ?? 'نام خانوادگی',
+        firstNameEn: cleanName(dto.firstNameEn),
+        lastNameEn: cleanName(dto.lastNameEn),
         gender: dto.gender ?? undefined,
         age: dto.age,
-        educationLevel: dto.educationLevel,
-        fieldOfStudy: dto.fieldOfStudy,
+        educationLevel: cleanString(dto.educationLevel),
+        fieldOfStudy: cleanString(dto.fieldOfStudy),
         isEmployed: dto.isEmployed,
-        jobTitle: dto.jobTitle,
-        email: dto.email,
-        languageLevel: dto.languageLevel,
+        jobTitle: cleanString(dto.jobTitle),
+        email: cleanString(dto.email),
+        languageLevel: cleanString(dto.languageLevel),
       },
     });
 
@@ -67,18 +81,18 @@ export class PrismaUserRepository extends IUserRepository {
     const user = await this.prisma.user.update({
       where: { id },
       data: {
-        firstNameFa: dto.firstNameFa ?? undefined,
-        lastNameFa: dto.lastNameFa ?? undefined,
-        firstNameEn: dto.firstNameEn ?? undefined,
-        lastNameEn: dto.lastNameEn ?? undefined,
+        firstNameFa: cleanName(dto.firstNameFa),
+        lastNameFa: cleanName(dto.lastNameFa),
+        firstNameEn: cleanName(dto.firstNameEn),
+        lastNameEn: cleanName(dto.lastNameEn),
         gender: dto.gender ?? undefined,
         age: dto.age ?? undefined,
-        educationLevel: dto.educationLevel ?? undefined,
-        fieldOfStudy: dto.fieldOfStudy ?? undefined,
+        educationLevel: cleanString(dto.educationLevel),
+        fieldOfStudy: cleanString(dto.fieldOfStudy),
         isEmployed: dto.isEmployed ?? undefined,
-        jobTitle: dto.jobTitle ?? undefined,
-        email: dto.email ?? undefined,
-        languageLevel: dto.languageLevel ?? undefined,
+        jobTitle: cleanString(dto.jobTitle),
+        email: cleanString(dto.email),
+        languageLevel: cleanString(dto.languageLevel),
       },
     });
 

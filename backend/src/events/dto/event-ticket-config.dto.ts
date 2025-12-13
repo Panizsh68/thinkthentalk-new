@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Currency, TicketType } from '@prisma/client';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class EventTicketConfigDto {
   @ApiProperty({ enum: TicketType })
@@ -23,8 +23,21 @@ export class EventTicketConfigDto {
   @IsNumber()
   quantitySold!: number;
 
+  @ApiProperty({ type: String, format: 'date-time' })
+  @IsDateString()
+  saleStartDate!: string;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  @IsDateString()
+  saleEndDate!: string;
+
   @ApiPropertyOptional({ type: String, format: 'date-time' })
   @IsOptional()
   @IsString()
   earlyBirdEndDate?: string | null;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsOptional()
+  @IsNumber()
+  quantityRemaining?: number;
 }

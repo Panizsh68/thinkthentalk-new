@@ -18,14 +18,30 @@ export function TicketSelector({ tickets, selectedTicket, onTicketSelect, disabl
   const { t } = useLanguage();
 
   const getTicketStatus = (ticket: EventTicketConfig) => {
-    const isSoldOut = ticket.quantitySold >= ticket.quantityTotal;
-    if (isSoldOut) {
-      return { available: false, reason: t('tickets.soldOut') };
+    const remaining =
+      typeof ticket.quantityRemaining === 'number'
+        ? ticket.quantityRemaining
+        : Math.max(ticket.quantityTotal - ticket.quantitySold, 0);
+
+    if (remaining <= 0) {
+      return { available: false, reason: t('tickets.soldOut'), remaining: 0 };
     }
-    if (ticket.type === 'EARLY_BIRD' && ticket.earlyBirdEndDate && new Date(ticket.earlyBirdEndDate) < new Date()) {
-      return { available: false, reason: t('tickets.expired') };
+
+    const now = new Date();
+    const start = ticket.saleStartDate ? new Date(ticket.saleStartDate) : undefined;
+    const end = ticket.saleEndDate ? new Date(ticket.saleEndDate) : undefined;
+
+    if (start && now < start) {
+      return { available: false, reason: t('tickets.notStarted', { date: format(start, 'MMM d') }), remaining };
     }
-    return { available: true, reason: null };
+    if (end && now > end) {
+      return { available: false, reason: t('tickets.saleEnded'), remaining: 0 };
+    }
+    if (ticket.type === 'EARLY_BIRD' && ticket.earlyBirdEndDate && new Date(ticket.earlyBirdEndDate) < now) {
+      return { available: false, reason: t('tickets.expired'), remaining };
+    }
+
+    return { available: true, reason: null, remaining };
   };
 
   return (
@@ -39,8 +55,10 @@ export function TicketSelector({ tickets, selectedTicket, onTicketSelect, disabl
       disabled={disabled}
     >
       {tickets.map((ticket) => {
-        const { available, reason } = getTicketStatus(ticket);
+        const { available, reason, remaining } = getTicketStatus(ticket);
         const isTicketDisabled = disabled || !available;
+        const remainingText =
+          remaining !== undefined ? t('tickets.remaining', { count: remaining }) : null;
 
         return (
           <Label
@@ -59,13 +77,15 @@ export function TicketSelector({ tickets, selectedTicket, onTicketSelect, disabl
               </div>
               <span className="font-semibold">{getFormattedPrice(ticket.price, ticket.currency, t)}</span>
             </div>
-            {(reason || ticket.type === 'EARLY_BIRD') && (
-              <div className="pl-8 pt-1 text-xs text-muted-foreground">
-                {reason ? reason : 
-                 ticket.earlyBirdEndDate ? t('tickets.earlyBirdEnds', { date: format(new Date(ticket.earlyBirdEndDate), 'MMM d') }) : null
-                }
-              </div>
-            )}
+            <div className="pl-8 pt-1 text-xs text-muted-foreground space-y-1">
+              {remainingText && available && <div>{remainingText}</div>}
+              {reason ? (
+                <div>{reason}</div>
+              ) : (
+                ticket.earlyBirdEndDate &&
+                <div>{t('tickets.earlyBirdEnds', { date: format(new Date(ticket.earlyBirdEndDate), 'MMM d') })}</div>
+              )}
+            </div>
           </Label>
         );
       })}

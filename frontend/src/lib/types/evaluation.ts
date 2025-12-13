@@ -1,6 +1,6 @@
 
 
-export type EvaluationQuestionType = 'RATING' | 'TEXT';
+export type EvaluationQuestionType = 'RATING' | 'TEXT' | 'YES_NO';
 
 export interface EvaluationQuestion {
   id: string; // Now guaranteed by the builder
@@ -16,7 +16,7 @@ export interface EvaluationForm {
   submitted: boolean; // Indicates if the current user has already submitted this form
 }
 
-export type EvaluationAnswers = Record<string, string | number>;
+export type EvaluationAnswers = Record<string, string | number | boolean>;
 
 export interface EvaluationSubmission {
   id: string;

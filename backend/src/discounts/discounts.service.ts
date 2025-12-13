@@ -18,6 +18,29 @@ export class DiscountsService {
     return discounts.map((d) => this.toDiscountDto(d, d.events.map((e) => e.eventId)));
   }
 
+  async listPublicDiscounts(eventId?: string): Promise<DiscountDto[]> {
+    const now = new Date();
+    const discounts = await this.prisma.discount.findMany({
+      where: {
+        isActive: true,
+        isPublic: true,
+        startDate: { lte: now },
+        endDate: { gte: now },
+        ...(eventId
+          ? {
+              OR: [
+                { events: { some: { eventId } } },
+                { events: { none: {} } }, // applies to all if no linkage
+              ],
+            }
+          : {}),
+      },
+      include: { events: true },
+    });
+
+    return discounts.map((d) => this.toDiscountDto(d, d.events.map((e) => e.eventId)));
+  }
+
   async createDiscount(dto: DiscountFormDataDto): Promise<DiscountDto> {
     this.validateDates(dto.startDate, dto.endDate);
 

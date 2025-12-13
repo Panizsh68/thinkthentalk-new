@@ -126,11 +126,10 @@ export class AdminRegistrationsController {
 
   @Get('export')
   @ApiOperation({
-    summary: 'Registrations export (Admin)',
-    description: 'Generates a CSV file of registrations.',
+    summary: 'Paid registrations export (Admin)',
+    description: 'Generates a CSV file of paid registrations with full form data.',
   })
   @ApiQuery({ name: 'eventId', required: false, type: String })
-  @ApiQuery({ name: 'status', required: false, enum: RegistrationStatus })
   @ApiOkResponse({
     description: 'A CSV file of registrations.',
     content: { 'text/csv': { schema: { type: 'string' } } },
@@ -142,48 +141,117 @@ export class AdminRegistrationsController {
     @Res() res: Response,
     @CurrentUser() user: { sub: string },
   ) {
-    const { eventId, status } = query;
-    const registrations = await this.registrationsService.exportAdminRegistrations({ eventId, status });
+    const { eventId } = query;
+    const registrations = await this.registrationsService.exportAdminRegistrations({ eventId });
 
     const header = [
       'registrationId',
+      'userId',
       'eventId',
       'eventTitle',
-      'userNameFa',
-      'userMobile',
+      'eventStart',
       'ticketType',
-      'status',
+      'registrationStatus',
       'paymentStatus',
-      'amount',
+      'paymentAmount',
+      'paymentId',
+      'gatewayTransactionId',
       'createdAt',
+      'firstNameFa',
+      'lastNameFa',
+      'firstNameEn',
+      'lastNameEn',
+      'gender',
+      'age',
+      'mobile',
+      'email',
+      'educationLevel',
+      'fieldOfStudy',
+      'isEmployed',
+      'jobTitle',
+      'languageLevel',
+      'referralSource',
+      'referrerName',
+      'otherReferralSource',
+      'acceptedRules',
     ];
 
+    const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+    const cleanString = (value: any): string => {
+      if (value === null || value === undefined) return '';
+      const str = String(value).trim();
+      if (!str) return '';
+      const normalized = str.toLowerCase();
+      return placeholders.includes(normalized) ? '' : str;
+    };
+
+    const escapeCsv = (value: any): string => {
+      const str = value === null || value === undefined ? '' : String(value);
+      if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
     const rows = registrations.map((r) => {
-      const eventTitle = (r.event as any).title?.fa ?? (r.event as any).title?.en ?? '';
+      const form = (r.formData as any) ?? {};
+      const profile = r.user ?? {};
+      const pick = (formValue: any, profileValue: any) =>
+        cleanString(formValue) || cleanString(profileValue);
+
+      const eventTitle = (r.event as any)?.title?.fa ?? (r.event as any)?.title?.en ?? '';
+      const rawStart = (r.event as any)?.startDateTime ?? '';
+      const eventStart =
+        rawStart instanceof Date
+          ? rawStart.toISOString()
+          : typeof rawStart === 'string'
+            ? rawStart
+            : '';
+      const amount = r.payment?.amount ?? '';
+
       return [
         r.id,
+        r.userId,
         r.event.id,
         eventTitle,
-        `${r.user.firstNameFa ?? ''} ${r.user.lastNameFa ?? ''}`.trim(),
-        r.user.mobile,
+        eventStart,
         r.ticketType,
         r.status,
         r.payment?.status ?? '',
-        r.payment?.amount ?? '',
+        amount,
+        r.payment?.id ?? '',
+        r.payment?.gatewayTransactionId ?? '',
         r.createdAt,
+        pick(form.firstNameFa, profile.firstNameFa),
+        pick(form.lastNameFa, profile.lastNameFa),
+        pick(form.firstNameEn, profile.firstNameEn),
+        pick(form.lastNameEn, profile.lastNameEn),
+        cleanString(form.gender ?? profile.gender),
+        form.age ?? profile.age ?? '',
+        pick(form.mobile, profile.mobile),
+        pick(form.email, profile.email),
+        cleanString(form.educationLevel ?? profile.educationLevel),
+        cleanString(form.fieldOfStudy ?? profile.fieldOfStudy),
+        form.isEmployed ?? profile.isEmployed ?? '',
+        cleanString(form.jobTitle ?? profile.jobTitle),
+        cleanString(form.languageLevel ?? profile.languageLevel),
+        cleanString(form.referralSource),
+        cleanString(form.referrerName),
+        cleanString(form.otherReferralSource),
+        form.acceptedRules ?? '',
       ];
     });
 
-    const csv = [header, ...rows].map((r) => r.join(',')).join('\n');
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename=\"registrations.csv\"');
+    const csv = [header, ...rows].map((r) => r.map(escapeCsv).join(',')).join('\n');
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename=\"registrations_paid.csv\"');
     this.auditService.record({
       adminId: user.sub,
       action: 'EXPORT_REGISTRATIONS',
       resourceType: 'registration',
       resourceId: 'bulk',
-      metadata: { eventId, status } as any,
+      metadata: { eventId, status: 'PAID' } as any,
     });
-    return res.send(csv);
+    return res.send(`\uFEFF${csv}`);
   }
 }

@@ -18,18 +18,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { isEventPast } from '@/lib/event-helpers';
 import type { EvaluationQuestion } from '@/lib/types';
 import { useParams } from 'next/navigation';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 
 export default function EvaluationPage() {
   const { t } = useLanguage();
   const { currentUser, isLoading: isAuthLoading } = useAuth();
+  const { toast } = useToast();
   const params = useParams<{ id: string }>();
   const eventId = params.id;
 
   const { data: event, isLoading: isLoadingEvent } = useEventQuery(eventId);
   const { data: registrations, isLoading: isLoadingRegistrations } = useUserRegistrationsQuery(currentUser?.id);
-  const { data: evaluation, isLoading: isLoadingEvaluation, error: evaluationError } = useEvaluationFormQuery(eventId, currentUser?.id);
-  const { mutate: submitEvaluation, isPending: isSubmitting } = useSubmitEvaluationMutation();
+  const { data: evaluation, isLoading: isLoadingEvaluation, error: evaluationError } = useEvaluationFormQuery(eventId, 'user', currentUser?.id);
+  const { mutate: submitEvaluation, isPending: isSubmitting, isSuccess: isSubmitSuccess, isError: isSubmitError, error: submitError } = useSubmitEvaluationMutation();
 
   const isLoading = isAuthLoading || isLoadingEvent || isLoadingRegistrations || isLoadingEvaluation;
 
@@ -39,17 +42,17 @@ export default function EvaluationPage() {
   const generateSchema = (questions: EvaluationQuestion[]) => {
     const schemaShape: { [key: string]: z.ZodType<any, any> } = {};
     questions.forEach(q => {
-      let fieldSchema;
+      let fieldSchema: z.ZodTypeAny;
       if (q.type === 'RATING') {
         fieldSchema = z.coerce.number().min(1).max(5);
+        fieldSchema = q.required ? fieldSchema : fieldSchema.optional();
+      } else if (q.type === 'YES_NO') {
+        fieldSchema = z.boolean();
+        fieldSchema = q.required ? fieldSchema : fieldSchema.optional();
       } else {
-        fieldSchema = z.string();
-      }
-
-      if (q.required) {
-        fieldSchema = fieldSchema.min(1, t('evaluation.validation.required'));
-      } else {
-        fieldSchema = fieldSchema.optional();
+        fieldSchema = q.required
+          ? z.string().min(1, t('evaluation.validation.required'))
+          : z.string().optional();
       }
       schemaShape[q.id] = fieldSchema;
     });
@@ -64,7 +67,12 @@ export default function EvaluationPage() {
     if (!evaluation || !currentUser) return;
     submitEvaluation({
         evaluationId: evaluation.id,
+        eventId,
         answers: data,
+    }, {
+      onSuccess: () => {
+        toast({ title: t('evaluation.successTitle'), description: t('evaluation.successDescription') });
+      }
     });
   };
 
@@ -162,6 +170,38 @@ export default function EvaluationPage() {
                                                         </RadioGroup>
                                                     )}
                                                 />
+                                            ) : question.type === 'YES_NO' ? (
+                                                <Controller
+                                                  name={question.id}
+                                                  control={form.control}
+                                                  render={({ field: controllerField }) => (
+                                                    <RadioGroup
+                                                      className="flex items-center gap-4 pt-2"
+                                                      onValueChange={(val) => controllerField.onChange(val === 'yes')}
+                                                      value={
+                                                        controllerField.value === undefined
+                                                          ? ''
+                                                          : controllerField.value
+                                                            ? 'yes'
+                                                            : 'no'
+                                                      }
+                                                    >
+                                                      {[
+                                                        { value: 'yes', label: t('actions.yes') },
+                                                        { value: 'no', label: t('actions.no') },
+                                                      ].map(({ value, label }) => (
+                                                        <FormItem key={value} className="flex flex-col items-center space-y-1">
+                                                          <FormControl>
+                                                            <RadioGroupItem value={value} id={`${question.id}-${value}`} />
+                                                          </FormControl>
+                                                          <FormLabel htmlFor={`${question.id}-${value}`} className="font-normal text-sm">
+                                                            {label}
+                                                          </FormLabel>
+                                                        </FormItem>
+                                                      ))}
+                                                    </RadioGroup>
+                                                  )}
+                                                />
                                             ) : (
                                                 <Textarea
                                                     placeholder={t('evaluation.textPlaceholder')}
@@ -186,6 +226,18 @@ export default function EvaluationPage() {
                 </form>
             </Form>
         </Card>
+        {isSubmitSuccess && (
+          <Alert className="mt-6" variant="default">
+            <AlertTitle>{t('evaluation.successTitle')}</AlertTitle>
+            <AlertDescription>{t('evaluation.successDescription')}</AlertDescription>
+          </Alert>
+        )}
+        {isSubmitError && (
+          <Alert className="mt-4" variant="destructive">
+            <AlertTitle>{t('errors.genericTitle')}</AlertTitle>
+            <AlertDescription>{(submitError as any)?.message || t('errors.genericTitle')}</AlertDescription>
+          </Alert>
+        )}
     </div>
   );
 }

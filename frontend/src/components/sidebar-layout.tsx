@@ -44,6 +44,7 @@ export function SidebarLayout({
   const pathname = usePathname();
   const { t, language } = useLanguage();
   const isRTL = language === 'fa';
+  const showHeaderControls = !!adminUser;
 
   return (
     <SidebarProvider>
@@ -95,33 +96,35 @@ export function SidebarLayout({
                   <span className="font-semibold lg:hidden">{t('admin.nav.menu')}</span>
               </div>
               
-              <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
-                  <LanguageSwitcher />
-                  <ThemeToggle />
-                  {adminUser && (
-                      <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                  <User className="h-5 w-5" />
-                                  <span className="sr-only">Admin Account</span>
-                              </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align={isRTL ? "start" : "end"}>
-                              <DropdownMenuLabel className="font-normal" dir={isRTL ? 'rtl' : 'ltr'}>
-                                  <div className="flex flex-col space-y-1">
-                                      <p className="text-sm font-medium leading-none">{adminUser.name}</p>
-                                      <p className="text-xs leading-none text-muted-foreground">{adminUser.email}</p>
-                                  </div>
-                              </DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onSelect={onLogout}>
-                                  <LogOut className={cn(isRTL ? "ml-2" : "mr-2", "h-4 w-4")} />
-                                  <span>{t('actions.logout')}</span>
-                              </DropdownMenuItem>
-                          </DropdownMenuContent>
-                      </DropdownMenu>
-                  )}
-              </div>
+              {showHeaderControls && (
+                <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
+                    <LanguageSwitcher />
+                    <ThemeToggle />
+                    {adminUser && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                    <User className="h-5 w-5" />
+                                    <span className="sr-only">Admin Account</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align={isRTL ? "start" : "end"}>
+                                <DropdownMenuLabel className="font-normal" dir={isRTL ? 'rtl' : 'ltr'}>
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">{adminUser.name}</p>
+                                        <p className="text-xs leading-none text-muted-foreground">{adminUser.email}</p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onSelect={onLogout}>
+                                    <LogOut className={cn(isRTL ? "ml-2" : "mr-2", "h-4 w-4")} />
+                                    <span>{t('actions.logout')}</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                </div>
+              )}
             </header>
           <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
         </SidebarInset>

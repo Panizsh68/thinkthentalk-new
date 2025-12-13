@@ -3,14 +3,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useEffect, useState } from 'react';
-import { Loader2, X } from 'lucide-react';
-import Image from 'next/image';
+import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useAuth } from '@/lib/auth/auth-provider';
 import { useToast } from '@/hooks/use-toast';
-import { useUploadUserAvatar } from '@/hooks/use-upload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -19,6 +17,13 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+
+const placeholderNames = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+const clearPlaceholderName = (value?: string | null): string => {
+  if (!value) return '';
+  const normalized = value.trim().toLowerCase();
+  return placeholderNames.includes(normalized) ? '' : value;
+};
 
 const getProfileSchema = (t: (key: string) => string) => z.object({
   // Personal
@@ -60,8 +65,7 @@ export default function UserProfilePage() {
   const { t } = useLanguage();
   const { currentUser, updateUserProfile, isLoading: isAuthLoading } = useAuth();
   const { toast } = useToast();
-  const { mutate: uploadAvatar, isPending: isUploading } = useUploadUserAvatar();
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  // Avatar upload temporarily disabled
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(getProfileSchema(t)),
@@ -85,12 +89,12 @@ export default function UserProfilePage() {
   });
 
   useEffect(() => {
-    if (currentUser && !isUploading) {
+    if (currentUser) {
       form.reset({
-        firstNameFa: currentUser.firstNameFa || '',
-        lastNameFa: currentUser.lastNameFa || '',
-        firstNameEn: currentUser.firstNameEn || '',
-        lastNameEn: currentUser.lastNameEn || '',
+        firstNameFa: clearPlaceholderName(currentUser.firstNameFa),
+        lastNameFa: clearPlaceholderName(currentUser.lastNameFa),
+        firstNameEn: clearPlaceholderName(currentUser.firstNameEn),
+        lastNameEn: clearPlaceholderName(currentUser.lastNameEn),
         age: (currentUser.age || '') as any,
         gender: currentUser.gender || undefined,
         mobile: currentUser.mobile || '',
@@ -103,7 +107,7 @@ export default function UserProfilePage() {
         languageLevel: currentUser.languageLevel || '',
       });
     }
-  }, [currentUser?.id, isUploading, form]);
+  }, [currentUser?.id, form]);
 
   async function onSubmit(values: ProfileFormValues) {
     if (!currentUser) return;
@@ -143,10 +147,10 @@ export default function UserProfilePage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="firstNameFa" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.firstNameFa')}</FormLabel><FormControl><Input {...field} data-testid="profile-firstNameFa-input" /></FormControl><FormMessage /></FormItem>)} />
-                <FormField control={form.control} name="lastNameFa" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.lastNameFa')}</FormLabel><FormControl><Input {...field} data-testid="profile-lastNameFa-input" /></FormControl><FormMessage /></FormItem>)} />
-                <FormField control={form.control} name="firstNameEn" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.firstNameEn')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                <FormField control={form.control} name="lastNameEn" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.lastNameEn')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="firstNameFa" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.firstNameFa')}</FormLabel><FormControl><Input placeholder={t('registration.placeholders.firstNameFa')} {...field} data-testid="profile-firstNameFa-input" /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="lastNameFa" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.lastNameFa')}</FormLabel><FormControl><Input placeholder={t('registration.placeholders.lastNameFa')} {...field} data-testid="profile-lastNameFa-input" /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="firstNameEn" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.firstNameEn')}</FormLabel><FormControl><Input placeholder={t('registration.placeholders.firstNameEn')} {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="lastNameEn" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.lastNameEn')}</FormLabel><FormControl><Input placeholder={t('registration.placeholders.lastNameEn')} {...field} /></FormControl><FormMessage /></FormItem>)} />
                 <FormField control={form.control} name="age" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.age')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                 <FormField control={form.control} name="gender" render={({ field }) => (
                   <FormItem className="space-y-3"><FormLabel>{t('registration.fields.gender')}</FormLabel>
@@ -161,52 +165,7 @@ export default function UserProfilePage() {
                   </FormItem>
                 )} />
               </div>
-              <Separator className="my-6" />
-              <FormField control={form.control} name="avatarUrl" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Avatar</FormLabel>
-                  <FormControl>
-                    <div className="space-y-3">
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        disabled={isUploading}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-
-                          setUploadError(null);
-                          uploadAvatar(file, {
-                            onSuccess: (data) => {
-                              field.onChange(data.url);
-                              e.target.value = '';
-                            },
-                            onError: (error) => setUploadError(error.message),
-                          });
-                        }}
-                      />
-                      {isUploading && <p className="text-sm text-gray-500 flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Uploading...</p>}
-                      {uploadError && <p className="text-sm text-red-500">{uploadError}</p>}
-                      {field.value && (
-                        <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
-                          <Image src={field.value} alt="Avatar" width={128} height={128} className="w-full h-full object-cover" />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-1 right-1 h-6 w-6"
-                            onClick={() => form.setValue('avatarUrl', '')}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormDescription>Upload your profile picture</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              {/* Avatar upload temporarily disabled */}
             </CardContent>
           </Card>
 

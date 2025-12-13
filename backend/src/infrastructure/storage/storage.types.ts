@@ -19,6 +19,7 @@ export enum FileCategory {
   SPONSOR_LOGO = 'content/sponsors',
   DOCUMENT = 'documents',
   ATTACHMENT = 'attachments',
+  EVENT_RESOURCE = 'resources',
 }
 
 export interface StoredFile {

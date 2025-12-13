@@ -53,6 +53,7 @@
     "tickets": "Tickets",
     "selectTicket": "Select your ticket to register.",
     "free": "Free",
+    "noRatings": "No ratings yet",
     "resourcesTitle": "Resources",
     "resourcePublic": "Public",
     "resourceRegisteredOnly": "For participants only",
@@ -258,6 +259,8 @@
     "textPlaceholder": "Your feedback here...",
     "alreadySubmittedTitle": "Feedback Submitted",
     "alreadySubmittedDescription": "Thank you, you have already submitted your feedback for this event.",
+    "successTitle": "Thanks for your feedback",
+    "successDescription": "Your responses were submitted successfully.",
     "errors": {
       "notAuthenticated": "Please Login",
       "loginPrompt": "You must be logged in to submit feedback for this event.",

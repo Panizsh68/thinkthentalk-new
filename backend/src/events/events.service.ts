@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHash } from 'crypto';
 import { EventResourceDto } from './dto/event-resource.dto';
@@ -68,6 +68,27 @@ export class EventsService {
     eventId: string,
     tickets: EventTicketConfigDto[],
   ) {
+    const now = new Date();
+    tickets.forEach((t) => {
+      // sale window optional with current Prisma client; if provided, validate order.
+      if (t.saleStartDate && t.saleEndDate) {
+        const start = new Date(t.saleStartDate);
+        const end = new Date(t.saleEndDate);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+          throw new BadRequestException('Invalid sale window for ticket.');
+        }
+        if (start > end) {
+          throw new BadRequestException('saleStartDate must be before saleEndDate.');
+        }
+        if (end.getTime() < now.getTime() && t.quantityTotal > 0) {
+          // allow but note expired window; capacity will still update.
+        }
+      }
+      if (t.quantitySold !== undefined && t.quantitySold > t.quantityTotal) {
+        throw new BadRequestException('quantitySold cannot exceed quantityTotal.');
+      }
+    });
+
     const updated = await this.eventsRepository.updateEventTickets(eventId, tickets);
     if (updated) await this.invalidateEventCaches(eventId);
     return updated ? eventEntityToEventDto(updated) : null;

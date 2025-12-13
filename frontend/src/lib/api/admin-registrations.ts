@@ -4,20 +4,28 @@
 import apiClient from './client';
 import type { UserRegistrationDetails, UpdateRegistrationAdminDto, AdminRegistrationsQueryDto } from '@/lib/types';
 
-const transformDetails = (reg: any): UserRegistrationDetails => ({
-  ...reg,
-  createdAt: new Date(reg.createdAt),
-  user: reg.user,
-  formData: reg.formData,
-  event: {
-    ...reg.event,
-    startDateTime: new Date(reg.event.startDateTime),
-  },
-  payment: {
-    ...reg.payment,
-    amount: Number(reg.payment.amount),
-  }
-});
+const transformDetails = (reg: any): UserRegistrationDetails => {
+  const payment = reg.payment
+    ? {
+        ...reg.payment,
+        amount: Number(reg.payment.amount),
+      }
+    : null;
+
+  return {
+    ...reg,
+    createdAt: new Date(reg.createdAt),
+    user: reg.user,
+    formData: reg.formData,
+    event: reg.event
+      ? {
+          ...reg.event,
+          startDateTime: reg.event.startDateTime ? new Date(reg.event.startDateTime) : undefined,
+        }
+      : reg.event,
+    payment,
+  };
+};
 
 
 export async function getAllRegistrations(filters: AdminRegistrationsQueryDto): Promise<UserRegistrationDetails[]> {

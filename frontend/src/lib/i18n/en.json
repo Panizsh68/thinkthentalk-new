@@ -78,6 +78,8 @@
     "download": "Download",
     "view": "View",
     "addToCalendar": "Add to Calendar",
+    "yes": "Yes",
+    "no": "No",
     "clearFilters": "Clear Filters",
     "backToEvents": "Back to Events",
     "back": "Back",
@@ -119,6 +121,7 @@
     "tickets": "Tickets",
     "selectTicket": "Select your ticket to register.",
     "free": "Free",
+    "noRatings": "No ratings yet",
     "resourcesTitle": "Resources",
     "resourcePublic": "Public",
     "resourceRegisteredOnly": "For participants only",
@@ -133,6 +136,9 @@
     "supporter": "Supporter",
     "soldOut": "Sold Out",
     "expired": "Offer Expired",
+    "saleEnded": "Sales Ended",
+    "notStarted": "Sales start {date}",
+    "remaining": "{count} left",
     "earlyBirdEnds": "Ends {date}"
   },
   "filters": {
@@ -331,6 +337,8 @@
     "textPlaceholder": "Your feedback here...",
     "alreadySubmittedTitle": "Feedback Submitted",
     "alreadySubmittedDescription": "Thank you, you have already submitted your feedback for this event.",
+    "successTitle": "Thanks for your feedback",
+    "successDescription": "Your responses were submitted successfully.",
     "errors": {
       "notAuthenticated": "Please Login",
       "loginPrompt": "You must be logged in to submit feedback for this event.",
@@ -348,6 +356,7 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "registrations": "Registrations",
+      "users": "Users",
       "payments": "Payments",
       "discounts": "Discounts",
       "messaging": "Messaging",
@@ -355,6 +364,44 @@
       "feedback": "Feedback",
       "sponsors": "Sponsors",
       "team": "Team"
+    },
+    "filters": {
+      "title": "Filters"
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "See OTP sign-ins, profile completeness, and their registrations.",
+      "filters": {
+        "searchPlaceholder": "Search by name, mobile, or email",
+        "profileStatus": "Profile status",
+        "all": "All users",
+        "complete": "Complete",
+        "incomplete": "Incomplete"
+      },
+      "table": {
+        "user": "User",
+        "profileStatus": "Profile",
+        "registrations": "Registrations",
+        "lastRegistration": "Last registration",
+        "missing": "Missing fields",
+        "actions": "Actions"
+      },
+      "badges": {
+        "complete": "Complete",
+        "incomplete": "Incomplete"
+      },
+      "missingFieldsLabel": "Missing",
+      "profileCard": {
+        "title": "Profile",
+        "completion": "Profile completion",
+        "missingFields": "Missing fields"
+      },
+      "registrations": {
+        "title": "Registrations",
+        "empty": "No registrations yet",
+        "open": "Open registration"
+      },
+      "latestFormData": "Latest registration data"
     },
     "contact": {
       "title": "Contact Messages",
@@ -512,6 +559,7 @@
       "enable": "Enable",
       "price": "Price (Toman)",
       "quantity": "Total Quantity",
+      "startDate": "Sale Start Date",
       "endDate": "Sale End Date",
       "endDateDesc": "Optional. After this date, early bird tickets cannot be purchased.",
       "saveChanges": "Save Ticket Settings",
@@ -847,7 +895,8 @@
       },
       "types": {
         "rating": "Rating (1-5)",
-        "text": "Text Input"
+        "text": "Text Input",
+        "yesNo": "Yes / No"
       },
       "saveSuccessTitle": "Form Saved",
       "saveSuccessDescription": "The evaluation form has been successfully updated.",

@@ -35,7 +35,12 @@ export const prismaEventToEventEntity = (
         ticket.currency,
         ticket.quantityTotal,
         ticket.quantitySold,
+        (ticket as any).saleStartDate ?? event.startDateTime,
+        (ticket as any).saleEndDate ??
+          event.endDateTime ??
+          new Date(event.startDateTime.getTime() + 30 * 24 * 60 * 60 * 1000),
         ticket.earlyBirdEndDate,
+        Math.max(ticket.quantityTotal - ticket.quantitySold, 0),
       ),
   );
 
@@ -99,6 +104,9 @@ export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
     currency: t.currency,
     quantityTotal: t.quantityTotal,
     quantitySold: t.quantitySold,
+    quantityRemaining: t.quantityRemaining,
+    saleStartDate: t.saleStartDate.toISOString(),
+    saleEndDate: t.saleEndDate.toISOString(),
     earlyBirdEndDate: t.earlyBirdEndDate
       ? t.earlyBirdEndDate.toISOString()
       : null,

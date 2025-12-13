@@ -20,6 +20,12 @@ export async function getDiscounts(): Promise<Discount[]> {
   return data.map(transformDiscount);
 }
 
+export async function getPublicDiscounts(eventId?: string): Promise<Discount[]> {
+  const query = eventId ? `?eventId=${encodeURIComponent(eventId)}` : '';
+  const { data } = await apiClient.get<any[]>(`/discounts/public${query}`);
+  return data.map(transformDiscount);
+}
+
 export async function createDiscount(data: DiscountFormData): Promise<Discount> {
   const { data: newDiscount } = await apiClient.post<any>('/admin/discounts', data);
   return transformDiscount(newDiscount);

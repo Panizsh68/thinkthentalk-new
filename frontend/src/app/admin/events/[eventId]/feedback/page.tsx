@@ -19,12 +19,13 @@ import type { EvaluationQuestion } from '@/lib/types';
 import { useParams } from 'next/navigation';
 
 
-const getQuestionSchema = (t: (key: string) => string) => z.object({
-  id: z.string().optional(),
-  label: z.string().min(1, t('admin.feedback.validation.labelRequired')),
-  type: z.enum(['RATING', 'TEXT']),
-  required: z.boolean(),
-});
+const getQuestionSchema = (t: (key: string) => string) =>
+  z.object({
+    id: z.string(),
+    label: z.string().min(1, t('admin.feedback.validation.labelRequired')),
+    type: z.enum(['RATING', 'TEXT', 'YES_NO']),
+    required: z.boolean(),
+  });
 
 const formSchema = (t: (key: string) => string) => z.object({
   questions: z.array(getQuestionSchema(t)),
@@ -32,6 +33,12 @@ const formSchema = (t: (key: string) => string) => z.object({
 
 type FormValues = z.infer<ReturnType<typeof formSchema>>;
 
+const generateQuestionId = () => {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID();
+  }
+  return `q_${Math.random().toString(36).slice(2, 10)}`;
+};
 
 export default function EventFeedbackFormBuilderPage() {
   const params = useParams<{ eventId: string }>();
@@ -40,7 +47,7 @@ export default function EventFeedbackFormBuilderPage() {
   const { toast } = useToast();
 
   const { data: event, isLoading: isLoadingEvent, error: eventError } = useAdminEventQuery(eventId);
-  const { data: evaluationForm, isLoading: isLoadingForm } = useEvaluationFormQuery(eventId, 'admin');
+  const { data: evaluationForm, isLoading: isLoadingForm } = useEvaluationFormQuery(eventId, 'admin', 'admin');
   const { mutate: saveForm, isPending: isSaving } = useSaveEvaluationFormMutation();
   
   const form = useForm<FormValues>({
@@ -57,7 +64,11 @@ export default function EventFeedbackFormBuilderPage() {
 
   useEffect(() => {
     if (evaluationForm?.questions) {
-      form.reset({ questions: evaluationForm.questions });
+      const normalized = evaluationForm.questions.map((q) => ({
+        ...q,
+        id: q.id || generateQuestionId(),
+      }));
+      form.reset({ questions: normalized });
     }
   }, [evaluationForm, form]);
 
@@ -115,11 +126,12 @@ export default function EventFeedbackFormBuilderPage() {
                                         <FormLabel>{t('admin.feedback.form.type')}</FormLabel>
                                          <Select onValueChange={field.onChange} value={field.value}>
                                             <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="RATING">{t('admin.feedback.types.rating')}</SelectItem>
-                                                <SelectItem value="TEXT">{t('admin.feedback.types.text')}</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <SelectContent>
+                                            <SelectItem value="RATING">{t('admin.feedback.types.rating')}</SelectItem>
+                                            <SelectItem value="TEXT">{t('admin.feedback.types.text')}</SelectItem>
+                                            <SelectItem value="YES_NO">{t('admin.feedback.types.yesNo')}</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -152,7 +164,11 @@ export default function EventFeedbackFormBuilderPage() {
                 ))}
 
                 <div className="flex justify-between items-center">
-                    <Button type="button" variant="outline" onClick={() => append({ label: '', type: 'RATING', required: true })}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => append({ id: generateQuestionId(), label: '', type: 'RATING', required: true })}
+                    >
                         <PlusCircle className="mr-2 h-4 w-4" /> {t('admin.feedback.addQuestion')}
                     </Button>
                      <Button type="submit" disabled={isSaving}>

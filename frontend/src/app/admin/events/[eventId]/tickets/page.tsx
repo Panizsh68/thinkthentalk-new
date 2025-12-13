@@ -28,8 +28,14 @@ const ticketConfigSchema = z.object({
   quantityTotal: z.coerce.number().int().min(0, "Quantity must be 0 or more"),
   quantitySold: z.coerce.number().int().min(0),
   currency: z.enum(['IRR', 'TOMAN']),
+  saleStartDate: z.date({ required_error: "Start date is required" }),
+  saleEndDate: z.date({ required_error: "End date is required" }),
   earlyBirdEndDate: z.date().optional().nullable(),
+  quantityRemaining: z.coerce.number().int().min(0).optional().default(0),
   enabled: z.boolean().default(false),
+}).refine((data) => data.saleStartDate <= data.saleEndDate, {
+  message: "Start date must be before end date",
+  path: ['saleEndDate'],
 });
 
 const formSchema = z.object({
@@ -48,11 +54,14 @@ export default function TicketManagementPage() {
   const { mutate: updateTickets, isPending: isSaving } = useUpdateEventTicketsMutation();
 
 
-  const defaultTickets = useMemo<Omit<EventTicketConfig, 'quantitySold'>[]>(() => [
-      { type: 'EARLY_BIRD', price: 0, currency: 'TOMAN', quantityTotal: 0, earlyBirdEndDate: undefined },
-      { type: 'STANDARD', price: 0, currency: 'TOMAN', quantityTotal: 0 },
-      { type: 'SUPPORTER', price: 0, currency: 'TOMAN', quantityTotal: 0 },
-  ], []);
+  const defaultTickets = useMemo<Omit<EventTicketConfig, 'quantitySold'>[]>(() => {
+      const now = new Date();
+      return [
+        { type: 'EARLY_BIRD', price: 0, currency: 'TOMAN', quantityTotal: 0, earlyBirdEndDate: undefined, saleStartDate: now, saleEndDate: now, quantityRemaining: 0 },
+        { type: 'STANDARD', price: 0, currency: 'TOMAN', quantityTotal: 0, saleStartDate: now, saleEndDate: now, quantityRemaining: 0 },
+        { type: 'SUPPORTER', price: 0, currency: 'TOMAN', quantityTotal: 0, saleStartDate: now, saleEndDate: now, quantityRemaining: 0 },
+      ];
+  }, []);
 
   const form = useForm<TicketManagementFormValues>({
     resolver: zodResolver(formSchema),
@@ -70,17 +79,25 @@ export default function TicketManagementPage() {
     if (event?.tickets) {
         const initialTickets = defaultTickets.map(defaultTicket => {
             const existingTicket = event.tickets.find(et => et.type === defaultTicket.type);
+            const fallbackStart = event.startDateTime ? new Date(event.startDateTime) : new Date();
+            const fallbackEnd = event.endDateTime ? new Date(event.endDateTime) : fallbackStart;
             if (existingTicket) {
                 return {
                     ...existingTicket,
                     enabled: true,
+                    saleStartDate: existingTicket.saleStartDate ? new Date(existingTicket.saleStartDate) : fallbackStart,
+                    saleEndDate: existingTicket.saleEndDate ? new Date(existingTicket.saleEndDate) : fallbackEnd,
                     earlyBirdEndDate: existingTicket.earlyBirdEndDate ? new Date(existingTicket.earlyBirdEndDate) : undefined,
+                    quantityRemaining: existingTicket.quantityRemaining ?? Math.max((existingTicket.quantityTotal || 0) - (existingTicket.quantitySold || 0), 0),
                 };
             }
             return {
                 ...defaultTicket,
                 quantitySold: 0,
                 enabled: false,
+                saleStartDate: fallbackStart,
+                saleEndDate: fallbackEnd,
+                quantityRemaining: Math.max((defaultTicket.quantityTotal || 0), 0),
             };
         });
         form.reset({ tickets: initialTickets });
@@ -166,6 +183,58 @@ export default function TicketManagementPage() {
                                     <FormControl><Input type="number" {...quantityField} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`tickets.${index}.saleStartDate`}
+                                render={({ field: dateField }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>{t('admin.tickets.startDate')}</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn("w-full pl-3 text-left font-normal", !dateField.value && "text-muted-foreground")}
+                                                    >
+                                                        {dateField.value ? format(dateField.value, "PPP") : <span>{t('admin.events.form.pickDate')}</span>}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar mode="single" selected={dateField.value || undefined} onSelect={dateField.onChange} />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`tickets.${index}.saleEndDate`}
+                                render={({ field: dateField }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>{t('admin.tickets.endDate')}</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn("w-full pl-3 text-left font-normal", !dateField.value && "text-muted-foreground")}
+                                                    >
+                                                        {dateField.value ? format(dateField.value, "PPP") : <span>{t('admin.events.form.pickDate')}</span>}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar mode="single" selected={dateField.value || undefined} onSelect={dateField.onChange} />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
                                 )}
                             />
                             {field.type === 'EARLY_BIRD' && (

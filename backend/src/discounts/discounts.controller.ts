@@ -15,6 +15,7 @@ import { DiscountsService } from './discounts.service';
 import { ValidateDiscountDto } from './dto/validate-discount.dto';
 import { DiscountDto } from './dto/discount.dto';
 import { ModuleStatusDto } from '../common/dto/module-status.dto';
+import { Query } from '@nestjs/common';
 
 @ApiTags('Discounts')
 @Controller({ path: 'discounts', version: '1' })
@@ -26,6 +27,18 @@ export class DiscountsController {
   @ApiOkResponse({ description: 'Discounts status.', type: ModuleStatusDto })
   status(): ModuleStatusDto {
     return this.discountsService.status();
+  }
+
+  @Get('public')
+  @ApiOperation({
+    summary: 'List public discounts',
+    description: 'Returns active public discounts, optionally filtered by eventId.',
+  })
+  @ApiOkResponse({ description: 'Public discounts list.', type: [DiscountDto] })
+  async listPublic(
+    @Query('eventId') eventId?: string,
+  ): Promise<DiscountDto[]> {
+    return this.discountsService.listPublicDiscounts(eventId);
   }
 
   @Post('validate')

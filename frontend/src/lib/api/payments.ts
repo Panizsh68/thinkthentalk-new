@@ -46,3 +46,24 @@ export async function verifyPayment(paymentId: string, status: 'SUCCESS' | 'FAIL
         throw new Error(error.message || 'Failed to verify payment status.');
     }
 }
+
+export async function getPaymentPublic(
+  paymentId: string,
+  params?: { status?: 'SUCCESS' | 'FAILED'; authority?: string | null },
+): Promise<Payment | null> {
+  const query = new URLSearchParams();
+  if (params?.status) query.append('status', params.status);
+  if (params?.authority) query.append('Authority', params.authority);
+
+  try {
+    const { data } = await apiClient.get<any>(`/payments/public/${paymentId}${query.toString() ? `?${query.toString()}` : ''}`);
+    if (!data) return null;
+    return transformPayment(data);
+  } catch (error: any) {
+    if (error.status === 404) {
+      return null;
+    }
+    console.error(`Failed to fetch public payment ${paymentId}:`, error);
+    throw new Error(error.message || 'Failed to fetch payment.');
+  }
+}

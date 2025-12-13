@@ -21,6 +21,9 @@ export type EventTicketConfig = {
   currency: 'IRR' | 'TOMAN';
   quantityTotal: number;
   quantitySold: number;
+  quantityRemaining: number;
+  saleStartDate?: Date;
+  saleEndDate?: Date;
   earlyBirdEndDate?: Date;
 };
 

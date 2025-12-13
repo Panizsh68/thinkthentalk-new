@@ -1,26 +1,35 @@
 
 'use client';
 import apiClient from './client';
-import type { EvaluationForm, EvaluationSubmission, EvaluationAnswers, EvaluationQuestion, EvaluationResponse } from '@/lib/types';
+import type { EvaluationForm, EvaluationAnswers, EvaluationQuestion, EvaluationResponse } from '@/lib/types';
 
 export type { EvaluationAnswers, EvaluationQuestion };
+export type EventRating = { average: number | null; count: number };
 
-export async function getEventEvaluationForm(eventId: string, userId?: string): Promise<EvaluationForm | null> {
-  // The backend determines eligibility based on the user's token, so userId is not sent in the request
+type EvaluationContext = 'user' | 'admin';
+
+export async function getEventEvaluationForm(eventId: string, context: EvaluationContext = 'user'): Promise<EvaluationForm | null> {
+  const path = context === 'admin'
+    ? `/admin/events/${eventId}/evaluation`
+    : `/events/${eventId}/evaluation`;
+
   try {
-    const { data } = await apiClient.get<EvaluationForm>(`/events/${eventId}/evaluation`);
+    const { data } = await apiClient.get<EvaluationForm>(path);
     return data;
   } catch (error: any) {
     if (error.status === 404) {
-      // Form not created for this event yet
-      return {
-        id: `temp-eval-id-${eventId}`,
-        eventId,
-        questions: [],
-        submitted: false
-      };
+      if (context === 'user') {
+        // Form not created for this event yet
+        return {
+          id: `temp-eval-id-${eventId}`,
+          eventId,
+          questions: [],
+          submitted: false
+        };
+      }
+      throw error;
     }
-    if (error.status === 403) {
+    if (context === 'user' && error.status === 403) {
       // Not eligible
       throw new Error("User is not eligible for this evaluation.");
     }
@@ -35,7 +44,7 @@ export async function submitEventEvaluation(
 ): Promise<{ success: boolean; eventId: string; }> {
   try {
     const { data } = await apiClient.post<{ success: boolean; eventId: string }>(`/evaluations/${evaluationId}/submit`, { answers });
-    return { ...data, eventId: '' }; // The backend doesn't return eventId, but we might need it for cache invalidation
+    return data;
   } catch (error: any) {
     console.error(`Failed to submit evaluation for ${evaluationId}:`, error);
     throw new Error(error.message || 'Failed to submit evaluation.');
@@ -43,7 +52,7 @@ export async function submitEventEvaluation(
 }
 
 
-export async function saveEventEvaluationForm(eventId: string, questions: Partial<EvaluationQuestion>[]): Promise<EvaluationForm> {
+export async function saveEventEvaluationForm(eventId: string, questions: EvaluationQuestion[]): Promise<EvaluationForm> {
   try {
     const { data } = await apiClient.patch<EvaluationForm>(`/admin/events/${eventId}/evaluation`, { questions });
     return data;
@@ -64,5 +73,15 @@ export async function getEvaluationResponses(eventId: string): Promise<Evaluatio
     }
     console.error(`Failed to fetch responses for event ${eventId}:`, error);
     throw new Error(error.message || 'Failed to fetch responses.');
+  }
+}
+
+export async function getEventRating(eventId: string): Promise<EventRating> {
+  try {
+    const { data } = await apiClient.get<EventRating>(`/events/${eventId}/evaluation/rating`);
+    return data;
+  } catch (error: any) {
+    console.error(`Failed to fetch rating for event ${eventId}:`, error);
+    return { average: null, count: 0 };
   }
 }

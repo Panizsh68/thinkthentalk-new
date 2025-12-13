@@ -14,30 +14,46 @@ export interface GetAdminEventsParams {
   deleted?: 'all' | 'true' | 'false';
 }
 
-const transformEvent = (event: any): Event => ({
-  id: event.id,
-  title: event.title,
-  summary: event.summary,
-  description: event.description,
-  startDateTime: new Date(event.startDateTime),
-  endDateTime: event.endDateTime ? new Date(event.endDateTime) : undefined,
-  city: event.city,
-  address: event.address,
-  type: event.type,
-  posterUrl: event.posterUrl,
-  categories: event.categories || [],
-  capacityTotal: event.capacityTotal,
-  capacityRemaining: event.capacityRemaining,
-  showRemainingCapacity: event.showRemainingCapacity,
-  tickets: event.tickets,
-  resources: event.resources,
-  publicDiscountIds: event.publicDiscountIds,
-  isArchived: Boolean(event.isArchived),
-  archivedAt: event.archivedAt ? new Date(event.archivedAt) : undefined,
-  archivedById: event.archivedById ?? null,
-  deletedAt: event.deletedAt ? new Date(event.deletedAt) : undefined,
-  deletedById: event.deletedById ?? null,
-});
+const transformEvent = (event: any): Event => {
+  const eventStart = new Date(event.startDateTime);
+  const eventEnd = event.endDateTime ? new Date(event.endDateTime) : undefined;
+
+  return {
+    id: event.id,
+    title: event.title,
+    summary: event.summary,
+    description: event.description,
+    startDateTime: eventStart,
+    endDateTime: eventEnd,
+    city: event.city,
+    address: event.address,
+    type: event.type,
+    posterUrl: event.posterUrl,
+    categories: event.categories || [],
+    capacityTotal: event.capacityTotal,
+    capacityRemaining: event.capacityRemaining,
+    showRemainingCapacity: event.showRemainingCapacity,
+    tickets: (event.tickets || []).map((t: any) => ({
+      ...t,
+      saleStartDate: t.saleStartDate ? new Date(t.saleStartDate) : eventStart,
+      saleEndDate: t.saleEndDate
+        ? new Date(t.saleEndDate)
+        : eventEnd ?? new Date(eventStart.getTime() + 30 * 24 * 60 * 60 * 1000),
+      earlyBirdEndDate: t.earlyBirdEndDate ? new Date(t.earlyBirdEndDate) : undefined,
+      quantityRemaining:
+        typeof t.quantityRemaining === 'number'
+          ? t.quantityRemaining
+          : Math.max((t.quantityTotal ?? 0) - (t.quantitySold ?? 0), 0),
+    })) as EventTicketConfig[],
+    resources: event.resources,
+    publicDiscountIds: event.publicDiscountIds,
+    isArchived: Boolean(event.isArchived),
+    archivedAt: event.archivedAt ? new Date(event.archivedAt) : undefined,
+    archivedById: event.archivedById ?? null,
+    deletedAt: event.deletedAt ? new Date(event.deletedAt) : undefined,
+    deletedById: event.deletedById ?? null,
+  };
+};
 
 export async function getAdminEvents(params: GetAdminEventsParams = {}): Promise<Event[]> {
   const queryParams = new URLSearchParams();

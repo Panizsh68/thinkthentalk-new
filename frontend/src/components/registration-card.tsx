@@ -66,7 +66,7 @@ export function RegistrationCard({ registration }: RegistrationCardProps) {
             <Button variant="outline" size="sm" asChild>
             <Link href={`/events/${registration.eventId}`}>{t('actions.viewEvent')}</Link>
             </Button>
-            {registration.status === 'PAID' && (
+            {registration.status === 'PAID' && registration.paymentId && (
             <Button size="sm" asChild>
                 <Link href={`/payment/callback?paymentId=${registration.paymentId}`}>{t('actions.viewReceipt')}</Link>
             </Button>

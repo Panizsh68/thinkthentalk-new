@@ -41,8 +41,9 @@ const apiClient = {
         token = adminToken;
         usedTokenType = 'admin';
       } else if (path.includes('/upload') || path.includes('/upload/')) {
-        token = adminToken || userToken;
-        usedTokenType = adminToken ? 'admin' : 'user';
+        // Prefer user token for uploads if available, otherwise fall back to admin
+        token = userToken || adminToken;
+        usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
       } else {
         token = userToken;
         usedTokenType = 'user';
@@ -71,22 +72,29 @@ const apiClient = {
 
       if (response.status === 401 && typeof window !== 'undefined') {
         console.log("Received 401 Unauthorized. Clearing tokens and redirecting to login.");
-        const isAdminToken = usedTokenType === 'admin';
-        const loginPath = isAdminToken ? '/admin/login' : '/login';
+        const isAdminRequest = path.startsWith('/admin') || usedTokenType === 'admin';
+        const onAdminPage = window.location.pathname.startsWith('/admin');
 
-        if (isAdminToken) {
+        if (isAdminRequest || usedTokenType === 'admin') {
           localStorage.removeItem('adminAccessToken');
           localStorage.removeItem('currentAdminUser');
-        } else {
+        }
+
+        if (usedTokenType === 'user') {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('currentUser');
         }
 
-        // Redirect to login page, preserving the intended destination
-        const redirectUrl = window.location.pathname;
-        if (window.location.pathname !== loginPath) {
+        const loginPath = onAdminPage || isAdminRequest ? '/admin/login' : '/login';
+        const redirectUrl = window.location.pathname + window.location.search;
+        const shouldRedirect =
+          (onAdminPage && isAdminRequest) || (!isAdminRequest && !onAdminPage);
+
+        if (shouldRedirect && window.location.pathname !== loginPath) {
           window.location.href = `${loginPath}?redirect=${encodeURIComponent(redirectUrl)}`;
         }
+
+        throw new Error('Unauthorized');
       }
 
       if (!response.ok) {

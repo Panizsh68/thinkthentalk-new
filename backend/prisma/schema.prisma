@@ -142,6 +142,8 @@ model EventTicketConfig {
   type             TicketType
   price            Decimal
   currency         Currency
+  saleStartDate    DateTime?
+  saleEndDate      DateTime?
   quantityTotal    Int
   quantitySold     Int
   earlyBirdEndDate DateTime?
@@ -272,6 +274,7 @@ model AdminAuditLog {
 enum EvaluationQuestionType {
   RATING
   TEXT
+  YES_NO
 }
 
 model EvaluationForm {

@@ -8,17 +8,19 @@ import { useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useRegistrationWizardStore } from '@/hooks/use-registration-wizard-store';
 import { useAuth } from '@/lib/auth/auth-provider';
+import type { StepRef } from '../registration-wizard';
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import type { StepComponentProps } from '../registration-wizard';
 
-const getContactSchema = (t: (key: string) => string) => z.object({
-  mobile: z.string().regex(/^09\d{9}$/, t('auth.errors.invalidMobile')),
-  email: z.string().email({ message: t('registration.validation.invalidEmail') }).optional().or(z.literal('')),
-});
+const getContactSchema = (t: (key: string) => string) =>
+  z.object({
+    mobile: z.string().regex(/^09\d{9}$/, t('auth.errors.invalidMobile')),
+    email: z.string().email({ message: t('registration.validation.invalidEmail') }),
+  });
 
-export const ContactStep = forwardRef<any, StepComponentProps>(({}, ref) => {
+export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => {
   const { t } = useLanguage();
   const { formData, setFormData, setStepValidity, currentStep } = useRegistrationWizardStore();
   const { currentUser } = useAuth();
@@ -53,9 +55,13 @@ export const ContactStep = forwardRef<any, StepComponentProps>(({}, ref) => {
 
   // Update zustand store on every valid form change
   useEffect(() => {
-    const subscription = form.watch((values) => {
-      setFormData(values as Partial<typeof formData>);
-       form.trigger().then(isValid => {
+    const subscription = form.watch((values: Partial<ContactFormValues>) => {
+      const normalized = {
+        mobile: values?.mobile ?? '',
+        email: values?.email ?? '',
+      };
+      setFormData(normalized as Partial<typeof formData>);
+      form.trigger().then((isValid: boolean) => {
         setStepValidity(currentStep, isValid);
       });
     });
@@ -73,7 +79,7 @@ export const ContactStep = forwardRef<any, StepComponentProps>(({}, ref) => {
             <FormField
               control={form.control}
               name="mobile"
-              render={({ field }) => (
+              render={({ field }: { field: any }) => (
                 <FormItem>
                   <FormLabel>{t('auth.mobileLabel')}</FormLabel>
                   <FormControl>
@@ -89,15 +95,12 @@ export const ContactStep = forwardRef<any, StepComponentProps>(({}, ref) => {
             <FormField
               control={form.control}
               name="email"
-              render={({ field }) => (
+              render={({ field }: { field: any }) => (
                 <FormItem>
                   <FormLabel>{t('registration.fields.email')}</FormLabel>
                   <FormControl>
                     <Input placeholder={t('registration.placeholders.email')} {...field} dir="ltr" />
                   </FormControl>
-                   <FormDescription>
-                    {t('registration.descriptions.emailOptional')}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

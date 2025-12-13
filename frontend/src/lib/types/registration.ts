@@ -36,7 +36,7 @@ export type UserRegistrationDetails = {
     id: string;
     userId: string;
     eventId: string;
-    paymentId: string;
+    paymentId?: string;
     ticketType: TicketType;
     status: RegistrationStatus;
     createdAt: Date;
@@ -47,13 +47,13 @@ export type UserRegistrationDetails = {
         title: LocalizedText;
         startDateTime: Date;
     };
-    payment: {
+    payment?: {
         id: string;
         amount: number;
         currency: 'TOMAN' | 'IRR';
         status: 'PENDING' | 'SUCCESS' | 'FAILED';
         gatewayTransactionId?: string;
-    }
+    } | null;
 }
 
 

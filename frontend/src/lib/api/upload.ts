@@ -21,18 +21,6 @@ export async function uploadEventPoster(file: File): Promise<UploadResponse> {
 }
 
 /**
- * Upload user avatar image
- */
-export async function uploadUserAvatar(file: File): Promise<UploadResponse> {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const response = await apiClient.post<UploadResponse>('/upload/user-avatar', formData);
-
-  return response.data;
-}
-
-/**
  * Upload team member photo
  */
 export async function uploadTeamMember(file: File): Promise<UploadResponse> {
@@ -52,6 +40,18 @@ export async function uploadSponsorLogo(file: File): Promise<UploadResponse> {
   formData.append('file', file);
 
   const response = await apiClient.post<UploadResponse>('/upload/sponsor-logo', formData);
+
+  return response.data;
+}
+
+/**
+ * Upload event resource file
+ */
+export async function uploadEventResource(file: File): Promise<UploadResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await apiClient.post<UploadResponse>('/upload/event-resource', formData);
 
   return response.data;
 }

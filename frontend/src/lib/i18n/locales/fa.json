@@ -53,6 +53,7 @@
     "tickets": "بلیت‌ها",
     "selectTicket": "برای ثبت‌نام، بلیت خود را انتخاب کنید.",
     "free": "رایگان",
+    "noRatings": "هنوز امتیازی ثبت نشده است",
     "resourcesTitle": "منابع",
     "resourcePublic": "عمومی",
     "resourceRegisteredOnly": "فقط برای شرکت‌کنندگان",
@@ -258,6 +259,8 @@
     "textPlaceholder": "بازخورد شما...",
     "alreadySubmittedTitle": "بازخورد قبلا ارسال شده است",
     "alreadySubmittedDescription": "با تشکر، شما قبلاً بازخورد خود را برای این رویداد ارسال کرده‌اید.",
+    "successTitle": "از بازخورد شما متشکریم",
+    "successDescription": "پاسخ‌های شما با موفقیت ثبت شد.",
     "errors": {
       "notAuthenticated": "لطفا وارد شوید",
       "loginPrompt": "برای ارسال بازخورد برای این رویداد باید وارد شوید.",

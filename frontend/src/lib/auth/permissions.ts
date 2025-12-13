@@ -5,6 +5,7 @@ export const pagePermissions = {
   dashboard: ['ADMIN', 'EVENT_MANAGER', 'FINANCE'],
   events: ['ADMIN', 'EVENT_MANAGER'],
   registrations: ['ADMIN', 'EVENT_MANAGER', 'FINANCE'],
+  users: ['ADMIN', 'EVENT_MANAGER', 'FINANCE'],
   payments: ['ADMIN', 'FINANCE'],
   discounts: ['ADMIN', 'FINANCE'],
   messaging: ['ADMIN', 'EVENT_MANAGER'],

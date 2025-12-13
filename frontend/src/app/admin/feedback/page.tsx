@@ -166,7 +166,13 @@ export default function AdminFeedbackPage() {
                                                     <span className="text-muted-foreground text-sm">({answer}/5)</span>
                                                 </div>
                                             ) : (
-                                                <p className="text-muted-foreground border-l-2 pl-4 mt-1">{String(answer)}</p>
+                                                <p className="text-muted-foreground border-l-2 pl-4 mt-1">
+                                                    {q.type === 'YES_NO'
+                                                      ? ((typeof answer === 'boolean' ? answer : String(answer).toLowerCase() === 'true')
+                                                        ? t('actions.yes')
+                                                        : t('actions.no'))
+                                                      : String(answer)}
+                                                </p>
                                             )}
                                         </div>
                                     )

@@ -10,6 +10,7 @@ import { useLanguage } from '@/lib/i18n/language-provider';
 import type { EventResource } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
+import { useUploadEventResource } from '@/hooks/use-upload';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -53,6 +54,7 @@ export default function ManageResourcesPage() {
   const { toast } = useToast();
   const { data: event, isLoading: isLoadingEvent, error } = useAdminEventQuery(eventId);
   const { mutate: updateResources, isPending: isSaving } = useUpdateEventResourcesMutation();
+  const { mutate: uploadResourceFile, isPending: isUploading } = useUploadEventResource();
   
   const [resources, setResources] = useState<Partial<EventResource>[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -200,7 +202,34 @@ export default function ManageResourcesPage() {
                     <FormField control={form.control} name="url" render={({ field }) => (
                         <FormItem>
                             <FormLabel>{t('admin.resources.form.url')}</FormLabel>
-                            <FormControl><Input {...field} dir="ltr" /></FormControl>
+                            <FormControl>
+                              <div className="flex flex-col gap-2">
+                                <Input {...field} dir="ltr" placeholder="https://example.com/file.pdf" />
+                                <div className="flex items-center gap-3">
+                                  <Input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar,.json,.txt,.png,.jpg,.jpeg"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (!file) return;
+                                      uploadResourceFile(file, {
+                                        onSuccess: (data) => {
+                                          field.onChange(data.url);
+                                          toast({ title: t('admin.resources.form.fileUploaded') });
+                                          e.target.value = '';
+                                        },
+                                        onError: (err) => {
+                                          toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+                                        },
+                                      });
+                                    }}
+                                    disabled={isUploading}
+                                  />
+                                  {isUploading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+                                </div>
+                                {field.value && <p className="text-xs text-muted-foreground break-all">{t('admin.resources.form.currentUrl')}: {field.value}</p>}
+                              </div>
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
@@ -226,7 +255,7 @@ export default function ManageResourcesPage() {
                     <DialogFooter>
                         <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>{t('admin.resources.form.cancel')}</Button>
                         <Button type="submit" disabled={isSaving}>
-                            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {(isSaving || isUploading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {editingResource ? t('admin.resources.form.save') : t('admin.resources.form.add')}
                         </Button>
                     </DialogFooter>

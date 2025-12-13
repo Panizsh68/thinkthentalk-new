@@ -78,6 +78,8 @@
     "download": "دانلود",
     "view": "مشاهده",
     "addToCalendar": "افزودن به تقویم",
+    "yes": "بله",
+    "no": "خیر",
     "clearFilters": "پاک کردن فیلترها",
     "backToEvents": "بازگشت به رویدادها",
     "back": "بازگشت",
@@ -119,6 +121,7 @@
     "tickets": "بلیت‌ها",
     "selectTicket": "برای ثبت‌نام، نوع بلیت خود را انتخاب کنید.",
     "free": "رایگان",
+    "noRatings": "هنوز امتیازی ثبت نشده است",
     "resourcesTitle": "منابع رویداد",
     "resourcePublic": "عمومی",
     "resourceRegisteredOnly": "ویژه شرکت‌کنندگان",
@@ -133,6 +136,9 @@
     "supporter": "حمایتی",
     "soldOut": "ظرفیت تکمیل شد",
     "expired": "مهلت تمام شد",
+    "saleEnded": "فروش به پایان رسیده",
+    "notStarted": "فروش از {date} شروع می‌شود",
+    "remaining": "{count} بلیت باقی مانده",
     "earlyBirdEnds": "پایان تا {date}"
   },
   "filters": {
@@ -331,6 +337,8 @@
     "textPlaceholder": "بازخورد شما...",
     "alreadySubmittedTitle": "بازخورد قبلا ارسال شده است",
     "alreadySubmittedDescription": "با تشکر، شما قبلاً بازخورد خود را برای این رویداد ارسال کرده‌اید.",
+    "successTitle": "از بازخورد شما متشکریم",
+    "successDescription": "پاسخ‌های شما با موفقیت ثبت شد.",
     "errors": {
       "notAuthenticated": "لطفا وارد شوید",
       "loginPrompt": "برای ارسال بازخورد برای این رویداد باید وارد شوید.",
@@ -348,6 +356,7 @@
       "dashboard": "داشبورد",
       "events": "رویدادها",
       "registrations": "ثبت‌نام‌ها",
+      "users": "کاربران",
       "payments": "پرداخت‌ها",
       "discounts": "تخفیف‌ها",
       "messaging": "پیام‌رسانی",
@@ -355,6 +364,44 @@
       "feedback": "بازخوردها",
       "sponsors": "حامیان",
       "team": "تیم"
+    },
+    "filters": {
+      "title": "فیلترها"
+    },
+    "users": {
+      "title": "کاربران",
+      "subtitle": "مشاهده ورودهای OTP، وضعیت تکمیل پروفایل و رویدادهای ثبت‌نام شده.",
+      "filters": {
+        "searchPlaceholder": "جستجو بر اساس نام، موبایل یا ایمیل",
+        "profileStatus": "وضعیت پروفایل",
+        "all": "همه کاربران",
+        "complete": "کامل",
+        "incomplete": "ناقص"
+      },
+      "table": {
+        "user": "کاربر",
+        "profileStatus": "پروفایل",
+        "registrations": "ثبت‌نام‌ها",
+        "lastRegistration": "آخرین ثبت‌نام",
+        "missing": "فیلدهای ناقص",
+        "actions": "عملیات"
+      },
+      "badges": {
+        "complete": "تکمیل شده",
+        "incomplete": "نیاز به تکمیل"
+      },
+      "missingFieldsLabel": "ناقص",
+      "profileCard": {
+        "title": "پروفایل",
+        "completion": "وضعیت پروفایل",
+        "missingFields": "فیلدهای خالی"
+      },
+      "registrations": {
+        "title": "ثبت‌نام‌ها",
+        "empty": "هنوز ثبت‌نامی برای این کاربر ثبت نشده است.",
+        "open": "مشاهده ثبت‌نام"
+      },
+      "latestFormData": "آخرین اطلاعات وارد شده در فرم"
     },
     "contact": {
       "title": "مدیریت پیام‌های تماس",
@@ -509,6 +556,7 @@
       "enable": "فعال",
       "price": "قیمت (تومان)",
       "quantity": "تعداد کل",
+      "startDate": "تاریخ شروع فروش",
       "endDate": "تاریخ پایان فروش",
       "endDateDesc": "اختیاری. پس از این تاریخ، بلیت‌های پیش‌فروش قابل خریداری نیستند.",
       "saveChanges": "ذخیره تنظیمات بلیت",
@@ -844,7 +892,8 @@
       },
       "types": {
         "rating": "امتیاز (۱-۵)",
-        "text": "ورودی متن"
+        "text": "ورودی متن",
+        "yesNo": "بله / خیر"
       },
       "saveSuccessTitle": "فرم ذخیره شد",
       "saveSuccessDescription": "فرم ارزیابی با موفقیت به‌روزرسانی شد.",

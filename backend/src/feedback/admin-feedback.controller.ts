@@ -63,6 +63,22 @@ export class AdminFeedbackController {
     return this.feedbackService.saveEvaluationForm(eventId, questions);
   }
 
+  @Get('events/:eventId/evaluation')
+  @ApiOperation({
+    summary: 'Get Evaluation Form (Admin)',
+    description: 'Fetches or initializes the evaluation form for an event so admins can edit questions.',
+  })
+  @ApiParam({ name: 'eventId', type: String, required: true })
+  @ApiOkResponse({ description: 'Evaluation form.', type: EvaluationFormDto })
+  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
+  async getEvaluationForm(
+    @Param('eventId') eventId: string,
+  ): Promise<EvaluationFormDto> {
+    return this.feedbackService.getEvaluationFormForAdmin(eventId);
+  }
+
   @Get('events/:eventId/evaluation/responses')
   @ApiOperation({
     summary: 'Get Evaluation Responses (Admin)',

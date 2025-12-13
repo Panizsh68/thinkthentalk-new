@@ -28,7 +28,7 @@ export function SummaryStep() {
     const [appliedCodeDiscount, setAppliedCodeDiscount] = useState<Discount | null>(null);
 
     const { mutate: validateCode, isPending: isApplyingCode, error: discountError } = useValidateDiscountMutation();
-    const { data: allDiscounts } = useDiscountsQuery();
+    const { data: allDiscounts } = useDiscountsQuery({ scope: 'public', eventId });
 
 
     const publicDiscount = useMemo(() => {

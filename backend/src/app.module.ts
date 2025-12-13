@@ -23,20 +23,31 @@ import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot(
-      {
-        // Serve from project-level uploads directory (not dist/)
-        rootPath: path.join(process.cwd(), 'uploads'),
-        serveRoot: '/uploads',
+    ServeStaticModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const configuredUploadDir = configService.get<string>('UPLOADS_DIR');
+        const publicUploadPath = configService.get<string>('PUBLIC_UPLOAD_PATH') ?? '/images';
+        const rootPath = configuredUploadDir
+          ? path.resolve(configuredUploadDir)
+          : path.join(process.cwd(), 'uploads');
+
+        // Serve under both configured path and legacy paths to avoid 404s
+        const serveRoots = Array.from(
+          new Set([
+            publicUploadPath.startsWith('/') ? publicUploadPath : `/${publicUploadPath}`,
+            '/uploads',
+            '/images',
+          ]),
+        );
+
+        return serveRoots.map((serveRoot) => ({
+          rootPath,
+          serveRoot,
+          serveStaticOptions: { index: false },
+        }));
       },
-      {
-        rootPath: path.join(process.cwd(), 'uploads'),
-        serveRoot: '/images',
-        serveStaticOptions: {
-          index: false,
-        },
-      },
-    ),
+    }),
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => [

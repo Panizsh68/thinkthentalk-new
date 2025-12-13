@@ -3,7 +3,7 @@
 import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useVerifyPaymentMutation, usePaymentQuery } from '@/hooks/use-payment-queries';
+import { usePaymentPublicQuery } from '@/hooks/use-payment-queries';
 import { useEventQuery } from '@/hooks/use-event-queries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,20 +17,17 @@ function PaymentCallbackContent() {
   const searchParams = useSearchParams();
   const paymentId = searchParams.get('paymentId');
   const statusParam = searchParams.get('status') || searchParams.get('Status');
+  const authority = searchParams.get('Authority');
   const normalizedStatus = statusParam
     ? ((statusParam.toUpperCase() === 'OK' || statusParam.toUpperCase() === 'SUCCESS') ? 'SUCCESS' : 'FAILED')
     : null;
   const { t, language } = useLanguage();
 
-  const { data: payment, isLoading: isLoadingPayment, error: paymentError } = usePaymentQuery(paymentId);
+  const { data: payment, isLoading: isLoadingPayment, error: paymentError } = usePaymentPublicQuery(paymentId, {
+    status: normalizedStatus ?? undefined,
+    authority: authority,
+  });
   const { data: event, isLoading: isLoadingEvent } = useEventQuery(payment?.eventId || '');
-  const { mutate: verifyPayment, isPending: isVerifying } = useVerifyPaymentMutation();
-
-  useEffect(() => {
-    if (paymentId && normalizedStatus && payment && payment.status === 'PENDING') {
-        verifyPayment({ paymentId, status: normalizedStatus });
-    }
-  }, [paymentId, normalizedStatus, payment, verifyPayment]);
 
   useEffect(() => {
     if (!normalizedStatus && payment?.status === 'PENDING' && payment.redirectUrl) {
@@ -38,7 +35,7 @@ function PaymentCallbackContent() {
     }
   }, [normalizedStatus, payment]);
 
-  const isLoading = isVerifying || isLoadingPayment || (payment?.eventId && isLoadingEvent);
+  const isLoading = isLoadingPayment || (payment?.eventId && isLoadingEvent);
 
   if (isLoading) {
     return (

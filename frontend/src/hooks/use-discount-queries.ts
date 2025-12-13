@@ -2,21 +2,25 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getDiscounts, createDiscount, updateDiscount, deleteDiscount, validateDiscountCode } from '@/lib/api/discounts';
+import { getDiscounts, getPublicDiscounts, createDiscount, updateDiscount, deleteDiscount, validateDiscountCode } from '@/lib/api/discounts';
 import type { DiscountFormData, UpdateDiscountFormDataDto, ValidateDiscountDto } from '@/lib/types';
 
 const discountKeys = {
   all: ['discounts'] as const,
   lists: () => [...discountKeys.all, 'list'] as const,
-  list: () => [...discountKeys.lists()] as const,
+  list: (scope: 'admin' | 'public', eventId?: string | null) => [...discountKeys.lists(), scope, eventId ?? null] as const,
   details: () => [...discountKeys.all, 'detail'] as const,
   detail: (id: string) => [...discountKeys.details(), id] as const,
 };
 
-export function useDiscountsQuery() {
+export function useDiscountsQuery(options?: { scope?: 'admin' | 'public'; eventId?: string | null }) {
+  const scope = options?.scope ?? 'admin';
+  const eventId = options?.eventId ?? null;
+  const queryFn = scope === 'admin' ? getDiscounts : () => getPublicDiscounts(eventId ?? undefined);
+
   return useQuery({
-    queryKey: discountKeys.list(),
-    queryFn: getDiscounts,
+    queryKey: discountKeys.list(scope, eventId),
+    queryFn,
   });
 }
 

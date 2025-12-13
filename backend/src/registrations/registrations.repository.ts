@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { prismaToUserRegistrationDetailsEntity, prismaToUserRegistrationEntity } from './mappers/registration.mapper';
 import { UserRegistrationDetailsEntity, UserRegistrationEntity } from './domain/registration.entity';
+import { Prisma } from '@prisma/client';
 
 export interface AdminRegistrationFilter {
   userId?: string;
@@ -25,6 +26,7 @@ export class RegistrationsRepository {
             startDateTime: true,
           },
         },
+        payment: { select: { id: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -82,6 +84,10 @@ export class RegistrationsRepository {
           ? { connect: { id: data.paymentId } }
           : data.paymentId === null
             ? { disconnect: true }
+            : undefined,
+        formData:
+          data.formData !== undefined
+            ? (data.formData as Prisma.InputJsonValue)
             : undefined,
       },
       include: {

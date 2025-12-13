@@ -74,6 +74,13 @@ interface RegistrationWizardState {
 
 const getLocalStorageKey = (eventId: string, ticketType: string) => `registration-wizard-${eventId}-${ticketType}`;
 
+const clearPlaceholderName = (value?: string | null): string => {
+  if (!value) return '';
+  const normalized = value.trim().toLowerCase();
+  const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+  return placeholders.includes(normalized) ? '' : value;
+};
+
 export const useRegistrationWizardStore = create<RegistrationWizardState>((set, get) => ({
   eventId: '',
   ticketType: 'STANDARD',
@@ -117,6 +124,12 @@ export const useRegistrationWizardStore = create<RegistrationWizardState>((set, 
   reset: (user, event, ticketType, totalSteps) => {
      const storageKey = getLocalStorageKey(event.id, ticketType);
      localStorage.removeItem(storageKey);
+
+     const firstNameFa = clearPlaceholderName(user.firstNameFa);
+     const lastNameFa = clearPlaceholderName(user.lastNameFa);
+     const firstNameEn = clearPlaceholderName(user.firstNameEn);
+     const lastNameEn = clearPlaceholderName(user.lastNameEn);
+
      set({
         eventId: event.id,
         ticketType: ticketType as TicketType,
@@ -125,10 +138,10 @@ export const useRegistrationWizardStore = create<RegistrationWizardState>((set, 
         stepsValidity: Array(totalSteps).fill(false),
         formData: {
             ...initialFormData,
-            firstNameFa: user.firstNameFa || '',
-            lastNameFa: user.lastNameFa || '',
-            firstNameEn: user.firstNameEn || '',
-            lastNameEn: user.lastNameEn || '',
+            firstNameFa: firstNameFa || '',
+            lastNameFa: lastNameFa || '',
+            firstNameEn: firstNameEn || '',
+            lastNameEn: lastNameEn || '',
             gender: user.gender || undefined,
             age: user.age || undefined,
             educationLevel: user.educationLevel || '',
