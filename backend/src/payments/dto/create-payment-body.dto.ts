@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Currency, TicketType } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { RegistrationFormDataDto } from '../../registrations/dto/registration-form-data.dto';
 

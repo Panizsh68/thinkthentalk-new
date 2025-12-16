@@ -22,7 +22,10 @@ export class AdminUsersQueryDto {
   @IsNumber()
   page?: number;
 
-  @ApiPropertyOptional({ description: 'Items per page (default: 50)', example: 50 })
+  @ApiPropertyOptional({
+    description: 'Items per page (default: 50)',
+    example: 50,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

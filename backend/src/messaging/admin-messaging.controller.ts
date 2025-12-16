@@ -28,12 +28,13 @@ export class AdminMessagingController {
   constructor(
     private readonly messagingService: MessagingService,
     private readonly auditService: AuditService,
-  ) { }
+  ) {}
 
   @Post('send')
   @ApiOperation({
     summary: 'Send Bulk Message (Admin)',
-    description: 'Sends a bulk message via specified channels to a list of registered users.',
+    description:
+      'Sends a bulk message via specified channels to a list of registered users.',
   })
   @ApiBody({ type: SendBulkMessageDto, required: true })
   @ApiOkResponse({
@@ -46,8 +47,14 @@ export class AdminMessagingController {
       },
     },
   })
-  @ApiBadRequestResponse({ description: 'Invalid data.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiBadRequestResponse({
+    description: 'Invalid data.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async sendBulk(
     @Body() dto: SendBulkMessageDto,

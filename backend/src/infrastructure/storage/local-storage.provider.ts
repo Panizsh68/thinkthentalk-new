@@ -4,7 +4,12 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { randomUUID } from 'crypto';
 import type { Express } from 'express';
-import { StorageProvider, StoredFile, StorageUploadOptions, FileCategory } from './storage.types';
+import {
+  StorageProvider,
+  StoredFile,
+  StorageUploadOptions,
+  FileCategory,
+} from './storage.types';
 
 @Injectable()
 export class LocalStorageProvider implements StorageProvider {
@@ -16,7 +21,8 @@ export class LocalStorageProvider implements StorageProvider {
 
   constructor(private configService: ConfigService) {
     const configuredUploadDir = this.configService.get<string>('UPLOADS_DIR');
-    const configuredPublicPath = this.configService.get<string>('PUBLIC_UPLOAD_PATH');
+    const configuredPublicPath =
+      this.configService.get<string>('PUBLIC_UPLOAD_PATH');
 
     this.uploadDir = configuredUploadDir
       ? path.resolve(configuredUploadDir)
@@ -27,11 +33,15 @@ export class LocalStorageProvider implements StorageProvider {
       ? normalizedPublicPath
       : `/${normalizedPublicPath}`;
     this.maxFileSize = 50 * 1024 * 1024; // 50MB default
-    this.baseUrl = this.configService.get<string>('APP_URL') || 'http://localhost:3000';
+    this.baseUrl =
+      this.configService.get<string>('APP_URL') || 'http://localhost:3000';
     this.apiBaseUrl = this.configService.get<string>('API_BASE_URL');
   }
 
-  async upload(file: Express.Multer.File, options: StorageUploadOptions): Promise<StoredFile> {
+  async upload(
+    file: Express.Multer.File,
+    options: StorageUploadOptions,
+  ): Promise<StoredFile> {
     // Validate file
     if (!file) {
       throw new BadRequestException('No file provided');
@@ -92,13 +102,18 @@ export class LocalStorageProvider implements StorageProvider {
   getUrl(filePath: string): string {
     const apiBase = this.apiBaseUrl;
     if (apiBase) {
-      const normalizedApiBase = apiBase.endsWith('/api') ? apiBase.slice(0, -4) : apiBase;
+      const normalizedApiBase = apiBase.endsWith('/api')
+        ? apiBase.slice(0, -4)
+        : apiBase;
       return `${normalizedApiBase}/api/upload/files/${filePath}`;
     }
     return `${this.baseUrl}${this.publicDir}/${filePath}`;
   }
 
-  async getTemporaryUrl(filePath: string, expirationHours: number = 24): Promise<string> {
+  async getTemporaryUrl(
+    filePath: string,
+    expirationHours: number = 24,
+  ): Promise<string> {
     // Local storage doesn't support temporary URLs, return permanent URL
     return this.getUrl(filePath);
   }
@@ -128,10 +143,20 @@ export class LocalStorageProvider implements StorageProvider {
 
   private getValidMimeTypes(category: FileCategory): string[] {
     const mimeTypeMap: Record<FileCategory, string[]> = {
-      [FileCategory.EVENT_POSTER]: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+      [FileCategory.EVENT_POSTER]: [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+      ],
       [FileCategory.USER_AVATAR]: ['image/jpeg', 'image/png', 'image/webp'],
       [FileCategory.TEAM_MEMBER]: ['image/jpeg', 'image/png', 'image/webp'],
-      [FileCategory.SPONSOR_LOGO]: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'],
+      [FileCategory.SPONSOR_LOGO]: [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/svg+xml',
+      ],
       [FileCategory.DOCUMENT]: [
         'application/pdf',
         'application/msword',

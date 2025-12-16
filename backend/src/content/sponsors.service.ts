@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { SponsorDto } from './dto/sponsor.dto';
-import { SponsorFormDataDto, UpdateSponsorFormDataDto } from './dto/sponsor-form-data.dto';
+import {
+  SponsorFormDataDto,
+  UpdateSponsorFormDataDto,
+} from './dto/sponsor-form-data.dto';
 import { RedisService } from '../infrastructure/cache/redis.service';
 
 @Injectable()
@@ -14,7 +17,9 @@ export class SponsorsService {
     private readonly redis: RedisService,
     private readonly configService: ConfigService,
   ) {
-    this.cacheTtl = Number(this.configService.get('CONTENT_CACHE_TTL_SECONDS') ?? 120);
+    this.cacheTtl = Number(
+      this.configService.get('CONTENT_CACHE_TTL_SECONDS') ?? 120,
+    );
   }
 
   async listPublic(): Promise<SponsorDto[]> {
@@ -49,7 +54,10 @@ export class SponsorsService {
     return this.toDto(sponsor);
   }
 
-  async update(id: string, dto: UpdateSponsorFormDataDto): Promise<SponsorDto | null> {
+  async update(
+    id: string,
+    dto: UpdateSponsorFormDataDto,
+  ): Promise<SponsorDto | null> {
     const existing = await this.prisma.sponsor.findUnique({ where: { id } });
     if (!existing) {
       return null;
@@ -58,7 +66,9 @@ export class SponsorsService {
       where: { id },
       data: {
         ...(dto.name !== undefined ? { name: dto.name } : {}),
-        ...(dto.productOrTagline !== undefined ? { productOrTagline: dto.productOrTagline } : {}),
+        ...(dto.productOrTagline !== undefined
+          ? { productOrTagline: dto.productOrTagline }
+          : {}),
         ...(dto.logoUrl !== undefined ? { logoUrl: dto.logoUrl } : {}),
         ...(dto.websiteUrl !== undefined ? { websiteUrl: dto.websiteUrl } : {}),
       },

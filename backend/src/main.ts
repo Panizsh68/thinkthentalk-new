@@ -1,4 +1,3 @@
-
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
@@ -26,8 +25,16 @@ async function bootstrap() {
   ];
 
   app.enableCors({
-    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      if (!origin || allowedOrigins.some(o => (typeof o === 'string' ? o === origin : o.test(origin)))) {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      if (
+        !origin ||
+        allowedOrigins.some((o) =>
+          typeof o === 'string' ? o === origin : o.test(origin),
+        )
+      ) {
         callback(null, true);
       } else {
         logger.warn(`CORS: Origin ${origin} not allowed.`);
@@ -38,9 +45,11 @@ async function bootstrap() {
     exposedHeaders: ['Authorization'],
   });
 
-  app.use(helmet({
-    crossOriginResourcePolicy: { policy: 'cross-origin' },
-  }));
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
@@ -62,7 +71,9 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Think Then Talk API')
-    .setDescription('The complete API specification for the Think Then Talk event platform.')
+    .setDescription(
+      'The complete API specification for the Think Then Talk event platform.',
+    )
     .setVersion('1.0.0')
     .addBearerAuth(
       {
@@ -77,9 +88,18 @@ async function bootstrap() {
     .addTag('Events', 'Public operations for events')
     .addTag('Registrations', 'User-facing registration and payment flow')
     .addTag('Payments', 'Operations related to payment processing')
-    .addTag('Discounts', 'Operations for managing and validating discount codes')
-    .addTag('Content Management', 'Admin operations for managing site content like Sponsors and Team members')
-    .addTag('Feedback', 'Operations for managing event feedback forms and viewing responses')
+    .addTag(
+      'Discounts',
+      'Operations for managing and validating discount codes',
+    )
+    .addTag(
+      'Content Management',
+      'Admin operations for managing site content like Sponsors and Team members',
+    )
+    .addTag(
+      'Feedback',
+      'Operations for managing event feedback forms and viewing responses',
+    )
     .addTag('Messaging', 'Admin tools for bulk messaging')
     .addTag('Admin', 'General admin utilities like statistics and exports')
     .addServer('http://localhost:3000', 'Development server')

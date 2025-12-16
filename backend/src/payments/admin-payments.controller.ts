@@ -24,19 +24,29 @@ import type { Response } from 'express';
 @Roles(AdminRole.ADMIN, AdminRole.FINANCE)
 @Controller({ path: 'admin/payments', version: '1' })
 export class AdminPaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) { }
+  constructor(private readonly paymentsService: PaymentsService) {}
 
   @Get()
   @ApiOperation({
     summary: 'List All Payments (Admin)',
-    description: 'Retrieves a list of all payment records for financial overview.',
+    description:
+      'Retrieves a list of all payment records for financial overview.',
   })
-  @ApiOkResponse({ description: 'A list of payments.', type: PaymentDto, isArray: true })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'A list of payments.',
+    type: PaymentDto,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   @ApiQuery({ name: 'eventId', required: false, type: String })
   @ApiQuery({ name: 'status', required: false, enum: PaymentStatus })
-  async listPayments(@Query() query: AdminPaymentsQueryDto): Promise<PaymentDto[]> {
+  async listPayments(
+    @Query() query: AdminPaymentsQueryDto,
+  ): Promise<PaymentDto[]> {
     const { eventId, status } = query;
     return this.paymentsService.listAdminPayments({ eventId, status });
   }
@@ -50,13 +60,22 @@ export class AdminPaymentsController {
     description: 'A CSV file of payments.',
     content: { 'text/csv': { schema: { type: 'string' } } },
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   @ApiQuery({ name: 'eventId', required: false, type: String })
   @ApiQuery({ name: 'status', required: false, enum: PaymentStatus })
-  async exportPayments(@Query() query: AdminPaymentsQueryDto, @Res() res: Response) {
+  async exportPayments(
+    @Query() query: AdminPaymentsQueryDto,
+    @Res() res: Response,
+  ) {
     const { eventId, status } = query;
-    const payments = await this.paymentsService.listAdminPayments({ eventId, status });
+    const payments = await this.paymentsService.listAdminPayments({
+      eventId,
+      status,
+    });
 
     const header = [
       'id',

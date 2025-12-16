@@ -1,8 +1,18 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UserDto {
-  @ApiProperty({ description: 'The unique identifier for the user.', type: String })
+  @ApiProperty({
+    description: 'The unique identifier for the user.',
+    type: String,
+  })
   @IsString()
   id!: string;
 
@@ -14,12 +24,18 @@ export class UserDto {
   @IsString()
   lastNameFa!: string;
 
-  @ApiPropertyOptional({ description: "User's first name in English.", type: String })
+  @ApiPropertyOptional({
+    description: "User's first name in English.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   firstNameEn?: string | null;
 
-  @ApiPropertyOptional({ description: "User's last name in English.", type: String })
+  @ApiPropertyOptional({
+    description: "User's last name in English.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   lastNameEn?: string | null;
@@ -57,7 +73,10 @@ export class UserDto {
   @IsString()
   jobTitle?: string | null;
 
-  @ApiProperty({ description: "The user's primary mobile number (unique).", type: String })
+  @ApiProperty({
+    description: "The user's primary mobile number (unique).",
+    type: String,
+  })
   @IsString()
   mobile!: string;
 
@@ -66,12 +85,18 @@ export class UserDto {
   @IsEmail()
   email?: string | null;
 
-  @ApiPropertyOptional({ description: 'Language proficiency level.', type: String })
+  @ApiPropertyOptional({
+    description: 'Language proficiency level.',
+    type: String,
+  })
   @IsOptional()
   @IsString()
   languageLevel?: string | null;
 
-  @ApiPropertyOptional({ description: "User's avatar image URL.", type: String })
+  @ApiPropertyOptional({
+    description: "User's avatar image URL.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   avatarUrl?: string | null;

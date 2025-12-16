@@ -35,26 +35,39 @@ import { EvaluationResponseDto } from './dto/evaluation-response.dto';
 @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER, AdminRole.FINANCE)
 @Controller({ path: 'admin', version: '1' })
 export class AdminFeedbackController {
-  constructor(private readonly feedbackService: FeedbackService) { }
+  constructor(private readonly feedbackService: FeedbackService) {}
 
   @Patch('events/:eventId/evaluation')
   @ApiOperation({
     summary: 'Save Evaluation Form (Admin)',
-    description: "Creates or updates the questions for an event's evaluation form.",
+    description:
+      "Creates or updates the questions for an event's evaluation form.",
   })
   @ApiParam({ name: 'eventId', type: String, required: true })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        questions: { type: 'array', items: { $ref: '#/components/schemas/EvaluationQuestion' } },
+        questions: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/EvaluationQuestion' },
+        },
       },
       required: ['questions'],
     },
   })
-  @ApiOkResponse({ description: 'Evaluation form saved.', type: EvaluationFormDto })
-  @ApiBadRequestResponse({ description: 'Invalid data.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'Evaluation form saved.',
+    type: EvaluationFormDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async saveEvaluationForm(
     @Param('eventId') eventId: string,
@@ -66,12 +79,19 @@ export class AdminFeedbackController {
   @Get('events/:eventId/evaluation')
   @ApiOperation({
     summary: 'Get Evaluation Form (Admin)',
-    description: 'Fetches or initializes the evaluation form for an event so admins can edit questions.',
+    description:
+      'Fetches or initializes the evaluation form for an event so admins can edit questions.',
   })
   @ApiParam({ name: 'eventId', type: String, required: true })
   @ApiOkResponse({ description: 'Evaluation form.', type: EvaluationFormDto })
-  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Event not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async getEvaluationForm(
     @Param('eventId') eventId: string,
@@ -85,14 +105,25 @@ export class AdminFeedbackController {
     description: 'Retrieves submitted evaluation responses for an event.',
   })
   @ApiParam({ name: 'eventId', type: String, required: true })
-  @ApiOkResponse({ description: 'Evaluation responses.', type: EvaluationResponseDto, isArray: true })
-  @ApiNotFoundResponse({ description: 'Event or form not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'Evaluation responses.',
+    type: EvaluationResponseDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({
+    description: 'Event or form not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async getEvaluationResponses(
     @Param('eventId') eventId: string,
   ): Promise<EvaluationResponseDto[]> {
-    const responses = await this.feedbackService.getEvaluationResponses(eventId);
+    const responses =
+      await this.feedbackService.getEvaluationResponses(eventId);
     if (!responses) {
       throw new NotFoundException('Evaluation form not found.');
     }

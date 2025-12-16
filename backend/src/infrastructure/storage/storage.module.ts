@@ -9,4 +9,4 @@ import { CloudStorageProvider } from './cloud-storage.provider';
   providers: [StorageService, LocalStorageProvider, CloudStorageProvider],
   exports: [StorageService],
 })
-export class StorageModule { }
+export class StorageModule {}

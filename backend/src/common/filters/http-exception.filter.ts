@@ -7,7 +7,12 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ValidationError as ClassValidatorError } from 'class-validator';
-import { DomainError, ForbiddenError, NotFoundError, ValidationError } from '../errors/domain.errors';
+import {
+  DomainError,
+  ForbiddenError,
+  NotFoundError,
+  ValidationError,
+} from '../errors/domain.errors';
 
 interface ErrorResponse {
   message: string;
@@ -30,15 +35,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exception instanceof Error ? exception.stack : undefined,
       );
     } else {
-      this.logger.warn(`${request.method} ${request.url} failed with status ${status}: ${body.message}`);
+      this.logger.warn(
+        `${request.method} ${request.url} failed with status ${status}: ${body.message}`,
+      );
     }
 
     response.status(status).json(body);
   }
 
-  private mapException(exception: unknown): { status: number; body: ErrorResponse } {
-    if (Array.isArray(exception) && exception.every((e) => e instanceof ClassValidatorError)) {
-      const messages = (exception as ClassValidatorError[])
+  private mapException(exception: unknown): {
+    status: number;
+    body: ErrorResponse;
+  } {
+    if (
+      Array.isArray(exception) &&
+      exception.every((e) => e instanceof ClassValidatorError)
+    ) {
+      const messages = exception
         .map((err) => Object.values(err.constraints ?? {}).join(', '))
         .filter(Boolean);
       return {
@@ -52,30 +65,46 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const message =
         typeof response === 'string'
           ? response
-          : typeof response === 'object' && response !== null && 'message' in response
+          : typeof response === 'object' &&
+              response !== null &&
+              'message' in response
             ? (response as { message: string | string[] }).message
             : exception.message;
 
       return {
         status: exception.getStatus(),
-        body: { message: Array.isArray(message) ? message.join(', ') : message },
+        body: {
+          message: Array.isArray(message) ? message.join(', ') : message,
+        },
       };
     }
 
     if (exception instanceof DomainError) {
-      return { status: exception.statusCode, body: { message: exception.message } };
+      return {
+        status: exception.statusCode,
+        body: { message: exception.message },
+      };
     }
 
     if (exception instanceof ValidationError) {
-      return { status: HttpStatus.BAD_REQUEST, body: { message: exception.message } };
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        body: { message: exception.message },
+      };
     }
 
     if (exception instanceof ForbiddenError) {
-      return { status: HttpStatus.FORBIDDEN, body: { message: exception.message } };
+      return {
+        status: HttpStatus.FORBIDDEN,
+        body: { message: exception.message },
+      };
     }
 
     if (exception instanceof NotFoundError) {
-      return { status: HttpStatus.NOT_FOUND, body: { message: exception.message } };
+      return {
+        status: HttpStatus.NOT_FOUND,
+        body: { message: exception.message },
+      };
     }
 
     return {

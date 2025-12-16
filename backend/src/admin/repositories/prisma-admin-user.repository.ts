@@ -30,15 +30,12 @@ export class PrismaAdminUserRepository extends IAdminUserRepository {
     return toAdminUserEntity(admin);
   }
 
-  async update(
-    id: string,
-    data: UpdateAdminUserDto,
-  ): Promise<AdminUserEntity> {
+  async update(id: string, data: UpdateAdminUserDto): Promise<AdminUserEntity> {
     const admin = await this.prisma.adminUser.update({
       where: { id },
       data: {
         name: data.name ?? undefined,
-        role: (data.role as AdminRole | undefined) ?? undefined,
+        role: data.role ?? undefined,
         passwordHash: data.passwordHash ?? undefined,
       },
     });

@@ -7,7 +7,10 @@ import { ThrottlerException, ThrottlerStorageService } from '@nestjs/throttler';
 import { CreateContactMessageDto } from './dto/create-contact-message.dto';
 import { ListContactMessagesQueryDto } from './dto/list-contact-messages.dto';
 import { UpdateContactStatusDto } from './dto/update-contact-status.dto';
-import { ContactMessageDto, PaginatedContactMessagesDto } from './dto/contact-message.dto';
+import {
+  ContactMessageDto,
+  PaginatedContactMessagesDto,
+} from './dto/contact-message.dto';
 
 interface SubmissionMeta {
   ip: string;
@@ -25,7 +28,7 @@ export class ContactService {
     private readonly mailer: MailerService,
     private readonly configService: ConfigService,
     private readonly throttlerStorage: ThrottlerStorageService,
-  ) { }
+  ) {}
 
   private getRateLimitCount(): number {
     return Number(this.configService.get('CONTACT_RATE_LIMIT_COUNT') ?? 1);
@@ -53,18 +56,31 @@ export class ContactService {
     const limit = this.getRateLimitCount();
     const ttl = this.getRateLimitWindow();
     const key = `contact:${ip}`;
-    const record = await this.throttlerStorage.increment(key, ttl, limit, 0, 'contact');
+    const record = await this.throttlerStorage.increment(
+      key,
+      ttl,
+      limit,
+      0,
+      'contact',
+    );
     if (record.totalHits > limit) {
-      throw new ThrottlerException('Too many requests. Please wait before sending another message.');
+      throw new ThrottlerException(
+        'Too many requests. Please wait before sending another message.',
+      );
     }
   }
 
-  async submitPublicMessage(dto: CreateContactMessageDto, meta: SubmissionMeta): Promise<void> {
+  async submitPublicMessage(
+    dto: CreateContactMessageDto,
+    meta: SubmissionMeta,
+  ): Promise<void> {
     await this.enforceRateLimit(meta.ip);
 
     const honeypotValue = dto.honeypot || dto.website || meta.honeypotValue;
     if (honeypotValue && honeypotValue.trim().length > 0) {
-      this.logger.warn(`Honeypot triggered for IP ${meta.ip}. Message dropped.`);
+      this.logger.warn(
+        `Honeypot triggered for IP ${meta.ip}. Message dropped.`,
+      );
       return;
     }
 
@@ -83,7 +99,10 @@ export class ContactService {
     });
 
     void this.dispatchNotification(created).catch((error) =>
-      this.logger.error('Unable to send contact notification', error instanceof Error ? error.message : error),
+      this.logger.error(
+        'Unable to send contact notification',
+        error instanceof Error ? error.message : error,
+      ),
     );
   }
 
@@ -93,7 +112,8 @@ export class ContactService {
     }
 
     const subject = `New contact message from ${contact.email}`;
-    const plainBody = `A new contact message has been received.\n\n` +
+    const plainBody =
+      `A new contact message has been received.\n\n` +
       `Name: ${contact.name ?? 'N/A'}\n` +
       `Email: ${contact.email}\n` +
       `Language: ${contact.language}\n` +
@@ -124,7 +144,9 @@ export class ContactService {
     }
   }
 
-  private buildWhereClause(query: ListContactMessagesQueryDto): Prisma.ContactMessageWhereInput {
+  private buildWhereClause(
+    query: ListContactMessagesQueryDto,
+  ): Prisma.ContactMessageWhereInput {
     const where: Prisma.ContactMessageWhereInput = {};
 
     if (query.status) {
@@ -161,7 +183,9 @@ export class ContactService {
     return where;
   }
 
-  async listMessages(query: ListContactMessagesQueryDto): Promise<PaginatedContactMessagesDto> {
+  async listMessages(
+    query: ListContactMessagesQueryDto,
+  ): Promise<PaginatedContactMessagesDto> {
     const where = this.buildWhereClause(query);
     const [items, total] = await this.prisma.$transaction([
       this.prisma.contactMessage.findMany({
@@ -182,11 +206,16 @@ export class ContactService {
   }
 
   async getMessage(id: string): Promise<ContactMessageDto> {
-    const message = await this.prisma.contactMessage.findUniqueOrThrow({ where: { id } });
+    const message = await this.prisma.contactMessage.findUniqueOrThrow({
+      where: { id },
+    });
     return message as ContactMessageDto;
   }
 
-  async updateStatus(id: string, dto: UpdateContactStatusDto): Promise<ContactMessageDto> {
+  async updateStatus(
+    id: string,
+    dto: UpdateContactStatusDto,
+  ): Promise<ContactMessageDto> {
     if (dto.status === ContactMessageStatus.NEW) {
       throw new BadRequestException('Invalid status change.');
     }

@@ -1,5 +1,12 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 import type { Request } from 'express';
 import { ContactService } from './contact.service';
 import { CreateContactMessageDto } from './dto/create-contact-message.dto';
@@ -9,7 +16,7 @@ import { ErrorResponseDto } from '../common/dto/error-response.dto';
 @ApiTags('Contact')
 @Controller({ path: 'contact', version: '1' })
 export class ContactController {
-  constructor(private readonly contactService: ContactService) { }
+  constructor(private readonly contactService: ContactService) {}
 
   private detectLanguage(header?: string, fallback?: string): string {
     const explicit = fallback?.toLowerCase();
@@ -37,19 +44,33 @@ export class ContactController {
   @Post()
   @ApiOperation({ summary: 'Send a contact message' })
   @ApiBody({ type: CreateContactMessageDto })
-  @ApiOkResponse({ description: 'Message accepted.', type: ContactSuccessResponseDto })
-  @ApiBadRequestResponse({ description: 'Validation error.', type: ErrorResponseDto })
-  @ApiTooManyRequestsResponse({ description: 'Rate limit exceeded.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'Message accepted.',
+    type: ContactSuccessResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Validation error.',
+    type: ErrorResponseDto,
+  })
+  @ApiTooManyRequestsResponse({
+    description: 'Rate limit exceeded.',
+    type: ErrorResponseDto,
+  })
   async submitContactMessage(
     @Body() body: CreateContactMessageDto,
     @Req() req: Request,
   ): Promise<ContactSuccessResponseDto> {
     const ip =
-      (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ||
+      (req.headers['x-forwarded-for'] as string | undefined)
+        ?.split(',')[0]
+        ?.trim() ||
       req.ip ||
       req.socket.remoteAddress ||
       'unknown';
-    const language = this.detectLanguage(req.headers['accept-language'] as string | undefined, body.language);
+    const language = this.detectLanguage(
+      req.headers['accept-language'],
+      body.language,
+    );
 
     await this.contactService.submitPublicMessage(body, {
       ip,

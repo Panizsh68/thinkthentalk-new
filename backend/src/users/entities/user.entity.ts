@@ -17,5 +17,5 @@ export class UserEntity {
     public readonly avatarUrl?: string | null,
     public readonly createdAt?: Date,
     public readonly updatedAt?: Date,
-  ) { }
+  ) {}
 }

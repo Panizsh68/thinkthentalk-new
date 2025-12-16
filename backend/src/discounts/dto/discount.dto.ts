@@ -17,7 +17,10 @@ export class DiscountDto {
   @ApiProperty({ type: Number })
   value!: number;
 
-  @ApiPropertyOptional({ type: [String], description: 'IDs of events this discount applies to.' })
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'IDs of events this discount applies to.',
+  })
   applicableEventIds?: string[];
 
   @ApiPropertyOptional({ type: Number })

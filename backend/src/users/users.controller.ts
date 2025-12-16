@@ -17,14 +17,17 @@ import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearerAuth')
   @ApiOperation({ summary: 'Get My Profile' })
   @ApiOkResponse({ description: 'User profile data.', type: UserDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   async getMe(@CurrentUser() user: { sub: string }): Promise<UserDto> {
     return this.usersService.getMe(user.sub);
   }
@@ -33,9 +36,18 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearerAuth')
   @ApiOperation({ summary: 'Update My Profile' })
-  @ApiOkResponse({ description: 'Profile updated successfully.', type: UserDto })
-  @ApiBadRequestResponse({ description: 'Invalid data provided.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'Profile updated successfully.',
+    type: UserDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data provided.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   async updateMe(
     @CurrentUser() user: { sub: string },
     @Body() body: UpdateUserProfileDto,

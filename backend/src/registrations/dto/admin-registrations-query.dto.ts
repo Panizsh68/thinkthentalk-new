@@ -8,7 +8,10 @@ export class AdminRegistrationsQueryDto {
   @IsString()
   eventId?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by status', enum: RegistrationStatus })
+  @ApiPropertyOptional({
+    description: 'Filter by status',
+    enum: RegistrationStatus,
+  })
   @IsOptional()
   @IsEnum(RegistrationStatus)
   status?: RegistrationStatus;
@@ -19,7 +22,10 @@ export class AdminRegistrationsQueryDto {
   @Min(1)
   page?: number;
 
-  @ApiPropertyOptional({ description: 'Items per page (default: 20)', example: 20 })
+  @ApiPropertyOptional({
+    description: 'Items per page (default: 20)',
+    example: 20,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)

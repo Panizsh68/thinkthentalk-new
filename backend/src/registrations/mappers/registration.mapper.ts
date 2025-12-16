@@ -1,7 +1,14 @@
 import { Registration, Event, Payment, User } from '@prisma/client';
 import { RegistrationFormDataDto } from '../dto/registration-form-data.dto';
-import { RegistrationEntity, UserRegistrationDetailsEntity, UserRegistrationEntity } from '../domain/registration.entity';
-import { eventEntityToEventDto, prismaEventToEventEntity } from '../../events/mappers/event.mapper';
+import {
+  RegistrationEntity,
+  UserRegistrationDetailsEntity,
+  UserRegistrationEntity,
+} from '../domain/registration.entity';
+import {
+  eventEntityToEventDto,
+  prismaEventToEventEntity,
+} from '../../events/mappers/event.mapper';
 import { toUserDto } from '../../users/mappers/user.mapper';
 import { PaymentDto } from '../../payments/dto/payment.dto';
 import { parseLocalizedText } from '../../events/utils/localized-text.helper';
@@ -33,7 +40,11 @@ export const prismaRegistrationToEntity = (
   );
 
 export const prismaToUserRegistrationEntity = (
-  registration: Registration & { event: Pick<Event, 'title' | 'startDateTime'>; paymentId?: string | null; payment?: Pick<Payment, 'id'> | null },
+  registration: Registration & {
+    event: Pick<Event, 'title' | 'startDateTime'>;
+    paymentId?: string | null;
+    payment?: Pick<Payment, 'id'> | null;
+  },
 ): UserRegistrationEntity =>
   new UserRegistrationEntity(
     registration.id,
@@ -74,7 +85,9 @@ export const prismaToUserRegistrationDetailsEntity = (
     registration.payment,
   );
 
-export const registrationFormDataFromJson = (json: any): RegistrationFormDataDto | null => {
+export const registrationFormDataFromJson = (
+  json: any,
+): RegistrationFormDataDto | null => {
   if (!json || typeof json !== 'object') return null;
   return json as RegistrationFormDataDto;
 };
@@ -106,7 +119,9 @@ export const paymentToDto = (payment: Payment | null): PaymentDto | null => {
   };
 };
 
-export const userRegistrationEntityToDto = (entity: UserRegistrationEntity) => ({
+export const userRegistrationEntityToDto = (
+  entity: UserRegistrationEntity,
+) => ({
   id: entity.id,
   userId: entity.userId,
   eventId: entity.eventId,
@@ -120,7 +135,9 @@ export const userRegistrationEntityToDto = (entity: UserRegistrationEntity) => (
   },
 });
 
-export const userRegistrationDetailsEntityToDto = (entity: UserRegistrationDetailsEntity) => ({
+export const userRegistrationDetailsEntityToDto = (
+  entity: UserRegistrationDetailsEntity,
+) => ({
   id: entity.id,
   userId: entity.userId,
   eventId: entity.eventId,
@@ -130,6 +147,6 @@ export const userRegistrationDetailsEntityToDto = (entity: UserRegistrationDetai
   createdAt: toDate(entity.createdAt).toISOString(),
   user: toUserDto(entity.user),
   formData: registrationFormDataFromJson(entity.formData) ?? undefined,
-  event: eventEntityToEventDto(entity.event as any),
+  event: eventEntityToEventDto(entity.event),
   payment: entity.payment ? paymentToDto(entity.payment) : undefined,
 });

@@ -27,7 +27,10 @@ export class AuditService {
         },
       });
     } catch (error) {
-      this.logger.error('Failed to record audit log', error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        'Failed to record audit log',
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 }

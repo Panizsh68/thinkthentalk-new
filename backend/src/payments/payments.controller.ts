@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, UseGuards, NotFoundException, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  NotFoundException,
+  Query,
+  Res,
+} from '@nestjs/common';
 import type { Response } from 'express';
 import {
   ApiBadRequestResponse,
@@ -23,7 +33,7 @@ import { VerifyPaymentStatusDto } from './dto/verify-payment-status.dto';
 @ApiTags('Payments')
 @Controller({ path: 'payments', version: '1' })
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) { }
+  constructor(private readonly paymentsService: PaymentsService) {}
 
   @Get('public/:paymentId')
   @ApiOperation({
@@ -33,7 +43,10 @@ export class PaymentsController {
   })
   @ApiParam({ name: 'paymentId', type: String })
   @ApiOkResponse({ description: 'Payment details.', type: PaymentDto })
-  @ApiNotFoundResponse({ description: 'Payment record not found.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Payment record not found.',
+    type: ErrorResponseDto,
+  })
   async getPaymentPublic(
     @Param('paymentId') paymentId: string,
     @Query('Status') status?: string,
@@ -63,7 +76,8 @@ export class PaymentsController {
   @Get('callback')
   @ApiOperation({
     summary: 'Zarinpal callback (public)',
-    description: 'Handles payment gateway callback without requiring authentication.',
+    description:
+      'Handles payment gateway callback without requiring authentication.',
   })
   async handleGatewayCallback(
     @Query('paymentId') paymentId?: string,
@@ -76,10 +90,13 @@ export class PaymentsController {
     }
 
     const normalizedStatus = status === 'OK' ? 'SUCCESS' : 'FAILED';
-    const payment = await this.paymentsService.verifyPaymentStatusPublic(paymentId, {
-      status: normalizedStatus,
-      authority,
-    });
+    const payment = await this.paymentsService.verifyPaymentStatusPublic(
+      paymentId,
+      {
+        status: normalizedStatus,
+        authority,
+      },
+    );
 
     if (!payment) {
       throw new NotFoundException('Payment record not found.');
@@ -111,10 +128,14 @@ export class PaymentsController {
     type: PaymentDto,
   })
   @ApiBadRequestResponse({
-    description: 'Invalid input data (e.g., validation error or capacity full).',
+    description:
+      'Invalid input data (e.g., validation error or capacity full).',
     type: ErrorResponseDto,
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   async createPayment(
     @CurrentUser() user: { sub: string },
     @Body() dto: CreatePaymentBodyDto,
@@ -131,13 +152,22 @@ export class PaymentsController {
   })
   @ApiParam({ name: 'paymentId', type: String })
   @ApiOkResponse({ description: 'Payment details.', type: PaymentDto })
-  @ApiNotFoundResponse({ description: 'Payment record not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Payment record not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   async getPaymentById(
     @Param('paymentId') paymentId: string,
     @CurrentUser() user: { sub: string },
   ): Promise<PaymentDto> {
-    const payment = await this.paymentsService.getPaymentForUser(paymentId, user.sub);
+    const payment = await this.paymentsService.getPaymentForUser(
+      paymentId,
+      user.sub,
+    );
     if (!payment) {
       throw new NotFoundException('Payment record not found.');
     }
@@ -158,18 +188,27 @@ export class PaymentsController {
     required: true,
   })
   @ApiOkResponse({ description: 'Payment status updated.', type: PaymentDto })
-  @ApiNotFoundResponse({ description: 'Payment record not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Payment record not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   async verifyPaymentStatus(
     @Param('paymentId') paymentId: string,
     @CurrentUser() user: { sub: string },
     @Body() dto: VerifyPaymentStatusDto,
   ): Promise<PaymentDto> {
-    const payment = await this.paymentsService.verifyPaymentStatus(paymentId, user.sub, dto);
+    const payment = await this.paymentsService.verifyPaymentStatus(
+      paymentId,
+      user.sub,
+      dto,
+    );
     if (!payment) {
       throw new NotFoundException('Payment record not found.');
     }
     return payment;
   }
-
 }

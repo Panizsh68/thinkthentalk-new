@@ -18,5 +18,8 @@ export abstract class IAdminUserRepository {
   abstract findById(id: string): Promise<AdminUserEntity | null>;
   abstract findByEmail(email: string): Promise<AdminUserEntity | null>;
   abstract create(data: CreateAdminUserDto): Promise<AdminUserEntity>;
-  abstract update(id: string, data: UpdateAdminUserDto): Promise<AdminUserEntity>;
+  abstract update(
+    id: string,
+    data: UpdateAdminUserDto,
+  ): Promise<AdminUserEntity>;
 }

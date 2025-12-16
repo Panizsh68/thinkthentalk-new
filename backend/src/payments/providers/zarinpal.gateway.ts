@@ -20,9 +20,12 @@ export class ZarinpalGateway implements PaymentGateway {
   private readonly client: ZarinPal;
 
   constructor(private readonly configService: ConfigService) {
-    this.merchantId = this.configService.get<string>('ZARINPAL_MERCHANT_ID') ?? 'f1911c5f-deee-4c21-ae20-06a00877fd3d';
+    this.merchantId =
+      this.configService.get<string>('ZARINPAL_MERCHANT_ID') ??
+      'f1911c5f-deee-4c21-ae20-06a00877fd3d';
     this.callbackUrl =
-      this.configService.get<string>('ZARINPAL_CALLBACK_URL') ?? 'https://thinkthentalk.ir/api/payments/callback';
+      this.configService.get<string>('ZARINPAL_CALLBACK_URL') ??
+      'https://thinkthentalk.ir/api/payments/callback';
     this.sandbox =
       (this.configService.get<string>('ZARINPAL_SANDBOX') ?? 'true') === 'true';
 
@@ -36,7 +39,9 @@ export class ZarinpalGateway implements PaymentGateway {
     });
   }
 
-  async requestPayment(input: RequestPaymentInput): Promise<RequestPaymentResult> {
+  async requestPayment(
+    input: RequestPaymentInput,
+  ): Promise<RequestPaymentResult> {
     const callbackUrl = input.callbackUrl || this.callbackUrl;
     if (!this.merchantId || !callbackUrl) {
       throw new Error('Zarinpal merchant configuration missing');
@@ -45,16 +50,22 @@ export class ZarinpalGateway implements PaymentGateway {
     try {
       const amountRounded = Math.round(input.amount);
       const mobile =
-        typeof input.metadata?.mobile === 'string' ? input.metadata?.mobile : undefined;
+        typeof input.metadata?.mobile === 'string'
+          ? input.metadata?.mobile
+          : undefined;
       const email =
-        typeof input.metadata?.email === 'string' ? input.metadata?.email : undefined;
+        typeof input.metadata?.email === 'string'
+          ? input.metadata?.email
+          : undefined;
       const response = await this.client.payments.create({
         amount: amountRounded,
         description: input.description || 'Event payment',
         callback_url: callbackUrl,
         mobile,
         email,
-        ...(input.currency ? { currency: input.currency === 'TOMAN' ? 'IRT' : 'IRR' } : {}),
+        ...(input.currency
+          ? { currency: input.currency === 'TOMAN' ? 'IRT' : 'IRR' }
+          : {}),
       });
 
       const authority = response.data?.authority as string | undefined;

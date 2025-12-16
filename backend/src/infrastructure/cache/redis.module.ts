@@ -11,9 +11,12 @@ import { RedisService } from './redis.service';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const logger = new Logger('RedisModule');
-        const nodeEnv = (configService.get<string>('NODE_ENV') ?? 'development').toLowerCase();
+        const nodeEnv = (
+          configService.get<string>('NODE_ENV') ?? 'development'
+        ).toLowerCase();
         const requireRedis = nodeEnv === 'production';
-        const ttlMs = Number(configService.get('CACHE_TTL_SECONDS') ?? 60) * 1000;
+        const ttlMs =
+          Number(configService.get('CACHE_TTL_SECONDS') ?? 60) * 1000;
         const redisHost = configService.get<string>('redis.host');
         const redisPort = configService.get<number>('redis.port') ?? 6379;
         const redisPassword = configService.get<string>('redis.password');
@@ -37,7 +40,9 @@ import { RedisService } from './redis.service';
               },
               password: redisPassword,
             });
-            logger.log(`Redis cache connected via host=${redisHost} port=${redisPort}`);
+            logger.log(
+              `Redis cache connected via host=${redisHost} port=${redisPort}`,
+            );
             return { store, ttl: ttlMs };
           }
         } catch (error) {
@@ -50,9 +55,13 @@ import { RedisService } from './redis.service';
         }
 
         if (requireRedis) {
-          throw new Error('Redis configuration missing in production; cannot start with in-memory cache.');
+          throw new Error(
+            'Redis configuration missing in production; cannot start with in-memory cache.',
+          );
         }
-        logger.warn('Redis not configured; using in-memory cache store (development only).');
+        logger.warn(
+          'Redis not configured; using in-memory cache store (development only).',
+        );
         return { ttl: ttlMs };
       },
     }),

@@ -6,4 +6,4 @@ import { UploadController } from './upload.controller';
   imports: [StorageModule],
   controllers: [UploadController],
 })
-export class UploadModule { }
+export class UploadModule {}

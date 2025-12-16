@@ -24,4 +24,4 @@ import { MailerModule } from './mailer/mailer.module';
     MailerModule,
   ],
 })
-export class InfrastructureModule { }
+export class InfrastructureModule {}

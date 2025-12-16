@@ -1,5 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Event as PrismaEvent, Prisma, EventType, EventTicketConfig as PrismaEventTicketConfig } from '@prisma/client';
+import {
+  Event as PrismaEvent,
+  Prisma,
+  EventType,
+  EventTicketConfig as PrismaEventTicketConfig,
+} from '@prisma/client';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { EventEntity } from './domain/event.entity';
 import { EventTicketConfigDto } from './dto/event-ticket-config.dto';
@@ -37,12 +42,14 @@ export interface AdminEventsFilter extends EventsFilter {
 export class EventsRepository {
   private readonly logger = new Logger(EventsRepository.name);
 
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findPublicEvents(filters: EventsFilter): Promise<EventEntity[]> {
     const where: Prisma.EventWhereInput = this.buildFilter(filters, true);
     const orderBy: Prisma.EventOrderByWithRelationInput = filters.sortBy
-      ? ({ [filters.sortBy]: filters.sortOrder === 'desc' ? 'desc' : 'asc' } as Prisma.EventOrderByWithRelationInput)
+      ? ({
+          [filters.sortBy]: filters.sortOrder === 'desc' ? 'desc' : 'asc',
+        } as Prisma.EventOrderByWithRelationInput)
       : { startDateTime: 'asc' };
     const events = await this.prisma.event.findMany({
       where,
@@ -62,7 +69,11 @@ export class EventsRepository {
     const includeRelations = { ticketConfigs: true, resources: true };
 
     const upcomingEventsRaw = await this.prisma.event.findMany({
-      where: { startDateTime: { gte: now }, isArchived: false, deletedAt: null },
+      where: {
+        startDateTime: { gte: now },
+        isArchived: false,
+        deletedAt: null,
+      },
       include: includeRelations,
       orderBy: { startDateTime: 'asc' },
       take: limit,
@@ -77,18 +88,20 @@ export class EventsRepository {
     const pastEventsRaw =
       remaining > 0
         ? await this.prisma.event.findMany({
-          where: {
-            OR: [
-              { endDateTime: { lt: now } },
-              { AND: [{ endDateTime: null }, { startDateTime: { lt: now } }] },
-            ],
-            isArchived: false,
-            deletedAt: null,
-          },
-          include: includeRelations,
-          orderBy: { startDateTime: 'desc' },
-          take: remaining,
-        })
+            where: {
+              OR: [
+                { endDateTime: { lt: now } },
+                {
+                  AND: [{ endDateTime: null }, { startDateTime: { lt: now } }],
+                },
+              ],
+              isArchived: false,
+              deletedAt: null,
+            },
+            include: includeRelations,
+            orderBy: { startDateTime: 'desc' },
+            take: remaining,
+          })
         : [];
     const pastEvents = await this.addSaleWindows(pastEventsRaw);
 
@@ -110,14 +123,19 @@ export class EventsRepository {
   async findAdminEvents(filters: AdminEventsFilter): Promise<EventEntity[]> {
     const where: Prisma.EventWhereInput = this.buildFilter(filters, false);
     const orderBy: Prisma.EventOrderByWithRelationInput = filters.sortBy
-      ? ({ [filters.sortBy]: filters.sortOrder ?? 'asc' } as Prisma.EventOrderByWithRelationInput)
+      ? ({
+          [filters.sortBy]: filters.sortOrder ?? 'asc',
+        } as Prisma.EventOrderByWithRelationInput)
       : { startDateTime: 'desc' };
-      
+
     const events = await this.prisma.event.findMany({
       where,
       include: { ticketConfigs: true, resources: true },
       orderBy,
-      skip: filters.page && filters.limit ? (filters.page - 1) * filters.limit : undefined,
+      skip:
+        filters.page && filters.limit
+          ? (filters.page - 1) * filters.limit
+          : undefined,
       take: filters.limit,
     });
     const enriched = await this.addSaleWindows(events);
@@ -138,7 +156,10 @@ export class EventsRepository {
     return prismaEventToEventEntity(enriched);
   }
 
-  async updateEvent(id: string, data: UpdateEventFormDataDto): Promise<EventEntity> {
+  async updateEvent(
+    id: string,
+    data: UpdateEventFormDataDto,
+  ): Promise<EventEntity> {
     const input = eventUpdateFormDataDtoToPrismaInput(data);
     const event = await this.prisma.event.update({
       where: { id },
@@ -177,8 +198,8 @@ export class EventsRepository {
         : existing.startDateTime;
       const saleEndDate = t.saleEndDate
         ? new Date(t.saleEndDate)
-        : existing.endDateTime ??
-          new Date(saleStartDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        : (existing.endDateTime ??
+          new Date(saleStartDate.getTime() + 30 * 24 * 60 * 60 * 1000));
 
       return {
         eventId,
@@ -187,7 +208,9 @@ export class EventsRepository {
         currency: t.currency,
         quantityTotal: t.quantityTotal,
         quantitySold,
-        earlyBirdEndDate: t.earlyBirdEndDate ? new Date(t.earlyBirdEndDate) : null,
+        earlyBirdEndDate: t.earlyBirdEndDate
+          ? new Date(t.earlyBirdEndDate)
+          : null,
         _saleStartDate: saleStartDate, // keep for capacity calc
         _saleEndDate: saleEndDate, // keep for capacity calc
       };
@@ -197,10 +220,13 @@ export class EventsRepository {
       (sum, t) => sum + (t.quantityTotal ?? 0),
       0,
     );
-    const remainingByTicket = normalizedTickets.map(
-      (t) => Math.max((t.quantityTotal ?? 0) - (t.quantitySold ?? 0), 0),
+    const remainingByTicket = normalizedTickets.map((t) =>
+      Math.max((t.quantityTotal ?? 0) - (t.quantitySold ?? 0), 0),
     );
-    const newCapacityRemaining = remainingByTicket.reduce((sum, r) => sum + r, 0);
+    const newCapacityRemaining = remainingByTicket.reduce(
+      (sum, r) => sum + r,
+      0,
+    );
 
     const ticketsToPersist = normalizedTickets.map(
       ({ _saleStartDate, _saleEndDate, ...rest }) => rest,
@@ -212,7 +238,10 @@ export class EventsRepository {
     >`SELECT COLUMN_NAME as column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'EventTicketConfig' AND COLUMN_NAME IN ('saleStartDate','sale_start_date','saleEndDate','sale_end_date')`;
 
     const columnNameByLower = new Map(
-      saleWindowColumns.map((c) => [c.column_name.toLowerCase(), c.column_name]),
+      saleWindowColumns.map((c) => [
+        c.column_name.toLowerCase(),
+        c.column_name,
+      ]),
     );
     const saleStartColumn =
       columnNameByLower.get('salestartdate') ??
@@ -264,7 +293,9 @@ export class EventsRepository {
     eventId: string,
     resources: EventResourceDto[],
   ): Promise<EventEntity | null> {
-    const existing = await this.prisma.event.findUnique({ where: { id: eventId } });
+    const existing = await this.prisma.event.findUnique({
+      where: { id: eventId },
+    });
     if (!existing) {
       return null;
     }
@@ -305,20 +336,28 @@ export class EventsRepository {
       data: {
         isArchived: archived,
         archivedAt: archived ? new Date() : null,
-        archivedById: archived ? byUserId ?? null : null,
+        archivedById: archived ? (byUserId ?? null) : null,
       },
       include: { ticketConfigs: true, resources: true },
     });
 
-    await this.recordAudit(event.id, archived ? 'ARCHIVE' : 'UNARCHIVE', byUserId, {
-      previousArchived: existing.isArchived,
-      nextArchived: event.isArchived,
-    });
+    await this.recordAudit(
+      event.id,
+      archived ? 'ARCHIVE' : 'UNARCHIVE',
+      byUserId,
+      {
+        previousArchived: existing.isArchived,
+        nextArchived: event.isArchived,
+      },
+    );
 
     return prismaEventToEventEntity(event);
   }
 
-  async softDeleteEvent(eventId: string, byUserId?: string): Promise<EventEntity | null> {
+  async softDeleteEvent(
+    eventId: string,
+    byUserId?: string,
+  ): Promise<EventEntity | null> {
     const existing = await this.prisma.event.findUnique({
       where: { id: eventId },
       include: { ticketConfigs: true, resources: true },
@@ -342,7 +381,10 @@ export class EventsRepository {
     return prismaEventToEventEntity(event);
   }
 
-  async hardDeleteEvent(eventId: string, byUserId?: string): Promise<EventEntity | null> {
+  async hardDeleteEvent(
+    eventId: string,
+    byUserId?: string,
+  ): Promise<EventEntity | null> {
     const event = await this.prisma.event.findUnique({
       where: { id: eventId },
       include: { ticketConfigs: true, resources: true },
@@ -363,7 +405,10 @@ export class EventsRepository {
     return prismaEventToEventEntity(event);
   }
 
-  private buildFilter(filters: EventsFilter, publicOnly: boolean): Prisma.EventWhereInput {
+  private buildFilter(
+    filters: EventsFilter,
+    publicOnly: boolean,
+  ): Prisma.EventWhereInput {
     const where: Prisma.EventWhereInput = {};
     const andConditions: Prisma.EventWhereInput[] = [];
     const now = new Date();
@@ -407,7 +452,9 @@ export class EventsRepository {
       }
     }
     if (filters.category) {
-      andConditions.push({ categories: { array_contains: [filters.category] } });
+      andConditions.push({
+        categories: { array_contains: [filters.category] },
+      });
     }
     if (filters.categories && filters.categories.length > 0) {
       andConditions.push({
@@ -444,13 +491,18 @@ export class EventsRepository {
   }
 
   private async addSaleWindows<
-    T extends PrismaEvent & { ticketConfigs: PrismaEventTicketConfig[]; resources: any },
+    T extends PrismaEvent & {
+      ticketConfigs: PrismaEventTicketConfig[];
+      resources: any;
+    },
   >(events: T[]): Promise<T[]> {
     if (!events || events.length === 0) {
       return events;
     }
 
-    const ticketIds = events.flatMap((event) => event.ticketConfigs?.map((ticket) => ticket.id) ?? []);
+    const ticketIds = events.flatMap(
+      (event) => event.ticketConfigs?.map((ticket) => ticket.id) ?? [],
+    );
     if (ticketIds.length === 0) {
       return events;
     }

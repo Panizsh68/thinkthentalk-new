@@ -30,7 +30,10 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { DiscountsService } from './discounts.service';
 import { DiscountDto } from './dto/discount.dto';
-import { DiscountFormDataDto, UpdateDiscountFormDataDto } from './dto/discount-form-data.dto';
+import {
+  DiscountFormDataDto,
+  UpdateDiscountFormDataDto,
+} from './dto/discount-form-data.dto';
 import { AuditService } from '../infrastructure/audit/audit.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
@@ -43,23 +46,45 @@ export class AdminDiscountsController {
   constructor(
     private readonly discountsService: DiscountsService,
     private readonly auditService: AuditService,
-  ) { }
+  ) {}
 
   @Get()
-  @ApiOperation({ summary: 'List Discounts (Admin)', description: 'Retrieves a list of all discounts for the admin panel.' })
-  @ApiOkResponse({ description: 'A list of all discounts.', type: DiscountDto, isArray: true })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOperation({
+    summary: 'List Discounts (Admin)',
+    description: 'Retrieves a list of all discounts for the admin panel.',
+  })
+  @ApiOkResponse({
+    description: 'A list of all discounts.',
+    type: DiscountDto,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async listDiscounts(): Promise<DiscountDto[]> {
     return this.discountsService.listDiscounts();
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create Discount (Admin)', description: 'Creates a new discount code or automatic offer.' })
+  @ApiOperation({
+    summary: 'Create Discount (Admin)',
+    description: 'Creates a new discount code or automatic offer.',
+  })
   @ApiBody({ type: DiscountFormDataDto, required: true })
-  @ApiCreatedResponse({ description: 'Discount created successfully.', type: DiscountDto })
-  @ApiBadRequestResponse({ description: 'Invalid discount data.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiCreatedResponse({
+    description: 'Discount created successfully.',
+    type: DiscountDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid discount data.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async createDiscount(
     @Body() dto: DiscountFormDataDto,
@@ -77,13 +102,28 @@ export class AdminDiscountsController {
   }
 
   @Patch(':discountId')
-  @ApiOperation({ summary: 'Update Discount (Admin)', description: 'Updates an existing discount.' })
+  @ApiOperation({
+    summary: 'Update Discount (Admin)',
+    description: 'Updates an existing discount.',
+  })
   @ApiParam({ name: 'discountId', type: String, required: true })
   @ApiBody({ type: UpdateDiscountFormDataDto, required: true })
-  @ApiOkResponse({ description: 'Discount updated successfully.', type: DiscountDto })
-  @ApiNotFoundResponse({ description: 'Discount not found.', type: ErrorResponseDto })
-  @ApiBadRequestResponse({ description: 'Invalid discount data.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'Discount updated successfully.',
+    type: DiscountDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Discount not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid discount data.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async updateDiscount(
     @Param('discountId') discountId: string,
@@ -105,11 +145,20 @@ export class AdminDiscountsController {
   }
 
   @Delete(':discountId')
-  @ApiOperation({ summary: 'Delete Discount (Admin)', description: 'Deletes a discount.' })
+  @ApiOperation({
+    summary: 'Delete Discount (Admin)',
+    description: 'Deletes a discount.',
+  })
   @ApiParam({ name: 'discountId', type: String, required: true })
   @ApiNoContentResponse({ description: 'Discount deleted successfully.' })
-  @ApiNotFoundResponse({ description: 'Discount not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Discount not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async deleteDiscount(
     @Param('discountId') discountId: string,

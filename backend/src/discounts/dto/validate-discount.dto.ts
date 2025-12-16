@@ -6,11 +6,17 @@ export class ValidateDiscountDto {
   @IsString()
   code!: string;
 
-  @ApiProperty({ type: String, description: 'The ID of the event the code is being applied to.' })
+  @ApiProperty({
+    type: String,
+    description: 'The ID of the event the code is being applied to.',
+  })
   @IsString()
   eventId!: string;
 
-  @ApiProperty({ type: Number, description: 'The original ticket price before discount.' })
+  @ApiProperty({
+    type: Number,
+    description: 'The original ticket price before discount.',
+  })
   @IsNumber()
   ticketPrice!: number;
 }

@@ -8,6 +8,10 @@ import { PublicFeedbackController } from './public-feedback.controller';
 @Module({
   imports: [PrismaModule],
   providers: [FeedbackService],
-  controllers: [FeedbackController, AdminFeedbackController, PublicFeedbackController],
+  controllers: [
+    FeedbackController,
+    AdminFeedbackController,
+    PublicFeedbackController,
+  ],
 })
 export class FeedbackModule {}

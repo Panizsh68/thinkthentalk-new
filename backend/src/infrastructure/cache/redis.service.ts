@@ -6,7 +6,7 @@ import type { Cache } from 'cache-manager';
 export class RedisService {
   private readonly logger = new Logger(RedisService.name);
 
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   async get<T>(key: string): Promise<T | undefined> {
     try {
@@ -26,7 +26,11 @@ export class RedisService {
     }
   }
 
-  async setWithTTL<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
+  async setWithTTL<T>(
+    key: string,
+    value: T,
+    ttlSeconds: number,
+  ): Promise<void> {
     await this.set(key, value, ttlSeconds);
   }
 
@@ -74,12 +78,18 @@ export class RedisService {
       }
 
       // Last resort: reset the cache store
-      const resetFn = (this.cacheManager as unknown as { reset?: () => Promise<void> }).reset;
+      const resetFn = (
+        this.cacheManager as unknown as { reset?: () => Promise<void> }
+      ).reset;
       if (typeof resetFn === 'function') {
-        this.logger.warn('Cache store does not support key iteration; resetting entire cache store');
+        this.logger.warn(
+          'Cache store does not support key iteration; resetting entire cache store',
+        );
         await resetFn();
       } else {
-        this.logger.warn('Cache store does not support key iteration and no reset available; skipping prefix delete');
+        this.logger.warn(
+          'Cache store does not support key iteration and no reset available; skipping prefix delete',
+        );
       }
     } catch (error) {
       this.logger.error(`Failed to delete keys by prefix "${prefix}"`, error);

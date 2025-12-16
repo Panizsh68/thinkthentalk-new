@@ -11,6 +11,10 @@ export class EvaluationFormDto {
   @ApiProperty({ type: [EvaluationQuestionDto] })
   questions!: EvaluationQuestionDto[];
 
-  @ApiProperty({ type: Boolean, description: 'Indicates if the current user has already submitted this form.' })
+  @ApiProperty({
+    type: Boolean,
+    description:
+      'Indicates if the current user has already submitted this form.',
+  })
   submitted!: boolean;
 }

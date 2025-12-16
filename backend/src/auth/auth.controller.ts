@@ -26,10 +26,13 @@ import type { Response } from 'express';
 @ApiTags('Auth')
 @Controller({ path: 'auth' })
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Get('status')
-  @ApiOperation({ summary: 'Module status', description: 'Health/status check for the auth subsystem.' })
+  @ApiOperation({
+    summary: 'Module status',
+    description: 'Health/status check for the auth subsystem.',
+  })
   @ApiOkResponse({ description: 'Auth status.', type: ModuleStatusDto })
   status(): ModuleStatusDto {
     return this.authService.status();
@@ -50,9 +53,14 @@ export class AuthController {
     type: ErrorResponseDto,
   })
   @ApiBody({ type: RequestOtpDto, required: true })
-  async requestOtp(@Body() body: RequestOtpDto, @Req() req: Request): Promise<{ success: boolean }> {
+  async requestOtp(
+    @Body() body: RequestOtpDto,
+    @Req() req: Request,
+  ): Promise<{ success: boolean }> {
     const clientIp =
-      (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ||
+      (req.headers['x-forwarded-for'] as string | undefined)
+        ?.split(',')[0]
+        ?.trim() ||
       req.ip ||
       req.socket.remoteAddress ||
       'unknown';
@@ -71,13 +79,19 @@ export class AuthController {
     description: 'Invalid OTP.',
     type: ErrorResponseDto,
   })
-  @ApiTooManyRequestsResponse({ description: 'Too many requests.', type: ErrorResponseDto })
+  @ApiTooManyRequestsResponse({
+    description: 'Too many requests.',
+    type: ErrorResponseDto,
+  })
   @ApiBody({ type: VerifyOtpDto, required: true })
   async verifyOtp(
     @Body() body: VerifyOtpDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ user: UserDto }> {
-    const result = await this.authService.verifyOtpAndLogin(body.mobile, body.otp);
+    const result = await this.authService.verifyOtpAndLogin(
+      body.mobile,
+      body.otp,
+    );
     res.setHeader('Authorization', `Bearer ${result.token}`);
     return { user: result.user as any };
   }
@@ -88,8 +102,14 @@ export class AuthController {
     description: 'Admin login successful.',
     type: AdminAuthResponseDto,
   })
-  @ApiUnauthorizedResponse({ description: 'Invalid credentials.', type: ErrorResponseDto })
-  @ApiTooManyRequestsResponse({ description: 'Too many requests.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid credentials.',
+    type: ErrorResponseDto,
+  })
+  @ApiTooManyRequestsResponse({
+    description: 'Too many requests.',
+    type: ErrorResponseDto,
+  })
   @ApiBody({ type: AdminLoginDto, required: true })
   async adminLogin(
     @Body() body: AdminLoginDto,
@@ -97,11 +117,17 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ user: AdminUserDto }> {
     const clientIp =
-      (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ||
+      (req.headers['x-forwarded-for'] as string | undefined)
+        ?.split(',')[0]
+        ?.trim() ||
       req.ip ||
       req.socket.remoteAddress ||
       'unknown';
-    const result = await this.authService.loginAdmin(body.email, body.password, clientIp);
+    const result = await this.authService.loginAdmin(
+      body.email,
+      body.password,
+      clientIp,
+    );
     res.setHeader('Authorization', `Bearer ${result.token}`);
     return { user: result.user as any };
   }

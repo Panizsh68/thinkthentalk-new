@@ -14,7 +14,9 @@ export async function getTicketSaleWindows(
     return new Map();
   }
 
-  const rows = await prisma.$queryRaw<Array<{ id: string; saleStartDate: Date | null; saleEndDate: Date | null }>>(
+  const rows = await prisma.$queryRaw<
+    Array<{ id: string; saleStartDate: Date | null; saleEndDate: Date | null }>
+  >(
     Prisma.sql`
       SELECT id, saleStartDate, saleEndDate
       FROM EventTicketConfig
@@ -23,7 +25,10 @@ export async function getTicketSaleWindows(
   );
 
   return rows.reduce((acc, row) => {
-    acc.set(row.id, { saleStartDate: row.saleStartDate, saleEndDate: row.saleEndDate });
+    acc.set(row.id, {
+      saleStartDate: row.saleStartDate,
+      saleEndDate: row.saleEndDate,
+    });
     return acc;
   }, new Map<string, TicketSaleWindow>());
 }

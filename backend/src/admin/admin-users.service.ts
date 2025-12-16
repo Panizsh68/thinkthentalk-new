@@ -1,7 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { Gender, PaymentStatus, Prisma, RegistrationStatus, TicketType } from '@prisma/client';
+import {
+  Gender,
+  PaymentStatus,
+  Prisma,
+  RegistrationStatus,
+  TicketType,
+} from '@prisma/client';
 import { PrismaService } from '../infrastructure/database/prisma.service';
-import { AdminUserDetailsDto, AdminUserListItemDto, AdminUserRegistrationDto, AdminUserProfileDto } from './dto/admin-user.dto';
+import {
+  AdminUserDetailsDto,
+  AdminUserListItemDto,
+  AdminUserRegistrationDto,
+  AdminUserProfileDto,
+} from './dto/admin-user.dto';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { parseLocalizedText } from '../events/utils/localized-text.helper';
 import { registrationFormDataFromJson } from '../registrations/mappers/registration.mapper';
@@ -117,24 +128,26 @@ export class AdminUsersService {
       missingFields,
     };
 
-    const registrations: AdminUserRegistrationDto[] = user.registrations.map((reg) => {
-      const parsedTitle = parseLocalizedText(reg.event.title);
-      const formData = registrationFormDataFromJson(reg.formData);
-      return {
-        id: reg.id,
-        eventId: reg.eventId,
-        eventTitle: parsedTitle.fa ?? parsedTitle.en ?? '',
-        eventStartDateTime: this.toISOString(reg.event.startDateTime),
-        ticketType: reg.ticketType as TicketType,
-        status: reg.status as RegistrationStatus,
-        paymentStatus: reg.payment?.status ?? null,
-        paymentId: reg.payment?.id ?? null,
-        paymentAmount: this.toNumber(reg.payment?.amount),
-        gatewayTransactionId: reg.payment?.gatewayTransactionId ?? null,
-        createdAt: this.toISOString(reg.createdAt),
-        formData: formData ?? undefined,
-      };
-    });
+    const registrations: AdminUserRegistrationDto[] = user.registrations.map(
+      (reg) => {
+        const parsedTitle = parseLocalizedText(reg.event.title);
+        const formData = registrationFormDataFromJson(reg.formData);
+        return {
+          id: reg.id,
+          eventId: reg.eventId,
+          eventTitle: parsedTitle.fa ?? parsedTitle.en ?? '',
+          eventStartDateTime: this.toISOString(reg.event.startDateTime),
+          ticketType: reg.ticketType as TicketType,
+          status: reg.status as RegistrationStatus,
+          paymentStatus: reg.payment?.status ?? null,
+          paymentId: reg.payment?.id ?? null,
+          paymentAmount: this.toNumber(reg.payment?.amount),
+          gatewayTransactionId: reg.payment?.gatewayTransactionId ?? null,
+          createdAt: this.toISOString(reg.createdAt),
+          formData: formData ?? undefined,
+        };
+      },
+    );
 
     return { profile, registrations };
   }
@@ -145,7 +158,13 @@ export class AdminUsersService {
   ): CombinedProfile {
     const form = (formData as Record<string, any>) ?? {};
     const pickString = (...values: Array<any>): string | undefined => {
-      const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+      const placeholders = [
+        'نام',
+        'نام خانوادگی',
+        'name',
+        'first name',
+        'last name',
+      ];
       for (const value of values) {
         if (value === null || value === undefined) continue;
         const str = String(value).trim();
@@ -201,7 +220,11 @@ export class AdminUsersService {
 
     requiredStrings.forEach((field) => {
       const value = profile[field];
-      if (value === null || value === undefined || String(value).trim() === '') {
+      if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ''
+      ) {
         missing.push(field as string);
       }
     });
@@ -216,7 +239,10 @@ export class AdminUsersService {
 
     if (profile.isEmployed === undefined || profile.isEmployed === null) {
       missing.push('isEmployed');
-    } else if (profile.isEmployed && (!profile.jobTitle || String(profile.jobTitle).trim() === '')) {
+    } else if (
+      profile.isEmployed &&
+      (!profile.jobTitle || String(profile.jobTitle).trim() === '')
+    ) {
       missing.push('jobTitle');
     }
 

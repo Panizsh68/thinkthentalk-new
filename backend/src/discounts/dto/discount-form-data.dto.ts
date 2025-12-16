@@ -1,6 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { DiscountType } from '@prisma/client';
-import { IsArray, IsBoolean, IsDateString, IsEnum, IsInt, IsOptional, IsString, IsNumber } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsNumber,
+} from 'class-validator';
 
 export class DiscountFormDataDto {
   @ApiProperty({ type: String })
@@ -20,7 +29,10 @@ export class DiscountFormDataDto {
   @IsNumber()
   value!: number;
 
-  @ApiPropertyOptional({ type: [String], description: 'Event IDs this discount applies to.' })
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'Event IDs this discount applies to.',
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -79,7 +91,10 @@ export class UpdateDiscountFormDataDto {
   @IsNumber()
   value?: number;
 
-  @ApiPropertyOptional({ type: [String], description: 'Event IDs this discount applies to.' })
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'Event IDs this discount applies to.',
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

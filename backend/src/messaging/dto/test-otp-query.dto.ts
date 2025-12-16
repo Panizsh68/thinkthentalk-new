@@ -3,7 +3,8 @@ import { IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 
 export class TestOtpQueryDto {
   @ApiProperty({
-    description: 'Destination mobile number (e.g. 0912xxxxxxx or +98912xxxxxxx).',
+    description:
+      'Destination mobile number (e.g. 0912xxxxxxx or +98912xxxxxxx).',
     example: '09123456789',
   })
   @IsString()
@@ -20,7 +21,8 @@ export class TestOtpQueryDto {
   otp?: string;
 
   @ApiPropertyOptional({
-    description: 'Override the IPPanel pattern code; defaults to config. Useful for testing multiple templates.',
+    description:
+      'Override the IPPanel pattern code; defaults to config. Useful for testing multiple templates.',
     example: 'otp-pattern-code',
   })
   @IsOptional()

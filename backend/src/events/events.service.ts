@@ -22,7 +22,9 @@ export class EventsService {
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) {
-    this.cacheTtl = Number(this.configService.get('EVENTS_CACHE_TTL_SECONDS') ?? 120);
+    this.cacheTtl = Number(
+      this.configService.get('EVENTS_CACHE_TTL_SECONDS') ?? 120,
+    );
   }
 
   async findPublicEvents(filters: EventsFilter) {
@@ -64,10 +66,7 @@ export class EventsService {
     return eventEntityToEventDto(event);
   }
 
-  async updateEventTickets(
-    eventId: string,
-    tickets: EventTicketConfigDto[],
-  ) {
+  async updateEventTickets(eventId: string, tickets: EventTicketConfigDto[]) {
     const now = new Date();
     tickets.forEach((t) => {
       // sale window optional with current Prisma client; if provided, validate order.
@@ -78,33 +77,44 @@ export class EventsService {
           throw new BadRequestException('Invalid sale window for ticket.');
         }
         if (start > end) {
-          throw new BadRequestException('saleStartDate must be before saleEndDate.');
+          throw new BadRequestException(
+            'saleStartDate must be before saleEndDate.',
+          );
         }
         if (end.getTime() < now.getTime() && t.quantityTotal > 0) {
           // allow but note expired window; capacity will still update.
         }
       }
       if (t.quantitySold !== undefined && t.quantitySold > t.quantityTotal) {
-        throw new BadRequestException('quantitySold cannot exceed quantityTotal.');
+        throw new BadRequestException(
+          'quantitySold cannot exceed quantityTotal.',
+        );
       }
     });
 
-    const updated = await this.eventsRepository.updateEventTickets(eventId, tickets);
+    const updated = await this.eventsRepository.updateEventTickets(
+      eventId,
+      tickets,
+    );
     if (updated) await this.invalidateEventCaches(eventId);
     return updated ? eventEntityToEventDto(updated) : null;
   }
 
-  async updateEventResources(
-    eventId: string,
-    resources: EventResourceDto[],
-  ) {
-    const updated = await this.eventsRepository.updateEventResources(eventId, resources);
+  async updateEventResources(eventId: string, resources: EventResourceDto[]) {
+    const updated = await this.eventsRepository.updateEventResources(
+      eventId,
+      resources,
+    );
     if (updated) await this.invalidateEventCaches(eventId);
     return updated ? eventEntityToEventDto(updated) : null;
   }
 
   async archiveEvent(eventId: string, archived: boolean, adminId?: string) {
-    const updated = await this.eventsRepository.setArchiveStatus(eventId, archived, adminId);
+    const updated = await this.eventsRepository.setArchiveStatus(
+      eventId,
+      archived,
+      adminId,
+    );
     if (updated) {
       await this.invalidateEventCaches(eventId);
       return eventEntityToEventDto(updated);
@@ -113,7 +123,10 @@ export class EventsService {
   }
 
   async softDeleteEvent(eventId: string, adminId?: string) {
-    const updated = await this.eventsRepository.softDeleteEvent(eventId, adminId);
+    const updated = await this.eventsRepository.softDeleteEvent(
+      eventId,
+      adminId,
+    );
     if (updated) {
       await this.invalidateEventCaches(eventId);
       return eventEntityToEventDto(updated);
@@ -122,7 +135,10 @@ export class EventsService {
   }
 
   async hardDeleteEvent(eventId: string, adminId?: string) {
-    const deleted = await this.eventsRepository.hardDeleteEvent(eventId, adminId);
+    const deleted = await this.eventsRepository.hardDeleteEvent(
+      eventId,
+      adminId,
+    );
     if (deleted) {
       await this.invalidateEventCaches(eventId);
       return eventEntityToEventDto(deleted);

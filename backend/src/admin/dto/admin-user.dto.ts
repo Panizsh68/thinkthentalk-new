@@ -1,5 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Gender, PaymentStatus, RegistrationStatus, TicketType } from '@prisma/client';
+import {
+  Gender,
+  PaymentStatus,
+  RegistrationStatus,
+  TicketType,
+} from '@prisma/client';
 import { RegistrationFormDataDto } from '../../registrations/dto/registration-form-data.dto';
 
 export class AdminUserDto {

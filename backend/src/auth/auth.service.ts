@@ -25,27 +25,47 @@ export class AuthService {
   ) {}
 
   private get adminEmailLimit() {
-    return Number(this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_PER_EMAIL') ?? 5);
+    return Number(
+      this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_PER_EMAIL') ?? 5,
+    );
   }
 
   private get adminIpLimit() {
-    return Number(this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_PER_IP') ?? 10);
+    return Number(
+      this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_PER_IP') ?? 10,
+    );
   }
 
   private get adminWindowSeconds() {
-    return Number(this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_WINDOW_SECONDS') ?? 600);
+    return Number(
+      this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_WINDOW_SECONDS') ??
+        600,
+    );
   }
 
   status(): { status: 'ok'; module: string; timestamp: string } {
-    return { status: 'ok', module: 'auth', timestamp: new Date().toISOString() };
+    return {
+      status: 'ok',
+      module: 'auth',
+      timestamp: new Date().toISOString(),
+    };
   }
 
   async requestOtp(mobile: string, ipAddress: string): Promise<void> {
-    const result = await this.otpService.generateAndStoreOtp(mobile, 'LOGIN', ipAddress);
-    if ((this.configService.get<string>('NODE_ENV') ?? 'development') !== 'production') {
+    const result = await this.otpService.generateAndStoreOtp(
+      mobile,
+      'LOGIN',
+      ipAddress,
+    );
+    if (
+      (this.configService.get<string>('NODE_ENV') ?? 'development') !==
+      'production'
+    ) {
       this.logger.log(`Dev OTP for ${mobile}: ${result.code}`);
     }
-    const patternResult = await this.ippanelService.sendPatternSms(mobile, { code: result.code });
+    const patternResult = await this.ippanelService.sendPatternSms(mobile, {
+      code: result.code,
+    });
     if (!patternResult.success) {
       this.logger.warn(
         `IPPanel pattern send failed (status=${patternResult.statusCode ?? 'n/a'}).`,
@@ -99,7 +119,10 @@ export class AuthService {
     return { token, user: toAdminUserDto(admin) };
   }
 
-  private async enforceAdminLoginRateLimit(email: string, ip?: string): Promise<void> {
+  private async enforceAdminLoginRateLimit(
+    email: string,
+    ip?: string,
+  ): Promise<void> {
     const keys = [`admin:login:email:${email.toLowerCase()}`];
     if (ip) {
       keys.push(`admin:login:ip:${ip}`);
@@ -108,10 +131,14 @@ export class AuthService {
     for (const key of keys) {
       const current = (await this.redisService.get<number>(key)) ?? 0;
       const next = current + 1;
-      const limit = key.includes(':ip:') ? this.adminIpLimit : this.adminEmailLimit;
+      const limit = key.includes(':ip:')
+        ? this.adminIpLimit
+        : this.adminEmailLimit;
 
       if (next > limit) {
-        throw new TooManyRequestsError('Too many attempts. Please try again later.');
+        throw new TooManyRequestsError(
+          'Too many attempts. Please try again later.',
+        );
       }
 
       await this.redisService.setWithTTL(key, next, this.adminWindowSeconds);

@@ -15,7 +15,9 @@ export class EvaluationSubmissionDto {
 
   @ApiProperty({
     description: 'Answers keyed by question ID',
-    additionalProperties: { oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }] },
+    additionalProperties: {
+      oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }],
+    },
   })
   answers!: Record<string, string | number | boolean>;
 

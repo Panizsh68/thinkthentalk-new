@@ -8,7 +8,10 @@ export class AdminPaymentsQueryDto {
   @IsString()
   eventId?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by payment status', enum: PaymentStatus })
+  @ApiPropertyOptional({
+    description: 'Filter by payment status',
+    enum: PaymentStatus,
+  })
   @IsOptional()
   @IsEnum(PaymentStatus)
   status?: PaymentStatus;

@@ -3,7 +3,10 @@ import { Transform } from 'class-transformer';
 import { IsBoolean } from 'class-validator';
 
 export class ArchiveEventDto {
-  @ApiProperty({ description: 'Whether the event should be archived', type: Boolean })
+  @ApiProperty({
+    description: 'Whether the event should be archived',
+    type: Boolean,
+  })
   @Transform(({ value }) => {
     if (typeof value === 'boolean') {
       return value;

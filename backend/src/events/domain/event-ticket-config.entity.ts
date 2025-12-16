@@ -11,6 +11,9 @@ export class EventTicketConfigEntity {
     public readonly saleStartDate: Date,
     public readonly saleEndDate: Date,
     public readonly earlyBirdEndDate?: Date | null,
-    public readonly quantityRemaining: number = Math.max(quantityTotal - quantitySold, 0),
+    public readonly quantityRemaining: number = Math.max(
+      quantityTotal - quantitySold,
+      0,
+    ),
   ) {}
 }

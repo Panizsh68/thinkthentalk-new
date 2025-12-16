@@ -13,6 +13,12 @@ import { RedisModule } from '../infrastructure/cache/redis.module';
 @Module({
   imports: [PrismaModule, RedisModule],
   providers: [ContentService, SponsorsService, TeamMembersService],
-  controllers: [ContentController, SponsorsController, AdminSponsorsController, TeamController, AdminTeamController],
+  controllers: [
+    ContentController,
+    SponsorsController,
+    AdminSponsorsController,
+    TeamController,
+    AdminTeamController,
+  ],
 })
-export class ContentModule { }
+export class ContentModule {}

@@ -7,7 +7,10 @@ export class AdminStatsService {
   private readonly cacheKey = 'admin:stats';
   private readonly ttlSeconds = 60;
 
-  constructor(private readonly prisma: PrismaService, private readonly redis: RedisService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redis: RedisService,
+  ) {}
 
   async getStats(): Promise<{
     upcomingEvents: number;
@@ -24,7 +27,12 @@ export class AdminStatsService {
       }
     }
 
-    const [upcomingEvents, totalRegistrations, paidRegistrations, totalRevenueAgg] = await Promise.all([
+    const [
+      upcomingEvents,
+      totalRegistrations,
+      paidRegistrations,
+      totalRevenueAgg,
+    ] = await Promise.all([
       this.prisma.event.count({ where: { startDateTime: { gt: new Date() } } }),
       this.prisma.registration.count(),
       this.prisma.registration.count({ where: { status: 'PAID' as any } }),
@@ -35,11 +43,21 @@ export class AdminStatsService {
     ]);
 
     const totalRevenue = totalRevenueAgg._sum.amount
-      ? (totalRevenueAgg._sum.amount as any).toNumber?.() ?? (totalRevenueAgg._sum.amount as unknown as number)
+      ? ((totalRevenueAgg._sum.amount as any).toNumber?.() ??
+        (totalRevenueAgg._sum.amount as unknown as number))
       : 0;
 
-    const stats = { upcomingEvents, totalRegistrations, paidRegistrations, totalRevenue };
-    await this.redis.setWithTTL(this.cacheKey, JSON.stringify(stats), this.ttlSeconds);
+    const stats = {
+      upcomingEvents,
+      totalRegistrations,
+      paidRegistrations,
+      totalRevenue,
+    };
+    await this.redis.setWithTTL(
+      this.cacheKey,
+      JSON.stringify(stats),
+      this.ttlSeconds,
+    );
     return stats;
   }
 }

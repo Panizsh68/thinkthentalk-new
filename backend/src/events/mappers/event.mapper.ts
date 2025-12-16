@@ -10,7 +10,11 @@ import { EventTicketConfigEntity } from '../domain/event-ticket-config.entity';
 import { EventDto } from '../dto/event.dto';
 import { EventFormDataDto } from '../dto/event-form-data.dto';
 import { UpdateEventFormDataDto } from '../dto/event-update-form-data.dto';
-import { fromLegacyLocalizedText, parseLocalizedText, serializeLocalizedText } from '../utils/localized-text.helper';
+import {
+  fromLegacyLocalizedText,
+  parseLocalizedText,
+  serializeLocalizedText,
+} from '../utils/localized-text.helper';
 
 export const prismaEventToEventEntity = (
   event: PrismaEvent & {
@@ -31,12 +35,12 @@ export const prismaEventToEventEntity = (
       new EventTicketConfigEntity(
         ticket.id,
         ticket.type,
-        ticket.price.toNumber ? ticket.price.toNumber() : (ticket.price as any),
+        ticket.price.toNumber ? ticket.price.toNumber() : ticket.price,
         ticket.currency,
         ticket.quantityTotal,
         ticket.quantitySold,
-        (ticket as any).saleStartDate ?? event.startDateTime,
-        (ticket as any).saleEndDate ??
+        ticket.saleStartDate ?? event.startDateTime,
+        ticket.saleEndDate ??
           event.endDateTime ??
           new Date(event.startDateTime.getTime() + 30 * 24 * 60 * 60 * 1000),
         ticket.earlyBirdEndDate,
@@ -56,7 +60,10 @@ export const prismaEventToEventEntity = (
   );
 
   const summary = fromLegacyLocalizedText(event.summaryFa, event.summaryEn);
-  const description = fromLegacyLocalizedText(event.descriptionFa, event.descriptionEn);
+  const description = fromLegacyLocalizedText(
+    event.descriptionFa,
+    event.descriptionEn,
+  );
 
   return new EventEntity(
     event.id,
@@ -132,9 +139,9 @@ export const eventFormDataDtoToPrismaInput = (
 ): Prisma.EventCreateInput => {
   const categories = dto.categories
     ? dto.categories
-      .split(',')
-      .map((c) => c.trim())
-      .filter(Boolean)
+        .split(',')
+        .map((c) => c.trim())
+        .filter(Boolean)
     : [];
 
   return {
@@ -163,24 +170,24 @@ export const eventUpdateFormDataDtoToPrismaInput = (
   const categories =
     dto.categories !== undefined
       ? dto.categories
-        .split(',')
-        .map((c) => c.trim())
-        .filter(Boolean)
+          .split(',')
+          .map((c) => c.trim())
+          .filter(Boolean)
       : undefined;
 
   return {
     ...(dto.title ? { title: serializeLocalizedText(dto.title) } : {}),
     ...(dto.summary
       ? {
-        summaryFa: dto.summary.fa,
-        summaryEn: dto.summary.en,
-      }
+          summaryFa: dto.summary.fa,
+          summaryEn: dto.summary.en,
+        }
       : {}),
     ...(dto.description
       ? {
-        descriptionFa: dto.description.fa,
-        descriptionEn: dto.description.en,
-      }
+          descriptionFa: dto.description.fa,
+          descriptionEn: dto.description.en,
+        }
       : {}),
     ...(dto.type !== undefined ? { type: dto.type } : {}),
     ...(dto.city !== undefined
@@ -190,15 +197,22 @@ export const eventUpdateFormDataDtoToPrismaInput = (
     ...(dto.startDateTime !== undefined
       ? { startDateTime: new Date(dto.startDateTime) }
       : {}),
-    ...(dto.endDateTime !== undefined ? { endDateTime: new Date(dto.endDateTime) } : {}),
+    ...(dto.endDateTime !== undefined
+      ? { endDateTime: new Date(dto.endDateTime) }
+      : {}),
     ...(dto.capacityTotal !== undefined
-      ? { capacityTotal: dto.capacityTotal, capacityRemaining: dto.capacityTotal }
+      ? {
+          capacityTotal: dto.capacityTotal,
+          capacityRemaining: dto.capacityTotal,
+        }
       : {}),
     ...(dto.showRemainingCapacity !== undefined
       ? { showRemainingCapacity: dto.showRemainingCapacity }
       : {}),
     ...(categories !== undefined ? { categories } : {}),
-    ...(dto.publicDiscountIds !== undefined ? { publicDiscountIds: dto.publicDiscountIds } : {}),
+    ...(dto.publicDiscountIds !== undefined
+      ? { publicDiscountIds: dto.publicDiscountIds }
+      : {}),
     ...(dto.posterUrl !== undefined ? { posterUrl: dto.posterUrl } : {}),
   };
 };

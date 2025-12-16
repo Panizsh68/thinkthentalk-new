@@ -20,7 +20,11 @@ export function parseLocalizedText(
 
   try {
     const parsed = JSON.parse(value);
-    if (parsed && typeof parsed.fa === 'string' && typeof parsed.en === 'string') {
+    if (
+      parsed &&
+      typeof parsed.fa === 'string' &&
+      typeof parsed.en === 'string'
+    ) {
       return {
         fa: parsed.fa,
         en: parsed.en,

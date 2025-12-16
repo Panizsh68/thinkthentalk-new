@@ -1,12 +1,31 @@
-import { Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { AdminRole } from '@prisma/client';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { AdminUsersService } from './admin-users.service';
-import { AdminUserDetailsDto, AdminUserListItemDto } from './dto/admin-user.dto';
+import {
+  AdminUserDetailsDto,
+  AdminUserListItemDto,
+} from './dto/admin-user.dto';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 
 @ApiTags('Admin')
@@ -20,7 +39,8 @@ export class AdminUsersController {
   @Get()
   @ApiOperation({
     summary: 'List users (OTP sign-in)',
-    description: 'Lists users who have signed in with mobile/OTP and shows profile completeness.',
+    description:
+      'Lists users who have signed in with mobile/OTP and shows profile completeness.',
   })
   @ApiQuery({ name: 'search', required: false, type: String })
   @ApiQuery({
@@ -31,21 +51,34 @@ export class AdminUsersController {
   })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 50 })
-  @ApiOkResponse({ description: 'List of users.', type: AdminUserListItemDto, isArray: true })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiOkResponse({
+    description: 'List of users.',
+    type: AdminUserListItemDto,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
-  async listUsers(@Query() query: AdminUsersQueryDto): Promise<AdminUserListItemDto[]> {
+  async listUsers(
+    @Query() query: AdminUsersQueryDto,
+  ): Promise<AdminUserListItemDto[]> {
     return this.adminUsersService.listUsers(query);
   }
 
   @Get(':userId')
   @ApiOperation({
     summary: 'User details (Admin)',
-    description: 'Returns full profile details and registrations for a specific user.',
+    description:
+      'Returns full profile details and registrations for a specific user.',
   })
   @ApiParam({ name: 'userId', required: true, type: String })
   @ApiOkResponse({ description: 'User details.', type: AdminUserDetailsDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async getUser(@Param('userId') userId: string): Promise<AdminUserDetailsDto> {
     const details = await this.adminUsersService.getUserDetails(userId);

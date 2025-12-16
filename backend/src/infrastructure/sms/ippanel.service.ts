@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 
@@ -55,14 +60,22 @@ export class IppanelService {
   private readonly hardcodedOtpPatternCode = 'hijid9771y36ega';
 
   constructor(private readonly configService: ConfigService) {
-    const configuredBaseUrl = this.configService.get<string>('ippanel.baseUrl') ?? 'https://edge.ippanel.com/v1';
+    const configuredBaseUrl =
+      this.configService.get<string>('ippanel.baseUrl') ??
+      'https://edge.ippanel.com/v1';
     const configuredPatternBaseUrl =
-      this.configService.get<string>('ippanel.patternBaseUrl') ?? 'https://api2.ippanel.com';
+      this.configService.get<string>('ippanel.patternBaseUrl') ??
+      'https://api2.ippanel.com';
     this.baseUrl = configuredBaseUrl.replace(/\/+$/, '');
     this.patternBaseUrl = configuredPatternBaseUrl.replace(/\/+$/, '');
-    this.apiKey = this.configService.get<string>('ippanel.apiKey') ?? 'YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=';
-    this.defaultFrom = this.configService.get<string>('ippanel.fromNumber') ?? '+983000505';
-    const configuredPatternCode = this.configService.get<string>('ippanel.otpPatternCode')?.trim();
+    this.apiKey =
+      this.configService.get<string>('ippanel.apiKey') ??
+      'YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=';
+    this.defaultFrom =
+      this.configService.get<string>('ippanel.fromNumber') ?? '+983000505';
+    const configuredPatternCode = this.configService
+      .get<string>('ippanel.otpPatternCode')
+      ?.trim();
     this.defaultPatternCode =
       configuredPatternCode && configuredPatternCode.toLowerCase() !== 'otp'
         ? configuredPatternCode
@@ -70,7 +83,10 @@ export class IppanelService {
     this.patternUrl = `${this.patternBaseUrl}/api/send`;
     this.textUrl = `${this.baseUrl}/api/send/webservice`;
     this.httpClient = axios.create({ baseURL: this.baseUrl, timeout: 10_000 });
-    this.patternClient = axios.create({ baseURL: this.patternBaseUrl, timeout: 10_000 });
+    this.patternClient = axios.create({
+      baseURL: this.patternBaseUrl,
+      timeout: 10_000,
+    });
   }
 
   async sendPatternSms(
@@ -88,17 +104,24 @@ export class IppanelService {
     const recipients = this.normalizeRecipients(to);
     const recipient = recipients[0];
     if (!recipient) {
-      this.logger.warn('Attempted to send IPPanel pattern SMS with no recipients.');
+      this.logger.warn(
+        'Attempted to send IPPanel pattern SMS with no recipients.',
+      );
       throw new BadRequestException('At least one recipient is required');
     }
     if (recipients.length > 1) {
-      this.logger.warn(`Pattern SMS received ${recipients.length} recipients; using only the first.`);
+      this.logger.warn(
+        `Pattern SMS received ${recipients.length} recipients; using only the first.`,
+      );
     }
 
     const payload = {
       sending_type: 'pattern',
       from_number: options?.from ?? this.defaultFrom,
-      code: options?.code?.trim() ?? this.defaultPatternCode ?? this.hardcodedOtpPatternCode,
+      code:
+        options?.code?.trim() ??
+        this.defaultPatternCode ??
+        this.hardcodedOtpPatternCode,
       recipients: [recipient],
       params,
     };
@@ -110,9 +133,13 @@ export class IppanelService {
 
     try {
       const response = await this.executeWithRetry(async () => {
-        return this.patternClient.post<IppanelSendResponse>(this.patternUrl, payload, {
-          headers: this.buildPatternHeaders(),
-        });
+        return this.patternClient.post<IppanelSendResponse>(
+          this.patternUrl,
+          payload,
+          {
+            headers: this.buildPatternHeaders(),
+          },
+        );
       }, 'pattern SMS');
 
       const result = this.mapResponse(response.data);
@@ -121,7 +148,11 @@ export class IppanelService {
           result.success
         }, messageIds=${result.messageIds?.join(',') ?? 'n/a'})`,
       );
-      return { ...result, usedPatternCode: payload.code, requestUrl: this.patternUrl };
+      return {
+        ...result,
+        usedPatternCode: payload.code,
+        requestUrl: this.patternUrl,
+      };
     } catch (error) {
       if (this.isPatternRejection(error)) {
         const rejection = this.mapErrorResponse(error);
@@ -130,7 +161,11 @@ export class IppanelService {
             rejection.statusMessage ?? 'unknown'
           })`,
         );
-        return { ...rejection, usedPatternCode: payload.code, requestUrl: this.patternUrl };
+        return {
+          ...rejection,
+          usedPatternCode: payload.code,
+          requestUrl: this.patternUrl,
+        };
       }
       this.handleProviderError('pattern SMS', error);
     }
@@ -150,7 +185,9 @@ export class IppanelService {
     }
     const recipients = this.normalizeRecipients(to);
     if (!recipients.length) {
-      this.logger.warn('Attempted to send IPPanel text SMS with no recipients.');
+      this.logger.warn(
+        'Attempted to send IPPanel text SMS with no recipients.',
+      );
       throw new BadRequestException('At least one recipient is required');
     }
 
@@ -209,18 +246,31 @@ export class IppanelService {
     const statusMessage =
       data?.status?.message ??
       (typeof data?.status === 'string' ? data.status : undefined) ??
-      (typeof meta?.message === 'string' ? (meta.message as string) : undefined);
-    const bulkId = data?.data?.bulk_id ?? (typeof data?.bulk_id === 'string' ? data.bulk_id : undefined);
+      (typeof meta?.message === 'string'
+        ? (meta.message as string)
+        : undefined);
+    const bulkId =
+      data?.data?.bulk_id ??
+      (typeof data?.bulk_id === 'string' ? data.bulk_id : undefined);
     const inferredMessageIds =
       data?.data?.message_ids ??
-      (Array.isArray((data as any)?.message_ids) ? ((data as any).message_ids as string[]) : undefined) ??
-      (typeof data?.data?.message_id === 'string' ? [data.data.message_id] : undefined) ??
-      (typeof (data as any)?.message_id === 'string' ? ([(data as any).message_id] as string[]) : undefined) ??
+      (Array.isArray((data as any)?.message_ids)
+        ? ((data as any).message_ids as string[])
+        : undefined) ??
+      (typeof data?.data?.message_id === 'string'
+        ? [data.data.message_id]
+        : undefined) ??
+      (typeof (data as any)?.message_id === 'string'
+        ? ([(data as any).message_id] as string[])
+        : undefined) ??
       (Array.isArray((data?.data as any)?.message_outbox_ids)
-        ? ((data?.data as any).message_outbox_ids as Array<string | number>).map((id) => String(id))
+        ? (
+            (data?.data as any).message_outbox_ids as Array<string | number>
+          ).map((id) => String(id))
         : undefined);
     const messageIds = inferredMessageIds;
-    const metaStatus = typeof meta?.status === 'boolean' ? (meta.status as boolean) : undefined;
+    const metaStatus =
+      typeof meta?.status === 'boolean' ? (meta.status as boolean) : undefined;
     const success =
       metaStatus === true ||
       (typeof statusCode === 'number' ? statusCode < 400 : false) ||
@@ -245,7 +295,9 @@ export class IppanelService {
       return await operation();
     } catch (error) {
       if (attempt === 0 && this.isRetryableError(error)) {
-        this.logger.warn(`IPPanel ${action} failed (attempt ${attempt + 1}); retrying once.`);
+        this.logger.warn(
+          `IPPanel ${action} failed (attempt ${attempt + 1}); retrying once.`,
+        );
         return this.executeWithRetry(operation, action, attempt + 1);
       }
       throw error;
@@ -273,7 +325,7 @@ export class IppanelService {
 
   private handleProviderError(action: string, error: unknown): never {
     const reason = axios.isAxiosError(error)
-      ? error.message ?? error.response?.statusText ?? 'axios error'
+      ? (error.message ?? error.response?.statusText ?? 'axios error')
       : error instanceof Error
         ? error.message
         : String(error);
@@ -287,7 +339,8 @@ export class IppanelService {
       return {
         success: false,
         statusCode: error.response?.status,
-        statusMessage: this.extractStatusMessage(data) ?? error.response?.statusText,
+        statusMessage:
+          this.extractStatusMessage(data) ?? error.response?.statusText,
         raw: data,
       };
     }

@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/database/prisma.service';
-import { prismaToUserRegistrationDetailsEntity, prismaToUserRegistrationEntity } from './mappers/registration.mapper';
-import { UserRegistrationDetailsEntity, UserRegistrationEntity } from './domain/registration.entity';
+import {
+  prismaToUserRegistrationDetailsEntity,
+  prismaToUserRegistrationEntity,
+} from './mappers/registration.mapper';
+import {
+  UserRegistrationDetailsEntity,
+  UserRegistrationEntity,
+} from './domain/registration.entity';
 import { Prisma } from '@prisma/client';
 
 export interface AdminRegistrationFilter {
@@ -16,7 +22,9 @@ export interface AdminRegistrationFilter {
 export class RegistrationsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserRegistrations(userId: string): Promise<UserRegistrationEntity[]> {
+  async findUserRegistrations(
+    userId: string,
+  ): Promise<UserRegistrationEntity[]> {
     const registrations = await this.prisma.registration.findMany({
       where: { userId },
       include: {
@@ -48,7 +56,10 @@ export class RegistrationsRepository {
         payment: true,
       },
       orderBy: { createdAt: 'desc' },
-      skip: filters.page && filters.limit ? (filters.page - 1) * filters.limit : undefined,
+      skip:
+        filters.page && filters.limit
+          ? (filters.page - 1) * filters.limit
+          : undefined,
       take: filters.limit,
     });
     return registrations.map(prismaToUserRegistrationDetailsEntity);
@@ -65,7 +76,9 @@ export class RegistrationsRepository {
         payment: true,
       },
     });
-    return registration ? prismaToUserRegistrationDetailsEntity(registration) : null;
+    return registration
+      ? prismaToUserRegistrationDetailsEntity(registration)
+      : null;
   }
 
   async updateRegistration(

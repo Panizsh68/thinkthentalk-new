@@ -21,7 +21,7 @@ import { ErrorResponseDto } from '../common/dto/error-response.dto';
 @ApiTags('Events')
 @Controller({ path: 'events', version: '1' })
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) { }
+  constructor(private readonly eventsService: EventsService) {}
 
   @Get()
   @ApiOperation({
@@ -64,15 +64,13 @@ export class EventsController {
     name: 'dateRange[from]',
     required: false,
     type: String,
-    description:
-      'Filter events starting from this date/time (inclusive).',
+    description: 'Filter events starting from this date/time (inclusive).',
   })
   @ApiQuery({
     name: 'dateRange[to]',
     required: false,
     type: String,
-    description:
-      'Filter events up to this date/time (inclusive).',
+    description: 'Filter events up to this date/time (inclusive).',
   })
   @ApiQuery({
     name: 'status',
@@ -84,7 +82,8 @@ export class EventsController {
     name: 'forHomepage',
     required: false,
     type: Boolean,
-    description: 'If true, returns exactly three events prioritizing upcoming ones for the homepage.',
+    description:
+      'If true, returns exactly three events prioritizing upcoming ones for the homepage.',
   })
   @ApiOkResponse({
     description: 'A list of events.',
@@ -116,33 +115,43 @@ export class EventsController {
           ? false
           : undefined;
 
-    const normalizedCategories = (Array.isArray(categories)
-      ? categories
-      : categories
-        ? [categories]
-        : [])
+    const normalizedCategories = (
+      Array.isArray(categories) ? categories : categories ? [categories] : []
+    )
       .flatMap((categoryValue) => categoryValue.split(','))
       .map((categoryValue) => categoryValue.trim())
-      .filter((categoryValue) => categoryValue.length > 0 && categoryValue.toLowerCase() !== 'all');
+      .filter(
+        (categoryValue) =>
+          categoryValue.length > 0 && categoryValue.toLowerCase() !== 'all',
+      );
 
     const normalizedCity = (city ?? '').trim();
-    const cleanCity = normalizedCity && normalizedCity.toLowerCase() !== 'all'
-      ? normalizedCity
-      : undefined;
+    const cleanCity =
+      normalizedCity && normalizedCity.toLowerCase() !== 'all'
+        ? normalizedCity
+        : undefined;
 
     const normalizedCategory = (category ?? '').trim();
-    const cleanCategory = normalizedCategory && normalizedCategory.toLowerCase() !== 'all'
-      ? normalizedCategory
-      : undefined;
+    const cleanCategory =
+      normalizedCategory && normalizedCategory.toLowerCase() !== 'all'
+        ? normalizedCategory
+        : undefined;
 
-    const normalizedType = typeof type === 'string'
-      ? ((): EventType | undefined => {
-        const upperType = type.toUpperCase() as EventType;
-        return Object.values(EventType).includes(upperType) ? upperType : undefined;
-      })()
-      : undefined;
+    const normalizedType =
+      typeof type === 'string'
+        ? ((): EventType | undefined => {
+            const upperType = type.toUpperCase() as EventType;
+            return Object.values(EventType).includes(upperType)
+              ? upperType
+              : undefined;
+          })()
+        : undefined;
 
-    const allowedStatuses: Array<'upcoming' | 'past' | 'all'> = ['upcoming', 'past', 'all'];
+    const allowedStatuses: Array<'upcoming' | 'past' | 'all'> = [
+      'upcoming',
+      'past',
+      'all',
+    ];
     const normalizedStatus: 'upcoming' | 'past' | 'all' | undefined =
       status && allowedStatuses.includes(status)
         ? status
@@ -151,14 +160,17 @@ export class EventsController {
           : undefined;
 
     const parsedLimit = limit ? Number(limit) : undefined;
-    const safeLimit = parsedLimit && !Number.isNaN(parsedLimit) && parsedLimit > 0 ? parsedLimit : undefined;
+    const safeLimit =
+      parsedLimit && !Number.isNaN(parsedLimit) && parsedLimit > 0
+        ? parsedLimit
+        : undefined;
 
-    const safeSortBy = sortBy && ['startDateTime', 'createdAt'].includes(sortBy)
-      ? sortBy
-      : undefined;
-    const safeSortOrder = sortOrder && ['asc', 'desc'].includes(sortOrder)
-      ? sortOrder
-      : undefined;
+    const safeSortBy =
+      sortBy && ['startDateTime', 'createdAt'].includes(sortBy)
+        ? sortBy
+        : undefined;
+    const safeSortOrder =
+      sortOrder && ['asc', 'desc'].includes(sortOrder) ? sortOrder : undefined;
 
     const filters = {
       showPastEvents: normalizedShowPastEvents,
@@ -189,7 +201,10 @@ export class EventsController {
     description: 'The ID of the event.',
   })
   @ApiOkResponse({ description: 'Event details.', type: EventDto })
-  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Event not found.',
+    type: ErrorResponseDto,
+  })
   async getEventById(@Param('eventId') eventId: string): Promise<EventDto> {
     const event = await this.eventsService.findEventById(eventId);
     if (!event) {

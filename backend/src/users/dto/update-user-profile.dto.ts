@@ -1,27 +1,47 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { Gender } from '@prisma/client';
 
 export class UpdateUserProfileDto {
-  @ApiPropertyOptional({ description: "User's first name in Persian.", type: String })
+  @ApiPropertyOptional({
+    description: "User's first name in Persian.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   @MaxLength(100)
   firstNameFa?: string;
 
-  @ApiPropertyOptional({ description: "User's last name in Persian.", type: String })
+  @ApiPropertyOptional({
+    description: "User's last name in Persian.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   @MaxLength(100)
   lastNameFa?: string;
 
-  @ApiPropertyOptional({ description: "User's first name in English.", type: String })
+  @ApiPropertyOptional({
+    description: "User's first name in English.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   @MaxLength(100)
   firstNameEn?: string;
 
-  @ApiPropertyOptional({ description: "User's last name in English.", type: String })
+  @ApiPropertyOptional({
+    description: "User's last name in English.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   @MaxLength(100)
@@ -61,17 +81,27 @@ export class UpdateUserProfileDto {
   @IsString()
   jobTitle?: string;
 
-  @ApiPropertyOptional({ description: 'Email address.', type: String, format: 'email' })
+  @ApiPropertyOptional({
+    description: 'Email address.',
+    type: String,
+    format: 'email',
+  })
   @IsOptional()
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({ description: 'Language proficiency level.', type: String })
+  @ApiPropertyOptional({
+    description: 'Language proficiency level.',
+    type: String,
+  })
   @IsOptional()
   @IsString()
   languageLevel?: string;
 
-  @ApiPropertyOptional({ description: "User's avatar image URL.", type: String })
+  @ApiPropertyOptional({
+    description: "User's avatar image URL.",
+    type: String,
+  })
   @IsOptional()
   @IsString()
   avatarUrl?: string;

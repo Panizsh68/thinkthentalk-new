@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Express } from 'express';
-import { StorageProvider, StoredFile, StorageUploadOptions, StorageType } from './storage.types';
+import {
+  StorageProvider,
+  StoredFile,
+  StorageUploadOptions,
+  StorageType,
+} from './storage.types';
 import { LocalStorageProvider } from './local-storage.provider';
 import { CloudStorageProvider } from './cloud-storage.provider';
 
@@ -15,7 +20,8 @@ export class StorageService {
     private cloudStorageProvider: CloudStorageProvider,
   ) {
     // Initialize provider based on environment
-    const storageType = this.configService.get<string>('STORAGE_TYPE') || StorageType.LOCAL;
+    const storageType =
+      this.configService.get<string>('STORAGE_TYPE') || StorageType.LOCAL;
 
     if (storageType === StorageType.LOCAL) {
       this.provider = this.localStorageProvider;
@@ -52,7 +58,10 @@ export class StorageService {
   /**
    * Get temporary URL with expiration (useful for private files)
    */
-  async getTemporaryFileUrl(filePath: string, expirationHours?: number): Promise<string> {
+  async getTemporaryFileUrl(
+    filePath: string,
+    expirationHours?: number,
+  ): Promise<string> {
     return this.provider.getTemporaryUrl(filePath, expirationHours);
   }
 

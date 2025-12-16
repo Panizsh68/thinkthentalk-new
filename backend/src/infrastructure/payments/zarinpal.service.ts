@@ -19,10 +19,13 @@ export class ZarinpalService {
   private readonly defaultCallbackUrl?: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.merchantId = this.configService.get<string>('ZARINPAL_MERCHANT_ID') ?? '';
+    this.merchantId =
+      this.configService.get<string>('ZARINPAL_MERCHANT_ID') ?? '';
     this.sandbox =
       (this.configService.get<string>('ZARINPAL_SANDBOX') ?? 'true') === 'true';
-    this.defaultCallbackUrl = this.configService.get<string>('ZARINPAL_CALLBACK_URL');
+    this.defaultCallbackUrl = this.configService.get<string>(
+      'ZARINPAL_CALLBACK_URL',
+    );
 
     const baseURL = this.sandbox
       ? 'https://sandbox.zarinpal.com/pg/v4'
@@ -37,10 +40,14 @@ export class ZarinpalService {
   async requestPayment(params: ZarinpalRequestPaymentParams): Promise<void> {
     const callback_url = params.callbackUrl ?? this.defaultCallbackUrl;
     if (!this.merchantId) {
-      throw new InternalServerErrorException('Zarinpal merchantId is not configured');
+      throw new InternalServerErrorException(
+        'Zarinpal merchantId is not configured',
+      );
     }
     if (!callback_url) {
-      throw new InternalServerErrorException('Zarinpal callback URL is not configured');
+      throw new InternalServerErrorException(
+        'Zarinpal callback URL is not configured',
+      );
     }
 
     try {
@@ -57,12 +64,16 @@ export class ZarinpalService {
 
   async verifyPayment(amount: number, authority: string): Promise<void> {
     if (!this.merchantId) {
-      throw new InternalServerErrorException('Zarinpal merchantId is not configured');
+      throw new InternalServerErrorException(
+        'Zarinpal merchantId is not configured',
+      );
     }
 
     try {
       // Placeholder for actual API call
-      this.logger.debug(`Zarinpal verifyPayment: amount=${amount}, authority=${authority}`);
+      this.logger.debug(
+        `Zarinpal verifyPayment: amount=${amount}, authority=${authority}`,
+      );
       // await this.httpClient.post('/payment/verify.json', { ...payload });
     } catch (error) {
       this.logger.error('Zarinpal verifyPayment failed', error);

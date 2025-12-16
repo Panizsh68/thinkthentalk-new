@@ -22,7 +22,9 @@ export class MailerService {
     const port = Number(this.configService.get<number>('SMTP_PORT') ?? 587);
     const user = this.configService.get<string>('SMTP_USER');
     const pass = this.configService.get<string>('SMTP_PASS');
-    this.fromAddress = this.configService.get<string>('SMTP_FROM') ?? 'no-reply@thinkthentalk.ir';
+    this.fromAddress =
+      this.configService.get<string>('SMTP_FROM') ??
+      'no-reply@thinkthentalk.ir';
 
     if (host && user && pass) {
       this.transporter = nodemailer.createTransport({
@@ -35,7 +37,9 @@ export class MailerService {
       this.logger.log('SMTP transport configured.');
     } else {
       this.isConfigured = false;
-      this.logger.warn('SMTP credentials are not fully configured; contact notifications will be skipped.');
+      this.logger.warn(
+        'SMTP credentials are not fully configured; contact notifications will be skipped.',
+      );
     }
   }
 
@@ -60,7 +64,10 @@ export class MailerService {
       });
       return true;
     } catch (error) {
-      this.logger.error('Failed to send email', error instanceof Error ? error.message : error);
+      this.logger.error(
+        'Failed to send email',
+        error instanceof Error ? error.message : error,
+      );
       return false;
     }
   }

@@ -50,8 +50,8 @@ describe('ContactService', () => {
   const baseDto = {
     name: 'Jane Tester',
     email: 'jane@example.com',
-    message: 'Hello Think Then Talk!'
-      + ' I have more than ten characters here.',
+    message:
+      'Hello Think Then Talk!' + ' I have more than ten characters here.',
   };
 
   const baseMeta = {
@@ -80,7 +80,10 @@ describe('ContactService', () => {
 
     expect(prisma.contactMessage.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ email: baseDto.email.toLowerCase(), ipAddress: baseMeta.ip }),
+        data: expect.objectContaining({
+          email: baseDto.email.toLowerCase(),
+          ipAddress: baseMeta.ip,
+        }),
       }),
     );
     expect(mailer.configured).toHaveBeenCalled();
@@ -88,12 +91,17 @@ describe('ContactService', () => {
   });
 
   it('drops honeypot submissions without touching DB', async () => {
-    await service.submitPublicMessage({ ...baseDto, website: 'filled' }, baseMeta);
+    await service.submitPublicMessage(
+      { ...baseDto, website: 'filled' },
+      baseMeta,
+    );
     expect(prisma.contactMessage.create).not.toHaveBeenCalled();
   });
 
   it('throws when rate limit exceeded', async () => {
     throttler.increment = jest.fn().mockResolvedValue({ totalHits: 5 });
-    await expect(service.submitPublicMessage(baseDto, baseMeta)).rejects.toBeInstanceOf(ThrottlerException);
+    await expect(
+      service.submitPublicMessage(baseDto, baseMeta),
+    ).rejects.toBeInstanceOf(ThrottlerException);
   });
 });

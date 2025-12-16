@@ -20,10 +20,13 @@ import { Query } from '@nestjs/common';
 @ApiTags('Discounts')
 @Controller({ path: 'discounts', version: '1' })
 export class DiscountsController {
-  constructor(private readonly discountsService: DiscountsService) { }
+  constructor(private readonly discountsService: DiscountsService) {}
 
   @Get('status')
-  @ApiOperation({ summary: 'Module status', description: 'Health/status check for the discounts subsystem.' })
+  @ApiOperation({
+    summary: 'Module status',
+    description: 'Health/status check for the discounts subsystem.',
+  })
   @ApiOkResponse({ description: 'Discounts status.', type: ModuleStatusDto })
   status(): ModuleStatusDto {
     return this.discountsService.status();
@@ -32,12 +35,11 @@ export class DiscountsController {
   @Get('public')
   @ApiOperation({
     summary: 'List public discounts',
-    description: 'Returns active public discounts, optionally filtered by eventId.',
+    description:
+      'Returns active public discounts, optionally filtered by eventId.',
   })
   @ApiOkResponse({ description: 'Public discounts list.', type: [DiscountDto] })
-  async listPublic(
-    @Query('eventId') eventId?: string,
-  ): Promise<DiscountDto[]> {
+  async listPublic(@Query('eventId') eventId?: string): Promise<DiscountDto[]> {
     return this.discountsService.listPublicDiscounts(eventId);
   }
 
@@ -46,7 +48,8 @@ export class DiscountsController {
   @ApiBearerAuth('bearerAuth')
   @ApiOperation({
     summary: 'Validate a Discount Code',
-    description: 'Checks if a discount code is valid for a given event and price.',
+    description:
+      'Checks if a discount code is valid for a given event and price.',
   })
   @ApiBody({ type: ValidateDiscountDto, required: true })
   @ApiOkResponse({ description: 'Discount code is valid.', type: DiscountDto })
@@ -54,7 +57,10 @@ export class DiscountsController {
     description: 'Discount is not valid for one or more reasons.',
     type: ErrorResponseDto,
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   async validate(
     @CurrentUser() user: { sub: string },
     @Body() dto: ValidateDiscountDto,

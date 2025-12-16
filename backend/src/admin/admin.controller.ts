@@ -22,7 +22,7 @@ import { ModuleStatusDto } from '../common/dto/module-status.dto';
 @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER, AdminRole.FINANCE)
 @Controller({ path: 'admin', version: '1' })
 export class AdminController {
-  constructor(private readonly adminStatsService: AdminStatsService) { }
+  constructor(private readonly adminStatsService: AdminStatsService) {}
 
   @Get('stats')
   @ApiOperation({
@@ -33,7 +33,10 @@ export class AdminController {
     description: 'Dashboard statistics.',
     type: AdminStatsDto,
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async getStats(): Promise<AdminStatsDto> {
     return this.adminStatsService.getStats();
@@ -45,9 +48,16 @@ export class AdminController {
     description: 'Health/status check for the admin subsystem.',
   })
   @ApiOkResponse({ description: 'Admin status.', type: ModuleStatusDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async status(): Promise<ModuleStatusDto> {
-    return { status: 'ok', module: 'admin', timestamp: new Date().toISOString() };
+    return {
+      status: 'ok',
+      module: 'admin',
+      timestamp: new Date().toISOString(),
+    };
   }
 }

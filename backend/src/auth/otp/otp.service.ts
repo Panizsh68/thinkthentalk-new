@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DomainError, TooManyRequestsError } from '../../common/errors/domain.errors';
+import {
+  DomainError,
+  TooManyRequestsError,
+} from '../../common/errors/domain.errors';
 import { RedisService } from '../../infrastructure/cache/redis.service';
 import { generateOtp } from './otp.generator';
 import { OtpContext, OtpResult } from './otp.types';
@@ -47,7 +50,9 @@ export class OtpService {
     this.verifyPerMobileLimit = Number(
       this.configService.get<number>('OTP_VERIFY_RATE_LIMIT_PER_MOBILE') ?? 5,
     );
-    this.isProd = (this.configService.get<string>('NODE_ENV') ?? 'development') === 'production';
+    this.isProd =
+      (this.configService.get<string>('NODE_ENV') ?? 'development') ===
+      'production';
   }
 
   async generateAndStoreOtp(
@@ -67,25 +72,38 @@ export class OtpService {
     return { code, expiresInSeconds: this.ttlSeconds };
   }
 
-  async verifyOtp(mobile: string, context: OtpContext, otp: string): Promise<void> {
+  async verifyOtp(
+    mobile: string,
+    context: OtpContext,
+    otp: string,
+  ): Promise<void> {
     const normalizedMobile = this.normalizeMobile(mobile);
-    await this.incrementAndCheckLimit(this.keyForVerifyCount(normalizedMobile), this.verifyPerMobileLimit);
+    await this.incrementAndCheckLimit(
+      this.keyForVerifyCount(normalizedMobile),
+      this.verifyPerMobileLimit,
+    );
     const key = this.keyForOtp(context, normalizedMobile);
     const stored = await this.redisService.get<string>(key);
 
     if (!stored) {
       this.logger.warn(`OTP verify failed: not found key=${key}`);
       if (!this.isProd) {
-        this.logger.warn(`No OTP found for ${mobile} (dev mode); accepting for convenience.`);
+        this.logger.warn(
+          `No OTP found for ${mobile} (dev mode); accepting for convenience.`,
+        );
         return;
       }
       throw new ExpiredOtpError();
     }
 
     if (stored !== otp) {
-      this.logger.warn(`OTP mismatch key=${key} stored=${stored} provided=${otp}`);
+      this.logger.warn(
+        `OTP mismatch key=${key} stored=${stored} provided=${otp}`,
+      );
       if (!this.isProd) {
-        this.logger.warn(`OTP mismatch for ${mobile}. Stored=${stored}, provided=${otp}; rejecting in dev.`);
+        this.logger.warn(
+          `OTP mismatch for ${mobile}. Stored=${stored}, provided=${otp}; rejecting in dev.`,
+        );
       }
       throw new InvalidOtpError();
     }
@@ -94,19 +112,35 @@ export class OtpService {
     this.logger.log(`OTP verified and deleted key=${key}`);
   }
 
-  private async enforceRateLimits(mobile: string, requesterIp?: string): Promise<void> {
+  private async enforceRateLimits(
+    mobile: string,
+    requesterIp?: string,
+  ): Promise<void> {
     const tasks: Promise<void>[] = [];
 
-    tasks.push(this.incrementAndCheckLimit(this.keyForMobileCount(mobile), this.perMobileLimit));
+    tasks.push(
+      this.incrementAndCheckLimit(
+        this.keyForMobileCount(mobile),
+        this.perMobileLimit,
+      ),
+    );
 
     if (requesterIp) {
-      tasks.push(this.incrementAndCheckLimit(this.keyForIpCount(requesterIp), this.perIpLimit));
+      tasks.push(
+        this.incrementAndCheckLimit(
+          this.keyForIpCount(requesterIp),
+          this.perIpLimit,
+        ),
+      );
     }
 
     await Promise.all(tasks);
   }
 
-  private async incrementAndCheckLimit(key: string, limit: number): Promise<void> {
+  private async incrementAndCheckLimit(
+    key: string,
+    limit: number,
+  ): Promise<void> {
     const current = (await this.redisService.get<number>(key)) ?? 0;
     const next = current + 1;
 

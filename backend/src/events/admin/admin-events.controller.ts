@@ -55,31 +55,41 @@ export class AdminEventsController {
     private readonly eventsService: EventsService,
     private readonly auditService: AuditService,
     private readonly redisService: RedisService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({
     summary: 'List All Events (Admin)',
-    description: 'Retrieves a list of all events for the admin panel, including past events.',
+    description:
+      'Retrieves a list of all events for the admin panel, including past events.',
   })
   @ApiOkResponse({
     description: 'A list of all events.',
     type: EventDto,
     isArray: true,
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
-  async listAdminEvents(@Query() rawQuery: Record<string, any>): Promise<EventDto[]> {
+  async listAdminEvents(
+    @Query() rawQuery: Record<string, any>,
+  ): Promise<EventDto[]> {
     const query = plainToInstance(AdminEventsQueryDto, rawQuery, {
       enableImplicitConversion: true,
       exposeUnsetFields: false,
     });
-    const errors = await validate(query, { whitelist: true, forbidNonWhitelisted: false });
+    const errors = await validate(query, {
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    });
     if (errors.length) {
-      const message = errors
-        .flatMap((error) => Object.values(error.constraints ?? {}))
-        .filter(Boolean)
-        .join('; ') || 'Validation failed';
+      const message =
+        errors
+          .flatMap((error) => Object.values(error.constraints ?? {}))
+          .filter(Boolean)
+          .join('; ') || 'Validation failed';
       throw new BadRequestException(message);
     }
 
@@ -93,7 +103,16 @@ export class AdminEventsController {
       archived = 'false',
       deleted = 'false',
     } = query;
-    return this.eventsService.findAdminEvents({ page, limit, sortBy, sortOrder, status, type, archived, deleted });
+    return this.eventsService.findAdminEvents({
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+      status,
+      type,
+      archived,
+      deleted,
+    });
   }
 
   @Post()
@@ -101,12 +120,24 @@ export class AdminEventsController {
     summary: 'Create Event (Admin)',
     description: 'Creates a new event.',
   })
-  @ApiCreatedResponse({ description: 'Event created successfully.', type: EventDto })
-  @ApiBadRequestResponse({ description: 'Invalid data.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiCreatedResponse({
+    description: 'Event created successfully.',
+    type: EventDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   @ApiBody({ type: EventFormDataDto, required: true })
-  async createEvent(@Body() dto: EventFormDataDto, @CurrentUser() user: { sub: string }): Promise<EventDto> {
+  async createEvent(
+    @Body() dto: EventFormDataDto,
+    @CurrentUser() user: { sub: string },
+  ): Promise<EventDto> {
     const event = await this.eventsService.createEvent(dto);
     this.auditService.record({
       adminId: user.sub,
@@ -124,10 +155,21 @@ export class AdminEventsController {
     summary: 'Get Event (Admin)',
     description: 'Retrieves a single event for editing in the admin panel.',
   })
-  @ApiParam({ name: 'eventId', type: String, required: true, description: 'The ID of the event.' })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'The ID of the event.',
+  })
   @ApiOkResponse({ description: 'Event data.', type: EventDto })
-  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiNotFoundResponse({
+    description: 'Event not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async getAdminEvent(@Param('eventId') eventId: string): Promise<EventDto> {
     const event = await this.eventsService.findEventById(eventId);
@@ -142,12 +184,26 @@ export class AdminEventsController {
     summary: 'Update Event (Admin)',
     description: 'Updates the core details of an event.',
   })
-  @ApiParam({ name: 'eventId', type: String, required: true, description: 'The ID of the event.' })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'The ID of the event.',
+  })
   @ApiOkResponse({ description: 'Event updated.', type: EventDto })
-  @ApiBadRequestResponse({ description: 'Invalid data.', type: ErrorResponseDto })
-  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
+  @ApiBadRequestResponse({
+    description: 'Invalid data.',
+    type: ErrorResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Event not found.',
+    type: ErrorResponseDto,
+  })
   @ApiBody({ type: UpdateEventFormDataDto, required: true })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async updateAdminEvent(
     @Param('eventId') eventId: string,
@@ -176,12 +232,29 @@ export class AdminEventsController {
     description:
       'Updates the ticket configuration for a specific event. The provided list replaces the existing configuration.',
   })
-  @ApiParam({ name: 'eventId', type: String, required: true, description: 'The ID of the event.' })
-  @ApiOkResponse({ description: 'Ticket configuration updated.', type: EventDto })
-  @ApiBadRequestResponse({ description: 'Invalid data.', type: ErrorResponseDto })
-  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'The ID of the event.',
+  })
+  @ApiOkResponse({
+    description: 'Ticket configuration updated.',
+    type: EventDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid data.',
+    type: ErrorResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Event not found.',
+    type: ErrorResponseDto,
+  })
   @ApiBody({ type: EventTicketConfigDto, isArray: true, required: true })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async updateEventTickets(
     @Param('eventId') eventId: string,
@@ -210,19 +283,36 @@ export class AdminEventsController {
     description:
       'Updates the list of downloadable or linkable resources for an event. The provided list replaces existing resources.',
   })
-  @ApiParam({ name: 'eventId', type: String, required: true, description: 'The ID of the event.' })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'The ID of the event.',
+  })
   @ApiOkResponse({ description: 'Resources updated.', type: EventDto })
-  @ApiBadRequestResponse({ description: 'Invalid data.', type: ErrorResponseDto })
-  @ApiNotFoundResponse({ description: 'Event not found.', type: ErrorResponseDto })
+  @ApiBadRequestResponse({
+    description: 'Invalid data.',
+    type: ErrorResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Event not found.',
+    type: ErrorResponseDto,
+  })
   @ApiBody({ type: EventResourceDto, isArray: true, required: true })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async updateEventResources(
     @Param('eventId') eventId: string,
     @Body() resources: EventResourceDto[],
     @CurrentUser() user: { sub: string },
   ): Promise<EventDto> {
-    const event = await this.eventsService.updateEventResources(eventId, resources);
+    const event = await this.eventsService.updateEventResources(
+      eventId,
+      resources,
+    );
     if (!event) {
       throw new NotFoundException('Event not found.');
     }
@@ -243,7 +333,12 @@ export class AdminEventsController {
     summary: 'Archive or unarchive an event',
     description: 'Toggles the archive status of an event without deleting it.',
   })
-  @ApiParam({ name: 'eventId', type: String, required: true, description: 'The ID of the event.' })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'The ID of the event.',
+  })
   @ApiBody({ type: ArchiveEventDto })
   @ApiOkResponse({ description: 'Updated event.', type: EventDto })
   async archiveEvent(
@@ -251,7 +346,11 @@ export class AdminEventsController {
     @Body() dto: ArchiveEventDto,
     @CurrentUser() user: { sub: string },
   ): Promise<EventDto> {
-    const event = await this.eventsService.archiveEvent(eventId, dto.archived, user.sub);
+    const event = await this.eventsService.archiveEvent(
+      eventId,
+      dto.archived,
+      user.sub,
+    );
     if (!event) {
       throw new NotFoundException('Event not found.');
     }
@@ -273,7 +372,12 @@ export class AdminEventsController {
     description:
       'Performs a soft delete by default. Provide force=true query param and confirmation header for permanent deletion.',
   })
-  @ApiParam({ name: 'eventId', type: String, required: true, description: 'The ID of the event.' })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'The ID of the event.',
+  })
   @ApiOkResponse({ description: 'Deletion result.', type: EventDto })
   async deleteEvent(
     @Param('eventId') eventId: string,
@@ -285,12 +389,19 @@ export class AdminEventsController {
 
     if (forceDelete) {
       if (user.role !== AdminRole.ADMIN) {
-        throw new ForbiddenException('Only admins may perform permanent deletions.');
+        throw new ForbiddenException(
+          'Only admins may perform permanent deletions.',
+        );
       }
       if (!confirmHeader || confirmHeader.toLowerCase() !== 'true') {
-        throw new BadRequestException('Hard delete requires X-Confirm-Delete: true header.');
+        throw new BadRequestException(
+          'Hard delete requires X-Confirm-Delete: true header.',
+        );
       }
-      const deleted = await this.eventsService.hardDeleteEvent(eventId, user.sub);
+      const deleted = await this.eventsService.hardDeleteEvent(
+        eventId,
+        user.sub,
+      );
       if (!deleted) {
         throw new NotFoundException('Event not found.');
       }

@@ -1,4 +1,3 @@
-
 import {
   BeforeApplicationShutdown,
   Injectable,
@@ -12,7 +11,8 @@ import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, BeforeApplicationShutdown {
+  implements OnModuleInit, BeforeApplicationShutdown
+{
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(configService: ConfigService) {
@@ -31,7 +31,6 @@ export class PrismaService
       ],
     });
   }
-
 
   async onModuleInit(): Promise<void> {
     try {

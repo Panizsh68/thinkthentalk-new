@@ -19,7 +19,9 @@ export class ListContactMessagesQueryDto {
   @IsString()
   endDate?: string;
 
-  @ApiPropertyOptional({ description: 'Search by name, email or message snippet.' })
+  @ApiPropertyOptional({
+    description: 'Search by name, email or message snippet.',
+  })
   @IsOptional()
   @IsString()
   search?: string;

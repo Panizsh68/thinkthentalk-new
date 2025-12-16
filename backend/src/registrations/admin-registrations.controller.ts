@@ -1,4 +1,14 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -35,12 +45,13 @@ export class AdminRegistrationsController {
   constructor(
     private readonly registrationsService: RegistrationsService,
     private readonly auditService: AuditService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({
     summary: 'List All Registrations (Admin)',
-    description: 'Retrieves a detailed list of all user registrations for the admin panel.',
+    description:
+      'Retrieves a detailed list of all user registrations for the admin panel.',
   })
   @ApiQuery({ name: 'eventId', required: false, type: String })
   @ApiQuery({ name: 'status', required: false, enum: RegistrationStatus })
@@ -49,15 +60,33 @@ export class AdminRegistrationsController {
     type: UserRegistrationDetailsDto,
     isArray: true,
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
-  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)', example: 1 })
-  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 20)', example: 20 })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number (default: 1)',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Items per page (default: 20)',
+    example: 20,
+  })
   async listAdminRegistrations(
     @Query() query: AdminRegistrationsQueryDto,
   ): Promise<UserRegistrationDetailsDto[]> {
     const { eventId, status, page = 1, limit = 20 } = query;
-    return this.registrationsService.getAdminRegistrations({ eventId, status, page, limit });
+    return this.registrationsService.getAdminRegistrations({
+      eventId,
+      status,
+      page,
+      limit,
+    });
   }
 
   @Get(':registrationId')
@@ -74,12 +103,16 @@ export class AdminRegistrationsController {
     description: 'Registration not found.',
     type: ErrorResponseDto,
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async getRegistrationDetails(
     @Param('registrationId') registrationId: string,
   ): Promise<UserRegistrationDetailsDto> {
-    const result = await this.registrationsService.getRegistrationDetails(registrationId);
+    const result =
+      await this.registrationsService.getRegistrationDetails(registrationId);
     if (!result) {
       throw new NotFoundException('Registration not found.');
     }
@@ -89,7 +122,8 @@ export class AdminRegistrationsController {
   @Patch(':registrationId')
   @ApiOperation({
     summary: 'Update Registration (Admin)',
-    description: "Manually updates a registration's status or the user's submitted form data.",
+    description:
+      "Manually updates a registration's status or the user's submitted form data.",
   })
   @ApiParam({ name: 'registrationId', type: String, required: true })
   @ApiBody({
@@ -101,16 +135,28 @@ export class AdminRegistrationsController {
     description: 'Registration updated.',
     type: UserRegistrationDetailsDto,
   })
-  @ApiBadRequestResponse({ description: 'Invalid update.', type: ErrorResponseDto })
-  @ApiNotFoundResponse({ description: 'Registration not found.', type: ErrorResponseDto })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiBadRequestResponse({
+    description: 'Invalid update.',
+    type: ErrorResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Registration not found.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async updateRegistration(
     @Param('registrationId') registrationId: string,
     @Body() dto: UpdateRegistrationAdminDto,
     @CurrentUser() user: { sub: string },
   ): Promise<UserRegistrationDetailsDto> {
-    const result = await this.registrationsService.updateRegistration(registrationId, dto);
+    const result = await this.registrationsService.updateRegistration(
+      registrationId,
+      dto,
+    );
     if (!result) {
       throw new NotFoundException('Registration not found.');
     }
@@ -127,14 +173,18 @@ export class AdminRegistrationsController {
   @Get('export')
   @ApiOperation({
     summary: 'Paid registrations export (Admin)',
-    description: 'Generates a CSV file of paid registrations with full form data.',
+    description:
+      'Generates a CSV file of paid registrations with full form data.',
   })
   @ApiQuery({ name: 'eventId', required: false, type: String })
   @ApiOkResponse({
     description: 'A CSV file of registrations.',
     content: { 'text/csv': { schema: { type: 'string' } } },
   })
-  @ApiUnauthorizedResponse({ description: 'Not authenticated.', type: ErrorResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async exportRegistrations(
     @Query() query: AdminRegistrationsQueryDto,
@@ -142,7 +192,8 @@ export class AdminRegistrationsController {
     @CurrentUser() user: { sub: string },
   ) {
     const { eventId } = query;
-    const registrations = await this.registrationsService.exportAdminRegistrations({ eventId });
+    const registrations =
+      await this.registrationsService.exportAdminRegistrations({ eventId });
 
     const header = [
       'registrationId',
@@ -176,7 +227,13 @@ export class AdminRegistrationsController {
       'acceptedRules',
     ];
 
-    const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+    const placeholders = [
+      'نام',
+      'نام خانوادگی',
+      'name',
+      'first name',
+      'last name',
+    ];
     const cleanString = (value: any): string => {
       if (value === null || value === undefined) return '';
       const str = String(value).trim();
@@ -199,7 +256,8 @@ export class AdminRegistrationsController {
       const pick = (formValue: any, profileValue: any) =>
         cleanString(formValue) || cleanString(profileValue);
 
-      const eventTitle = (r.event as any)?.title?.fa ?? (r.event as any)?.title?.en ?? '';
+      const eventTitle =
+        (r.event as any)?.title?.fa ?? (r.event as any)?.title?.en ?? '';
       const rawStart = (r.event as any)?.startDateTime ?? '';
       const eventStart =
         rawStart instanceof Date
@@ -242,9 +300,14 @@ export class AdminRegistrationsController {
       ];
     });
 
-    const csv = [header, ...rows].map((r) => r.map(escapeCsv).join(',')).join('\n');
+    const csv = [header, ...rows]
+      .map((r) => r.map(escapeCsv).join(','))
+      .join('\n');
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition', 'attachment; filename=\"registrations_paid.csv\"');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename=\"registrations_paid.csv\"',
+    );
     this.auditService.record({
       adminId: user.sub,
       action: 'EXPORT_REGISTRATIONS',

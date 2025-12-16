@@ -28,7 +28,8 @@
     "prisma:db:pull": "prisma db pull",
     "db:setup:dev": "NODE_ENV=development prisma migrate dev --name init",
     "db:setup:prod": "NODE_ENV=production prisma migrate deploy",
-    "db:seed": "ts-node prisma/seed.ts"
+    "db:seed": "ts-node prisma/seed.ts",
+    "postinstall": "node scripts/patch-zeptomatch.js"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.1",

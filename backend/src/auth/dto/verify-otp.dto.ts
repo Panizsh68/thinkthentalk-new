@@ -8,7 +8,8 @@ export class VerifyOtpDto {
   })
   @IsNotEmpty()
   @Matches(/^09\d{9}$/, {
-    message: 'mobile must be an 11-digit Iranian mobile number starting with 09',
+    message:
+      'mobile must be an 11-digit Iranian mobile number starting with 09',
   })
   mobile!: string;
 
