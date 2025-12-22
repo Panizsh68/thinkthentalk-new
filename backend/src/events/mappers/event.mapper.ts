@@ -35,7 +35,7 @@ export const prismaEventToEventEntity = (
       new EventTicketConfigEntity(
         ticket.id,
         ticket.type,
-        ticket.price.toNumber ? ticket.price.toNumber() : ticket.price,
+        typeof ticket.price === 'number' ? ticket.price : ticket.price.toNumber(),
         ticket.currency,
         ticket.quantityTotal,
         ticket.quantitySold,
