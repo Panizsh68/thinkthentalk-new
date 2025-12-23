@@ -3,25 +3,25 @@
     {
       "id": "group-photo-1",
       "description": "A group of people collaborating in a workshop.",
-      "imageUrl": "https://thinkthentalk.ir/images/IMG_7025.JPG?v=3",
+      "imageUrl": "/static-images/group-photo-1.jpg",
       "imageHint": "workshop collaboration"
     },
     {
       "id": "group-photo-2",
       "description": "People listening to a speaker at a seminar.",
-      "imageUrl": "https://thinkthentalk.ir/images/IMG_8773.JPG?v=3",
+      "imageUrl": "/static-images/group-photo-2.jpg",
       "imageHint": "seminar speaker"
     },
     {
       "id": "group-photo-3",
       "description": "A lively debate session in progress.",
-      "imageUrl": "https://thinkthentalk.ir/images/IMG_20250421_112815_091.jpg?v=3",
+      "imageUrl": "/static-images/group-photo-3.jpg",
       "imageHint": "debate discussion"
     },
     {
       "id": "group-photo-4",
       "description": "Attendees networking during a break at an event.",
-      "imageUrl": "https://thinkthentalk.ir/images/IMG_20251207_131329_398.JPG?v=3",
+      "imageUrl": "/static-images/group-photo-4.jpg",
       "imageHint": "event networking"
     }
   ]
