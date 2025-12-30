@@ -65,7 +65,7 @@ export class IppanelService {
       'https://edge.ippanel.com/v1';
     const configuredPatternBaseUrl =
       this.configService.get<string>('ippanel.patternBaseUrl') ??
-      'https://api2.ippanel.com';
+      'https://edge.ippanel.com/v1';
     this.baseUrl = configuredBaseUrl.replace(/\/+$/, '');
     this.patternBaseUrl = configuredPatternBaseUrl.replace(/\/+$/, '');
     this.apiKey =
