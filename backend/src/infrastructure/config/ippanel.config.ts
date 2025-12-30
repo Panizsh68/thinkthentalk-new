@@ -8,13 +8,13 @@ export interface IppanelConfig {
   otpPatternCode: string;
 }
 
-export const ippanelConfig = registerAs<IppanelConfig>('ippanel', () => ({
-  baseUrl: process.env.IPPANEL_BASE_URL ?? 'https://edge.ippanel.com/v1',
-  patternBaseUrl:
-    process.env.IPPANEL_PATTERN_BASE_URL ??
-    process.env.IPPANEL_BASE_URL ??
-    'https://edge.ippanel.com/v1',
-  apiKey: process.env.IPPANEL_API_KEY ?? '',
-  fromNumber: process.env.IPPANEL_FROM_NUMBER ?? '',
-  otpPatternCode: process.env.IPPANEL_OTP_PATTERN_CODE ?? 'hijid9771y36ega',
-}));
+export const ippanelConfig = registerAs<IppanelConfig>('ippanel', () => {
+  const baseUrl = process.env.IPPANEL_BASE_URL ?? 'https://edge.ippanel.com/v1';
+  return {
+    baseUrl,
+    patternBaseUrl: process.env.IPPANEL_PATTERN_BASE_URL ?? baseUrl,
+    apiKey: process.env.IPPANEL_API_KEY ?? '',
+    fromNumber: process.env.IPPANEL_FROM_NUMBER ?? '',
+    otpPatternCode: process.env.IPPANEL_OTP_PATTERN_CODE ?? 'hijid9771y36ega',
+  };
+});
