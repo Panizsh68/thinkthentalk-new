@@ -12,7 +12,7 @@ export const Logo = ({
   ...props
 }: LogoProps) => (
   <Image
-    src="/static-images/logo.png"
+    src="/frontend/public/static-images/logo.png"
     alt={alt}
     priority
     width={width}
