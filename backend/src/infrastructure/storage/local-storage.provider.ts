@@ -66,7 +66,7 @@ export class LocalStorageProvider implements StorageProvider {
     const fileExtension = path.extname(file.originalname);
     const filename = options.filename || `${randomUUID()}${fileExtension}`;
     const filePath = path.join(categoryDir, filename);
-    const relativePath = path.join(options.category, filename);
+    const relativePath = path.posix.join(options.category, filename);
 
     // Save file
     await fs.writeFile(filePath, file.buffer);
@@ -98,13 +98,10 @@ export class LocalStorageProvider implements StorageProvider {
   }
 
   getUrl(filePath: string): string {
-    const normalizedBase = this.baseUrl.endsWith('/')
-      ? this.baseUrl.slice(0, -1)
-      : this.baseUrl;
-    const normalizedPublicDir = this.publicDir.endsWith('/')
-      ? this.publicDir.slice(0, -1)
-      : this.publicDir;
-    return `${normalizedBase}${normalizedPublicDir}/${filePath}`;
+    const normalizedBase = this.normalizeBaseUrl(this.baseUrl);
+    const normalizedPublicDir = this.normalizePublicDir(this.publicDir);
+    const normalizedPath = this.normalizeFilePath(filePath);
+    return `${normalizedBase}${normalizedPublicDir}/${normalizedPath}`;
   }
 
   async getTemporaryUrl(
@@ -136,6 +133,27 @@ export class LocalStorageProvider implements StorageProvider {
         throw error;
       }
     }
+  }
+
+  private normalizeBaseUrl(baseUrl: string): string {
+    return baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  }
+
+  private normalizePublicDir(publicDir: string): string {
+    if (!publicDir) {
+      return '';
+    }
+    const withLeadingSlash = publicDir.startsWith('/')
+      ? publicDir
+      : `/${publicDir}`;
+    return withLeadingSlash.endsWith('/')
+      ? withLeadingSlash.slice(0, -1)
+      : withLeadingSlash;
+  }
+
+  private normalizeFilePath(filePath: string): string {
+    const normalized = filePath.replace(/\\/g, '/');
+    return path.posix.normalize(normalized).replace(/^\/+/, '');
   }
 
   private getValidMimeTypes(category: FileCategory): string[] {

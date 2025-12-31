@@ -13,13 +13,13 @@ export enum StorageType {
 }
 
 export enum FileCategory {
-  EVENT_POSTER = 'events',
-  USER_AVATAR = 'users',
-  TEAM_MEMBER = 'content/team',
-  SPONSOR_LOGO = 'content/sponsors',
+  EVENT_POSTER = 'event-poster',
+  USER_AVATAR = 'user-avatar',
+  TEAM_MEMBER = 'team-member',
+  SPONSOR_LOGO = 'sponsor-logo',
   DOCUMENT = 'documents',
   ATTACHMENT = 'attachments',
-  EVENT_RESOURCE = 'resources',
+  EVENT_RESOURCE = 'event-resource',
 }
 
 export interface StoredFile {
