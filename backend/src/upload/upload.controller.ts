@@ -2,11 +2,14 @@ import {
   Controller,
   Post,
   Delete,
+  Get,
   Param,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
   UseGuards,
+  NotFoundException,
+  Res,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
@@ -29,6 +32,7 @@ import {
 } from '../infrastructure/storage/storage.types';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
+import type { Response } from 'express';
 
 @ApiTags('Upload')
 @ApiBearerAuth('bearerAuth')
@@ -322,5 +326,42 @@ export class UploadController {
     await this.storageService.deleteFile(filePath);
 
     return { success: true };
+  }
+
+  @Get('files/:category/:filename')
+  @ApiOperation({
+    summary: 'Legacy file access',
+    description:
+      'Redirect legacy upload URLs to the current public upload location.',
+  })
+  async getLegacyFile(
+    @Param('category') category: string,
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    const normalizedPath = path.posix.normalize(`${category}/${filename}`);
+    if (normalizedPath.startsWith('..') || path.isAbsolute(normalizedPath)) {
+      throw new BadRequestException('Invalid file path');
+    }
+
+    const legacyMap: Record<string, string> = {
+      events: FileCategory.EVENT_POSTER,
+      'event-posters': FileCategory.EVENT_POSTER,
+      'event-resources': FileCategory.EVENT_RESOURCE,
+    };
+
+    const candidates = Array.from(
+      new Set([category, legacyMap[category]].filter(Boolean)),
+    );
+
+    for (const candidate of candidates) {
+      const candidatePath = path.posix.join(candidate, filename);
+      if (await this.storageService.fileExists(candidatePath)) {
+        res.redirect(this.storageService.getFileUrl(candidatePath));
+        return;
+      }
+    }
+
+    throw new NotFoundException('File not found');
   }
 }
