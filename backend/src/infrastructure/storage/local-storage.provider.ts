@@ -23,9 +23,10 @@ export class LocalStorageProvider implements StorageProvider {
     const configuredPublicPath =
       this.configService.get<string>('PUBLIC_UPLOAD_PATH');
 
-    this.uploadDir = configuredUploadDir
-      ? path.resolve(configuredUploadDir)
-      : path.join(process.cwd(), 'uploads');
+    const envUploadDir = process.env.UPLOADS_DIR;
+    this.uploadDir = path.resolve(
+      envUploadDir || configuredUploadDir || './uploads',
+    );
 
     const normalizedPublicPath = configuredPublicPath ?? '/uploads';
     this.publicDir = normalizedPublicPath.startsWith('/')

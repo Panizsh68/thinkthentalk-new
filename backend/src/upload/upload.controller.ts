@@ -350,16 +350,15 @@ export class UploadController {
       'event-resources': FileCategory.EVENT_RESOURCE,
     };
 
-    const candidates = Array.from(
-      new Set([category, legacyMap[category]].filter(Boolean)),
-    );
+    const candidates = [category, legacyMap[category]].filter(Boolean);
 
     for (const candidate of candidates) {
       const candidatePath = path.posix.join(candidate, filename);
-      if (await this.storageService.fileExists(candidatePath)) {
-        res.redirect(this.storageService.getFileUrl(candidatePath));
-        return;
+      if (!(await this.storageService.exists(candidatePath))) {
+        continue;
       }
+      res.redirect(this.storageService.getUrl(candidatePath));
+      return;
     }
 
     throw new NotFoundException('File not found');

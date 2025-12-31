@@ -55,6 +55,10 @@ export class StorageService {
     return this.provider.getUrl(filePath);
   }
 
+  getUrl(filePath: string): string {
+    return this.provider.getUrl(filePath);
+  }
+
   /**
    * Get temporary URL with expiration (useful for private files)
    */
@@ -69,6 +73,10 @@ export class StorageService {
    * Check if file exists
    */
   async fileExists(filePath: string): Promise<boolean> {
+    return this.provider.exists(filePath);
+  }
+
+  async exists(filePath: string): Promise<boolean> {
     return this.provider.exists(filePath);
   }
 
