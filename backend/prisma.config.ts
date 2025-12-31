@@ -10,10 +10,7 @@ for (const path of envFilePath) {
   config({ path });
 }
 
-const databaseUrl =
-  process.env.DATABASE_URL ??
-  `mysql://${process.env.DB_USER ?? "root"}:${process.env.DB_PASSWORD ?? ""}@${process.env.DB_HOST ?? "localhost"
-  }:${process.env.DB_PORT ?? "3306"}/${process.env.DB_NAME ?? "think_then_talk"}`;
+const databaseUrl = process.env.DATABASE_URL; 
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
