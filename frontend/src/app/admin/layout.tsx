@@ -63,17 +63,29 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
     const currentNavItem = allAdminNavItems.find(item => pathname.startsWith(item.href));
     if (currentNavItem && !hasPermission(currentAdmin.role, currentNavItem.permission as PagePermission)) {
       return (
-          <SidebarLayout navItems={navItems} adminUser={currentAdmin} onLogout={logout}>
+          <SidebarLayout
+            navItems={navItems}
+            account={currentAdmin ? { name: currentAdmin.name, email: currentAdmin.email } : null}
+            onLogout={logout}
+          >
                <div className="flex h-full w-full items-center justify-center">
                   <p>{t('errors.accessDenied')}</p>
                </div>
           </SidebarLayout>
-      )
+      );
     }
   }
 
 
-  return <SidebarLayout navItems={navItems} adminUser={currentAdmin} onLogout={logout}>{children}</SidebarLayout>;
+  return (
+    <SidebarLayout
+      navItems={navItems}
+      account={currentAdmin ? { name: currentAdmin.name, email: currentAdmin.email } : null}
+      onLogout={logout}
+    >
+      {children}
+    </SidebarLayout>
+  );
 }
 
 export default function AdminLayout({

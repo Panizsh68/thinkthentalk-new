@@ -34,22 +34,13 @@ export default function EventsPage() {
   const { data: allEvents, isLoading, error, refetch } = useEventsQuery({
     showPastEvents: true,
     sortBy: 'startDateTime',
-    sortOrder: 'desc',
+    sortOrder: 'asc',
   });
 
   const sortedEvents = useMemo(() => {
     if (!allEvents) return [];
-    return [...allEvents].sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime());
+    return [...allEvents].sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime());
   }, [allEvents]);
-
-  const isFilterActive = useMemo(() => {
-    return (
-      filters.city !== 'all' ||
-      filters.type !== 'ALL' ||
-      (filters.categories && filters.categories.length > 0) ||
-      filters.showPastEvents !== initialFilters.showPastEvents
-    );
-  }, [filters]);
 
   const filteredEvents = useMemo(() => {
     if (!sortedEvents) return [];
@@ -69,8 +60,7 @@ export default function EventsPage() {
       return true;
     });
   }, [sortedEvents, filters]);
-  
-  const eventsToShow = isFilterActive ? filteredEvents : sortedEvents.slice(0, 3);
+  const eventsToShow = filteredEvents;
 
   const cities = useMemo<CityFilterOption[]>(() => {
     if (!allEvents) return [];

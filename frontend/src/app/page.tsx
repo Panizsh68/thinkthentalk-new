@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n/language-provider";
+import { useAuth } from "@/lib/auth/auth-provider";
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 function HeroSection() {
   const { t } = useLanguage();
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -61,7 +63,19 @@ function HeroSection() {
         </p>
         <div className="flex gap-4 mt-4">
           <Button size="lg" onClick={() => router.push('/events')}>{t('home.hero.browseButton')}</Button>
-          <Button size="lg" variant="secondary" onClick={() => router.push('/login')}>{t('home.hero.signupButton')}</Button>
+          <Button
+            size="lg"
+            variant="secondary"
+            onClick={() => {
+              if (!isLoading && isAuthenticated) {
+                router.push('/dashboard');
+                return;
+              }
+              router.push('/login');
+            }}
+          >
+            {t('home.hero.signupButton')}
+          </Button>
         </div>
       </div>
     </section>
@@ -70,8 +84,14 @@ function HeroSection() {
 
 function EventsSection() {
   const { t } = useLanguage();
-  const { data: events, isLoading, error } = useEventsQuery({ forHomepage: true });
-  const eventsToShow = useMemo(() => events?.slice(0, 3) || [], [events]);
+  const { data: events, isLoading, error } = useEventsQuery({
+    forHomepage: true,
+    showPastEvents: true,
+    limit: 3,
+    sortBy: 'startDateTime',
+    sortOrder: 'asc',
+  });
+  const eventsToShow = useMemo(() => events || [], [events]);
 
   const renderContent = () => {
     if (isLoading) {
