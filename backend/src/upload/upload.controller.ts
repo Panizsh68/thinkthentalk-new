@@ -295,7 +295,7 @@ export class UploadController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':filePath(*)')
+  @Delete(':category/:filename')
   @ApiOperation({
     summary: 'Delete uploaded file',
     description:
@@ -311,9 +311,10 @@ export class UploadController {
     type: ErrorResponseDto,
   })
   async deleteFile(
-    @Param('filePath') filePathParam: string,
+    @Param('category') category: string,
+    @Param('filename') filename: string,
   ): Promise<{ success: boolean }> {
-    const normalizedPath = path.posix.normalize(filePathParam);
+    const normalizedPath = path.posix.normalize(`${category}/${filename}`);
     if (normalizedPath.startsWith('..') || path.isAbsolute(normalizedPath)) {
       throw new BadRequestException('Invalid file path');
     }
