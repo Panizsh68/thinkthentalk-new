@@ -83,7 +83,7 @@ function HeroSection() {
 }
 
 function EventsSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { data: events, isLoading, error } = useEventsQuery({
     forHomepage: true,
     showPastEvents: true,
@@ -122,7 +122,7 @@ function EventsSection() {
        <>
         {/* Mobile Carousel */}
         <div className="md:hidden overflow-x-auto pb-4">
-            <div className="flex gap-4">
+            <div className={cn("flex gap-4", language === 'fa' && "flex-row-reverse")}>
                 {eventsToShow.map((event) => (
                     <div key={event.id} className="w-[80%] sm:w-[60%] shrink-0">
                         <EventCard event={event} />

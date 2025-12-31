@@ -67,24 +67,29 @@ export class EventsRepository {
   async findEventsForHomepage(limit = 3): Promise<EventEntity[]> {
     const now = new Date();
     const includeRelations = { ticketConfigs: true, resources: true };
+    const getFinishTime = (event: PrismaEvent) =>
+      (event.endDateTime ?? event.startDateTime).getTime();
 
     const upcomingEventsRaw = await this.prisma.event.findMany({
       where: {
-        startDateTime: { gte: now },
+        OR: [{ startDateTime: { gte: now } }, { endDateTime: { gte: now } }],
         isArchived: false,
         deletedAt: null,
       },
       include: includeRelations,
-      orderBy: { startDateTime: 'asc' },
+      orderBy: { createdAt: 'desc' },
       take: limit,
     });
     const upcomingEvents = await this.addSaleWindows(upcomingEventsRaw);
+    const upcomingSorted = [...upcomingEvents].sort(
+      (a, b) => a.startDateTime.getTime() - b.startDateTime.getTime(),
+    );
 
-    if (upcomingEvents.length >= limit) {
-      return upcomingEvents.map(prismaEventToEventEntity);
+    if (upcomingSorted.length >= limit) {
+      return upcomingSorted.map(prismaEventToEventEntity);
     }
 
-    const remaining = limit - upcomingEvents.length;
+    const remaining = limit - upcomingSorted.length;
     const pastEventsRaw =
       remaining > 0
         ? await this.prisma.event.findMany({
@@ -99,13 +104,16 @@ export class EventsRepository {
               deletedAt: null,
             },
             include: includeRelations,
-            orderBy: { startDateTime: 'desc' },
+            orderBy: [{ endDateTime: 'desc' }, { startDateTime: 'desc' }],
             take: remaining,
           })
         : [];
     const pastEvents = await this.addSaleWindows(pastEventsRaw);
+    const pastSorted = [...pastEvents].sort(
+      (a, b) => getFinishTime(b) - getFinishTime(a),
+    );
 
-    return [...upcomingEvents, ...pastEvents].map(prismaEventToEventEntity);
+    return [...upcomingSorted, ...pastSorted].map(prismaEventToEventEntity);
   }
 
   async findEventById(id: string): Promise<EventEntity | null> {
