@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Home, LogOut, User } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
-import type { AdminUser } from '@/lib/types';
 import { LanguageSwitcher } from './language-switcher';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { cn } from '@/lib/utils';
@@ -33,18 +32,18 @@ interface NavItem {
 export function SidebarLayout({
   children,
   navItems,
-  adminUser,
+  account,
   onLogout,
 }: {
   children: React.ReactNode;
   navItems: NavItem[];
-  adminUser: AdminUser | null;
+  account?: { name?: string; email?: string } | null;
   onLogout?: () => void;
 }) {
   const pathname = usePathname();
   const { t, language } = useLanguage();
   const isRTL = language === 'fa';
-  const showHeaderControls = !!adminUser;
+  const showHeaderControls = !!account;
 
   return (
     <SidebarProvider>
@@ -100,19 +99,23 @@ export function SidebarLayout({
                 <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
                     <LanguageSwitcher />
                     <ThemeToggle />
-                    {adminUser && (
+                    {account && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon">
                                     <User className="h-5 w-5" />
-                                    <span className="sr-only">Admin Account</span>
+                                    <span className="sr-only">{t('nav.myAccount')}</span>
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align={isRTL ? "start" : "end"}>
                                 <DropdownMenuLabel className="font-normal" dir={isRTL ? 'rtl' : 'ltr'}>
                                     <div className="flex flex-col space-y-1">
-                                        <p className="text-sm font-medium leading-none">{adminUser.name}</p>
-                                        <p className="text-xs leading-none text-muted-foreground">{adminUser.email}</p>
+                                        {account.name && (
+                                          <p className="text-sm font-medium leading-none">{account.name}</p>
+                                        )}
+                                        {account.email && (
+                                          <p className="text-xs leading-none text-muted-foreground">{account.email}</p>
+                                        )}
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
