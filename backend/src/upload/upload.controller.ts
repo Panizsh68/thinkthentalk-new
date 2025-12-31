@@ -1,23 +1,17 @@
 import {
   Controller,
   Post,
-  Get,
   Delete,
   Param,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  Body,
-  NotFoundException,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import type { Express } from 'express';
-import type { Response } from 'express';
 import * as path from 'path';
-import * as fs from 'fs/promises';
 import {
   ApiTags,
   ApiOperation,
@@ -28,7 +22,6 @@ import {
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
 import { StorageService } from '../infrastructure/storage/storage.service';
 import {
   FileCategory,
@@ -41,10 +34,7 @@ import { ErrorResponseDto } from '../common/dto/error-response.dto';
 @ApiBearerAuth('bearerAuth')
 @Controller({ path: 'upload' })
 export class UploadController {
-  constructor(
-    private readonly storageService: StorageService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly storageService: StorageService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('event-poster')
@@ -80,8 +70,6 @@ export class UploadController {
         id: { type: 'string' },
         url: { type: 'string' },
         filename: { type: 'string' },
-        originalName: { type: 'string' },
-        size: { type: 'number' },
       },
     },
   })
@@ -108,8 +96,6 @@ export class UploadController {
       id: stored.id,
       url: stored.url,
       filename: stored.filename,
-      originalName: stored.originalName,
-      size: stored.size,
     };
   }
 
@@ -155,8 +141,6 @@ export class UploadController {
         id: { type: 'string' },
         url: { type: 'string' },
         filename: { type: 'string' },
-        originalName: { type: 'string' },
-        size: { type: 'number' },
       },
     },
   })
@@ -183,8 +167,6 @@ export class UploadController {
       id: stored.id,
       url: stored.url,
       filename: stored.filename,
-      originalName: stored.originalName,
-      size: stored.size,
     };
   }
 
@@ -250,28 +232,6 @@ export class UploadController {
     };
   }
 
-  @Get('files/:category/:filename')
-  async serveUploadedFile(
-    @Param('category') category: string,
-    @Param('filename') filename: string,
-    @Res() res: Response,
-  ): Promise<void> {
-    const uploadsDir = this.configService.get<string>('UPLOADS_DIR')
-      ? path.resolve(this.configService.get<string>('UPLOADS_DIR') as string)
-      : path.join(process.cwd(), 'uploads');
-
-    const safeCategory = category.replace(/\.\./g, '');
-    const filePath = path.join(uploadsDir, safeCategory, filename);
-
-    try {
-      await fs.access(filePath);
-    } catch {
-      throw new NotFoundException('File not found');
-    }
-
-    res.sendFile(filePath);
-  }
-
   @UseGuards(JwtAuthGuard)
   @Post('sponsor-logo')
   @UseInterceptors(
@@ -335,7 +295,7 @@ export class UploadController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':category/:filename')
+  @Delete(':filePath(*)')
   @ApiOperation({
     summary: 'Delete uploaded file',
     description:
@@ -351,10 +311,13 @@ export class UploadController {
     type: ErrorResponseDto,
   })
   async deleteFile(
-    @Param('category') category: string,
-    @Param('filename') filename: string,
+    @Param('filePath') filePathParam: string,
   ): Promise<{ success: boolean }> {
-    const filePath = `${category}/${filename}`;
+    const normalizedPath = path.posix.normalize(filePathParam);
+    if (normalizedPath.startsWith('..') || path.isAbsolute(normalizedPath)) {
+      throw new BadRequestException('Invalid file path');
+    }
+    const filePath = normalizedPath;
     await this.storageService.deleteFile(filePath);
 
     return { success: true };

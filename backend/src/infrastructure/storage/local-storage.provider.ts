@@ -17,7 +17,6 @@ export class LocalStorageProvider implements StorageProvider {
   private publicDir: string;
   private maxFileSize: number;
   private baseUrl: string;
-  private apiBaseUrl: string | undefined;
 
   constructor(private configService: ConfigService) {
     const configuredUploadDir = this.configService.get<string>('UPLOADS_DIR');
@@ -28,14 +27,13 @@ export class LocalStorageProvider implements StorageProvider {
       ? path.resolve(configuredUploadDir)
       : path.join(process.cwd(), 'uploads');
 
-    const normalizedPublicPath = configuredPublicPath ?? '/images';
+    const normalizedPublicPath = configuredPublicPath ?? '/uploads';
     this.publicDir = normalizedPublicPath.startsWith('/')
       ? normalizedPublicPath
       : `/${normalizedPublicPath}`;
     this.maxFileSize = 50 * 1024 * 1024; // 50MB default
     this.baseUrl =
       this.configService.get<string>('APP_URL') || 'http://localhost:3000';
-    this.apiBaseUrl = this.configService.get<string>('API_BASE_URL');
   }
 
   async upload(
@@ -100,14 +98,13 @@ export class LocalStorageProvider implements StorageProvider {
   }
 
   getUrl(filePath: string): string {
-    const apiBase = this.apiBaseUrl;
-    if (apiBase) {
-      const normalizedApiBase = apiBase.endsWith('/api')
-        ? apiBase.slice(0, -4)
-        : apiBase;
-      return `${normalizedApiBase}/api/upload/files/${filePath}`;
-    }
-    return `${this.baseUrl}${this.publicDir}/${filePath}`;
+    const normalizedBase = this.baseUrl.endsWith('/')
+      ? this.baseUrl.slice(0, -1)
+      : this.baseUrl;
+    const normalizedPublicDir = this.publicDir.endsWith('/')
+      ? this.publicDir.slice(0, -1)
+      : this.publicDir;
+    return `${normalizedBase}${normalizedPublicDir}/${filePath}`;
   }
 
   async getTemporaryUrl(
