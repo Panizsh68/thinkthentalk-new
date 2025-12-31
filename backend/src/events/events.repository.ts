@@ -128,6 +128,20 @@ export class EventsRepository {
     return prismaEventToEventEntity(enriched);
   }
 
+  async findEventByIdOrSlug(idOrSlug: string): Promise<EventEntity | null> {
+    const event = await this.prisma.event.findFirst({
+      where: {
+        OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+      },
+      include: { ticketConfigs: true, resources: true },
+    });
+    if (!event) {
+      return null;
+    }
+    const [enriched] = await this.addSaleWindows([event]);
+    return prismaEventToEventEntity(enriched);
+  }
+
   async findAdminEvents(filters: AdminEventsFilter): Promise<EventEntity[]> {
     const where: Prisma.EventWhereInput = this.buildFilter(filters, false);
     const orderBy: Prisma.EventOrderByWithRelationInput = filters.sortBy
@@ -180,6 +194,31 @@ export class EventsRepository {
     });
     const [enriched] = await this.addSaleWindows([event]);
     return prismaEventToEventEntity(enriched);
+  }
+
+  async resolveUniqueSlug(
+    baseSlug: string,
+    excludeId?: string,
+  ): Promise<string> {
+    let candidate = baseSlug;
+    let suffix = 1;
+
+    while (true) {
+      const existing = await this.prisma.event.findFirst({
+        where: {
+          slug: candidate,
+          ...(excludeId ? { id: { not: excludeId } } : {}),
+        },
+        select: { id: true },
+      });
+
+      if (!existing) {
+        return candidate;
+      }
+
+      suffix += 1;
+      candidate = `${baseSlug}-${suffix}`;
+    }
   }
 
   async updateEventTickets(

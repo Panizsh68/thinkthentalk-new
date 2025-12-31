@@ -8,6 +8,9 @@ export class EventDto {
   @ApiProperty({ type: String })
   id!: string;
 
+  @ApiProperty({ type: String })
+  slug!: string;
+
   @ApiProperty({ type: LocalizedTextDto })
   title!: LocalizedTextDto;
 

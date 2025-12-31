@@ -67,6 +67,7 @@ export const prismaEventToEventEntity = (
 
   return new EventEntity(
     event.id,
+    event.slug,
     parseLocalizedText(event.title),
     summary,
     description,
@@ -93,6 +94,7 @@ export const prismaEventToEventEntity = (
 
 export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
   id: entity.id,
+  slug: entity.slug,
   title: { fa: entity.title.fa, en: entity.title.en },
   summary: { fa: entity.summary.fa, en: entity.summary.en },
   description: { fa: entity.description.fa, en: entity.description.en },
@@ -146,6 +148,7 @@ export const eventFormDataDtoToPrismaInput = (
 
   return {
     title: serializeLocalizedText(dto.title),
+    slug: dto.slug ?? '',
     summaryFa: dto.summary.fa,
     summaryEn: dto.summary.en ?? '',
     descriptionFa: dto.description.fa,
@@ -177,6 +180,7 @@ export const eventUpdateFormDataDtoToPrismaInput = (
 
   return {
     ...(dto.title ? { title: serializeLocalizedText(dto.title) } : {}),
+    ...(dto.slug ? { slug: dto.slug } : {}),
     ...(dto.summary
       ? {
           summaryFa: dto.summary.fa,

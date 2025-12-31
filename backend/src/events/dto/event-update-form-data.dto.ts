@@ -18,6 +18,11 @@ export class UpdateEventFormDataDto {
   @Type(() => LocalizedTextDto)
   title?: LocalizedTextDto;
 
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
+  @IsString()
+  slug?: string;
+
   @ApiPropertyOptional({
     description: 'Event categories as a comma-separated string.',
     type: String,

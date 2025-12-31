@@ -97,6 +97,7 @@ model AdminUser {
 model Event {
   id                    String    @id @default(cuid())
   title                 String
+  slug                  String    @unique
   summaryFa             String    @db.Text
   summaryEn             String    @db.Text
   descriptionFa         String    @db.Text

@@ -6,6 +6,7 @@ import { LocalizedText } from '../utils/localized-text.helper';
 export class EventEntity {
   constructor(
     public readonly id: string,
+    public readonly slug: string,
     public readonly title: LocalizedText,
     public readonly summary: LocalizedText,
     public readonly description: LocalizedText,

@@ -192,21 +192,23 @@ export class EventsController {
   @Get(':eventId')
   @ApiOperation({
     summary: 'Get Event Details',
-    description: 'Retrieves the details of a single event by ID.',
+    description: 'Retrieves the details of a single event by ID or slug.',
   })
   @ApiParam({
     name: 'eventId',
     type: String,
     required: true,
-    description: 'The ID of the event.',
+    description: 'The ID or slug of the event.',
   })
   @ApiOkResponse({ description: 'Event details.', type: EventDto })
   @ApiNotFoundResponse({
     description: 'Event not found.',
     type: ErrorResponseDto,
   })
-  async getEventById(@Param('eventId') eventId: string): Promise<EventDto> {
-    const event = await this.eventsService.findEventById(eventId);
+  async getEventById(
+    @Param('eventId') eventIdOrSlug: string,
+  ): Promise<EventDto> {
+    const event = await this.eventsService.findEventByIdOrSlug(eventIdOrSlug);
     if (!event) {
       throw new NotFoundException('Event not found.');
     }

@@ -12,6 +12,7 @@ import {
 } from './events.repository';
 import { eventEntityToEventDto } from './mappers/event.mapper';
 import { RedisService } from '../infrastructure/cache/redis.service';
+import { buildEventSlug, slugify } from './utils/slug.helper';
 
 @Injectable()
 export class EventsService {
@@ -44,7 +45,14 @@ export class EventsService {
 
   async createEvent(data: EventFormDataDto) {
     this.validateEventForm(data);
-    const event = await this.eventsRepository.createEvent(data);
+    const baseSlug = data.slug?.trim()
+      ? slugify(data.slug)
+      : buildEventSlug(data.title);
+    const slug = await this.eventsRepository.resolveUniqueSlug(baseSlug);
+    const event = await this.eventsRepository.createEvent({
+      ...data,
+      slug,
+    });
     await this.invalidateEventCaches(event.id);
     return eventEntityToEventDto(event);
   }
@@ -55,13 +63,31 @@ export class EventsService {
     return eventEntityToEventDto(event);
   }
 
+  async findEventByIdOrSlug(idOrSlug: string) {
+    const event = await this.eventsRepository.findEventByIdOrSlug(idOrSlug);
+    if (!event) return null;
+    return eventEntityToEventDto(event);
+  }
+
   async updateEvent(id: string, data: UpdateEventFormDataDto) {
     this.validateEventForm(data);
     const existing = await this.eventsRepository.findEventById(id);
     if (!existing) {
       return null;
     }
-    const event = await this.eventsRepository.updateEvent(id, data);
+    const baseSlug = data.slug?.trim()
+      ? slugify(data.slug)
+      : data.title
+        ? buildEventSlug(data.title)
+        : existing.slug;
+    const nextSlug =
+      baseSlug === existing.slug
+        ? existing.slug
+        : await this.eventsRepository.resolveUniqueSlug(baseSlug, id);
+    const event = await this.eventsRepository.updateEvent(id, {
+      ...data,
+      slug: nextSlug,
+    });
     await this.invalidateEventCaches(id);
     return eventEntityToEventDto(event);
   }
