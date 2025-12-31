@@ -130,6 +130,18 @@
     "alreadyRegistered": "Already Registered",
     "dateTimeSeparator": " @ "
   },
+  "share": {
+    "label": "Share event",
+    "system": "Share...",
+    "copyLink": "Copy link",
+    "linkCopiedTitle": "Link copied",
+    "linkCopiedDescription": "Event link copied to clipboard.",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "x": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "email": "Email"
+  },
   "tickets": {
     "early_bird": "Early Bird",
     "standard": "Standard",

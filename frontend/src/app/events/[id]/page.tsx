@@ -10,8 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { Badge } from '@/components/ui/badge';
-import { isEventPast, formatEventDate } from '@/lib/event-helpers';
-import { Calendar, MapPin, Users, Lock, Download, FileText, ArrowLeft, Star } from 'lucide-react';
+import { isEventPast, formatEventDate, getEventPath, getEventShareUrl } from '@/lib/event-helpers';
+import { Calendar, MapPin, Users, Lock, Download, FileText, ArrowLeft, Star, Share2, Copy } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { TicketSelector } from '@/components/ticket-selector';
@@ -24,22 +24,28 @@ import { useUserRegistrationsQuery } from '@/hooks/use-registration-queries';
 import { cn } from '@/lib/utils';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 import { renderParagraphs } from '@/lib/text/render-paragraphs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 
 export default function EventDetailPage() {
   const { t, language } = useLanguage();
   const routeParams = useParams<{ id: string }>();
-  const eventId = routeParams.id;
+  const eventSlugOrId = routeParams.id;
 
-  const { data: event, isLoading: isLoadingEvent, error, refetch } = useEventQuery(eventId);
-  const { data: rating } = useEventRatingQuery(eventId);
+  const { data: event, isLoading: isLoadingEvent, error, refetch } = useEventQuery(eventSlugOrId);
+  const { data: rating } = useEventRatingQuery(event?.id ?? '');
   const { isAuthenticated, currentUser } = useAuth();
   const { data: registrations, isLoading: isLoadingRegistrations } = useUserRegistrationsQuery(currentUser?.id);
 
   const isRegistered = useMemo(() => {
-    if (!registrations) return false;
-    return registrations.some(reg => reg.eventId === eventId && reg.status === 'PAID');
-  }, [registrations, eventId]);
+    if (!registrations || !event?.id) return false;
+    return registrations.some(reg => reg.eventId === event.id && reg.status === 'PAID');
+  }, [registrations, event?.id]);
 
   const [selectedTicket, setSelectedTicket] = React.useState<EventTicketConfig | null>(null);
   const router = useRouter();
@@ -55,7 +61,8 @@ export default function EventDetailPage() {
       return;
     }
 
-    const registrationUrl = `/events/${eventId}/register?ticketType=${selectedTicket.type}`;
+    const eventPath = event ? getEventPath(event) : `/events/${eventSlugOrId}`;
+    const registrationUrl = `${eventPath}/register?ticketType=${selectedTicket.type}`;
 
     if (isAuthenticated) {
       router.push(registrationUrl);
@@ -127,6 +134,72 @@ export default function EventDetailPage() {
   const summaryParagraphs = renderParagraphs(eventSummary);
   const descriptionParagraphs = renderParagraphs(eventDescription);
   const ratingValue = rating?.average ? rating.average.toFixed(1) : null;
+  const shareUrl = getEventShareUrl(event);
+  const shareTitle = eventTitle;
+  const shareText = eventSummary || eventTitle;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: t('share.linkCopiedTitle'),
+        description: t('share.linkCopiedDescription'),
+      });
+    } catch (err) {
+      const textarea = document.createElement('textarea');
+      textarea.value = shareUrl;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      toast({
+        title: t('share.linkCopiedTitle'),
+        description: t('share.linkCopiedDescription'),
+      });
+    }
+  };
+
+  const handleNativeShare = async () => {
+    if (!navigator.share) {
+      return;
+    }
+    try {
+      await navigator.share({
+        title: shareTitle,
+        text: shareText,
+        url: shareUrl,
+      });
+    } catch (err) {
+      // User cancelled or share failed; ignore.
+    }
+  };
+
+  const encodedUrl = encodeURIComponent(shareUrl);
+  const encodedTitle = encodeURIComponent(shareTitle);
+  const shareLinks = [
+    {
+      label: t('share.whatsapp'),
+      href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+    },
+    {
+      label: t('share.telegram'),
+      href: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+    },
+    {
+      label: t('share.x'),
+      href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+    },
+    {
+      label: t('share.linkedin'),
+      href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`,
+    },
+    {
+      label: t('share.email'),
+      href: `mailto:?subject=${encodedTitle}&body=${encodedTitle}%0A${encodedUrl}`,
+    },
+  ];
 
   return (
     <>
@@ -152,9 +225,36 @@ export default function EventDetailPage() {
             <header className="space-y-4">
                 <div className="flex items-center justify-between gap-4">
                     <h1 className="text-h1">{eventTitle}</h1>
-                    <Badge variant={past ? 'secondary' : 'default'} className="hidden sm:inline-flex">
-                        {past ? t('event.finished') : t('event.upcoming')}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={past ? 'secondary' : 'default'} className="hidden sm:inline-flex">
+                          {past ? t('event.finished') : t('event.upcoming')}
+                      </Badge>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="sm" aria-label={t('share.label')}>
+                            <Share2 className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {typeof navigator !== 'undefined' && navigator.share && (
+                            <DropdownMenuItem onClick={handleNativeShare}>
+                              {t('share.system')}
+                            </DropdownMenuItem>
+                          )}
+                          {shareLinks.map((link) => (
+                            <DropdownMenuItem key={link.label} asChild>
+                              <a href={link.href} target="_blank" rel="noopener noreferrer">
+                                {link.label}
+                              </a>
+                            </DropdownMenuItem>
+                          ))}
+                          <DropdownMenuItem onClick={handleCopyLink}>
+                            <Copy className="mr-2 h-4 w-4" />
+                            {t('share.copyLink')}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-x-6 gap-y-4 text-muted-foreground">
                     <div className="flex items-center gap-2">

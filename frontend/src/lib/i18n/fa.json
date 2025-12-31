@@ -130,6 +130,18 @@
     "alreadyRegistered": "شما قبلاً ثبت‌نام کرده‌اید",
     "dateTimeSeparator": "، ساعت "
   },
+  "share": {
+    "label": "اشتراک‌گذاری رویداد",
+    "system": "اشتراک‌گذاری...",
+    "copyLink": "کپی لینک",
+    "linkCopiedTitle": "لینک کپی شد",
+    "linkCopiedDescription": "لینک رویداد در کلیپ‌بورد کپی شد.",
+    "whatsapp": "واتساپ",
+    "telegram": "تلگرام",
+    "x": "ایکس (توییتر)",
+    "linkedin": "لینکدین",
+    "email": "ایمیل"
+  },
   "tickets": {
     "early_bird": "پیش‌فروش",
     "standard": "عادی",

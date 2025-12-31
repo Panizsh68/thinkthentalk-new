@@ -29,6 +29,7 @@ export type EventTicketConfig = {
 
 export type Event = {
   id: string;
+  slug: string;
   title: LocalizedText;
   summary: LocalizedText;
   description: LocalizedText;
@@ -55,6 +56,7 @@ export type Event = {
 // This type is for the admin form
 export type EventFormData = {
   title: LocalizedText;
+  slug?: string;
   categories: string; // Comma-separated for the form
   summary: LocalizedText;
   description: LocalizedText;
@@ -71,6 +73,7 @@ export type EventFormData = {
 
 export interface UpdateEventFormDataDto {
   title?: LocalizedText;
+  slug?: string;
   categories?: string;
   summary?: LocalizedText;
   description?: LocalizedText;

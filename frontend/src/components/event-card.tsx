@@ -8,7 +8,7 @@ import { Calendar, MapPin, Ticket, Users, Image as ImageIcon } from 'lucide-reac
 import type { Event } from '@/lib/types';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { cn } from '@/lib/utils';
-import { getFormattedPrice, getMinPrice, isEventPast, formatEventDate } from '@/lib/event-helpers';
+import { getFormattedPrice, getMinPrice, isEventPast, formatEventDate, getEventPath } from '@/lib/event-helpers';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 import { renderParagraphs } from '@/lib/text/render-paragraphs';
 
@@ -107,7 +107,7 @@ export function EventCard({ event }: EventCardProps) {
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full" data-testid={`event-details-link-${event.id}`}>
-          <Link href={`/events/${event.id}`}>{t('event.viewDetails')}</Link>
+          <Link href={getEventPath(event)}>{t('event.viewDetails')}</Link>
         </Button>
       </CardFooter>
     </Card>

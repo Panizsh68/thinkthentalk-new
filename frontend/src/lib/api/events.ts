@@ -20,6 +20,7 @@ const transformEvent = (event: any): Event => {
 
   return {
     id: event.id,
+    slug: event.slug ?? event.id,
     title: event.title,
     summary: event.summary,
     description: event.description,

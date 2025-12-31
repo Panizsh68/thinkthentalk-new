@@ -134,3 +134,17 @@ export const formatEventDate = (event: MinimalEvent, language: Language): string
 export const getRegistrationWizardUrl = (eventId: string, ticketType: string, step: number): string => {
     return `/events/${eventId}/register?ticketType=${ticketType}&step=${step}`;
 }
+
+export const getEventSlugOrId = (event: Pick<Event, 'id' | 'slug'>): string =>
+  event.slug || event.id;
+
+export const getEventPath = (event: Pick<Event, 'id' | 'slug'>): string =>
+  `/events/${getEventSlugOrId(event)}`;
+
+export const getEventShareUrl = (event: Pick<Event, 'id' | 'slug'>): string => {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}${getEventPath(event)}`;
+  }
+
+  return `https://thinkthentalk.ir${getEventPath(event)}`;
+};

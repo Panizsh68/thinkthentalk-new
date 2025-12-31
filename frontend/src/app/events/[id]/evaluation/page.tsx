@@ -27,16 +27,17 @@ export default function EvaluationPage() {
   const { currentUser, isLoading: isAuthLoading } = useAuth();
   const { toast } = useToast();
   const params = useParams<{ id: string }>();
-  const eventId = params.id;
+  const eventSlugOrId = params.id;
 
-  const { data: event, isLoading: isLoadingEvent } = useEventQuery(eventId);
+  const { data: event, isLoading: isLoadingEvent } = useEventQuery(eventSlugOrId);
   const { data: registrations, isLoading: isLoadingRegistrations } = useUserRegistrationsQuery(currentUser?.id);
-  const { data: evaluation, isLoading: isLoadingEvaluation, error: evaluationError } = useEvaluationFormQuery(eventId, 'user', currentUser?.id);
+  const resolvedEventId = event?.id ?? '';
+  const { data: evaluation, isLoading: isLoadingEvaluation, error: evaluationError } = useEvaluationFormQuery(resolvedEventId, 'user', currentUser?.id);
   const { mutate: submitEvaluation, isPending: isSubmitting, isSuccess: isSubmitSuccess, isError: isSubmitError, error: submitError } = useSubmitEvaluationMutation();
 
   const isLoading = isAuthLoading || isLoadingEvent || isLoadingRegistrations || isLoadingEvaluation;
 
-  const registration = registrations?.find(reg => reg.eventId === eventId && reg.status === 'PAID');
+  const registration = registrations?.find(reg => reg.eventId === resolvedEventId && reg.status === 'PAID');
   const eventHasPassed = event ? isEventPast(event) : false;
 
   const generateSchema = (questions: EvaluationQuestion[]) => {
@@ -67,7 +68,7 @@ export default function EvaluationPage() {
     if (!evaluation || !currentUser) return;
     submitEvaluation({
         evaluationId: evaluation.id,
-        eventId,
+        eventId: resolvedEventId,
         answers: data,
     }, {
       onSuccess: () => {
@@ -90,7 +91,7 @@ export default function EvaluationPage() {
         <AlertTriangle className="h-16 w-16 text-destructive mx-auto mb-4" />
         <h1 className="text-2xl font-bold">{t('evaluation.errors.notAuthenticated')}</h1>
         <p className="text-muted-foreground">{t('evaluation.errors.loginPrompt')}</p>
-        <Button asChild className="mt-4"><Link href={`/login?redirect=/events/${eventId}/evaluation`}>{t('actions.login')}</Link></Button>
+        <Button asChild className="mt-4"><Link href={`/login?redirect=/events/${eventSlugOrId}/evaluation`}>{t('actions.login')}</Link></Button>
       </div>
     );
   }
@@ -114,7 +115,7 @@ export default function EvaluationPage() {
         <AlertTriangle className="h-16 w-16 text-destructive mx-auto mb-4" />
         <h1 className="text-2xl font-bold">{t('evaluation.errors.notEligibleTitle')}</h1>
         <p className="text-muted-foreground max-w-md mx-auto">{t('evaluation.errors.notEligibleDescription')}</p>
-        <Button asChild className="mt-4"><Link href={`/events/${eventId}`}>{t('actions.backToEvents')}</Link></Button>
+        <Button asChild className="mt-4"><Link href={`/events/${eventSlugOrId}`}>{t('actions.backToEvents')}</Link></Button>
       </div>
     );
   }

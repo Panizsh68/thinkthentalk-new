@@ -8,5 +8,3 @@ coverage
 .env.*
 !.env*.example
 
-# Prisma artifacts
-prisma/migrations
