@@ -108,7 +108,17 @@ export default function TicketManagementPage() {
   function onSubmit(data: TicketManagementFormValues) {
     const enabledTickets = data.tickets
       .filter(t => t.enabled)
-      .map(({ enabled, ...ticketData }) => ticketData); // remove 'enabled' property
+      .map(({ enabled, ...ticketData }) => ({
+        ...ticketData,
+        quantitySold: Number(ticketData.quantitySold ?? 0),
+        quantityTotal: Number(ticketData.quantityTotal ?? 0),
+        price: Number(ticketData.price ?? 0),
+        saleStartDate: ticketData.saleStartDate?.toISOString?.() ?? ticketData.saleStartDate,
+        saleEndDate: ticketData.saleEndDate?.toISOString?.() ?? ticketData.saleEndDate,
+        earlyBirdEndDate: ticketData.earlyBirdEndDate
+          ? ticketData.earlyBirdEndDate.toISOString?.() ?? ticketData.earlyBirdEndDate
+          : null,
+      })); // remove 'enabled' property
     
     updateTickets({ eventId, tickets: enabledTickets }, {
         onSuccess: () => {
@@ -163,6 +173,42 @@ export default function TicketManagementPage() {
                             </div>
                         </CardHeader>
                         <CardContent className={cn("space-y-4", !form.watch(`tickets.${index}.enabled`) && "opacity-50 pointer-events-none")}>
+                            <FormField
+                                control={form.control}
+                                name={`tickets.${index}.type`}
+                                render={({ field: typeField }) => (
+                                <FormItem className="hidden">
+                                    <FormControl><Input type="hidden" {...typeField} /></FormControl>
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`tickets.${index}.currency`}
+                                render={({ field: currencyField }) => (
+                                <FormItem className="hidden">
+                                    <FormControl><Input type="hidden" {...currencyField} /></FormControl>
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`tickets.${index}.quantitySold`}
+                                render={({ field: soldField }) => (
+                                <FormItem className="hidden">
+                                    <FormControl><Input type="hidden" {...soldField} /></FormControl>
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`tickets.${index}.quantityRemaining`}
+                                render={({ field: remainingField }) => (
+                                <FormItem className="hidden">
+                                    <FormControl><Input type="hidden" {...remainingField} /></FormControl>
+                                </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.price`}
