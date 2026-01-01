@@ -113,11 +113,7 @@ export default function TicketManagementPage() {
         quantitySold: Number(ticketData.quantitySold ?? 0),
         quantityTotal: Number(ticketData.quantityTotal ?? 0),
         price: Number(ticketData.price ?? 0),
-        saleStartDate: ticketData.saleStartDate?.toISOString?.() ?? ticketData.saleStartDate,
-        saleEndDate: ticketData.saleEndDate?.toISOString?.() ?? ticketData.saleEndDate,
-        earlyBirdEndDate: ticketData.earlyBirdEndDate
-          ? ticketData.earlyBirdEndDate.toISOString?.() ?? ticketData.earlyBirdEndDate
-          : null,
+        earlyBirdEndDate: ticketData.earlyBirdEndDate ?? undefined,
       })); // remove 'enabled' property
     
     updateTickets({ eventId, tickets: enabledTickets }, {
@@ -155,7 +151,13 @@ export default function TicketManagementPage() {
        <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {fields.map((field, index) => (
+                {fields.map(
+                  (
+                    field: TicketManagementFormValues['tickets'][number] & {
+                      id: string;
+                    },
+                    index: number,
+                  ) => (
                     <Card key={field.id}>
                         <CardHeader>
                             <div className="flex items-center justify-between">
@@ -163,7 +165,7 @@ export default function TicketManagementPage() {
                                  <FormField
                                     control={form.control}
                                     name={`tickets.${index}.enabled`}
-                                    render={({ field: switchField }) => (
+                                    render={({ field: switchField }: { field: any }) => (
                                         <FormItem className="flex items-center space-x-2 space-y-0">
                                             <FormControl><Switch checked={switchField.value} onCheckedChange={switchField.onChange} /></FormControl>
                                             <FormLabel>{t('admin.tickets.enable')}</FormLabel>
@@ -176,7 +178,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.type`}
-                                render={({ field: typeField }) => (
+                                render={({ field: typeField }: { field: any }) => (
                                 <FormItem className="hidden">
                                     <FormControl><Input type="hidden" {...typeField} /></FormControl>
                                 </FormItem>
@@ -185,7 +187,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.currency`}
-                                render={({ field: currencyField }) => (
+                                render={({ field: currencyField }: { field: any }) => (
                                 <FormItem className="hidden">
                                     <FormControl><Input type="hidden" {...currencyField} /></FormControl>
                                 </FormItem>
@@ -194,7 +196,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.quantitySold`}
-                                render={({ field: soldField }) => (
+                                render={({ field: soldField }: { field: any }) => (
                                 <FormItem className="hidden">
                                     <FormControl><Input type="hidden" {...soldField} /></FormControl>
                                 </FormItem>
@@ -203,7 +205,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.quantityRemaining`}
-                                render={({ field: remainingField }) => (
+                                render={({ field: remainingField }: { field: any }) => (
                                 <FormItem className="hidden">
                                     <FormControl><Input type="hidden" {...remainingField} /></FormControl>
                                 </FormItem>
@@ -212,7 +214,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.price`}
-                                render={({ field: priceField }) => (
+                                render={({ field: priceField }: { field: any }) => (
                                 <FormItem>
                                     <FormLabel>{t('admin.tickets.price')}</FormLabel>
                                     <FormControl><Input type="number" {...priceField} /></FormControl>
@@ -223,7 +225,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.quantityTotal`}
-                                render={({ field: quantityField }) => (
+                                render={({ field: quantityField }: { field: any }) => (
                                 <FormItem>
                                     <FormLabel>{t('admin.tickets.quantity')}</FormLabel>
                                     <FormControl><Input type="number" {...quantityField} /></FormControl>
@@ -234,7 +236,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.saleStartDate`}
-                                render={({ field: dateField }) => (
+                                render={({ field: dateField }: { field: any }) => (
                                     <FormItem className="flex flex-col">
                                         <FormLabel>{t('admin.tickets.startDate')}</FormLabel>
                                         <Popover>
@@ -260,7 +262,7 @@ export default function TicketManagementPage() {
                             <FormField
                                 control={form.control}
                                 name={`tickets.${index}.saleEndDate`}
-                                render={({ field: dateField }) => (
+                                render={({ field: dateField }: { field: any }) => (
                                     <FormItem className="flex flex-col">
                                         <FormLabel>{t('admin.tickets.endDate')}</FormLabel>
                                         <Popover>
@@ -287,7 +289,7 @@ export default function TicketManagementPage() {
                                 <FormField
                                     control={form.control}
                                     name={`tickets.${index}.earlyBirdEndDate`}
-                                    render={({ field: dateField }) => (
+                                    render={({ field: dateField }: { field: any }) => (
                                         <FormItem className="flex flex-col">
                                         <FormLabel>{t('admin.tickets.endDate')}</FormLabel>
                                         <Popover>
@@ -314,7 +316,8 @@ export default function TicketManagementPage() {
                             )}
                         </CardContent>
                     </Card>
-                ))}
+                ),
+                )}
             </div>
 
             <Button type="submit" disabled={isSaving}>

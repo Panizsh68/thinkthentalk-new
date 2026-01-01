@@ -132,7 +132,15 @@ export async function updateEvent(id: string, eventData: UpdateEventFormDataDto)
 
 export async function updateEventTickets(eventId: string, tickets: EventTicketConfig[]): Promise<Event> {
   try {
-    const { data } = await apiClient.patch<any>(`/admin/events/${eventId}/tickets`, tickets);
+    const payload = tickets.map((ticket) => ({
+      ...ticket,
+      saleStartDate: ticket.saleStartDate?.toISOString?.() ?? ticket.saleStartDate,
+      saleEndDate: ticket.saleEndDate?.toISOString?.() ?? ticket.saleEndDate,
+      earlyBirdEndDate: ticket.earlyBirdEndDate
+        ? ticket.earlyBirdEndDate.toISOString?.() ?? ticket.earlyBirdEndDate
+        : null,
+    }));
+    const { data } = await apiClient.patch<any>(`/admin/events/${eventId}/tickets`, payload);
     return transformEvent(data);
   } catch (error: any) {
     console.error(`Failed to update tickets for event ${eventId}:`, error);

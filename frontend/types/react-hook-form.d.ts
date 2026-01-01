@@ -3,16 +3,15 @@ declare module 'react-hook-form' {
 
   export interface UseFormReturn<TFieldValues extends FieldValues = FieldValues> {
     control: any;
-    watch: (
-      cb: (values: Partial<TFieldValues>) => void,
-    ) => { unsubscribe: () => void };
+    watch: any;
     trigger: () => Promise<boolean>;
     formState: {
       errors: Partial<Record<keyof TFieldValues, any>>;
     };
     handleSubmit: any;
-    getValues: () => Partial<TFieldValues>;
+    getValues: any;
     setValue: (name: keyof TFieldValues, value: any) => void;
+    reset: (values?: Partial<TFieldValues>) => void;
   }
 
   export interface ControllerRenderProps<
@@ -29,4 +28,6 @@ declare module 'react-hook-form' {
   export function useForm<TFieldValues extends FieldValues = FieldValues>(
     options?: any,
   ): UseFormReturn<TFieldValues>;
+
+  export function useFieldArray(options?: any): any;
 }
