@@ -28,14 +28,36 @@ const ticketConfigSchema = z.object({
   quantityTotal: z.coerce.number().int().min(0, "Quantity must be 0 or more"),
   quantitySold: z.coerce.number().int().min(0),
   currency: z.enum(['IRR', 'TOMAN']),
-  saleStartDate: z.date({ required_error: "Start date is required" }),
-  saleEndDate: z.date({ required_error: "End date is required" }),
+  saleStartDate: z.date().optional(),
+  saleEndDate: z.date().optional(),
   earlyBirdEndDate: z.date().optional().nullable(),
   quantityRemaining: z.coerce.number().int().min(0).optional().default(0),
   enabled: z.boolean().default(false),
-}).refine((data) => data.saleStartDate <= data.saleEndDate, {
-  message: "Start date must be before end date",
-  path: ['saleEndDate'],
+}).superRefine((data, ctx) => {
+  if (!data.enabled) {
+    return;
+  }
+  if (!data.saleStartDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Start date is required",
+      path: ['saleStartDate'],
+    });
+  }
+  if (!data.saleEndDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "End date is required",
+      path: ['saleEndDate'],
+    });
+  }
+  if (data.saleStartDate && data.saleEndDate && data.saleStartDate > data.saleEndDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Start date must be before end date",
+      path: ['saleEndDate'],
+    });
+  }
 });
 
 const formSchema = z.object({
@@ -132,6 +154,14 @@ export default function TicketManagementPage() {
         }
     })
   }
+
+  function onSubmitError() {
+    toast({
+      variant: 'destructive',
+      title: t('errors.genericTitle'),
+      description: t('admin.tickets.validationError'),
+    });
+  }
   
   if (isLoadingEvent) {
     return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -149,7 +179,7 @@ export default function TicketManagementPage() {
       </div>
 
        <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {fields.map(
                   (

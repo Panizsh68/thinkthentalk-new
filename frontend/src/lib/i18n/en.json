@@ -377,9 +377,6 @@
       "sponsors": "Sponsors",
       "team": "Team"
     },
-    "filters": {
-      "title": "Filters"
-    },
     "users": {
       "title": "Users",
       "subtitle": "See OTP sign-ins, profile completeness, and their registrations.",
@@ -576,7 +573,8 @@
       "endDateDesc": "Optional. After this date, early bird tickets cannot be purchased.",
       "saveChanges": "Save Ticket Settings",
       "saveSuccessTitle": "Tickets Updated",
-      "saveSuccessDescription": "Ticket settings for {eventName} have been saved."
+      "saveSuccessDescription": "Ticket settings for {eventName} have been saved.",
+      "validationError": "Please review the ticket details and try again."
     },
     "resources": {
       "title": "Manage Resources",
