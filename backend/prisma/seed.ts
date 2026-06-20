@@ -1,6 +1,7 @@
-
 import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PoolConfig } from 'mariadb';
 import * as bcryptjs from 'bcryptjs';
 
 // Load environment variables similar to application bootstrap
@@ -10,15 +11,17 @@ for (const path of envPaths) {
   config({ path });
 }
 
-const databaseUrl =
-  process.env.DATABASE_URL ??
-  `mysql://${process.env.DB_USER ?? 'root'}:${process.env.DB_PASSWORD ?? ''}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '3306'}/${process.env.DB_NAME ?? 'think_then_talk'}`;
+const poolConfig: PoolConfig = {
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  connectionLimit: 1,
+};
 
-  const prisma = new PrismaClient({
-    datasource: { // Ensure this is singular
-      url: process.env.DATABASE_URL,
-    },
-  });
+const adapter = new PrismaMariaDb(poolConfig);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   try {

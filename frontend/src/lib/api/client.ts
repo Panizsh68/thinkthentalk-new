@@ -83,15 +83,14 @@ const apiClient = {
         throw new Error('Unauthorized');
       }
 
+      const responseText = await response.text();
+
       if (!response.ok) {
         let errorData: any;
-        const contentType = response.headers.get('content-type');
-        
-        if (contentType && contentType.includes('application/json')) {
-          errorData = await response.json().catch(() => null);
-        } else {
-          const text = await response.text().catch(() => 'No response body');
-          errorData = { message: text || `HTTP error! Status: ${response.status}` };
+        try {
+          errorData = JSON.parse(responseText);
+        } catch {
+          errorData = { message: responseText || `HTTP error! Status: ${response.status}` };
         }
         
         console.error(`API Error for ${method} ${path}:`, errorData);
@@ -103,7 +102,6 @@ const apiClient = {
         throw error;
       }
 
-      const responseText = await response.text();
       if (response.status === 204 || !responseText) {
         return { data: undefined as T, token };
       }

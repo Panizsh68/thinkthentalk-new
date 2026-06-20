@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PoolConfig } from 'mariadb';
 
 @Injectable()
 export class PrismaService
@@ -15,16 +17,19 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(configService: ConfigService) {
-    const databaseUrl = configService.get<string>('DATABASE_URL');
+    const poolConfig: PoolConfig = {
+      host: configService.get<string>('DB_HOST'),
+      port: configService.get<number>('DB_PORT'),
+      user: configService.get<string>('DB_USER'),
+      password: configService.get<string>('DB_PASSWORD'),
+      database: configService.get<string>('DB_NAME'),
+      connectionLimit: 10,
+    };
 
-    if (!databaseUrl) {
-      throw new Error('DATABASE_URL environment variable is not set');
-    }
+    const adapter = new PrismaMariaDb(poolConfig);
 
     super({
-      datasource: { // Fixed: Changed from 'datasources' to 'datasource'
-        url: databaseUrl,
-      },
+      adapter,
       log: [
         { emit: 'stdout', level: 'info' },
         { emit: 'stdout', level: 'warn' },

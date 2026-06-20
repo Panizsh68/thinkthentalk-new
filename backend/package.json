@@ -54,6 +54,7 @@
     "ioredis": "^5.8.2",
     "joi": "^18.0.2",
     "js-yaml": "^4.1.0",
+    "mariadb": "^3.5.3",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.11",
     "passport": "^0.7.0",
@@ -113,5 +114,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "pnpm": {
+    "overrides": {
+      "mariadb": "^3.5.3"
+    }
   }
 }

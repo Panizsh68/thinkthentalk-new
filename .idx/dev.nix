@@ -1,10 +1,11 @@
 { pkgs, ... }: {
-  channel = "stable-23.11";
-packages = [
-  pkgs.nodejs_20
-  pkgs.nodePackages.pnpm
-  pkgs.openssl # Add this line
-];
+  channel = "unstable";
+  packages = [
+    pkgs.nodejs_22
+    pkgs.nodePackages.pnpm
+    pkgs.openssl
+    pkgs.mariadb
+  ];
   idx.extensions = [
     "rvest.vs-code-prettier-eslint"
   ];
@@ -12,11 +13,11 @@ packages = [
     enable = true;
     previews = {
       web = {
-        command = [
-          "npm" # Note: You might want to change this to "pnpm" since you are installing it
-          "run"
-          "dev"
-        ];
+        command = [ "sh" "-c" "cd frontend && pnpm run dev" ];
+        manager = "web";
+      };
+      backend = {
+        command = [ "sh" "-c" "cd backend && pnpm run start:dev" ];
         manager = "web";
       };
     };

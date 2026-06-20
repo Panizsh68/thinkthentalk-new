@@ -37,6 +37,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       );
     }
 
+    // Set JSON content type explicitly
     response.status(status).json(body);
   }
 
@@ -44,10 +45,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     status: number;
     body: ErrorResponse;
   } {
+    // Handle array of validation errors (e.g. from ValidationPipe)
     if (
       Array.isArray(exception) &&
       exception.length > 0 &&
-      exception[0] instanceof ClassValidatorError
+      (exception[0] instanceof ClassValidatorError || exception[0]?.constraints)
     ) {
       const messages = exception
         .map((err) => Object.values(err.constraints ?? {}).join(', '))
@@ -96,6 +98,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     }
 
+    // Generic error fallback
     const genericMessage =
       exception instanceof Error ? exception.message : 'Internal server error';
 
