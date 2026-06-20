@@ -7,12 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ValidationError as ClassValidatorError } from 'class-validator';
-import {
-  DomainError,
-  ForbiddenError,
-  NotFoundError,
-  ValidationError,
-} from '../errors/domain.errors';
+import { DomainError } from '../errors/domain.errors';
 
 interface ErrorResponse {
   message: string;
@@ -33,7 +28,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (status >= 500) {
       this.logger.error(
-        `${request.method} ${request.url} failed with status ${status}`,
+        `${request.method} ${request.url} failed with status ${status}: ${body.message}`,
         exception instanceof Error ? exception.stack : JSON.stringify(exception),
       );
     } else {
@@ -59,10 +54,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
         .filter(Boolean);
       return {
         status: HttpStatus.BAD_REQUEST,
-        body: { 
+        body: {
           message: messages.join('; ') || 'Validation failed',
           statusCode: HttpStatus.BAD_REQUEST,
-          error: 'Bad Request'
+          error: 'Bad Request',
         },
       };
     }
@@ -81,9 +76,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return {
         status: exception.getStatus(),
         body: {
-          message: Array.isArray(message) ? message.join(', ') : (message || exception.message),
+          message: Array.isArray(message)
+            ? message.join(', ')
+            : (message || exception.message),
           statusCode: exception.getStatus(),
-          error: exception.name
+          error: exception.name,
         },
       };
     }
@@ -91,22 +88,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof DomainError) {
       return {
         status: exception.statusCode,
-        body: { 
+        body: {
           message: exception.message,
           statusCode: exception.statusCode,
-          error: exception.name
+          error: exception.name,
         },
       };
     }
 
-    const genericMessage = exception instanceof Error ? exception.message : 'Internal server error';
+    const genericMessage =
+      exception instanceof Error ? exception.message : 'Internal server error';
 
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      body: { 
+      body: {
         message: genericMessage,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: 'Internal Server Error'
+        error: 'Internal Server Error',
       },
     };
   }
