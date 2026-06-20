@@ -1,22 +1,31 @@
 { pkgs, ... }: {
-  channel = "stable-24.05";
+  channel = "stable-23.11";
   packages = [
     pkgs.nodejs_20
-    pkgs.pnpm
+    pkgs.nodePackages.pnpm
   ];
   idx.previews = {
     enable = true;
     previews = {
       web = {
-        command = [ "pnpm" "run" "dev" ];
+        command = [
+          "npm"
+          "run"
+          "dev"
+        ];
         manager = "web";
         env = {
-          PORT = "9002";
+          PORT = "$PORT";
         };
       };
     };
   };
   idx.extensions = [
     "prisma.prisma"
+    "esbenp.prettier-vscode"
+    "dbaeumer.vscode-eslint"
   ];
+  idx.workspace.onCreate = {
+    install = "npm run install:all";
+  };
 }

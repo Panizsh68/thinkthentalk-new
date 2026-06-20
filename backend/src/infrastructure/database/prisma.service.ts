@@ -18,29 +18,45 @@ export class PrismaService
 
   constructor(configService: ConfigService) {
     const databaseUrl = configService.get<string>('DATABASE_URL');
-    
+    const dbHost = configService.get<string>('DB_HOST') || '127.0.0.1';
+    const dbPort = Number(configService.get<number>('DB_PORT') || 3306);
+    const dbUser = configService.get<string>('DB_USER') || 'root';
+    const dbPass = configService.get<string>('DB_PASSWORD') || '';
+    const dbName = configService.get<string>('DB_NAME') || 'think_then_talk_dev';
+
     let poolConfig: PoolConfig;
 
     if (databaseUrl && databaseUrl.startsWith('mysql://')) {
-      // Parse basic connection info from URL if possible, or use standard env keys
-      // The PrismaMariaDb adapter prefers a structured config.
-      const url = new URL(databaseUrl);
-      poolConfig = {
-        host: url.hostname || '127.0.0.1',
-        port: Number(url.port) || 3306,
-        user: url.username || 'root',
-        password: url.password || '',
-        database: url.pathname.replace(/^\//, '') || 'think_then_talk',
-        connectionLimit: 10,
-        connectTimeout: 10000,
-      };
+      try {
+        const url = new URL(databaseUrl);
+        poolConfig = {
+          host: url.hostname || dbHost,
+          port: Number(url.port) || dbPort,
+          user: url.username || dbUser,
+          password: url.password || dbPass,
+          database: url.pathname.replace(/^\//, '') || dbName,
+          connectionLimit: 10,
+          connectTimeout: 10000,
+        };
+      } catch (e) {
+        this.logger.warn('Failed to parse DATABASE_URL, falling back to individual variables');
+        poolConfig = {
+          host: dbHost,
+          port: dbPort,
+          user: dbUser,
+          password: dbPass,
+          database: dbName,
+          connectionLimit: 10,
+          connectTimeout: 10000,
+        };
+      }
     } else {
       poolConfig = {
-        host: configService.get<string>('DB_HOST') || '127.0.0.1',
-        port: Number(configService.get<number>('DB_PORT') || 3306),
-        user: configService.get<string>('DB_USER') || 'root',
-        password: configService.get<string>('DB_PASSWORD') || '',
-        database: configService.get<string>('DB_NAME') || 'think_then_talk',
+        host: dbHost,
+        port: dbPort,
+        user: dbUser,
+        password: dbPass,
+        database: dbName,
         connectionLimit: 10,
         connectTimeout: 10000,
       };

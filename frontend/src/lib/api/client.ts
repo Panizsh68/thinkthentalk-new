@@ -93,7 +93,7 @@ const apiClient = {
         try {
           errorData = JSON.parse(responseText);
         } catch {
-          // If not JSON, capture the raw text or status
+          // Capturing raw text to prevent {} being logged
           errorData = { message: responseText || `HTTP error! Status: ${response.status}` };
         }
         
@@ -119,7 +119,8 @@ const apiClient = {
       }
 
     } catch (error: any) {
-      // Don't retry mixed content or network errors that are clearly permanent
+      console.error(`API request failed for ${method} ${normalizedPath}:`, error.message);
+      
       const isNetworkError = error.message === 'Failed to fetch';
       const isUserError = error.status >= 400 && error.status < 500;
       
