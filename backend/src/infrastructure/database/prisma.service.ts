@@ -22,10 +22,8 @@ export class PrismaService
     }
 
     super({
-      datasources: {
-        db: {
-          url: databaseUrl,
-        },
+      datasource: { // Fixed: Changed from 'datasources' to 'datasource'
+        url: databaseUrl,
       },
       log: [
         { emit: 'stdout', level: 'info' },

@@ -24,6 +24,7 @@ export default defineConfig({
     seed: "ts-node prisma/seed.ts",
   },
   datasource: {
-    url: databaseUrl,
+    // Add 'as string' or a fallback to satisfy the type checker
+    url: process.env.DATABASE_URL as string,
   },
 });

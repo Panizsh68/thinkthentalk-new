@@ -14,13 +14,11 @@ const databaseUrl =
   process.env.DATABASE_URL ??
   `mysql://${process.env.DB_USER ?? 'root'}:${process.env.DB_PASSWORD ?? ''}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '3306'}/${process.env.DB_NAME ?? 'think_then_talk'}`;
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: databaseUrl,
+  const prisma = new PrismaClient({
+    datasource: { // Ensure this is singular
+      url: process.env.DATABASE_URL,
     },
-  },
-});
+  });
 
 async function main() {
   try {
