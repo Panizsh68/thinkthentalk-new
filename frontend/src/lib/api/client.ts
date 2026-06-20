@@ -12,7 +12,8 @@ const apiClient = {
     retries = MAX_RETRIES
   ): Promise<{ data: T; token?: string }> {
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-    const url = `${getApiUrl()}${normalizedPath}`;
+    const baseUrl = getApiUrl();
+    const url = baseUrl === '/api' ? `/api${normalizedPath}` : `${baseUrl}${normalizedPath}`;
     
     console.log(`API Request: ${method} ${url}`);
 
@@ -42,7 +43,7 @@ const apiClient = {
         usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
       } else {
         token = userToken;
-        usedTokenType = 'user';
+        usedTokenType = userToken ? 'user' : null;
       }
 
       if (token) {
@@ -92,6 +93,7 @@ const apiClient = {
         try {
           errorData = JSON.parse(responseText);
         } catch {
+          // If not JSON, capture the raw text or status
           errorData = { message: responseText || `HTTP error! Status: ${response.status}` };
         }
         
@@ -117,11 +119,11 @@ const apiClient = {
       }
 
     } catch (error: any) {
-      console.error(`API request failed for ${method} ${normalizedPath}:`, error.message || error);
-      
+      // Don't retry mixed content or network errors that are clearly permanent
+      const isNetworkError = error.message === 'Failed to fetch';
       const isUserError = error.status >= 400 && error.status < 500;
       
-      if (retries > 0 && !isUserError) {
+      if (retries > 0 && !isUserError && !isNetworkError) {
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
         return this.request(method, normalizedPath, data, options, retries - 1);
       }

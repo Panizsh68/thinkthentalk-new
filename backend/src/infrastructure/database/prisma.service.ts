@@ -17,40 +17,37 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(configService: ConfigService) {
-    const host =
-      configService.get<string>('database.host') ||
-      configService.get<string>('DB_HOST') ||
-      '127.0.0.1';
-    const port = Number(
-      configService.get<number>('database.port') ||
-        configService.get<number>('DB_PORT') ||
-        3306,
-    );
-    const user =
-      configService.get<string>('database.user') ||
-      configService.get<string>('DB_USER') ||
-      'root';
-    const password =
-      configService.get<string>('database.password') ||
-      configService.get<string>('DB_PASSWORD') ||
-      '';
-    const database =
-      configService.get<string>('database.name') ||
-      configService.get<string>('DB_NAME') ||
-      'think_then_talk';
+    const databaseUrl = configService.get<string>('DATABASE_URL');
+    
+    let poolConfig: PoolConfig;
 
-    const poolConfig: PoolConfig = {
-      host,
-      port,
-      user,
-      password,
-      database,
-      connectionLimit: 10,
-      connectTimeout: 10000,
-    };
+    if (databaseUrl && databaseUrl.startsWith('mysql://')) {
+      // Parse basic connection info from URL if possible, or use standard env keys
+      // The PrismaMariaDb adapter prefers a structured config.
+      const url = new URL(databaseUrl);
+      poolConfig = {
+        host: url.hostname || '127.0.0.1',
+        port: Number(url.port) || 3306,
+        user: url.username || 'root',
+        password: url.password || '',
+        database: url.pathname.replace(/^\//, '') || 'think_then_talk',
+        connectionLimit: 10,
+        connectTimeout: 10000,
+      };
+    } else {
+      poolConfig = {
+        host: configService.get<string>('DB_HOST') || '127.0.0.1',
+        port: Number(configService.get<number>('DB_PORT') || 3306),
+        user: configService.get<string>('DB_USER') || 'root',
+        password: configService.get<string>('DB_PASSWORD') || '',
+        database: configService.get<string>('DB_NAME') || 'think_then_talk',
+        connectionLimit: 10,
+        connectTimeout: 10000,
+      };
+    }
 
     this.logger.log(
-      `Initializing Prisma with MariaDB adapter for ${user}@${host}:${port}/${database}`,
+      `Initializing Prisma with MariaDB adapter for ${poolConfig.user}@${poolConfig.host}:${poolConfig.port}/${poolConfig.database}`,
     );
 
     const adapter = new PrismaMariaDb(poolConfig);
