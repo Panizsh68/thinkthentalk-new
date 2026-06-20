@@ -34,14 +34,12 @@ const apiClient = {
 
       // Token selection logic:
       // - Admin paths: use admin token
-      // - Upload paths: use admin token if admin is logged in, else user token
       // - Other paths: use user token
       let token: string | null = null;
       if (path.startsWith('/admin')) {
         token = adminToken;
         usedTokenType = 'admin';
       } else if (path.includes('/upload') || path.includes('/upload/')) {
-        // Prefer user token for uploads if available, otherwise fall back to admin
         token = userToken || adminToken;
         usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
       } else {
@@ -50,10 +48,7 @@ const apiClient = {
       }
 
       if (token) {
-        console.log(`Attaching token for ${path}`, { isAdmin: usedTokenType === 'admin', isUpload: path.includes('/upload') });
         headers.append('Authorization', `Bearer ${token}`);
-      } else {
-        console.log(`No token found for ${path}`);
       }
     }
 
@@ -71,7 +66,6 @@ const apiClient = {
       console.log(`API Response Status for ${method} ${path}:`, response.status);
 
       if (response.status === 401 && typeof window !== 'undefined') {
-        console.log("Received 401 Unauthorized. Clearing tokens and redirecting to login.");
         const isAdminRequest = path.startsWith('/admin') || usedTokenType === 'admin';
         const onAdminPage = window.location.pathname.startsWith('/admin');
 
@@ -87,10 +81,8 @@ const apiClient = {
 
         const loginPath = onAdminPage || isAdminRequest ? '/admin/login' : '/login';
         const redirectUrl = window.location.pathname + window.location.search;
-        const shouldRedirect =
-          (onAdminPage && isAdminRequest) || (!isAdminRequest && !onAdminPage);
-
-        if (shouldRedirect && window.location.pathname !== loginPath) {
+        
+        if (window.location.pathname !== loginPath) {
           window.location.href = `${loginPath}?redirect=${encodeURIComponent(redirectUrl)}`;
         }
 
@@ -98,12 +90,21 @@ const apiClient = {
       }
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
-        console.error(`API Error for ${method} ${path}:`, errorData);
-        // The backend wraps errors in a `message` property.
-        const errorMessage = errorData.message || `HTTP error! Status: ${response.status}`;
+        let errorData: any;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          errorData = await response.json().catch(() => null);
+        } else {
+          const text = await response.text().catch(() => 'No response body');
+          errorData = { message: text || `HTTP error! Status: ${response.status}` };
+        }
+        
+        console.error(`API Error for ${method} ${path}:`, errorData || `Status ${response.status}`);
+        
+        const errorMessage = errorData?.message || `HTTP error! Status: ${response.status}`;
         const error: any = new Error(errorMessage);
         error.status = response.status;
+        error.data = errorData;
         throw error;
       }
 
@@ -115,13 +116,11 @@ const apiClient = {
       const responseBody = JSON.parse(responseText);
       const responseData = responseBody.data !== undefined ? responseBody.data : responseBody;
 
-      console.log(`API Success for ${method} ${path}:`, { responseData, token });
       return { data: responseData, token };
 
-    } catch (error) {
-      console.error(`API request failed for ${method} ${path}:`, error);
-      if (retries > 0) {
-        console.log(`Retrying... (${retries} retries left)`);
+    } catch (error: any) {
+      console.error(`API request failed for ${method} ${path}:`, error.message || error);
+      if (retries > 0 && error.status !== 401 && error.status !== 400 && error.status !== 404) {
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
         return this.request(method, path, data, options, retries - 1);
       }

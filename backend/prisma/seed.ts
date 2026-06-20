@@ -1,6 +1,6 @@
+
 import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import * as bcryptjs from 'bcryptjs';
 
 // Load environment variables similar to application bootstrap
@@ -15,7 +15,11 @@ const databaseUrl =
   `mysql://${process.env.DB_USER ?? 'root'}:${process.env.DB_PASSWORD ?? ''}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '3306'}/${process.env.DB_NAME ?? 'think_then_talk'}`;
 
 const prisma = new PrismaClient({
-  adapter: new PrismaMariaDb(databaseUrl),
+  datasources: {
+    db: {
+      url: databaseUrl,
+    },
+  },
 });
 
 async function main() {

@@ -1,3 +1,4 @@
+
 import {
   BeforeApplicationShutdown,
   Injectable,
@@ -6,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
 @Injectable()
 export class PrismaService
@@ -23,7 +23,11 @@ export class PrismaService
     }
 
     super({
-      adapter: new PrismaMariaDb(databaseUrl),
+      datasources: {
+        db: {
+          url: databaseUrl,
+        },
+      },
       log: [
         { emit: 'stdout', level: 'info' },
         { emit: 'stdout', level: 'warn' },

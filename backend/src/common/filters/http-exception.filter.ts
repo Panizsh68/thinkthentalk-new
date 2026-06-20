@@ -1,3 +1,4 @@
+
 import {
   ArgumentsHost,
   Catch,
@@ -106,10 +107,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
         body: { message: exception.message },
       };
     }
+    
+    // Handle Prisma specific initialization errors or connection issues
+    if (exception instanceof Error && exception.name === 'PrismaClientInitializationError') {
+      return {
+        status: HttpStatus.SERVICE_UNAVAILABLE,
+        body: { message: 'Database connection failed. Please ensure the database is running.' },
+      };
+    }
 
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      body: { message: 'Internal server error' },
+      body: { message: exception instanceof Error ? exception.message : 'Internal server error' },
     };
   }
 }
