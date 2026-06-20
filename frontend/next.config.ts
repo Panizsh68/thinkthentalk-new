@@ -17,6 +17,10 @@ const config: NextConfig = {
 
     return [
       {
+        source: '/api/:path*',
+        destination: `${uploadProxyDestination}/api/:path*`,
+      },
+      {
         source: '/images/:path*',
         destination: `${uploadProxyDestination}/uploads/:path*`,
       },
