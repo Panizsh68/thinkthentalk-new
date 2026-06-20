@@ -11,7 +11,10 @@ const apiClient = {
     options?: RequestInit,
     retries = MAX_RETRIES
   ): Promise<{ data: T; token?: string }> {
-    const url = `${getApiUrl()}${path}`;
+    // Ensure path starts with /
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const url = `${getApiUrl()}${normalizedPath}`;
+    
     console.log(`API Request: ${method} ${url}`, { data });
 
     const isFormData = data instanceof FormData;
@@ -32,10 +35,10 @@ const apiClient = {
       const userToken = localStorage.getItem('accessToken');
 
       let token: string | null = null;
-      if (path.startsWith('/admin')) {
+      if (normalizedPath.startsWith('/admin')) {
         token = adminToken;
         usedTokenType = 'admin';
-      } else if (path.includes('/upload')) {
+      } else if (normalizedPath.includes('/upload')) {
         token = userToken || adminToken;
         usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
       } else {
@@ -60,7 +63,7 @@ const apiClient = {
       const token = response.headers.get('Authorization')?.split(' ')[1];
 
       if (response.status === 401 && typeof window !== 'undefined') {
-        const isAdminRequest = path.startsWith('/admin') || usedTokenType === 'admin';
+        const isAdminRequest = normalizedPath.startsWith('/admin') || usedTokenType === 'admin';
         const onAdminPage = window.location.pathname.startsWith('/admin');
 
         if (isAdminRequest || usedTokenType === 'admin') {
@@ -93,7 +96,7 @@ const apiClient = {
           errorData = { message: responseText || `HTTP error! Status: ${response.status}` };
         }
         
-        console.error(`API Error for ${method} ${path}:`, errorData);
+        console.error(`API Error for ${method} ${normalizedPath}:`, errorData);
         
         const errorMessage = errorData?.message || errorData?.error || `HTTP error! Status: ${response.status}`;
         const error: any = new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
@@ -115,10 +118,14 @@ const apiClient = {
       }
 
     } catch (error: any) {
-      console.error(`API request failed for ${method} ${path}:`, error.message || error);
-      if (retries > 0 && error.status !== 401 && error.status !== 400 && error.status !== 404 && error.status !== 403) {
+      console.error(`API request failed for ${method} ${normalizedPath}:`, error.message || error);
+      
+      // Don't retry on user errors
+      const isUserError = error.status >= 400 && error.status < 500;
+      
+      if (retries > 0 && !isUserError) {
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
-        return this.request(method, path, data, options, retries - 1);
+        return this.request(method, normalizedPath, data, options, retries - 1);
       }
       throw error;
     }
