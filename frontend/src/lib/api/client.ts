@@ -11,11 +11,10 @@ const apiClient = {
     options?: RequestInit,
     retries = MAX_RETRIES
   ): Promise<{ data: T; token?: string }> {
-    // Ensure path starts with /
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
     const url = `${getApiUrl()}${normalizedPath}`;
     
-    console.log(`API Request: ${method} ${url}`, { data });
+    console.log(`API Request: ${method} ${url}`);
 
     const isFormData = data instanceof FormData;
 
@@ -120,7 +119,6 @@ const apiClient = {
     } catch (error: any) {
       console.error(`API request failed for ${method} ${normalizedPath}:`, error.message || error);
       
-      // Don't retry on user errors
       const isUserError = error.status >= 400 && error.status < 500;
       
       if (retries > 0 && !isUserError) {
