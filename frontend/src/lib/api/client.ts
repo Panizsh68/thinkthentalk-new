@@ -92,6 +92,7 @@ const apiClient = {
       if (!response.ok) {
         let errorData: any;
         const contentType = response.headers.get('content-type');
+        
         if (contentType && contentType.includes('application/json')) {
           errorData = await response.json().catch(() => null);
         } else {
@@ -99,10 +100,10 @@ const apiClient = {
           errorData = { message: text || `HTTP error! Status: ${response.status}` };
         }
         
-        console.error(`API Error for ${method} ${path}:`, errorData || `Status ${response.status}`);
+        console.error(`API Error for ${method} ${path}:`, errorData);
         
         const errorMessage = errorData?.message || `HTTP error! Status: ${response.status}`;
-        const error: any = new Error(errorMessage);
+        const error: any = new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
         error.status = response.status;
         error.data = errorData;
         throw error;
@@ -113,14 +114,18 @@ const apiClient = {
         return { data: undefined as T, token };
       }
 
-      const responseBody = JSON.parse(responseText);
-      const responseData = responseBody.data !== undefined ? responseBody.data : responseBody;
-
-      return { data: responseData, token };
+      try {
+        const responseBody = JSON.parse(responseText);
+        const responseData = responseBody.data !== undefined ? responseBody.data : responseBody;
+        return { data: responseData, token };
+      } catch (parseError) {
+        console.error('Failed to parse successful response as JSON:', responseText);
+        return { data: responseText as unknown as T, token };
+      }
 
     } catch (error: any) {
       console.error(`API request failed for ${method} ${path}:`, error.message || error);
-      if (retries > 0 && error.status !== 401 && error.status !== 400 && error.status !== 404) {
+      if (retries > 0 && error.status !== 401 && error.status !== 400 && error.status !== 404 && error.status !== 403) {
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
         return this.request(method, path, data, options, retries - 1);
       }

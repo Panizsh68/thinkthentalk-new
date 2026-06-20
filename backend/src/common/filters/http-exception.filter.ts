@@ -30,10 +30,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const { status, body } = this.mapException(exception);
 
+    // Log the full stack trace for internal server errors to the server console
     if (status >= 500) {
       this.logger.error(
         `${request.method} ${request.url} failed with status ${status}`,
-        exception instanceof Error ? exception.stack : undefined,
+        exception instanceof Error ? exception.stack : JSON.stringify(exception),
       );
     } else {
       this.logger.warn(
@@ -48,9 +49,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     status: number;
     body: ErrorResponse;
   } {
+    // Handle standard NestJS Validation errors
     if (
       Array.isArray(exception) &&
-      exception.every((e) => e instanceof ClassValidatorError)
+      exception.length > 0 &&
+      exception[0] instanceof ClassValidatorError
     ) {
       const messages = exception
         .map((err) => Object.values(err.constraints ?? {}).join(', '))
@@ -75,7 +78,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return {
         status: exception.getStatus(),
         body: {
-          message: Array.isArray(message) ? message.join(', ') : message,
+          message: Array.isArray(message) ? message.join(', ') : (message || exception.message),
         },
       };
     }
@@ -109,10 +112,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
     
     // Handle Prisma specific initialization errors or connection issues
-    if (exception instanceof Error && exception.name === 'PrismaClientInitializationError') {
+    if (exception instanceof Error && (exception.name === 'PrismaClientInitializationError' || exception.name === 'PrismaClientKnownRequestError')) {
       return {
         status: HttpStatus.SERVICE_UNAVAILABLE,
-        body: { message: 'Database connection failed. Please ensure the database is running.' },
+        body: { message: `Database error: ${exception.message}` },
       };
     }
 
