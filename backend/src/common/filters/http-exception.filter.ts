@@ -1,4 +1,3 @@
-
 import {
   ArgumentsHost,
   Catch,
@@ -17,6 +16,8 @@ import {
 
 interface ErrorResponse {
   message: string;
+  error?: string;
+  statusCode: number;
 }
 
 @Catch()
@@ -30,7 +31,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const { status, body } = this.mapException(exception);
 
-    // Log the full stack trace for internal server errors to the server console
     if (status >= 500) {
       this.logger.error(
         `${request.method} ${request.url} failed with status ${status}`,
@@ -49,7 +49,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     status: number;
     body: ErrorResponse;
   } {
-    // Handle standard NestJS Validation errors
     if (
       Array.isArray(exception) &&
       exception.length > 0 &&
@@ -60,7 +59,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
         .filter(Boolean);
       return {
         status: HttpStatus.BAD_REQUEST,
-        body: { message: messages.join('; ') || 'Validation failed' },
+        body: { 
+          message: messages.join('; ') || 'Validation failed',
+          statusCode: HttpStatus.BAD_REQUEST,
+          error: 'Bad Request'
+        },
       };
     }
 
@@ -79,6 +82,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         status: exception.getStatus(),
         body: {
           message: Array.isArray(message) ? message.join(', ') : (message || exception.message),
+          statusCode: exception.getStatus(),
+          error: exception.name
         },
       };
     }
@@ -86,42 +91,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof DomainError) {
       return {
         status: exception.statusCode,
-        body: { message: exception.message },
+        body: { 
+          message: exception.message,
+          statusCode: exception.statusCode,
+          error: exception.name
+        },
       };
     }
 
-    if (exception instanceof ValidationError) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        body: { message: exception.message },
-      };
-    }
-
-    if (exception instanceof ForbiddenError) {
-      return {
-        status: HttpStatus.FORBIDDEN,
-        body: { message: exception.message },
-      };
-    }
-
-    if (exception instanceof NotFoundError) {
-      return {
-        status: HttpStatus.NOT_FOUND,
-        body: { message: exception.message },
-      };
-    }
-    
-    // Handle Prisma specific initialization errors or connection issues
-    if (exception instanceof Error && (exception.name === 'PrismaClientInitializationError' || exception.name === 'PrismaClientKnownRequestError')) {
-      return {
-        status: HttpStatus.SERVICE_UNAVAILABLE,
-        body: { message: `Database error: ${exception.message}` },
-      };
-    }
+    const genericMessage = exception instanceof Error ? exception.message : 'Internal server error';
 
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      body: { message: exception instanceof Error ? exception.message : 'Internal server error' },
+      body: { 
+        message: genericMessage,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Internal Server Error'
+      },
     };
   }
 }

@@ -1,4 +1,3 @@
-
 import {
   BeforeApplicationShutdown,
   Injectable,
@@ -16,13 +15,7 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(configService: ConfigService) {
-    // Prefer the namespaced config which builds the URL from components
-    let databaseUrl = configService.get<string>('database.url');
-
-    // Fallback to top-level env var if registered config is unavailable
-    if (!databaseUrl) {
-      databaseUrl = configService.get<string>('DATABASE_URL');
-    }
+    const databaseUrl = configService.get<string>('DATABASE_URL');
 
     if (!databaseUrl) {
       throw new Error('DATABASE_URL environment variable is not set');
@@ -48,7 +41,6 @@ export class PrismaService
       this.logger.log('Prisma connected to database');
     } catch (error) {
       this.logger.error('Error connecting Prisma to database', error);
-      // We don't throw here to allow the app to start and the filter to catch subsequent query errors
     }
   }
 

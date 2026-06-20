@@ -1,4 +1,3 @@
-
 import { getApiUrl } from '../config/api';
 
 const MAX_RETRIES = 1;
@@ -19,7 +18,7 @@ const apiClient = {
 
     const headers = new Headers(
       isFormData
-        ? { ...options?.headers }  // FormData: don't set Content-Type, let browser handle it
+        ? { ...options?.headers }
         : {
           'Content-Type': 'application/json',
           ...options?.headers,
@@ -32,14 +31,11 @@ const apiClient = {
       const adminToken = localStorage.getItem('adminAccessToken');
       const userToken = localStorage.getItem('accessToken');
 
-      // Token selection logic:
-      // - Admin paths: use admin token
-      // - Other paths: use user token
       let token: string | null = null;
       if (path.startsWith('/admin')) {
         token = adminToken;
         usedTokenType = 'admin';
-      } else if (path.includes('/upload') || path.includes('/upload/')) {
+      } else if (path.includes('/upload')) {
         token = userToken || adminToken;
         usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
       } else {
@@ -62,8 +58,6 @@ const apiClient = {
     try {
       const response = await fetch(url, config);
       const token = response.headers.get('Authorization')?.split(' ')[1];
-
-      console.log(`API Response Status for ${method} ${path}:`, response.status);
 
       if (response.status === 401 && typeof window !== 'undefined') {
         const isAdminRequest = path.startsWith('/admin') || usedTokenType === 'admin';
@@ -102,7 +96,7 @@ const apiClient = {
         
         console.error(`API Error for ${method} ${path}:`, errorData);
         
-        const errorMessage = errorData?.message || `HTTP error! Status: ${response.status}`;
+        const errorMessage = errorData?.message || errorData?.error || `HTTP error! Status: ${response.status}`;
         const error: any = new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
         error.status = response.status;
         error.data = errorData;
@@ -119,7 +113,6 @@ const apiClient = {
         const responseData = responseBody.data !== undefined ? responseBody.data : responseBody;
         return { data: responseData, token };
       } catch (parseError) {
-        console.error('Failed to parse successful response as JSON:', responseText);
         return { data: responseText as unknown as T, token };
       }
 
