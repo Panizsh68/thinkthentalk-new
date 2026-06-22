@@ -13,7 +13,11 @@ const apiClient = {
   ): Promise<{ data: T; token?: string }> {
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
     const baseUrl = getApiUrl();
-    const url = baseUrl === '/api' ? `/api${normalizedPath}` : `${baseUrl}${normalizedPath}`;
+    
+    // Construct URL. If baseUrl is relative (/api), Next.js handles proxying.
+    const url = baseUrl.startsWith('http') 
+      ? `${baseUrl}${normalizedPath}`
+      : `${normalizedPath.startsWith(baseUrl) ? '' : baseUrl}${normalizedPath}`;
     
     console.log(`API Request: ${method} ${url}`);
 
@@ -34,20 +38,16 @@ const apiClient = {
       const adminToken = localStorage.getItem('adminAccessToken');
       const userToken = localStorage.getItem('accessToken');
 
-      let token: string | null = null;
       if (normalizedPath.startsWith('/admin')) {
-        token = adminToken;
+        if (adminToken) headers.append('Authorization', `Bearer ${adminToken}`);
         usedTokenType = 'admin';
       } else if (normalizedPath.includes('/upload')) {
-        token = userToken || adminToken;
+        const token = userToken || adminToken;
+        if (token) headers.append('Authorization', `Bearer ${token}`);
         usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
       } else {
-        token = userToken;
+        if (userToken) headers.append('Authorization', `Bearer ${userToken}`);
         usedTokenType = userToken ? 'user' : null;
-      }
-
-      if (token) {
-        headers.append('Authorization', `Bearer ${token}`);
       }
     }
 
@@ -93,8 +93,10 @@ const apiClient = {
         try {
           errorData = JSON.parse(responseText);
         } catch {
-          // Capturing raw text to prevent {} being logged
-          errorData = { message: responseText || `HTTP error! Status: ${response.status}` };
+          errorData = { 
+            message: responseText || `HTTP error! Status: ${response.status}`,
+            raw: responseText
+          };
         }
         
         console.error(`API Error for ${method} ${normalizedPath}:`, errorData);
