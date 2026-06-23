@@ -1,4 +1,3 @@
-
 {
   "lng": "fa-IR",
   "nav": {
@@ -12,7 +11,53 @@
     "myAccount": "حساب من",
     "ideas": "پیشنهاد رویداد",
     "collaborate": "همکاری با ما",
-    "sponsorship": "اسپانسرینگ"
+    "sponsorship": "اسپانسرینگ",
+    "wallet": "کیف پول",
+    "subscription": "خرید اشتراک"
+  },
+  "wallet": {
+    "title": "کیف پول من",
+    "balance": "موجودی فعلی",
+    "deposit": "شارژ حساب",
+    "withdraw": "برداشت وجه",
+    "depositTitle": "افزایش موجودی",
+    "depositDesc": "مبلغ مورد نظر برای شارژ کیف پول را وارد کنید.",
+    "payAndCharge": "پرداخت و شارژ",
+    "withdrawTitle": "درخواست واریز به حساب",
+    "withdrawDesc": "مبلغ برداشتی و شماره شبای خود را وارد کنید. پس از بررسی تیم مالی، مبلغ به حساب شما واریز خواهد شد.",
+    "shabaLabel": "شماره شبا",
+    "shabaHelper": "شماره شبا باید ۲۶ کاراکتر و با IR شروع شود.",
+    "shabaInvalid": "شماره شبا معتبر نیست.",
+    "submitWithdraw": "ثبت درخواست برداشت",
+    "history": "تاریخچه تراکنش‌ها",
+    "noTransactions": "هنوز تراکنشی ثبت نشده است.",
+    "minDepositError": "حداقل مبلغ شارژ ۱,۰۰۰ تومان است.",
+    "minWithdrawError": "حداقل مبلغ برداشت ۱۰,۰۰۰ تومان است.",
+    "depositSuccess": "حساب شما با موفقیت شارژ شد.",
+    "withdrawRequestSuccess": "درخواست برداشت شما ثبت شد و در حال بررسی است.",
+    "txType": {
+      "DEPOSIT": "شارژ حساب",
+      "WITHDRAWAL": "برداشت",
+      "PURCHASE": "خرید بلیت",
+      "REFUND": "بازگشت وجه",
+      "SUBSCRIPTION": "خرید اشتراک"
+    }
+  },
+  "subscription": {
+    "title": "اشتراک ویژه تینک دن تاک",
+    "subtitle": "با تهیه اشتراک، از مزایای ویژه و دسترسی نامحدود به منابع جامعه بهره‌مند شوید.",
+    "buyNow": "خرید و فعال‌سازی",
+    "bestValue": "به‌صرفه‌ترین",
+    "planPlaceholder": "دسترسی کامل به محتوا",
+    "successTitle": "اشتراک فعال شد",
+    "successDesc": "از پیوستن شما به جمع اعضای ویژه خوشحالیم!",
+    "activeTitle": "اشتراک شما فعال است: {plan}",
+    "activeDesc": "تاریخ انقضا: {date}",
+    "perks": {
+      "events": "تخفیف ویژه در تمام رویدادها",
+      "resources": "دسترسی رایگان به منابع آموزشی",
+      "support": "اولویت در پشتیبانی و ثبت‌نام"
+    }
   },
   "partnership": {
     "status": {

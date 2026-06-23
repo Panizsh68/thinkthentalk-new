@@ -1,47 +1,11 @@
-
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["adapter-mariadb"]
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-}
-
-model User {
-  id                   String                  @id @default(uuid())
-  mobile               String                  @unique
-  firstNameFa          String?
-  lastNameFa           String?
-  firstNameEn          String?
-  lastNameEn           String?
-  gender               Gender?
-  age                  Int?
-  educationLevel       String?
-  fieldOfStudy         String?
-  isEmployed           Boolean?                @default(false)
-  jobTitle             String?
-  email                String?
-  languageLevel        String?
-  avatarUrl            String?
-  createdAt            DateTime                @default(now())
-  updatedAt            DateTime                @updatedAt
-  registrations        Registration[]
-  evaluationSubmissions EvaluationSubmission[]
-  eventIdeas           EventIdea[]
-  collaborationRequests CollaborationRequest[]
-  sponsorshipRequests  SponsorshipRequest[]
-}
-
-model AdminUser {
-  id           String      @id @default(uuid())
-  email        String      @unique
-  password     String
-  name         String?
-  role         AdminRole   @default(EVENT_MANAGER)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  eventAudits  EventAudit[]
 }
 
 enum AdminRole {
@@ -56,56 +20,9 @@ enum Gender {
   OTHER
 }
 
-model Event {
-  id                    String              @id @default(uuid())
-  slug                  String              @unique
-  title                 String
-  summaryFa             String              @db.Text
-  summaryEn             String?             @db.Text
-  descriptionFa         String              @db.LongText
-  descriptionEn         String?             @db.LongText
-  type                  EventType
-  city                  String?
-  address               String?             @db.Text
-  startDateTime         DateTime
-  endDateTime           DateTime?
-  capacityTotal         Int
-  capacityRemaining     Int
-  showRemainingCapacity Boolean             @default(true)
-  categories            Json
-  publicDiscountIds     Json
-  posterUrl             String?
-  isArchived            Boolean             @default(false)
-  archivedAt            DateTime?
-  archivedById          String?
-  deletedAt             DateTime?
-  deletedById           String?
-  createdAt             DateTime            @default(now())
-  updatedAt             DateTime            @updatedAt
-  ticketConfigs         EventTicketConfig[]
-  resources             EventResource[]
-  evaluationForm        EvaluationForm?
-}
-
 enum EventType {
   ONLINE
   OFFLINE
-}
-
-model EventTicketConfig {
-  id               String     @id @default(uuid())
-  eventId          String
-  type             TicketType
-  price            Decimal    @db.Decimal(15, 2)
-  currency         Currency   @default(TOMAN)
-  quantityTotal    Int
-  quantitySold     Int        @default(0)
-  saleStartDate    DateTime?
-  saleEndDate      DateTime?
-  earlyBirdEndDate DateTime?
-  event            Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, type])
 }
 
 enum TicketType {
@@ -119,36 +36,9 @@ enum Currency {
   TOMAN
 }
 
-model EventResource {
-  id          String              @id @default(uuid())
-  eventId     String
-  titleFa     String
-  titleEn     String
-  description String?             @db.Text
-  accessLevel ResourceAccessLevel @default(PUBLIC)
-  url         String
-  createdAt   DateTime            @default(now())
-  event       Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
-}
-
 enum ResourceAccessLevel {
   PUBLIC
   REGISTERED_ONLY
-}
-
-model Registration {
-  id         String             @id @default(uuid())
-  userId     String
-  eventId    String
-  ticketType TicketType
-  status     RegistrationStatus @default(PENDING)
-  formData   Json
-  paymentId  String?            @unique
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  user       User               @relation(fields: [userId], references: [id])
-  event      Event              @relation(fields: [eventId], references: [id])
-  payment    Payment?           @relation(fields: [paymentId], references: [id])
 }
 
 enum RegistrationStatus {
@@ -158,146 +48,16 @@ enum RegistrationStatus {
   CANCELLED
 }
 
-model Payment {
-  id                   String        @id @default(uuid())
-  registrationId       String        @unique
-  eventId              String
-  ticketType           TicketType
-  amount               Decimal       @db.Decimal(15, 2)
-  currency             Currency      @default(TOMAN)
-  status               PaymentStatus @default(PENDING)
-  gatewayTransactionId String?
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-  registration         Registration?
-}
-
 enum PaymentStatus {
   PENDING
   SUCCESS
   FAILED
 }
 
-model Discount {
-  id             String           @id @default(uuid())
-  name           String
-  code           String?          @unique
-  type           DiscountType
-  value          Decimal          @db.Decimal(15, 2)
-  maxUses        Int?
-  usedCount      Int              @default(0)
-  maxUsesPerUser Int?             @default(1)
-  minAmount      Decimal?         @db.Decimal(15, 2)
-  startDate      DateTime
-  endDate        DateTime
-  isActive       Boolean          @default(true)
-  isPublic       Boolean          @default(false)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  events         DiscountOnEvent[]
-}
-
-enum DiscountType {
-  PERCENT
-  FIXED
-}
-
-model DiscountOnEvent {
-  discountId String
-  eventId    String
-  discount   Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
-
-  @@id([discountId, eventId])
-}
-
-model EvaluationForm {
-  id          String               @id @default(uuid())
-  eventId     String               @unique
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-  event       Event                @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  questions   EvaluationQuestion[]
-  submissions EvaluationSubmission[]
-}
-
-model EvaluationQuestion {
-  id       String                 @id @default(uuid())
-  formId   String
-  type     EvaluationQuestionType
-  label    String
-  required Boolean                @default(true)
-  form     EvaluationForm         @relation(fields: [formId], references: [id], onDelete: Cascade)
-}
-
-enum EvaluationQuestionType {
-  RATING
-  TEXT
-  YES_NO
-}
-
-model EvaluationSubmission {
-  id               String         @id @default(uuid())
-  evaluationFormId String
-  userId           String
-  eventId          String
-  answers          Json
-  submittedAt      DateTime       @default(now())
-  form             EvaluationForm @relation(fields: [evaluationFormId], references: [id], onDelete: Cascade)
-  user             User           @relation(fields: [userId], references: [id])
-}
-
-model ContactMessage {
-  id          String               @id @default(uuid())
-  name        String?
-  email       String
-  message     String               @db.Text
-  source      String               @default("public-web")
-  ipAddress   String?
-  userAgent   String?
-  language    String               @default("fa")
-  status      ContactMessageStatus @default(NEW)
-  processedAt DateTime?
-  emailSent   Boolean              @default(false)
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-}
-
 enum ContactMessageStatus {
   NEW
   SEEN
   ARCHIVED
-}
-
-model EventAudit {
-  id              String    @id @default(uuid())
-  eventId         String
-  eventIdSnapshot String
-  action          String
-  byUserId        String?
-  meta            Json?
-  createdAt       DateTime  @default(now())
-  admin           AdminUser? @relation(fields: [byUserId], references: [id])
-}
-
-model EventIdea {
-  id          String          @id @default(uuid())
-  userId      String?
-  name        String?
-  email       String?
-  title       String
-  description String          @db.Text
-  type        EventIdeaType
-  status      EventIdeaStatus @default(PENDING)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  user        User?           @relation(fields: [userId], references: [id])
-}
-
-enum EventIdeaType {
-  TOPIC
-  FORMAT
-  VENUE
-  OTHER
 }
 
 enum EventIdeaStatus {
@@ -307,39 +67,11 @@ enum EventIdeaStatus {
   REJECTED
 }
 
-model CollaborationRequest {
-  id               String               @id @default(uuid())
-  userId           String?
-  name             String
-  email            String
-  mobile           String
-  fieldOfExpertise String
-  experience       String?              @db.Text
-  whyJoin          String               @db.Text
-  availability     String?
-  status           PartnershipStatus   @default(PENDING)
-  processedAt      DateTime?
-  notes            String?              @db.Text
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  user             User?                @relation(fields: [userId], references: [id])
-}
-
-model SponsorshipRequest {
-  id               String               @id @default(uuid())
-  userId           String?
-  companyName      String
-  representativeName String
-  email            String
-  mobile           String
-  plan             SponsorshipPlan
-  description      String?              @db.Text
-  status           PartnershipStatus   @default(PENDING)
-  processedAt      DateTime?
-  notes            String?              @db.Text
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  user             User?                @relation(fields: [userId], references: [id])
+enum EventIdeaType {
+  TOPIC
+  FORMAT
+  VENUE
+  OTHER
 }
 
 enum PartnershipStatus {
@@ -355,6 +87,317 @@ enum SponsorshipPlan {
   SILVER
   GOLD
   PLATINUM
+}
+
+enum WalletTransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  PURCHASE
+  REFUND
+  SUBSCRIPTION
+}
+
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PROCESSED
+}
+
+model AdminUser {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  password     String
+  role         AdminRole @default(ADMIN)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model User {
+  id             String    @id @default(uuid())
+  mobile         String    @unique
+  firstNameFa    String
+  lastNameFa     String
+  firstNameEn    String?
+  lastNameEn     String?
+  gender         Gender?
+  age            Int?
+  educationLevel String?
+  fieldOfStudy   String?
+  isEmployed     Boolean?
+  jobTitle       String?
+  email          String?   @unique
+  languageLevel  String?
+  avatarUrl      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  registrations          Registration[]
+  eventIdeas             EventIdea[]
+  collaborationRequests  CollaborationRequest[]
+  sponsorshipRequests    SponsorshipRequest[]
+  wallet                 Wallet?
+  subscription           Subscription?
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  balance   Decimal  @default(0) @db.Decimal(15, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User                @relation(fields: [userId], references: [id])
+  transactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String                @id @default(uuid())
+  walletId    String
+  amount      Decimal               @db.Decimal(15, 2)
+  type        WalletTransactionType
+  description String?
+  referenceId String?               // ID of associated payment or subscription
+  status      PaymentStatus         @default(PENDING)
+  createdAt   DateTime              @default(now())
+
+  wallet Wallet @relation(fields: [walletId], references: [id])
+}
+
+model WithdrawalRequest {
+  id          String           @id @default(uuid())
+  userId      String
+  amount      Decimal          @db.Decimal(15, 2)
+  shabaNumber String
+  status      WithdrawalStatus @default(PENDING)
+  adminNote   String?
+  processedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model SubscriptionPlan {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(15, 2)
+  durationDays Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Subscription {
+  id        String    @id @default(uuid())
+  userId    String    @unique
+  planName  String
+  startDate DateTime  @default(now())
+  endDate   DateTime
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id                    String   @id @default(uuid())
+  slug                  String   @unique
+  title                 String   @db.Text
+  summaryFa             String   @db.Text
+  summaryEn             String?  @db.Text
+  descriptionFa         String   @db.LongText
+  descriptionEn         String?  @db.LongText
+  type                  EventType
+  city                  String?  @db.Text
+  address               String?  @db.Text
+  startDateTime         DateTime
+  endDateTime           DateTime?
+  capacityTotal         Int
+  capacityRemaining     Int
+  showRemainingCapacity Boolean  @default(false)
+  categories            Json?
+  publicDiscountIds     Json?
+  posterUrl             String?  @db.Text
+  isArchived            Boolean  @default(false)
+  archivedAt            DateTime?
+  archivedById          String?
+  deletedAt             DateTime?
+  deletedById           String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  ticketConfigs EventTicketConfig[]
+  resources     EventResource[]
+  registrations Registration[]
+}
+
+model EventTicketConfig {
+  id               String     @id @default(uuid())
+  eventId          String
+  type             TicketType
+  price            Decimal    @db.Decimal(15, 2)
+  currency         Currency   @default(TOMAN)
+  quantityTotal    Int
+  quantitySold     Int        @default(0)
+  saleStartDate    DateTime?
+  saleEndDate      DateTime?
+  earlyBirdEndDate DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model EventResource {
+  id          String              @id @default(uuid())
+  eventId     String
+  titleFa     String
+  titleEn     String
+  description String?             @db.Text
+  accessLevel ResourceAccessLevel @default(PUBLIC)
+  url         String              @db.Text
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Registration {
+  id         String             @id @default(uuid())
+  userId     String
+  eventId    String
+  ticketType TicketType
+  status     RegistrationStatus @default(PENDING)
+  formData   Json?
+  paymentId  String?            @unique
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id])
+  event   Event    @relation(fields: [eventId], references: [id])
+  payment Payment?
+}
+
+model Payment {
+  id                   String        @id @default(uuid())
+  registrationId       String        @unique
+  eventId              String
+  ticketType           TicketType
+  amount               Decimal       @db.Decimal(15, 2)
+  currency             Currency      @default(TOMAN)
+  status               PaymentStatus @default(PENDING)
+  gatewayTransactionId String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+}
+
+model Discount {
+  id             String       @id @default(uuid())
+  name           String
+  code           String?      @unique
+  type           String       // PERCENT or FIXED
+  value          Decimal      @db.Decimal(15, 2)
+  maxUses        Int?
+  usedCount      Int          @default(0)
+  maxUsesPerUser Int?
+  minAmount      Decimal?     @db.Decimal(15, 2)
+  startDate      DateTime
+  endDate        DateTime
+  isActive       Boolean      @default(true)
+  isPublic       Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  events DiscountOnEvent[]
+}
+
+model DiscountOnEvent {
+  discountId String
+  eventId    String
+
+  discount Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+
+  @@id([discountId, eventId])
+}
+
+model ContactMessage {
+  id          String               @id @default(uuid())
+  name        String?
+  email       String
+  message     String               @db.LongText
+  source      String               @default("public-web")
+  ipAddress   String?
+  userAgent   String?
+  language    String               @default("en")
+  status      ContactMessageStatus @default(NEW)
+  processedAt DateTime?
+  emailSent   Boolean              @default(false)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+}
+
+model EventIdea {
+  id          String          @id @default(uuid())
+  userId      String?
+  name        String?
+  email       String?
+  title       String
+  description String          @db.LongText
+  type        EventIdeaType
+  status      EventIdeaStatus @default(PENDING)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model CollaborationRequest {
+  id               String            @id @default(uuid())
+  userId           String?
+  name             String
+  email            String
+  mobile           String
+  fieldOfExpertise String
+  experience       String?           @db.LongText
+  whyJoin          String            @db.LongText
+  availability     String?
+  status           PartnershipStatus @default(PENDING)
+  notes            String?           @db.LongText
+  processedAt      DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model SponsorshipRequest {
+  id                 String            @id @default(uuid())
+  userId             String?
+  companyName        String
+  representativeName String
+  email              String
+  mobile             String
+  plan               SponsorshipPlan
+  description        String?           @db.LongText
+  status             PartnershipStatus @default(PENDING)
+  notes              String?           @db.LongText
+  processedAt        DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model EventAudit {
+  id              String   @id @default(uuid())
+  eventId         String
+  eventIdSnapshot String
+  action          String
+  byUserId        String?
+  meta            Json?
+  createdAt       DateTime @default(now())
 }
 
 model AdminAuditLog {

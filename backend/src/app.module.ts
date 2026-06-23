@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -23,6 +22,8 @@ import { UploadModule } from './upload/upload.module';
 import { ContactModule } from './contact/contact.module';
 import { EventIdeasModule } from './event-ideas/event-ideas.module';
 import { PartnershipsModule } from './partnerships/partnerships.module';
+import { WalletModule } from './wallet/wallet.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -78,6 +79,8 @@ import { PartnershipsModule } from './partnerships/partnerships.module';
     UploadModule,
     EventIdeasModule,
     PartnershipsModule,
+    WalletModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [
