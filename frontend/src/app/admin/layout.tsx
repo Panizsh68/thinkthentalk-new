@@ -1,7 +1,6 @@
-
 'use client';
 import { SidebarLayout } from '@/components/sidebar-layout';
-import { Briefcase, Calendar, Home, Receipt, Tag, Users, ShieldCheck, MessageCircle, User, Building, Users2, Mail, UserCheck, Handshake } from 'lucide-react';
+import { Briefcase, Calendar, Home, Receipt, Tag, Users, ShieldCheck, MessageCircle, User, Building, Users2, Mail, UserCheck, Handshake, Lightbulb } from 'lucide-react';
 import { AdminAuthProvider, useAdminAuth } from '@/lib/auth/admin-auth-provider';
 import { useEffect, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -25,6 +24,7 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
     { href: '/admin/payments', labelKey: 'admin.nav.payments', icon: Receipt, permission: 'payments' },
     { href: '/admin/discounts', labelKey: 'admin.nav.discounts', icon: Tag, permission: 'discounts' },
     { href: '/admin/messaging', labelKey: 'admin.nav.messaging', icon: MessageCircle, permission: 'messaging' },
+    { href: '/admin/ideas', labelKey: 'admin.nav.ideas', icon: Lightbulb, permission: 'events' },
     { href: '/admin/partnerships', labelKey: 'admin.nav.partnerships', icon: Handshake, permission: 'contact' },
     { href: '/admin/contact', labelKey: 'admin.nav.contact', icon: Mail, permission: 'contact' },
     { href: '/admin/feedback', labelKey: 'admin.nav.feedback', icon: Briefcase, permission: 'feedback' },

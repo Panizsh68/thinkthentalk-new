@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { User, LogIn } from 'lucide-react';
@@ -65,13 +64,13 @@ export function AppHeader() {
             </span>
             </Link>
 
-            <nav className="hidden items-center gap-6 text-sm md:flex" aria-label="Main navigation">
+            <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Main navigation">
               <Link href="/" className="font-medium text-foreground/80 transition-colors hover:text-foreground" data-testid="nav-link-home">{t('nav.home')}</Link>
               <Link href="/events" className="font-medium text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-events">{t('nav.events')}</Link>
               <Link href="/ideas" className="font-medium text-foreground/60 transition-colors hover:text-foreground">{t('nav.ideas')}</Link>
+              <Link href="/collaborate" className="font-medium text-foreground/60 transition-colors hover:text-foreground">{t('nav.collaborate')}</Link>
+              <Link href="/sponsorship" className="font-medium text-foreground/60 transition-colors hover:text-foreground">{t('nav.sponsorship')}</Link>
               <Link href="/faq" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-faq">{t('nav.faq')}</Link>
-              <Link href="/about" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-about">{t('nav.about')}</Link>
-              <Link href="/contact" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-contact">{t('nav.contact')}</Link>
             </nav>
         </div>
 

@@ -1,4 +1,3 @@
-
 'use client';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,9 @@ import Link from 'next/link';
 import type { Event, Sponsor, TeamMember } from "@/lib/types";
 import { useSponsorsQuery } from "@/hooks/use-sponsor-queries";
 import { useTeamMembersQuery } from "@/hooks/use-team-queries";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Lightbulb, Users, HeartHandshake, ArrowRight } from "lucide-react";
 
 
 function HeroSection() {
@@ -31,14 +30,13 @@ function HeroSection() {
       setCurrentImageIndex((prevIndex) =>
         prevIndex === PlaceHolderImages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000); // Change image every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <section className="relative h-[60vh] min-h-[400px] w-full flex items-center justify-center text-center text-white overflow-hidden">
-      {/* Background Slideshow */}
       {PlaceHolderImages.map((image, index) => (
         <Image
           key={image.id}
@@ -52,10 +50,8 @@ function HeroSection() {
           priority={index === 0}
         />
       ))}
-      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      {/* Centered Content */}
       <div className="relative z-10 container flex max-w-[64rem] flex-col items-center gap-4 text-center">
         <h1 className="text-h1 text-white">{t('home.hero.title')}</h1>
         <p className="max-w-[42rem] leading-normal sm:text-xl sm:leading-8 text-slate-200">
@@ -76,6 +72,66 @@ function HeroSection() {
           >
             {t('home.hero.signupButton')}
           </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InteractionSection() {
+  const { t, language } = useLanguage();
+  const isRTL = language === 'fa';
+
+  const cards = [
+    {
+      title: t('nav.ideas'),
+      description: t('ideas.subtitle'),
+      icon: Lightbulb,
+      href: '/ideas',
+      color: 'text-yellow-500',
+      bg: 'bg-yellow-50 dark:bg-yellow-500/10'
+    },
+    {
+      title: t('nav.collaborate'),
+      description: t('collaborate.subtitle'),
+      icon: Users,
+      href: '/collaborate',
+      color: 'text-blue-500',
+      bg: 'bg-blue-50 dark:bg-blue-500/10'
+    },
+    {
+      title: t('nav.sponsorship'),
+      description: t('sponsorship.subtitle'),
+      icon: HeartHandshake,
+      href: '/sponsorship',
+      color: 'text-red-500',
+      bg: 'bg-red-50 dark:bg-red-500/10'
+    }
+  ];
+
+  return (
+    <section className="bg-secondary/30 py-20">
+      <div className="container max-w-screen-2xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {cards.map((card) => (
+            <Card key={card.href} className="group hover:shadow-xl transition-all duration-300 border-none bg-background/60 backdrop-blur-sm">
+              <CardHeader>
+                <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-transform group-hover:scale-110", card.bg)}>
+                  <card.icon className={cn("h-6 w-6", card.color)} />
+                </div>
+                <CardTitle className="text-xl">{card.title}</CardTitle>
+                <CardDescription className="line-clamp-2 min-h-[40px]">{card.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="ghost" asChild className="p-0 hover:bg-transparent group/btn">
+                  <Link href={card.href} className="flex items-center gap-2 text-primary font-semibold">
+                    {t('actions.view')}
+                    <ArrowRight className={cn("h-4 w-4 transition-transform", isRTL ? "group-hover:-translate-x-1 rotate-180" : "group-hover:translate-x-1")} />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
@@ -120,7 +176,6 @@ function EventsSection() {
     
     return (
        <>
-        {/* Mobile Carousel */}
         <div className="md:hidden overflow-x-auto pb-4">
             <div className={cn("flex gap-4", language === 'fa' && "flex-row-reverse")}>
                 {eventsToShow.map((event) => (
@@ -131,7 +186,6 @@ function EventsSection() {
             </div>
         </div>
         
-        {/* Desktop Grid */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
            {eventsToShow.map((event) => (
               <EventCard key={event.id} event={event} />
@@ -161,13 +215,13 @@ function EventsSection() {
 
 function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
     const cardContent = (
-        <Card className="group relative flex h-full flex-col items-center justify-center p-6 text-center transition-all duration-300 hover:shadow-lg hover:scale-105">
+        <Card className="group relative flex h-full flex-col items-center justify-center p-6 text-center transition-all duration-300 hover:shadow-lg hover:scale-105 border-none bg-background/50">
             <div className="relative mb-4 h-24 w-24">
                 <Image
                     src={sponsor.logoUrl}
                     alt={`${sponsor.name} logo`}
                     fill
-                    className="object-contain"
+                    className="object-contain grayscale group-hover:grayscale-0 transition-all"
                 />
             </div>
             <h3 className="text-lg font-semibold">{sponsor.name}</h3>
@@ -212,7 +266,6 @@ function SponsorsSection() {
 
         return (
             <>
-              {/* Mobile Carousel */}
               <div className="md:hidden overflow-x-auto pb-4">
                   <div className="flex gap-4">
                     {sponsors.map((sponsor) => (
@@ -223,7 +276,6 @@ function SponsorsSection() {
                   </div>
               </div>
 
-              {/* Desktop Grid */}
               <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {sponsors.map((sponsor) => (
                    <div key={sponsor.id} className="h-full">
@@ -236,7 +288,7 @@ function SponsorsSection() {
     }
 
     return (
-        <section className="bg-muted py-16">
+        <section className="bg-muted/50 py-20">
             <div className="container max-w-screen-2xl">
                  <div className="mb-12 text-center">
                     <h2 className="text-h2">{t('home.sponsors.title')}</h2>
@@ -250,8 +302,8 @@ function SponsorsSection() {
 
 function TeamMemberCard({ member }: { member: TeamMember }) {
     return (
-        <div className="text-center">
-            <Avatar className="h-32 w-32 mx-auto mb-4 border-4 border-background shadow-md">
+        <div className="text-center group">
+            <Avatar className="h-32 w-32 mx-auto mb-4 border-4 border-background shadow-md group-hover:scale-105 transition-transform">
                 <AvatarImage src={member.photoUrl} alt={member.name} />
                 <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -288,7 +340,6 @@ function TeamSection() {
 
         return (
             <>
-                {/* Mobile Carousel */}
                 <div className="md:hidden overflow-x-auto pb-4">
                     <div className="flex gap-4">
                         {team.map((member) => (
@@ -299,7 +350,6 @@ function TeamSection() {
                     </div>
                 </div>
 
-                {/* Desktop Grid */}
                 <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
                      {team.map((member) => (
                         <TeamMemberCard key={member.id} member={member} />
@@ -310,7 +360,7 @@ function TeamSection() {
     }
 
     return (
-        <section className="py-16">
+        <section className="py-20">
             <div className="container max-w-screen-2xl">
                  <div className="mb-12 text-center">
                     <h2 className="text-h2">{t('home.team.title')}</h2>
@@ -328,6 +378,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <EventsSection />
+      <InteractionSection />
       <SponsorsSection />
       <TeamSection />
     </>

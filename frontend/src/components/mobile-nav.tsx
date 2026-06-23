@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { Logo } from './icons/logo';
 
@@ -21,6 +20,9 @@ export function MobileNav() {
   const navLinks = [
     { href: '/', label: t('nav.home') },
     { href: '/events', label: t('nav.events') },
+    { href: '/ideas', label: t('nav.ideas') },
+    { href: '/collaborate', label: t('nav.collaborate') },
+    { href: '/sponsorship', label: t('nav.sponsorship') },
     { href: '/faq', label: t('nav.faq') },
     { href: '/about', label: t('nav.about') },
     { href: '/contact', label: t('nav.contact') },
@@ -40,6 +42,7 @@ export function MobileNav() {
             </Button>
         </SheetTrigger>
         <SheetContent side="left">
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <div className="p-4">
             <Link href="/" className="flex items-center gap-2 mb-8" onClick={() => setOpen(false)}>
                 <Logo className="h-8 w-auto text-primary" />
