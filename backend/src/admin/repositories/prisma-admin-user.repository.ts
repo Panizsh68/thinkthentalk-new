@@ -26,7 +26,7 @@ export class PrismaAdminUserRepository extends IAdminUserRepository {
   }
 
   async create(data: CreateAdminUserDto): Promise<AdminUserEntity> {
-    const admin = await this.prisma.adminUser.create({ data });
+    const admin = await this.prisma.adminUser.create({ data: { ...data, password: '' } });
     return toAdminUserEntity(admin);
   }
 
@@ -34,9 +34,8 @@ export class PrismaAdminUserRepository extends IAdminUserRepository {
     const admin = await this.prisma.adminUser.update({
       where: { id },
       data: {
-        name: data.name ?? undefined,
         role: data.role ?? undefined,
-        passwordHash: data.passwordHash ?? undefined,
+        password: data.passwordHash ?? undefined,
       },
     });
     return toAdminUserEntity(admin);

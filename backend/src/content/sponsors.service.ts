@@ -7,6 +7,7 @@ import {
   UpdateSponsorFormDataDto,
 } from './dto/sponsor-form-data.dto';
 import { RedisService } from '../infrastructure/cache/redis.service';
+import { Sponsor } from '@prisma/client';
 
 @Injectable()
 export class SponsorsService {
@@ -44,8 +45,7 @@ export class SponsorsService {
   async create(dto: SponsorFormDataDto): Promise<SponsorDto> {
     const sponsor = await this.prisma.sponsor.create({
       data: {
-        name: dto.name,
-        productOrTagline: dto.productOrTagline,
+        nameFa: dto.name,
         logoUrl: dto.logoUrl,
         websiteUrl: dto.websiteUrl,
       },
@@ -65,10 +65,7 @@ export class SponsorsService {
     const updated = await this.prisma.sponsor.update({
       where: { id },
       data: {
-        ...(dto.name !== undefined ? { name: dto.name } : {}),
-        ...(dto.productOrTagline !== undefined
-          ? { productOrTagline: dto.productOrTagline }
-          : {}),
+        ...(dto.name !== undefined ? { nameFa: dto.name } : {}),
         ...(dto.logoUrl !== undefined ? { logoUrl: dto.logoUrl } : {}),
         ...(dto.websiteUrl !== undefined ? { websiteUrl: dto.websiteUrl } : {}),
       },
@@ -87,16 +84,10 @@ export class SponsorsService {
     return true;
   }
 
-  private toDto = (sponsor: {
-    id: string;
-    name: string;
-    productOrTagline: string;
-    logoUrl: string;
-    websiteUrl: string | null;
-  }): SponsorDto => ({
+  private toDto = (sponsor: Sponsor): SponsorDto => ({
     id: sponsor.id,
-    name: sponsor.name,
-    productOrTagline: sponsor.productOrTagline,
+    name: sponsor.nameFa,
+    productOrTagline: "",
     logoUrl: sponsor.logoUrl,
     websiteUrl: sponsor.websiteUrl ?? undefined,
   });

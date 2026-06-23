@@ -10,8 +10,8 @@ export class SponsorDto {
   @ApiProperty({ type: String })
   productOrTagline!: string;
 
-  @ApiProperty({ type: String, format: 'uri' })
-  logoUrl!: string;
+  @ApiPropertyOptional({ type: String, format: 'uri' })
+  logoUrl?: string | null;
 
   @ApiPropertyOptional({ type: String, format: 'uri' })
   websiteUrl?: string;

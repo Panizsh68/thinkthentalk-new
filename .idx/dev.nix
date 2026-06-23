@@ -1,25 +1,39 @@
-{ pkgs, ... }: {
-  channel = "stable-24.05";
+{ pkgs, ... }:
+{
+  channel = "stable-23.11";
   packages = [
     pkgs.nodejs_20
-    pkgs.pnpm
+    pkgs.nodePackages.pnpm
+    pkgs.mariadb
+    pkgs.openssl
   ];
-  idx.previews = {
+
+  services.mysql = {
     enable = true;
+    package = pkgs.mariadb;
+  };
+
+  idx = {
+    extensions = [
+      "Prisma.prisma"
+      "esbenp.prettier-vscode"
+    ];
     previews = {
-      web = {
-        command = [ "npm" "run" "dev" ];
-        manager = "web";
-        env = {
-          PORT = "9002";
+      enable = true;
+      previews = {
+        web = {
+          command = [ "pnpm" "run" "dev" ];
+          manager = "web";
+          env = {
+            PORT = "9002";
+          };
         };
       };
-      genkit = {
-        command = [ "npm" "run" "genkit:dev" ];
-        manager = "web";
-        env = {
-          PORT = "4000";
-        };
+    };
+    workspace = {
+      # The onCreate hook expects an attribute set of named scripts.
+      onCreate = {
+        init-db = "./init-db.sh";
       };
     };
   };

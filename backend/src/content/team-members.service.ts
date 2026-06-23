@@ -7,6 +7,7 @@ import {
   UpdateTeamMemberFormDataDto,
 } from './dto/team-member-form-data.dto';
 import { RedisService } from '../infrastructure/cache/redis.service';
+import { TeamMember } from '@prisma/client';
 
 @Injectable()
 export class TeamMembersService {
@@ -27,7 +28,8 @@ export class TeamMembersService {
     const cached = await this.redis.getJson<TeamMemberDto[]>(cacheKey);
     if (cached) return cached;
     const members = await this.prisma.teamMember.findMany({
-      orderBy: { createdAt: 'asc' },
+      where: { isActive: true },
+      orderBy: { order: 'asc' },
     });
     const dtos = members.map(this.toDto);
     await this.redis.setJson(cacheKey, dtos, this.cacheTtl);
@@ -36,7 +38,7 @@ export class TeamMembersService {
 
   async listAdmin(): Promise<TeamMemberDto[]> {
     const members = await this.prisma.teamMember.findMany({
-      orderBy: { createdAt: 'asc' },
+      orderBy: { order: 'asc' },
     });
     return members.map(this.toDto);
   }
@@ -44,9 +46,10 @@ export class TeamMembersService {
   async create(dto: TeamMemberFormDataDto): Promise<TeamMemberDto> {
     const created = await this.prisma.teamMember.create({
       data: {
-        name: dto.name,
-        role: dto.role,
-        photoUrl: dto.photoUrl,
+        firstNameFa: dto.name, // Assuming name maps to firstNameFa for now, or split it
+        lastNameFa: '',
+        roleFa: dto.role,
+        avatarUrl: dto.photoUrl,
       },
     });
     await this.redis.del('team:list');
@@ -63,9 +66,9 @@ export class TeamMembersService {
     const updated = await this.prisma.teamMember.update({
       where: { id },
       data: {
-        ...(dto.name !== undefined ? { name: dto.name } : {}),
-        ...(dto.role !== undefined ? { role: dto.role } : {}),
-        ...(dto.photoUrl !== undefined ? { photoUrl: dto.photoUrl } : {}),
+        ...(dto.name !== undefined ? { firstNameFa: dto.name } : {}),
+        ...(dto.role !== undefined ? { roleFa: dto.role } : {}),
+        ...(dto.photoUrl !== undefined ? { avatarUrl: dto.photoUrl } : {}),
       },
     });
     await this.redis.del('team:list');
@@ -80,15 +83,10 @@ export class TeamMembersService {
     return true;
   }
 
-  private toDto = (member: {
-    id: string;
-    name: string;
-    role: string;
-    photoUrl: string;
-  }): TeamMemberDto => ({
+  private toDto = (member: TeamMember): TeamMemberDto => ({
     id: member.id,
-    name: member.name,
-    role: member.role,
-    photoUrl: member.photoUrl,
+    name: `${member.firstNameFa} ${member.lastNameFa}`.trim(),
+    role: member.roleFa,
+    photoUrl: member.avatarUrl ?? '',
   });
 }
