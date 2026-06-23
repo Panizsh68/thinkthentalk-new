@@ -9,6 +9,7 @@ import { LanguageProvider, useLanguage } from '@/lib/i18n/language-provider';
 import { QueryProvider } from '@/components/query-provider';
 import { AuthProvider } from '@/lib/auth/auth-provider';
 import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 function LayoutWithDirection({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
@@ -25,16 +26,14 @@ function LayoutWithDirection({ children }: { children: React.ReactNode }) {
 
     const dir = isAdminRoute ? 'ltr' : language === 'fa' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
-    document.documentElement.lang = isAdminRoute ? 'en' : language;
-    
-    if (!isAdminRoute && language === 'fa') {
-      document.documentElement.classList.add('font-vazir');
-    } else {
-      document.documentElement.classList.remove('font-vazir');
-    }
+    document.documentElement.lang = isAdminRoute ? 'en' : (language || 'en');
   }, [language, isAdminRoute, mounted]);
 
-  return <>{children}</>;
+  return (
+    <div className={cn("flex min-h-screen flex-col", !isAdminRoute && language === 'fa' && "font-vazir")}>
+      {children}
+    </div>
+  );
 }
 
 export default function RootLayout({

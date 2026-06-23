@@ -19,7 +19,6 @@ export function AppHeader() {
     setIsMounted(true);
   }, []);
 
-  // Return a stable shell on the server to prevent hydration mismatch
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
@@ -31,7 +30,6 @@ export function AppHeader() {
             </span>
           </Link>
 
-          {/* Only render nav links once mounted to ensure consistency with client state/translations */}
           {isMounted && (
             <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Main navigation">
               <Link href="/" className="font-medium text-foreground/80 transition-colors hover:text-foreground" data-testid="nav-link-home">{t('nav.home')}</Link>

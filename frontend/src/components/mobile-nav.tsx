@@ -17,6 +17,10 @@ export function MobileNav() {
     setIsMounted(true);
   }, []);
 
+  if (!isMounted) {
+    return null;
+  }
+
   const navLinks = [
     { href: '/', label: t('nav.home') },
     { href: '/events', label: t('nav.events') },
@@ -28,10 +32,6 @@ export function MobileNav() {
     { href: '/contact', label: t('nav.contact') },
   ];
   
-  if (!isMounted) {
-    return null;
-  }
-
   return (
     <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
