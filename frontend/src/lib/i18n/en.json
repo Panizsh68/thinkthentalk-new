@@ -47,6 +47,41 @@
       "rateLimit": "Please wait before sending another message."
     }
   },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about Think Then Talk and our events.",
+    "categories": {
+      "general": "General",
+      "registration": "Registration & Payments",
+      "events": "Events & Participation"
+    },
+    "questions": {
+      "whatIs": {
+        "q": "What is Think Then Talk?",
+        "a": "Think Then Talk is a community focused on fostering thoughtful conversations, critical thinking, and educational events. We believe in the power of dialogue and continuous learning."
+      },
+      "howToJoin": {
+        "q": "How can I join the community?",
+        "a": "The best way to join is by participating in our events! Simply browse our events page, find a topic that interests you, and sign up. You can also follow us on social media to stay updated."
+      },
+      "isRegistrationRequired": {
+        "q": "Is registration required for all events?",
+        "a": "Yes, most of our events require prior registration. This helps us manage capacity and provide the necessary resources and materials to all participants."
+      },
+      "howToPay": {
+        "q": "How can I pay for paid events?",
+        "a": "We use a secure local payment gateway (Zarinpal) that supports all bank cards. You will be redirected to the payment page after completing the registration form."
+      },
+      "onlineOrOffline": {
+        "q": "Are the events online or in-person?",
+        "a": "We host both online (via platforms like Google Meet or Zoom) and in-person events (mostly in Tehran). Each event page clearly specifies the format and location."
+      },
+      "refundPolicy": {
+        "q": "Can I cancel my registration and get a refund?",
+        "a": "Refund policies vary by event. Generally, cancellations made at least 48 hours before the event are eligible for a partial or full refund. Please refer to our Terms of Service for full details."
+      }
+    }
+  },
   "home": {
     "hero": {
       "title": "Think Then Talk Community",
