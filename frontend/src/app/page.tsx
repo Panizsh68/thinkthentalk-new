@@ -11,7 +11,7 @@ import { useEventsQuery } from "@/hooks/use-event-queries";
 import { EventCard } from "@/components/event-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from 'next/link';
-import type { Event, Sponsor, TeamMember } from "@/lib/types";
+import type { Sponsor, TeamMember } from "@/lib/types";
 import { useSponsorsQuery } from "@/hooks/use-sponsor-queries";
 import { useTeamMembersQuery } from "@/hooks/use-team-queries";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,6 +47,7 @@ function HeroSection() {
             "object-cover transition-opacity duration-1000 ease-in-out",
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           )}
+          data-ai-hint={image.imageHint}
           priority={index === 0}
         />
       ))}
@@ -222,6 +223,7 @@ function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
                     alt={`${sponsor.name} logo`}
                     fill
                     className="object-contain grayscale group-hover:grayscale-0 transition-all"
+                    data-ai-hint="company logo"
                 />
             </div>
             <h3 className="text-lg font-semibold">{sponsor.name}</h3>

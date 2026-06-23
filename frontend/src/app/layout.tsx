@@ -11,7 +11,11 @@ import { AuthProvider } from '@/lib/auth/auth-provider';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-function LayoutWithDirection({ children }: { children: React.ReactNode }) {
+/**
+ * AppShell manages the top-level structure of the application, 
+ * including language-based direction and common UI components.
+ */
+function AppShell({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
@@ -24,14 +28,23 @@ function LayoutWithDirection({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mounted) return;
 
+    // Apply document-level attributes after hydration
     const dir = isAdminRoute ? 'ltr' : language === 'fa' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = isAdminRoute ? 'en' : (language || 'en');
   }, [language, isAdminRoute, mounted]);
 
   return (
-    <div className={cn("flex min-h-screen flex-col", !isAdminRoute && language === 'fa' && "font-vazir")}>
-      {children}
+    <div className={cn(
+      "flex min-h-screen flex-col",
+      !isAdminRoute && language === 'fa' && "font-vazir"
+    )}>
+      <AppHeader />
+      <main id="main-content" className="flex-grow">
+        {children}
+      </main>
+      <AppFooter />
+      <Toaster />
     </div>
   );
 }
@@ -53,30 +66,28 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/static-images/logo.png" />
       </head>
       <body>
-         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground">
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground"
+        >
           Skip to main content
         </a>
-        <LanguageProvider>
-          <LayoutWithDirection>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <QueryProvider>
-                <AuthProvider>
-                    <div className="flex min-h-screen flex-col">
-                      <AppHeader />
-                      <main id="main-content" className="flex-grow">{children}</main>
-                      <AppFooter />
-                    </div>
-                    <Toaster />
-                </AuthProvider>
-              </QueryProvider>
-            </ThemeProvider>
-          </LayoutWithDirection>
-        </LanguageProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProvider>
+            <AuthProvider>
+              <LanguageProvider>
+                <AppShell>
+                  {children}
+                </AppShell>
+              </LanguageProvider>
+            </AuthProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
