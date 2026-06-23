@@ -11,3 +11,5 @@ export * from './sponsor';
 export * from './team';
 export * from './messaging';
 export * from './contact';
+export * from './event-idea';
+export * from './partnership';

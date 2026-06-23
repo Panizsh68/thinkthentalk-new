@@ -22,6 +22,7 @@ import { UsersModule } from './users/users.module';
 import { UploadModule } from './upload/upload.module';
 import { ContactModule } from './contact/contact.module';
 import { EventIdeasModule } from './event-ideas/event-ideas.module';
+import { PartnershipsModule } from './partnerships/partnerships.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { EventIdeasModule } from './event-ideas/event-ideas.module';
     ContactModule,
     UploadModule,
     EventIdeasModule,
+    PartnershipsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -10,7 +10,94 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "myAccount": "My Account",
-    "ideas": "Suggest Event"
+    "ideas": "Suggest Event",
+    "collaborate": "Collaborate",
+    "sponsorship": "Sponsorship"
+  },
+  "partnership": {
+    "status": {
+      "PENDING": "Pending",
+      "REVIEWING": "Reviewing",
+      "CONTACTED": "Contacted",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Rejected"
+    }
+  },
+  "collaborate": {
+    "title": "Join Our Team",
+    "subtitle": "We are always looking for passionate people to help grow our community.",
+    "successTitle": "Application Received",
+    "successDescription": "Thank you for your interest! Our team will review your information and get back to you shortly.",
+    "terms": {
+      "title": "Terms of Collaboration",
+      "content": "<p>At Think Then Talk, we strive to create a space for thoughtful dialogue. Joining us means:</p><ul><li>Commitment to community values and diverse perspectives.</li><li>Ability to work in a team and be responsible.</li><li>A passion for continuous learning.</li></ul>"
+    },
+    "actions": {
+      "acceptAndContinue": "Accept and Continue"
+    },
+    "form": {
+      "title": "Collaboration Form",
+      "subtitle": "Tell us a bit about yourself.",
+      "expertise": "Field of Expertise",
+      "expertisePlaceholder": "e.g. Event Management, Content Creation, etc.",
+      "experience": "Relevant Experience",
+      "whyJoin": "Why do you want to join Think Then Talk?",
+      "availability": "Weekly Availability (Hours)",
+      "acceptTerms": "I have read and accept the collaboration terms.",
+      "submit": "Submit Application"
+    }
+  },
+  "sponsorship": {
+    "title": "Become a Sponsor",
+    "subtitle": "Support our events and connect with a community of thoughtful learners.",
+    "successTitle": "Request Received",
+    "successDescription": "Thank you for your interest in supporting us! We will contact you with more details soon.",
+    "actions": {
+      "choosePlan": "Select Plan"
+    },
+    "plans": {
+      "BRONZE": {
+        "name": "Bronze Plan",
+        "subtitle": "Basic support",
+        "price": "Contact us",
+        "perk1": "Logo on website",
+        "perk2": "Mention in social media",
+        "perk3": "1 free ticket"
+      },
+      "SILVER": {
+        "name": "Silver Plan",
+        "subtitle": "Enhanced visibility",
+        "price": "Contact us",
+        "perk1": "All Bronze perks",
+        "perk2": "Logo on event slides",
+        "perk3": "3 free tickets"
+      },
+      "GOLD": {
+        "name": "Gold Plan",
+        "subtitle": "Premium partner",
+        "price": "Contact us",
+        "perk1": "All Silver perks",
+        "perk2": "Brief presentation at event",
+        "perk3": "Newsletter feature"
+      },
+      "PLATINUM": {
+        "name": "Platinum Plan",
+        "subtitle": "Strategic partner",
+        "price": "Contact us",
+        "perk1": "All Gold perks",
+        "perk2": "Exclusive event sponsor",
+        "perk3": "Direct network access"
+      }
+    },
+    "form": {
+      "title": "Sponsorship Request",
+      "subtitle": "Submitting request for {plan}",
+      "companyLabel": "Company Name",
+      "nameLabel": "Representative Name",
+      "notes": "Additional Notes",
+      "notesPlaceholder": "Tell us about your goals...",
+      "submit": "Submit Request"
+    }
   },
   "ideas": {
     "title": "Suggest a Topic or Idea",
@@ -442,10 +529,39 @@
       "discounts": "Discounts",
       "messaging": "Messaging",
       "contact": "Contact Messages",
+      "partnerships": "Partnerships",
       "feedback": "Feedback",
       "sponsors": "Sponsors",
       "team": "Team",
       "ideas": "Event Ideas"
+    },
+    "partnerships": {
+      "title": "Partnership Management",
+      "updateSuccess": "Request status updated.",
+      "tabs": {
+        "collabs": "Collaboration",
+        "sponsors": "Sponsorships"
+      },
+      "table": {
+        "expertise": "Expertise",
+        "plan": "Plan"
+      },
+      "detail": {
+        "title": "Request Detail",
+        "subtitle": "Review information for participation",
+        "content": "Request Content / Motivation",
+        "updateStatus": "Status & Notes",
+        "notes": "Admin Notes",
+        "notesPlaceholder": "Internal notes for follow-up..."
+      },
+      "collabs": {
+        "title": "Collaborators",
+        "subtitle": "People interested in joining the team."
+      },
+      "sponsors": {
+        "title": "Potential Sponsors",
+        "subtitle": "Companies/Organizations that applied."
+      }
     },
     "ideas": {
       "statusUpdated": "Idea status updated."
