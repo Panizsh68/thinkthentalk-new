@@ -1,3 +1,4 @@
+
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -20,6 +21,7 @@ import { RegistrationsModule } from './registrations/registrations.module';
 import { UsersModule } from './users/users.module';
 import { UploadModule } from './upload/upload.module';
 import { ContactModule } from './contact/contact.module';
+import { EventIdeasModule } from './event-ideas/event-ideas.module';
 
 @Module({
   imports: [
@@ -33,7 +35,6 @@ import { ContactModule } from './contact/contact.module';
           ? path.resolve(configuredUploadDir)
           : path.join(process.cwd(), 'uploads');
 
-        // Serve under both configured path and legacy paths to avoid 404s
         const serveRoots = Array.from(
           new Set([
             publicUploadPath.startsWith('/')
@@ -55,7 +56,7 @@ import { ContactModule } from './contact/contact.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => [
         {
-          ttl: Number(configService.get('THROTTLE_TTL') ?? 900), // default 15 minutes
+          ttl: Number(configService.get('THROTTLE_TTL') ?? 900),
           limit: Number(configService.get('THROTTLE_LIMIT') ?? 100),
         },
       ],
@@ -74,6 +75,7 @@ import { ContactModule } from './contact/contact.module';
     AdminModule,
     ContactModule,
     UploadModule,
+    EventIdeasModule,
   ],
   controllers: [AppController],
   providers: [

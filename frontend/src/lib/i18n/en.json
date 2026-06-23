@@ -9,7 +9,40 @@
     "faq": "FAQ",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "myAccount": "My Account"
+    "myAccount": "My Account",
+    "ideas": "Suggest Event"
+  },
+  "ideas": {
+    "title": "Suggest a Topic or Idea",
+    "subtitle": "Share your thoughts on future event topics or how we can improve our formats.",
+    "successTitle": "Suggestion Submitted",
+    "successDescription": "Thanks for your idea! Our team will review it soon.",
+    "types": {
+      "TOPIC": "New Topic",
+      "FORMAT": "Event Format",
+      "VENUE": "Venue Suggestion",
+      "OTHER": "Other"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "REVIEWED": "Reviewed",
+      "PLANNED": "Planned",
+      "REJECTED": "Rejected"
+    },
+    "form": {
+      "title": "Idea Submission Form",
+      "description": "What topic do you think would be exciting for our next event?",
+      "typeLabel": "Suggestion Type",
+      "titleLabel": "Idea Title",
+      "titlePlaceholder": "e.g., Critical Thinking in Daily Life",
+      "descriptionLabel": "Further Details",
+      "descriptionPlaceholder": "Tell us more about your idea and why it matters...",
+      "submitButton": "Submit Suggestion"
+    },
+    "validation": {
+      "titleLength": "Title must be at least 5 characters.",
+      "descriptionLength": "Description must be at least 20 characters."
+    }
   },
   "contact": {
     "kicker": "We are listening",
@@ -411,7 +444,11 @@
       "contact": "Contact Messages",
       "feedback": "Feedback",
       "sponsors": "Sponsors",
-      "team": "Team"
+      "team": "Team",
+      "ideas": "Event Ideas"
+    },
+    "ideas": {
+      "statusUpdated": "Idea status updated."
     },
     "users": {
       "title": "Users",

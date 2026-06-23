@@ -11,7 +11,6 @@ import { Logo } from './icons/logo';
 import { useAuth } from '@/lib/auth/auth-provider';
 import { useEffect, useState } from 'react';
 
-// New component to safely render client-side controls
 function HeaderControls() {
   const { t, language } = useLanguage();
   const { isAuthenticated } = useAuth();
@@ -69,6 +68,7 @@ export function AppHeader() {
             <nav className="hidden items-center gap-6 text-sm md:flex" aria-label="Main navigation">
               <Link href="/" className="font-medium text-foreground/80 transition-colors hover:text-foreground" data-testid="nav-link-home">{t('nav.home')}</Link>
               <Link href="/events" className="font-medium text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-events">{t('nav.events')}</Link>
+              <Link href="/ideas" className="font-medium text-foreground/60 transition-colors hover:text-foreground">{t('nav.ideas')}</Link>
               <Link href="/faq" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-faq">{t('nav.faq')}</Link>
               <Link href="/about" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-about">{t('nav.about')}</Link>
               <Link href="/contact" className="text-foreground/60 transition-colors hover:text-foreground" data-testid="nav-link-contact">{t('nav.contact')}</Link>
