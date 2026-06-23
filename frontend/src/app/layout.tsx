@@ -1,4 +1,3 @@
-
 'use client';
 import { usePathname } from 'next/navigation';
 import './globals.css';
@@ -9,38 +8,40 @@ import { AppFooter } from '@/components/app-footer';
 import { LanguageProvider, useLanguage } from '@/lib/i18n/language-provider';
 import { QueryProvider } from '@/components/query-provider';
 import { AuthProvider } from '@/lib/auth/auth-provider';
-import { useEffect } from 'react';
-import { cn } from '@/lib/utils';
-
+import { useEffect, useState } from 'react';
 
 function LayoutWithDirection({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
   const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith('/admin');
+  const [mounted, setMounted] = useState(false);
+  const isAdminRoute = pathname?.startsWith('/admin') ?? false;
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const dir = isAdminRoute ? 'ltr' : language === 'fa' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = isAdminRoute ? 'en' : language;
+    
     if (!isAdminRoute && language === 'fa') {
       document.documentElement.classList.add('font-vazir');
     } else {
       document.documentElement.classList.remove('font-vazir');
     }
-  }, [language, isAdminRoute]);
+  }, [language, isAdminRoute, mounted]);
 
   return <>{children}</>;
 }
-
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith('/admin');
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -65,18 +66,14 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <QueryProvider>
-                {isAdminRoute ? (
-                  <>{children}</>
-                ) : (
-                  <AuthProvider>
-                      <div className="flex min-h-screen flex-col">
+                <AuthProvider>
+                    <div className="flex min-h-screen flex-col">
                       <AppHeader />
                       <main id="main-content" className="flex-grow">{children}</main>
                       <AppFooter />
-                      </div>
-                      <Toaster />
-                  </AuthProvider>
-                )}
+                    </div>
+                    <Toaster />
+                </AuthProvider>
               </QueryProvider>
             </ThemeProvider>
           </LayoutWithDirection>
