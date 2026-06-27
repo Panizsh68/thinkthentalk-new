@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["adapter-mariadb"]
 }
 
 datasource db {
@@ -20,15 +19,17 @@ enum Gender {
   OTHER
 }
 
-enum EventType {
-  ONLINE
-  OFFLINE
+enum RegistrationStatus {
+  PAID
+  PENDING
+  FAILED
+  CANCELLED
 }
 
-enum TicketType {
-  EARLY_BIRD
-  STANDARD
-  SUPPORTER
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }
 
 enum Currency {
@@ -41,30 +42,9 @@ enum ResourceAccessLevel {
   REGISTERED_ONLY
 }
 
-enum RegistrationStatus {
-  PENDING
-  PAID
-  FAILED
-  CANCELLED
-}
-
-enum PaymentStatus {
-  PENDING
-  SUCCESS
-  FAILED
-}
-
-enum ContactMessageStatus {
-  NEW
-  SEEN
-  ARCHIVED
-}
-
-enum EventIdeaStatus {
-  PENDING
-  REVIEWED
-  PLANNED
-  REJECTED
+enum EventType {
+  ONLINE
+  OFFLINE
 }
 
 enum EventIdeaType {
@@ -72,6 +52,13 @@ enum EventIdeaType {
   FORMAT
   VENUE
   OTHER
+}
+
+enum EventIdeaStatus {
+  PENDING
+  REVIEWED
+  PLANNED
+  REJECTED
 }
 
 enum PartnershipStatus {
@@ -101,7 +88,6 @@ enum WithdrawalStatus {
   PENDING
   APPROVED
   REJECTED
-  PROCESSED
 }
 
 model AdminUser {
@@ -116,119 +102,66 @@ model AdminUser {
 model User {
   id             String    @id @default(uuid())
   mobile         String    @unique
-  firstNameFa    String
-  lastNameFa     String
+  firstNameFa    String    @default("نام")
+  lastNameFa     String    @default("نام خانوادگی")
   firstNameEn    String?
   lastNameEn     String?
   gender         Gender?
   age            Int?
   educationLevel String?
   fieldOfStudy   String?
-  isEmployed     Boolean?
+  isEmployed     Boolean?  @default(false)
   jobTitle       String?
-  email          String?   @unique
+  email          String?
   languageLevel  String?
   avatarUrl      String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
   registrations          Registration[]
+  evaluationSubmissions  EvaluationSubmission[]
   eventIdeas             EventIdea[]
   collaborationRequests  CollaborationRequest[]
   sponsorshipRequests    SponsorshipRequest[]
   wallet                 Wallet?
+  withdrawalRequests     WithdrawalRequest[]
   subscription           Subscription?
 }
 
-model Wallet {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  balance   Decimal  @default(0) @db.Decimal(15, 2)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user         User                @relation(fields: [userId], references: [id])
-  transactions WalletTransaction[]
-}
-
-model WalletTransaction {
-  id          String                @id @default(uuid())
-  walletId    String
-  amount      Decimal               @db.Decimal(15, 2)
-  type        WalletTransactionType
-  description String?
-  referenceId String?               // ID of associated payment or subscription
-  status      PaymentStatus         @default(PENDING)
-  createdAt   DateTime              @default(now())
-
-  wallet Wallet @relation(fields: [walletId], references: [id])
-}
-
-model WithdrawalRequest {
-  id          String           @id @default(uuid())
-  userId      String
-  amount      Decimal          @db.Decimal(15, 2)
-  shabaNumber String
-  status      WithdrawalStatus @default(PENDING)
-  adminNote   String?
-  processedAt DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-}
-
-model SubscriptionPlan {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal  @db.Decimal(15, 2)
-  durationDays Int
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-}
-
-model Subscription {
-  id        String    @id @default(uuid())
-  userId    String    @unique
-  planName  String
-  startDate DateTime  @default(now())
-  endDate   DateTime
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-}
-
 model Event {
-  id                    String   @id @default(uuid())
-  slug                  String   @unique
-  title                 String   @db.Text
-  summaryFa             String   @db.Text
-  summaryEn             String?  @db.Text
-  descriptionFa         String   @db.LongText
-  descriptionEn         String?  @db.LongText
-  type                  EventType
-  city                  String?  @db.Text
-  address               String?  @db.Text
+  id                    String    @id @default(uuid())
+  slug                  String    @unique
+  title                 String    @db.Text
+  summaryFa             String    @db.Text
+  summaryEn             String?   @db.Text
+  descriptionFa         String    @db.LongText
+  descriptionEn         String?   @db.LongText
+  type                  EventType @default(ONLINE)
+  city                  String?   @db.Text
+  address               String?   @db.Text
   startDateTime         DateTime
   endDateTime           DateTime?
   capacityTotal         Int
   capacityRemaining     Int
-  showRemainingCapacity Boolean  @default(false)
+  showRemainingCapacity Boolean   @default(false)
   categories            Json?
   publicDiscountIds     Json?
-  posterUrl             String?  @db.Text
-  isArchived            Boolean  @default(false)
+  posterUrl             String?
+  isArchived            Boolean   @default(false)
   archivedAt            DateTime?
   archivedById          String?
   deletedAt             DateTime?
   deletedById           String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  ticketConfigs EventTicketConfig[]
-  resources     EventResource[]
-  registrations Registration[]
+  ticketConfigs         EventTicketConfig[]
+  resources             EventResource[]
+  registrations         Registration[]
+  discounts             DiscountOnEvent[]
+  evaluationForm        EvaluationForm?
+  evaluationSubmissions EvaluationSubmission[]
+  eventAudits           EventAudit[]
 }
 
 model EventTicketConfig {
@@ -246,6 +179,14 @@ model EventTicketConfig {
   updatedAt        DateTime   @updatedAt
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, type])
+}
+
+enum TicketType {
+  EARLY_BIRD
+  STANDARD
+  SUPPORTER
 }
 
 model EventResource {
@@ -253,9 +194,9 @@ model EventResource {
   eventId     String
   titleFa     String
   titleEn     String
-  description String?             @db.Text
   accessLevel ResourceAccessLevel @default(PUBLIC)
-  url         String              @db.Text
+  url         String
+  description String?             @db.Text
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
 
@@ -269,7 +210,6 @@ model Registration {
   ticketType TicketType
   status     RegistrationStatus @default(PENDING)
   formData   Json?
-  paymentId  String?            @unique
   createdAt  DateTime           @default(now())
   updatedAt  DateTime           @updatedAt
 
@@ -297,7 +237,7 @@ model Discount {
   id             String       @id @default(uuid())
   name           String
   code           String?      @unique
-  type           String       // PERCENT or FIXED
+  type           DiscountType
   value          Decimal      @db.Decimal(15, 2)
   maxUses        Int?
   usedCount      Int          @default(0)
@@ -313,29 +253,103 @@ model Discount {
   events DiscountOnEvent[]
 }
 
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
 model DiscountOnEvent {
   discountId String
   eventId    String
 
   discount Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@id([discountId, eventId])
+}
+
+model EvaluationForm {
+  id        String   @id @default(uuid())
+  eventId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event                @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  questions EvaluationQuestion[]
+}
+
+model EvaluationQuestion {
+  id       String                 @id @default(uuid())
+  formId   String
+  type     EvaluationQuestionType
+  label    String
+  required Boolean                @default(true)
+  order    Int                    @default(0)
+
+  form EvaluationForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+}
+
+enum EvaluationQuestionType {
+  RATING
+  TEXT
+  YES_NO
+}
+
+model EvaluationSubmission {
+  id               String   @id @default(uuid())
+  evaluationFormId String
+  userId           String
+  eventId          String
+  answers          Json
+  submittedAt      DateTime @default(now())
+
+  form  EvaluationForm @relation(fields: [evaluationFormId], references: [id], onDelete: Cascade)
+  user  User           @relation(fields: [userId], references: [id])
+  event Event          @relation(fields: [eventId], references: [id])
 }
 
 model ContactMessage {
   id          String               @id @default(uuid())
   name        String?
   email       String
-  message     String               @db.LongText
+  message     String               @db.Text
   source      String               @default("public-web")
   ipAddress   String?
   userAgent   String?
-  language    String               @default("en")
+  language    String               @default("fa")
   status      ContactMessageStatus @default(NEW)
   processedAt DateTime?
   emailSent   Boolean              @default(false)
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
+}
+
+enum ContactMessageStatus {
+  NEW
+  SEEN
+  ARCHIVED
+}
+
+model EventAudit {
+  id              String   @id @default(uuid())
+  eventId         String
+  eventIdSnapshot String
+  action          String
+  byUserId        String?
+  meta            Json?
+  createdAt       DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model AdminAuditLog {
+  id           String   @id @default(uuid())
+  adminId      String
+  action       String
+  resourceType String
+  resourceId   String
+  metadata     Json?
+  createdAt    DateTime @default(now())
 }
 
 model EventIdea {
@@ -344,7 +358,7 @@ model EventIdea {
   name        String?
   email       String?
   title       String
-  description String          @db.LongText
+  description String          @db.Text
   type        EventIdeaType
   status      EventIdeaStatus @default(PENDING)
   createdAt   DateTime        @default(now())
@@ -360,11 +374,11 @@ model CollaborationRequest {
   email            String
   mobile           String
   fieldOfExpertise String
-  experience       String?           @db.LongText
-  whyJoin          String            @db.LongText
+  experience       String?           @db.Text
+  whyJoin          String            @db.Text
   availability     String?
   status           PartnershipStatus @default(PENDING)
-  notes            String?           @db.LongText
+  notes            String?           @db.Text
   processedAt      DateTime?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
@@ -380,9 +394,9 @@ model SponsorshipRequest {
   email              String
   mobile             String
   plan               SponsorshipPlan
-  description        String?           @db.LongText
+  description        String?           @db.Text
   status             PartnershipStatus @default(PENDING)
-  notes              String?           @db.LongText
+  notes              String?           @db.Text
   processedAt        DateTime?
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
@@ -390,22 +404,85 @@ model SponsorshipRequest {
   user User? @relation(fields: [userId], references: [id])
 }
 
-model EventAudit {
-  id              String   @id @default(uuid())
-  eventId         String
-  eventIdSnapshot String
-  action          String
-  byUserId        String?
-  meta            Json?
-  createdAt       DateTime @default(now())
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  balance   Decimal  @default(0) @db.Decimal(15, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User                @relation(fields: [userId], references: [id])
+  transactions WalletTransaction[]
 }
 
-model AdminAuditLog {
+model WalletTransaction {
+  id          String                @id @default(uuid())
+  walletId    String
+  amount      Decimal               @db.Decimal(15, 2)
+  type        WalletTransactionType
+  description String?
+  status      PaymentStatus         @default(SUCCESS)
+  referenceId String?
+  createdAt   DateTime              @default(now())
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+}
+
+model WithdrawalRequest {
+  id          String           @id @default(uuid())
+  userId      String
+  amount      Decimal          @db.Decimal(15, 2)
+  shabaNumber String
+  status      WithdrawalStatus @default(PENDING)
+  adminNote   String?          @db.Text
+  processedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model SubscriptionPlan {
   id           String   @id @default(uuid())
-  adminId      String
-  action       String
-  resourceType String
-  resourceId   String
-  metadata     Json?
+  name         String
+  description  String?  @db.Text
+  price        Decimal  @db.Decimal(15, 2)
+  durationDays Int
+  isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  planName  String
+  startDate DateTime @default(now())
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Sponsor {
+  id         String   @id @default(uuid())
+  nameFa     String
+  logoUrl    String
+  websiteUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model TeamMember {
+  id          String   @id @default(uuid())
+  firstNameFa String
+  lastNameFa  String
+  roleFa      String
+  avatarUrl   String?
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

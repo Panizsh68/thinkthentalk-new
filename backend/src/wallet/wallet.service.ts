@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/database/prisma.service';
-import { WalletTransactionType, PaymentStatus, WithdrawalStatus } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import { WalletTransactionType, PaymentStatus, WithdrawalStatus, Prisma } from '@prisma/client';
 
 @Injectable()
 export class WalletService {
@@ -33,13 +32,11 @@ export class WalletService {
 
     const wallet = await this.getWallet(userId);
 
-    // In a real app, this would initiate a gateway payment.
-    // For now, we simulate a successful deposit.
     return this.prisma.$transaction(async (tx) => {
       const transaction = await tx.walletTransaction.create({
         data: {
           walletId: wallet.id,
-          amount: new Decimal(amount),
+          amount: new Prisma.Decimal(amount),
           type: WalletTransactionType.DEPOSIT,
           description,
           status: PaymentStatus.SUCCESS,
@@ -57,13 +54,12 @@ export class WalletService {
 
   async withdrawRequest(userId: string, amount: number, shabaNumber: string) {
     const wallet = await this.getWallet(userId);
-    const balance = wallet.balance as unknown as number;
+    const balance = Number(wallet.balance);
 
     if (amount <= 0) throw new BadRequestException('Amount must be positive');
     if (balance < amount) throw new BadRequestException('Insufficient balance');
 
     return this.prisma.$transaction(async (tx) => {
-      // Deduct balance immediately to prevent double-withdrawal
       await tx.wallet.update({
         where: { id: wallet.id },
         data: { balance: { decrement: amount } },
@@ -72,16 +68,16 @@ export class WalletService {
       const request = await tx.withdrawalRequest.create({
         data: {
           userId,
-          amount: new Decimal(amount),
+          amount: new Prisma.Decimal(amount),
           shabaNumber,
-          status: WithdrawalStatus.PENDING,
+          status: 'PENDING' as WithdrawalStatus,
         },
       });
 
       await tx.walletTransaction.create({
         data: {
           walletId: wallet.id,
-          amount: new Decimal(amount),
+          amount: new Prisma.Decimal(amount),
           type: WalletTransactionType.WITHDRAWAL,
           description: `Withdrawal request to ${shabaNumber}`,
           status: PaymentStatus.PENDING,
@@ -95,7 +91,7 @@ export class WalletService {
 
   async payWithWallet(userId: string, amount: number, description: string, referenceId: string) {
     const wallet = await this.getWallet(userId);
-    const balance = wallet.balance as unknown as number;
+    const balance = Number(wallet.balance);
 
     if (balance < amount) throw new BadRequestException('Insufficient wallet balance');
 
@@ -108,7 +104,7 @@ export class WalletService {
       return tx.walletTransaction.create({
         data: {
           walletId: wallet.id,
-          amount: new Decimal(amount),
+          amount: new Prisma.Decimal(amount),
           type: WalletTransactionType.PURCHASE,
           description,
           referenceId,
@@ -131,8 +127,7 @@ export class WalletService {
     const request = await this.prisma.withdrawalRequest.findUnique({ where: { id } });
     if (!request) throw new NotFoundException('Request not found');
 
-    if (status === WithdrawalStatus.REJECTED && request.status !== WithdrawalStatus.REJECTED) {
-       // Refund the wallet if rejected
+    if (status === 'REJECTED' && request.status !== 'REJECTED') {
        const wallet = await this.getWallet(request.userId);
        await this.prisma.$transaction([
          this.prisma.wallet.update({

@@ -1,6 +1,6 @@
 const mysql = require('mysql2/promise');
 const bcryptjs = require('bcryptjs');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 require('dotenv').config();
 
 async function createAdmin() {
@@ -30,12 +30,12 @@ async function createAdmin() {
 
     // Hash password
     const passwordHash = await bcryptjs.hash(adminPassword, 10);
-    const id = uuidv4();
+    const id = randomUUID();
 
     // Create admin user
     await connection.execute(
-      'INSERT INTO `AdminUser` (id, email, name, role, passwordHash, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
-      [id, adminEmail, 'System Administrator', 'ADMIN', passwordHash]
+      'INSERT INTO `AdminUser` (id, email, password, role, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())',
+      [id, adminEmail, passwordHash, 'ADMIN']
     );
 
     console.log('✅ Admin user created successfully');
