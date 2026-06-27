@@ -1,31 +1,55 @@
-
 'use client';
 
 import { useMemo } from 'react';
-import { useAuth, useFirestore, useUser } from '@/firebase';
-import { getIdentityStatus, IdentityStatus, linkNewIdentity } from '@/lib/auth-identity';
+import { useFirestore, useUser } from '@/firebase';
+import { linkNewIdentity, syncUserIdentity } from '@/lib/auth-identity';
 import { AuthCredential } from 'firebase/auth';
 
+export interface IdentityStatus {
+  uid: string;
+  hasPhone: boolean;
+  hasEmail: boolean;
+  providers: string[];
+}
+
 /**
- * A specialized hook to manage the Unified Identity System.
+ * Hook to manage account linking and identity synchronization.
  */
 export function useAuthIdentity() {
   const { user } = useUser();
-  const auth = useAuth();
   const db = useFirestore();
 
   const status: IdentityStatus | null = useMemo(() => {
-    return user ? getIdentityStatus(user) : null;
+    if (!user) return null;
+    return {
+      uid: user.uid,
+      hasPhone: !!user.phoneNumber,
+      hasEmail: !!user.email,
+      providers: user.providerData.map(p => p.providerId),
+    };
   }, [user]);
 
+  /**
+   * Links a new method to the current session.
+   * Throws if the method belongs to another UID (Case 2).
+   */
   const linkMethod = async (credential: AuthCredential) => {
-    if (!user || !db) throw new Error('No authenticated user or database found.');
+    if (!user || !db) throw new Error('No active session found.');
     return await linkNewIdentity(user, credential, db);
+  };
+
+  /**
+   * Manually triggers a metadata sync to Firestore.
+   */
+  const syncProfile = async () => {
+    if (!user || !db) return;
+    await syncUserIdentity(db, user);
   };
 
   return {
     status,
     linkMethod,
+    syncProfile,
     isLinked: (providerId: string) => status?.providers.includes(providerId) ?? false,
   };
 }
