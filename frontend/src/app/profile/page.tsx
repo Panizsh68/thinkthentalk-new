@@ -1,4 +1,3 @@
-
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,8 +18,8 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { useUser, useAuth as useFirebase } from '../../../../src/firebase';
-import { useAuthIdentity } from '../../../../src/hooks/use-auth-identity';
+import { useUser, useAuth as useFirebase } from '@/firebase';
+import { useAuthIdentity } from '@/hooks/use-auth-identity';
 import { EmailAuthProvider, PhoneAuthProvider, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 const placeholderNames = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];

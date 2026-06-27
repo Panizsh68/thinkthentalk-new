@@ -1,4 +1,3 @@
-
 'use client';
 import { usePathname } from 'next/navigation';
 import './globals.css';
@@ -11,7 +10,7 @@ import { QueryProvider } from '@/components/query-provider';
 import { AuthProvider } from '@/lib/auth/auth-provider';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { initializeFirebase, FirebaseClientProvider } from '../../../src/firebase';
+import { initializeFirebase, FirebaseClientProvider } from '@/firebase';
 
 const firebase = initializeFirebase();
 
