@@ -13,7 +13,9 @@ import { useAuth } from '@/lib/auth/auth-provider';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail, Phone } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PasswordInput } from '@/components/ui/password-input';
 
 // Validation schemas
 const getMobileFormSchema = (t: (key: string) => string) => z.object({
@@ -24,8 +26,14 @@ const getOtpFormSchema = (t: (key: string) => string) => z.object({
   otp: z.string().min(6, t('auth.errors.otpRequired')).max(6, t('auth.errors.otpRequired')),
 });
 
+const getEmailFormSchema = (t: (key: string) => string) => z.object({
+  email: z.string().email(t('registration.validation.invalidEmail')),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
 type MobileFormValues = z.infer<ReturnType<typeof getMobileFormSchema>>;
 type OtpFormValues = z.infer<ReturnType<typeof getOtpFormSchema>>;
+type EmailFormValues = z.infer<ReturnType<typeof getEmailFormSchema>>;
 
 function MobileStep({ onMobileSubmitSuccess }: { onMobileSubmitSuccess: (mobile: string) => void }) {
   const { t } = useLanguage();
@@ -52,35 +60,96 @@ function MobileStep({ onMobileSubmitSuccess }: { onMobileSubmitSuccess: (mobile:
   }
 
   return (
-    <>
-      <CardHeader>
-        <CardTitle>{t('auth.loginTitle')}</CardTitle>
-        <CardDescription>{t('auth.loginSubtitle')}</CardDescription>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-6">
-            <FormField
-              control={form.control}
-              name="mobile"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('auth.mobileLabel')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="09123456789" {...field} dir="ltr" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t('auth.sendOtpButton')}
-            </Button>
-          </CardContent>
-        </form>
-      </Form>
-    </>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="space-y-6 pt-4">
+          <FormField
+            control={form.control}
+            name="mobile"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('auth.mobileLabel')}</FormLabel>
+                <FormControl>
+                  <Input placeholder="09123456789" {...field} dir="ltr" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {t('auth.sendOtpButton')}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
+function EmailLoginStep() {
+  const { t } = useLanguage();
+  const { loginWithEmail } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<EmailFormValues>({
+    resolver: zodResolver(getEmailFormSchema(t)),
+    defaultValues: { email: '', password: '' },
+  });
+
+  async function onSubmit(values: EmailFormValues) {
+    setIsLoading(true);
+    try {
+      await loginWithEmail(values.email, values.password);
+      toast({ title: t('auth.loginSuccessTitle') });
+      const redirectUrl = searchParams.get('redirect');
+      router.push(redirectUrl ? decodeURIComponent(redirectUrl) : '/dashboard');
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('errors.genericTitle'), description: error.message });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="space-y-6 pt-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('registration.fields.email')}</FormLabel>
+                <FormControl>
+                  <Input placeholder="user@example.com" {...field} dir="ltr" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <PasswordInput placeholder="••••••••" {...field} dir="ltr" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {t('actions.login')}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }
 
@@ -159,7 +228,8 @@ function OtpStep({ mobileNumber, onBack }: { mobileNumber: string; onBack: () =>
 
 
 export default function LoginPage() {
-  const [step, setStep] = useState<'mobile' | 'otp'>('mobile');
+  const { t } = useLanguage();
+  const [step, setStep] = useState<'mobile' | 'otp' | 'email'>('mobile');
   const [mobileNumber, setMobileNumber] = useState('');
 
   const handleMobileSubmit = (mobile: string) => {
@@ -172,14 +242,41 @@ export default function LoginPage() {
     setStep('mobile');
   };
 
+  if (step === 'otp') {
+    return (
+      <div className="container flex min-h-[calc(100vh-15rem)] items-center justify-center py-12">
+        <Card className="w-full max-w-md">
+          <OtpStep mobileNumber={mobileNumber} onBack={handleBack} />
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="container flex min-h-[calc(100vh-15rem)] items-center justify-center py-12">
       <Card className="w-full max-w-md">
-        {step === 'mobile' ? (
-          <MobileStep onMobileSubmitSuccess={handleMobileSubmit} />
-        ) : (
-          <OtpStep mobileNumber={mobileNumber} onBack={handleBack} />
-        )}
+        <CardHeader>
+          <CardTitle>{t('auth.loginTitle')}</CardTitle>
+          <CardDescription>{t('auth.loginSubtitle')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="mobile" onValueChange={(val) => setStep(val as any)}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="mobile">
+                <Phone className="w-4 h-4 mr-2 ml-2" /> {t('auth.mobileLabel')}
+              </TabsTrigger>
+              <TabsTrigger value="email">
+                <Mail className="w-4 h-4 mr-2 ml-2" /> {t('registration.fields.email')}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="mobile">
+              <MobileStep onMobileSubmitSuccess={handleMobileSubmit} />
+            </TabsContent>
+            <TabsContent value="email">
+              <EmailLoginStep />
+            </TabsContent>
+          </Tabs>
+        </CardContent>
       </Card>
     </div>
   );

@@ -1,15 +1,15 @@
+
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { AdminUserDto } from '../admin/dto/admin-user.dto';
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { AuthService } from './auth.service';
@@ -21,7 +21,6 @@ import { RequestOtpResponseDto } from './dto/request-otp-response.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { UserDto } from '../users/dto/user.dto';
 import { ModuleStatusDto } from '../common/dto/module-status.dto';
-import type { Response } from 'express';
 
 @ApiTags('Auth')
 @Controller({ path: 'auth' })
@@ -92,6 +91,25 @@ export class AuthController {
       body.mobile,
       body.otp,
     );
+    res.setHeader('Authorization', `Bearer ${result.token}`);
+    return { user: result.user as any };
+  }
+
+  @Post('login-email')
+  @ApiOperation({ summary: 'Login with email and password' })
+  @ApiOkResponse({
+    description: 'Login successful.',
+    type: AuthTokenResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid credentials.',
+    type: ErrorResponseDto,
+  })
+  async loginWithEmail(
+    @Body() body: any,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ user: UserDto }> {
+    const result = await this.authService.loginWithEmail(body.email, body.password);
     res.setHeader('Authorization', `Bearer ${result.token}`);
     return { user: result.user as any };
   }

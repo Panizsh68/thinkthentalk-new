@@ -7,6 +7,7 @@ import * as authApi from '@/lib/api/auth';
 import * as userApi from '@/lib/api/user';
 import type { User } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import apiClient from '../api/client';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -14,6 +15,7 @@ interface AuthContextType {
   isLoading: boolean;
   requestOtp: (mobile: string) => Promise<void>;
   verifyOtp: (mobile: string, otp: string) => Promise<void>;
+  loginWithEmail: (email: string, pass: string) => Promise<void>;
   updateUserProfile: (userData: Partial<User>) => Promise<void>;
   logout: () => void;
 }
@@ -75,6 +77,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     handleLogin(user, token);
   }, []);
 
+  const loginWithEmail = useCallback(async (email: string, password: string) => {
+    const response = await apiClient.post<any>('/auth/login-email', { email, password });
+    if (response.token) {
+      handleLogin(response.data.user, response.token);
+    }
+  }, []);
+
   const updateUserProfile = useCallback(async (userData: Partial<Omit<User, 'id' | 'mobile'>>) => {
     const updatedUser = await userApi.updateUserProfile(userData);
     setCurrentUser(updatedUser);
@@ -88,6 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isLoading,
     requestOtp,
     verifyOtp,
+    loginWithEmail,
     updateUserProfile,
     logout,
   };
