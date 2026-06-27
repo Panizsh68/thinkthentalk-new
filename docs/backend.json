@@ -1,0 +1,58 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Extended user profile for unified identity across phone and email.",
+      "type": "object",
+      "properties": {
+        "firstNameFa": {
+          "type": "string",
+          "description": "User's first name in Persian"
+        },
+        "lastNameFa": {
+          "type": "string",
+          "description": "User's last name in Persian"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "Legacy mobile number field"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Verified phone number for auth"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Verified email for auth"
+        },
+        "primaryLoginMethod": {
+          "type": "string",
+          "enum": ["phone", "password", "google.com"],
+          "description": "The method first used to create the account"
+        },
+        "linkedProviders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of auth providers linked to this UID"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["phone", "password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "#/backend/entities/UserProfile",
+      "description": "Stores user identity and profile metadata."
+    }
+  }
+}
