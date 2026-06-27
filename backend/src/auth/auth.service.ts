@@ -1,5 +1,9 @@
-
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  Logger,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { OtpService } from './otp/otp.service';
@@ -15,6 +19,8 @@ import { TooManyRequestsError } from '../common/errors/domain.errors';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private readonly saltRounds = 10;
+
   constructor(
     private readonly otpService: OtpService,
     private readonly ippanelService: IppanelService,
@@ -80,7 +86,7 @@ export class AuthService {
   ): Promise<{ token: string; user: ReturnType<typeof toUserDto> }> {
     try {
       await this.otpService.verifyOtp(mobile, 'LOGIN', otp);
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid OTP.');
     }
 
@@ -98,22 +104,40 @@ export class AuthService {
 
   async loginWithEmail(
     email: string,
-    pass: string,
+    password: string,
   ): Promise<{ token: string; user: ReturnType<typeof toUserDto> }> {
-    const user = await this.userRepository.findByEmail(email.toLowerCase().trim());
-    if (!user || !user.password) {
-      throw new UnauthorizedException('Invalid credentials.');
-    }
+    const cleanEmail = email.toLowerCase().trim();
+    let user = await this.userRepository.findByEmail(cleanEmail);
 
-    const isMatch = await bcrypt.compare(pass, user.password);
-    if (!isMatch) {
-      throw new UnauthorizedException('Invalid credentials.');
+    if (user) {
+      // User exists -> Login
+      if (!user.password) {
+        throw new UnauthorizedException(
+          'This account does not have a password. Please log in with your mobile number.',
+        );
+      }
+      const passwordValid = await bcrypt.compare(password, user.password);
+      if (!passwordValid) {
+        throw new UnauthorizedException('Invalid credentials.');
+      }
+    } else {
+      // User does not exist -> Signup
+      const hashedPassword = await bcrypt.hash(password, this.saltRounds);
+      try {
+        user = await this.userRepository.createUserWithEmailPassword(
+          cleanEmail,
+          hashedPassword,
+        );
+      } catch (error) {
+        this.logger.error('Error during user creation', error);
+        throw new ConflictException('A user with this email might already exist.');
+      }
     }
 
     const payload = { sub: user.id, type: 'USER' as const };
     const token = await this.jwtService.signAsync(payload);
 
-    this.logger.log(`Issued user token for email: ${email}`);
+    this.logger.log(`Issued user token for email: ${cleanEmail}`);
     return { token, user: toUserDto(user) };
   }
 

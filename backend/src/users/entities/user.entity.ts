@@ -15,6 +15,7 @@ export class UserEntity {
     public readonly email?: string | null,
     public readonly languageLevel?: string | null,
     public readonly avatarUrl?: string | null,
+    public readonly password?: string | null,
     public readonly createdAt?: Date,
     public readonly updatedAt?: Date,
   ) {}

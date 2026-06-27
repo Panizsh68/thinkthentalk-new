@@ -19,6 +19,7 @@ export const toUserEntity = (user: User): UserEntity =>
     user.email,
     user.languageLevel,
     user.avatarUrl,
+    user.password,
     user.createdAt,
     user.updatedAt,
   );

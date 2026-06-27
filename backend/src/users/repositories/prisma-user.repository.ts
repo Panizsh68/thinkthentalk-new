@@ -38,6 +38,11 @@ export class PrismaUserRepository extends IUserRepository {
     return user ? toUserEntity(user) : null;
   }
 
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const user = await this.prisma.user.findFirst({ where: { email } });
+    return user ? toUserEntity(user) : null;
+  }
+
   async createOrUpdateFromOtpProfile(
     dto: CreateOrUpdateUserProfileDto,
   ): Promise<UserEntity> {
@@ -99,6 +104,20 @@ export class PrismaUserRepository extends IUserRepository {
       },
     });
 
+    return toUserEntity(user);
+  }
+
+  async createUserWithEmailPassword(
+    email: string,
+    passwordHash: string,
+  ): Promise<UserEntity> {
+    const user = await this.prisma.user.create({
+      data: {
+        email: email,
+        password: passwordHash,
+        mobile: email, // Temporary placeholder
+      },
+    });
     return toUserEntity(user);
   }
 }

@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Lightbulb, Users, HeartHandshake, ArrowRight, Quote, Sparkles, Calendar, MapPin, Ticket } from "lucide-react";
+import { Lightbulb, Users, HeartHandshake, ArrowRight, Quote, Sparkles, Calendar, MapPin, Ticket, Star } from "lucide-react";
 import { getLocalizedTextValue } from "@/lib/i18n/get-localized-text";
 import { formatEventDate, getEventPath, getMinPrice, getFormattedPrice, isEventPast } from "@/lib/event-helpers";
 import type { Event } from "@/lib/types";
@@ -32,7 +32,7 @@ function HeroSection() {
   }, []);
 
   return (
-    <section className="relative h-[90vh] min-h-[600px] w-full flex items-center justify-center text-center text-white overflow-hidden">
+    <section className="relative h-screen min-h-[700px] w-full flex items-center justify-center text-center text-white overflow-hidden">
       {PlaceHolderImages.map((image, index) => (
         <Image
           key={image.id}
@@ -48,22 +48,22 @@ function HeroSection() {
           priority={index === 0}
         />
       ))}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
-      <div className="relative z-10 container flex max-w-[64rem] flex-col items-center gap-6 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="relative z-10 container flex max-w-[72rem] flex-col items-center gap-6 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <Badge variant="outline" className="text-white border-white/20 bg-white/10 backdrop-blur-md px-6 py-2 mb-4 text-sm font-medium tracking-widest uppercase">
-          {t('home.hero.kicker')}
+          {t('home.hero.kicker', 'A Community for Deeper Conversations')}
         </Badge>
-        <h1 className="text-h1 sm:text-7xl text-white tracking-tighter drop-shadow-md font-bold leading-tight">
-          {t('home.hero.title')}
+        <h1 className="text-5xl sm:text-7xl lg:text-8xl text-white tracking-tighter drop-shadow-lg font-bold leading-tight">
+          {t('home.hero.title', 'Where Curiosity Meets Conversation')}
         </h1>
-        <p className="max-w-[36rem] leading-relaxed sm:text-2xl text-slate-100 font-light opacity-90 mx-auto">
-          {t('home.hero.subtitle')}
+        <p className="max-w-[42rem] leading-relaxed sm:text-xl text-slate-100 font-light opacity-90 mx-auto mt-4">
+          {t('home.hero.subtitle', 'Join a curated community of thinkers, creators, and professionals for live events that challenge and inspire. Find your next great conversation.')}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 mt-12">
+        <div className="flex flex-col sm:flex-row gap-4 mt-8">
           <Button size="lg" className="h-16 px-10 text-xl rounded-full shadow-2xl hover:shadow-primary/40 transition-all bg-primary hover:bg-primary/90 text-primary-foreground group" onClick={() => router.push('/events')}>
-            {t('home.hero.browseButton')}
+            {t('home.hero.browseButton', 'Explore Events')}
             <ArrowRight className="ml-2 h-6 w-6 transition-transform group-hover:translate-x-1 rtl:rotate-180" />
           </Button>
         </div>
@@ -72,7 +72,7 @@ function HeroSection() {
   );
 }
 
-function ExperienceCard({ event }: { event: Event }) {
+function ExperienceCard({ event, isFeatured }: { event: Event, isFeatured?: boolean }) {
   const { t, language } = useLanguage();
   const eventTitle = getLocalizedTextValue(event.title, language);
   const eventSummary = getLocalizedTextValue(event.summary, language);
@@ -82,7 +82,7 @@ function ExperienceCard({ event }: { event: Event }) {
 
   return (
     <Link href={getEventPath(event)} className="group block h-full">
-      <Card className="h-full flex flex-col border-none shadow-lg overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl bg-card/60 backdrop-blur-sm">
+      <Card className={cn("h-full flex flex-col border-border/10 shadow-lg overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 bg-card/60 backdrop-blur-sm", isFeatured && "ring-2 ring-primary ring-offset-4 ring-offset-background")}>
         <div className="relative aspect-[4/3] overflow-hidden">
           {event.posterUrl ? (
             <Image 
@@ -97,44 +97,45 @@ function ExperienceCard({ event }: { event: Event }) {
               <Sparkles className="h-12 w-12 text-muted-foreground/20" />
             </div>
           )}
-          <div className="absolute top-4 right-4 z-10">
-            <Badge variant={past ? "secondary" : "default"} className="backdrop-blur-md shadow-md">
+           <div className="absolute top-4 right-4 z-10 flex gap-2">
+            {isFeatured && <Badge variant="default" className="bg-primary text-primary-foreground shadow-md">{t('home.events.featured', 'Featured')}</Badge>}
+            <Badge variant={past ? "secondary" : "default"} className="backdrop-blur-md shadow-md bg-background/60 text-foreground">
               {past ? t('event.finished') : t('event.upcoming')}
             </Badge>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 transition-opacity group-hover:opacity-90" />
           <div className="absolute bottom-4 left-4 right-4 text-white">
-            <h3 className="text-xl font-bold tracking-tight mb-1">{eventTitle}</h3>
-            <p className="text-xs opacity-90 line-clamp-1">{formattedDate}</p>
+            <h3 className="text-2xl font-bold tracking-tight mb-1 drop-shadow-md">{eventTitle}</h3>
+            <p className="text-sm opacity-90 font-medium">{formattedDate}</p>
           </div>
         </div>
         <CardContent className="p-6 flex-grow space-y-4">
-          <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+          <p className="text-base text-muted-foreground line-clamp-2 leading-relaxed">
             {eventSummary}
           </p>
-          <div className="flex flex-wrap gap-y-2 gap-x-4 text-xs text-muted-foreground font-medium pt-2 border-t">
+          <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-muted-foreground font-medium pt-4 border-t border-border/10">
             <div className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-primary" />
+              <MapPin className="h-4 w-4 text-primary" />
               {event.type === 'ONLINE' ? t('event.online') : getLocalizedTextValue(event.city || {fa: '', en: ''}, language)}
             </div>
             {minPrice !== null && (
               <div className="flex items-center gap-1.5">
-                <Ticket className="h-3.5 w-3.5 text-primary" />
+                <Ticket className="h-4 w-4 text-primary" />
                 {getFormattedPrice(minPrice, event.tickets[0].currency, t)}
               </div>
             )}
             {event.showRemainingCapacity && event.capacityRemaining > 0 && (
-              <div className="flex items-center gap-1.5 text-accent">
-                <Users className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-1.5 text-accent-foreground font-semibold">
+                <Users className="h-4 w-4" />
                 {t('home.events.spotsLeft', { count: event.capacityRemaining })}
               </div>
             )}
           </div>
         </CardContent>
         <CardFooter className="px-6 pb-6 pt-0">
-          <span className="text-sm font-bold text-primary flex items-center gap-1 transition-all group-hover:gap-2">
-            {t('event.viewDetails')}
-            <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+          <span className="text-base font-bold text-primary flex items-center gap-2 transition-all group-hover:gap-3">
+            {t('event.viewDetails', 'View Details')}
+            <ArrowRight className="h-5 w-5 rtl:rotate-180" />
           </span>
         </CardFooter>
       </Card>
@@ -155,35 +156,94 @@ function EventsSection() {
   return (
     <section className="container max-w-screen-2xl py-32">
         <div className="mb-20 text-center space-y-4">
-            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.events.title')}</h2>
-            <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.events.subtitle')}</p>
+            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.events.title', 'Explore Our Next Events')}</h2>
+            <p className="text-xl text-muted-foreground font-light max-w-3xl mx-auto">{t('home.events.subtitle', 'Engage in conversations that matter. Each event is a unique opportunity to learn, challenge your perspectives, and connect with like-minded individuals.')}</p>
         </div>
 
         {isLoading ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-[450px] w-full rounded-3xl" />
+              <Skeleton key={i} className="h-[480px] w-full rounded-3xl" />
             ))}
           </div>
         ) : error ? (
           <div className="p-12 rounded-3xl bg-destructive/5 text-center">
-            <p className="text-destructive">{t('errors.fetchEvents')}</p>
+            <p className="text-destructive">{t('errors.fetchEvents', 'Could not load events at this time. Please try again later.')}</p>
           </div>
         ) : events?.length === 0 ? (
-          <p className="text-muted-foreground text-center py-24 bg-secondary/10 rounded-3xl">{t('events.noEvents')}</p>
+          <p className="text-muted-foreground text-center py-24 bg-secondary/10 rounded-3xl">{t('events.noEvents', 'No upcoming events at the moment. Check back soon!')}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-            {events?.map((event) => (
-              <ExperienceCard key={event.id} event={event} />
+            {events?.map((event, i) => (
+              <ExperienceCard key={event.id} event={event} isFeatured={i === 0} />
             ))}
           </div>
         )}
 
         <div className="mt-20 text-center">
             <Button size="lg" variant="outline" className="rounded-full px-12 h-14 border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground transition-all font-bold" asChild>
-                <Link href="/events">{t('home.events.viewAllButton')}</Link>
+                <Link href="/events">{t('home.events.viewAllButton', 'View All Events')}</Link>
             </Button>
         </div>
+    </section>
+  );
+}
+
+function TestimonialsSection() {
+  const { t } = useLanguage();
+  const testimonials = [
+    {
+      name: "Sarah L.",
+      role: "Product Manager",
+      avatar: "/avatars/01.png",
+      quote: "This community has been a game-changer for me. The discussions are always high-quality and have genuinely changed how I approach my work.",
+    },
+    {
+      name: "David C.",
+      role: "Software Engineer",
+      avatar: "/avatars/02.png",
+      quote: "I was tired of superficial networking events. Think Then Talk is the complete opposite. Real conversations with brilliant people.",
+    },
+    {
+      name: "Fatemeh K.",
+      role: "UX Designer",
+      avatar: "/avatars/03.png",
+      quote: "An incredibly welcoming and intelligent group. The topics are always fascinating and the moderation ensures conversations stay on track and respectful.",
+    },
+  ];
+
+  return (
+    <section className="bg-secondary/40 py-32">
+      <div className="container max-w-screen-2xl">
+        <div className="mb-20 text-center space-y-4">
+          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.testimonials.title', 'Trusted by a Community of Thinkers')}</h2>
+          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.testimonials.subtitle', 'Here’s what some of our members have to say about their experience.')}</p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, i) => (
+            <Card key={i} className="border-border/10 bg-background/80 backdrop-blur-md shadow-lg p-8 h-full flex flex-col">
+              <div className="flex-grow mb-6">
+                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
+                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
+                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
+                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
+                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 inline-block" />
+                <p className="text-lg text-foreground/90 mt-4 leading-relaxed">\"{testimonial.quote}\"</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar>
+                  <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                  <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-bold">{testimonial.name}</p>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
@@ -220,11 +280,11 @@ function InvolvementSection() {
   ];
 
   return (
-    <section className="bg-secondary/40 py-32">
+    <section className="bg-secondary/10 py-32">
       <div className="container max-w-screen-2xl">
         <div className="text-center mb-20 space-y-4">
-          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.involved.title')}</h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.involved.subtitle')}</p>
+          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.involved.title', 'Get More Involved')}</h2>
+          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.involved.subtitle', 'Our community is built by its members. Here’s how you can contribute and shape our future.')}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {paths.map((path) => (
@@ -244,7 +304,7 @@ function InvolvementSection() {
                 </CardContent>
                 <CardFooter className="pt-0">
                   <span className="text-sm font-bold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
-                    {t('actions.view')}
+                    {t('actions.view', 'Learn More')}
                     <ArrowRight className={cn("h-4 w-4 transition-transform", isRTL ? "rotate-180" : "")} />
                   </span>
                 </CardFooter>
@@ -264,8 +324,8 @@ function AtmosphereSection() {
       <div className="container max-w-screen-2xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="space-y-4">
-            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.moments.title')}</h2>
-            <p className="text-xl text-muted-foreground font-light max-w-2xl">{t('home.moments.subtitle')}</p>
+            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.moments.title', 'Capture the Atmosphere')}</h2>
+            <p className="text-xl text-muted-foreground font-light max-w-2xl">{t('home.moments.subtitle', 'A glimpse into the energy and environment of our gatherings.')}</p>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[600px]">
@@ -309,10 +369,10 @@ function ExperienceSection() {
           <div className="space-y-10">
             <div className="space-y-6">
               <Badge variant="secondary" className="px-4 py-1 text-primary">
-                {t('home.experience.title')}
+                {t('home.experience.title', 'Our Philosophy')}
               </Badge>
               <h2 className="text-h2 tracking-tight sm:text-5xl">
-                {t('home.experience.subtitle')}
+                {t('home.experience.subtitle', 'Designed for Genuine Connection')}
               </h2>
             </div>
             
@@ -357,8 +417,9 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-0 pb-16">
       <HeroSection />
-      <ExperienceSection />
       <EventsSection />
+      <TestimonialsSection />
+      <ExperienceSection />
       <AtmosphereSection />
       <InvolvementSection />
     </div>

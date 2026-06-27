@@ -1,5 +1,12 @@
-
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -21,6 +28,7 @@ import { RequestOtpResponseDto } from './dto/request-otp-response.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { UserDto } from '../users/dto/user.dto';
 import { ModuleStatusDto } from '../common/dto/module-status.dto';
+import { LoginWithEmailDto } from './dto/login-email.dto';
 
 @ApiTags('Auth')
 @Controller({ path: 'auth' })
@@ -92,11 +100,11 @@ export class AuthController {
       body.otp,
     );
     res.setHeader('Authorization', `Bearer ${result.token}`);
-    return { user: result.user as any };
+    return { user: result.user };
   }
 
   @Post('login-email')
-  @ApiOperation({ summary: 'Login with email and password' })
+  @ApiOperation({ summary: 'Login with email' })
   @ApiOkResponse({
     description: 'Login successful.',
     type: AuthTokenResponseDto,
@@ -106,12 +114,16 @@ export class AuthController {
     type: ErrorResponseDto,
   })
   async loginWithEmail(
-    @Body() body: any,
+    @Body() body: LoginWithEmailDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ user: UserDto }> {
-    const result = await this.authService.loginWithEmail(body.email, body.password);
-    res.setHeader('Authorization', `Bearer ${result.token}`);
-    return { user: result.user as any };
+    try {
+      const result = await this.authService.loginWithEmail(body.email, body.password);
+      res.setHeader('Authorization', `Bearer ${result.token}`);
+      return { user: result.user };
+    } catch (error) {
+      throw new UnauthorizedException(error instanceof Error ? error.message : 'Login failed');
+    }
   }
 
   @Post('admin/login')
@@ -134,19 +146,23 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ user: AdminUserDto }> {
-    const clientIp =
-      (req.headers['x-forwarded-for'] as string | undefined)
-        ?.split(',')[0]
-        ?.trim() ||
-      req.ip ||
-      req.socket.remoteAddress ||
-      'unknown';
-    const result = await this.authService.loginAdmin(
-      body.email,
-      body.password,
-      clientIp,
-    );
-    res.setHeader('Authorization', `Bearer ${result.token}`);
-    return { user: result.user as any };
+    try {
+      const clientIp =
+        (req.headers['x-forwarded-for'] as string | undefined)
+          ?.split(',')[0]
+          ?.trim() ||
+        req.ip ||
+        req.socket.remoteAddress ||
+        'unknown';
+      const result = await this.authService.loginAdmin(
+        body.email,
+        body.password,
+        clientIp,
+      );
+      res.setHeader('Authorization', `Bearer ${result.token}`);
+      return { user: result.user };
+    } catch (error) {
+      throw new UnauthorizedException(error instanceof Error ? error.message : 'Login failed');
+    }
   }
 }

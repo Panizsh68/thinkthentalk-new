@@ -34,11 +34,16 @@ export interface UpdateUserProfileDto {
 export abstract class IUserRepository {
   abstract findById(id: string): Promise<UserEntity | null>;
   abstract findByMobile(mobile: string): Promise<UserEntity | null>;
+  abstract findByEmail(email: string): Promise<UserEntity | null>;
   abstract createOrUpdateFromOtpProfile(
     dto: CreateOrUpdateUserProfileDto,
   ): Promise<UserEntity>;
   abstract updateProfile(
     id: string,
     dto: UpdateUserProfileDto,
+  ): Promise<UserEntity>;
+  abstract createUserWithEmailPassword(
+    email: string,
+    passwordHash: string,
   ): Promise<UserEntity>;
 }
