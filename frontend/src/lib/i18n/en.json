@@ -1,4 +1,3 @@
-
 {
   "lng": "en-US",
   "nav": {
@@ -13,6 +12,73 @@
     "ideas": "Suggest Event",
     "collaborate": "Collaborate",
     "sponsorship": "Sponsorship"
+  },
+  "home": {
+    "hero": {
+      "kicker": "A Community of Thought",
+      "title": "Conversations that Change Perspectives",
+      "subtitle": "Join our curated dialogues and deep-thinking sessions to explore the questions that define us.",
+      "browseButton": "Discover Experiences",
+      "signupButton": "Join Us"
+    },
+    "experience": {
+      "title": "The Art of Dialogue",
+      "subtitle": "Think Then Talk isn't just an event series. It's a laboratory for collective intelligence and empathy.",
+      "perk1": {
+        "title": "Deep Exploration",
+        "desc": "Moving beyond surface-level small talk into the core of complex topics."
+      },
+      "perk2": {
+        "title": "Curated Community",
+        "desc": "Connecting with individuals who value listening as much as speaking."
+      },
+      "perk3": {
+        "title": "Intellectual Growth",
+        "desc": "Developing tools for critical thinking and articulate expression."
+      },
+      "simulation": {
+        "quote": "In every session, I find that my perspective doesn't just expand—it transforms. It's a rare space where silence is as meaningful as the words spoken.",
+        "caption": "The Community Experience"
+      }
+    },
+    "interaction": {
+      "title": "Grow With Us",
+      "subtitle": "Whether you have an idea for a topic or want to support our mission, there's a place for you."
+    },
+    "events": {
+      "title": "Upcoming Journeys",
+      "subtitle": "Each event is a designed experience. Choose your next step.",
+      "viewAllButton": "View All Journeys"
+    },
+    "trust": {
+      "kicker": "Echoes of Dialogue",
+      "title": "What Attendees Experience",
+      "t1": {
+        "name": "Sarah J.",
+        "role": "Designer",
+        "text": "The most meaningful weekend I've had in years. It changed how I approach my work and relationships."
+      },
+      "t2": {
+        "name": "David M.",
+        "role": "Educator",
+        "text": "Finally, a place where depth is the standard, not the exception. The curation is exceptional."
+      },
+      "t3": {
+        "name": "Elena R.",
+        "role": "Writer",
+        "text": "Think Then Talk provides the intellectual friction necessary to sharpen one's own ideas."
+      }
+    },
+    "sponsors": {
+      "title": "Supported By",
+      "subtitle": "Trusted partners who believe in the power of conversation",
+      "noSponsors": "No sponsors added yet."
+    },
+    "team": {
+      "title": "The Curators",
+      "subtitle": "Meet the minds behind the community architecture.",
+      "noMembers": "Team information is coming soon."
+    }
   },
   "partnership": {
     "status": {
@@ -201,29 +267,6 @@
         "q": "Can I cancel my registration and get a refund?",
         "a": "Refund policies vary by event. Generally, cancellations made at least 48 hours before the event are eligible for a partial or full refund. Please refer to our Terms of Service for full details."
       }
-    }
-  },
-  "home": {
-    "hero": {
-      "title": "Think Then Talk Community",
-      "subtitle": "Browse our upcoming events and join us.",
-      "browseButton": "Browse Events",
-      "signupButton": "Sign Up"
-    },
-    "events": {
-      "title": "Events",
-      "subtitle": "Explore our upcoming and past gatherings.",
-      "viewAllButton": "View All Events"
-    },
-    "sponsors": {
-      "title": "Sponsors & Supporters",
-      "subtitle": "We are grateful for the support of these amazing organizations.",
-      "noSponsors": "No sponsors added yet."
-    },
-    "team": {
-      "title": "Our Team",
-      "subtitle": "Meet the people behind our community.",
-      "noMembers": "Team information is coming soon."
     }
   },
   "actions": {
