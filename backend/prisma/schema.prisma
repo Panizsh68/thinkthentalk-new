@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 enum AdminRole {
@@ -91,41 +90,41 @@ enum WithdrawalStatus {
 }
 
 model AdminUser {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  password     String
-  role         AdminRole @default(ADMIN)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  role      AdminRole @default(ADMIN)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model User {
-  id             String    @id @default(uuid())
-  mobile         String    @unique
-  firstNameFa    String    @default("نام")
-  lastNameFa     String    @default("نام خانوادگی")
+  id             String   @id @default(uuid())
+  mobile         String   @unique
+  firstNameFa    String   @default("نام")
+  lastNameFa     String   @default("نام خانوادگی")
   firstNameEn    String?
   lastNameEn     String?
   gender         Gender?
   age            Int?
   educationLevel String?
   fieldOfStudy   String?
-  isEmployed     Boolean?  @default(false)
+  isEmployed     Boolean? @default(false)
   jobTitle       String?
   email          String?
   languageLevel  String?
   avatarUrl      String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  registrations          Registration[]
-  evaluationSubmissions  EvaluationSubmission[]
-  eventIdeas             EventIdea[]
-  collaborationRequests  CollaborationRequest[]
-  sponsorshipRequests    SponsorshipRequest[]
-  wallet                 Wallet?
-  withdrawalRequests     WithdrawalRequest[]
-  subscription           Subscription?
+  registrations         Registration[]
+  evaluationSubmissions EvaluationSubmission[]
+  eventIdeas            EventIdea[]
+  collaborationRequests CollaborationRequest[]
+  sponsorshipRequests   SponsorshipRequest[]
+  wallet                Wallet?
+  withdrawalRequests    WithdrawalRequest[]
+  subscription          Subscription?
 }
 
 model Event {
@@ -274,8 +273,9 @@ model EvaluationForm {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  event     Event                @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  questions EvaluationQuestion[]
+  event       Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  questions   EvaluationQuestion[]
+  submissions EvaluationSubmission[]
 }
 
 model EvaluationQuestion {
