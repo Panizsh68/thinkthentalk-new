@@ -15,10 +15,10 @@
   },
   "home": {
     "hero": {
-      "kicker": "A Community of Thought",
-      "title": "Conversations that Change Perspectives",
-      "subtitle": "Join our curated dialogues and deep-thinking sessions to explore the questions that define us.",
-      "browseButton": "Discover Experiences",
+      "kicker": "A Sanctuary for Intelligence",
+      "title": "Where Thought Finds its Voice",
+      "subtitle": "Step into a curated world of deep dialogues. We bridge perspectives and ignite growth through the art of collective thinking.",
+      "browseButton": "Discover the Experience",
       "signupButton": "Join Us"
     },
     "experience": {
@@ -41,18 +41,26 @@
         "caption": "The Community Experience"
       }
     },
-    "interaction": {
-      "title": "Grow With Us",
-      "subtitle": "Whether you have an idea for a topic or want to support our mission, there's a place for you."
+    "involved": {
+      "title": "Co-Create the Community",
+      "subtitle": "Shape the future of dialogue with us through these unique paths.",
+      "collaborateDesc": "Join the team of curators and moderators building this sanctuary.",
+      "ideasDesc": "Have a topic that needs depth? Pitch your next conversation idea.",
+      "sponsorshipDesc": "Align your brand with thoughtful growth and intellectual depth."
+    },
+    "moments": {
+      "title": "Community Atmosphere",
+      "subtitle": "Glimpses into the energy and focus of our past gatherings."
     },
     "events": {
       "title": "Upcoming Journeys",
-      "subtitle": "Each event is a designed experience. Choose your next step.",
-      "viewAllButton": "View All Journeys"
+      "subtitle": "Each event is a designed experience. Choose your next step into depth.",
+      "viewAllButton": "View All Journeys",
+      "spotsLeft": "{count} spots remaining"
     },
     "trust": {
       "kicker": "Echoes of Dialogue",
-      "title": "What Attendees Experience",
+      "title": "The Attendee Experience",
       "t1": {
         "name": "Sarah J.",
         "role": "Designer",
