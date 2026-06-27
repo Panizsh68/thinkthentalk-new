@@ -1,3 +1,4 @@
+
 'use client';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,8 @@ function HeroSection() {
           alt={image.description}
           fill
           className={cn(
-            "object-cover transition-opacity duration-[2000ms] ease-in-out scale-105",
+            "object-cover transition-opacity ease-in-out scale-105",
+            "[transition-duration:2000ms]",
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           )}
           data-ai-hint={image.imageHint}

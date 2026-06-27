@@ -531,9 +531,17 @@
   },
   "dashboard": {
     "myRegistrations": "My Registrations",
-    "myRegistrationsSubtitle": "Here are the events you've registered for.",
+    "myRegistrationsSubtitle": "Manage your past and upcoming event experiences.",
     "noRegistrations": "You haven't registered for any events yet.",
     "browseEvents": "Browse Events",
+    "welcomeBack": "Welcome back, {name}",
+    "personalIntro": "Your personal space for growth and thoughtful conversation.",
+    "upcomingSection": "Upcoming Experiences",
+    "pastSection": "Past Journeys",
+    "noUpcoming": "You have no upcoming events. Ready for a new experience?",
+    "noPast": "Your journey is just beginning. Your past events will appear here.",
+    "nextStepTitle": "What's next for you?",
+    "nextStepDesc": "Keep exploring new perspectives and connect with the community.",
     "table": {
       "event": "Event",
       "date": "Date",

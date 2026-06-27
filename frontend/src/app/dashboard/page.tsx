@@ -2,22 +2,15 @@
 'use client';
 import { useAuth } from '@/lib/auth/auth-provider';
 import { useUserRegistrationsQuery } from '@/hooks/use-registration-queries';
-import { Loader2, AlertTriangle, MessageSquareQuote } from 'lucide-react';
+import { Loader2, AlertTriangle, Sparkles, Calendar, History, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { RegistrationCard } from '@/components/registration-card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
-import { formatEventDateTimeForCard, getRegistrationWizardUrl, isEventPast } from '@/lib/event-helpers';
-import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
+import { isEventPast } from '@/lib/event-helpers';
+import { useMemo } from 'react';
 
 export default function UserDashboardPage() {
   const { t, language } = useLanguage();
@@ -26,16 +19,18 @@ export default function UserDashboardPage() {
 
   const isLoading = isAuthLoading || isLoadingRegistrations;
 
-  const getStatusVariant = (status: 'PAID' | 'PENDING' | 'FAILED' | 'CANCELLED') => {
-    switch (status) {
-      case 'PAID': return 'default';
-      case 'PENDING': return 'secondary';
-      case 'FAILED':
-      case 'CANCELLED':
-        return 'destructive';
-      default: return 'outline';
-    }
-  }
+  const { upcoming, past } = useMemo(() => {
+    if (!registrations) return { upcoming: [], past: [] };
+    return {
+      upcoming: registrations.filter(reg => !isEventPast({ startDateTime: reg.event.startDateTime })),
+      past: registrations.filter(reg => isEventPast({ startDateTime: reg.event.startDateTime })),
+    };
+  }, [registrations]);
+
+  const displayName = useMemo(() => {
+    const name = [currentUser?.firstNameFa, currentUser?.lastNameFa].filter(Boolean).join(' ').trim();
+    return name || currentUser?.mobile || '';
+  }, [currentUser]);
 
   if (isLoading) {
     return (
@@ -58,79 +53,96 @@ export default function UserDashboardPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">{t('dashboard.myRegistrations')}</h1>
-      <p className="mt-2 text-muted-foreground">{t('dashboard.myRegistrationsSubtitle')}</p>
-      
-      <div className="mt-6">
-        {registrations && registrations.length > 0 ? (
-          <>
-            {/* Desktop Table View */}
-            <div className="hidden md:block border rounded-lg">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t('dashboard.table.event')}</TableHead>
-                    <TableHead>{t('dashboard.table.date')}</TableHead>
-                    <TableHead>{t('dashboard.table.ticket')}</TableHead>
-                    <TableHead className="text-center">{t('dashboard.table.status')}</TableHead>
-                    <TableHead className="text-right">{t('dashboard.table.actions')}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {registrations.map((reg) => {
-                    const eventTitle = getLocalizedTextValue(reg.event.title, language);
-                    return (
-                    <TableRow key={reg.id}>
-                      <TableCell className="font-medium">{eventTitle}</TableCell>
-                      <TableCell>{formatEventDateTimeForCard(reg.event.startDateTime, language)}</TableCell>
-                      <TableCell>{t(`tickets.${reg.ticketType.toLowerCase()}`)}</TableCell>
-                      <TableCell className="text-center">
-                         <Badge variant={getStatusVariant(reg.status)}>{t(`registration.status.${reg.status.toLowerCase()}`)}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right space-x-2">
-                        <Button variant="outline" size="sm" asChild>
-                           <Link href={`/events/${reg.eventId}`}>{t('actions.viewEvent')}</Link>
-                        </Button>
-                        {reg.status === 'PAID' && (
-                           <Button size="sm" asChild>
-                              <Link href={`/payment/callback?paymentId=${reg.paymentId}`}>{t('actions.viewReceipt')}</Link>
-                           </Button>
-                        )}
-                        {reg.status === 'PAID' && isEventPast({ startDateTime: reg.event.startDateTime }) && (
-                           <Button size="sm" variant="secondary" asChild>
-                                <Link href={`/events/${reg.eventId}/evaluation`}>
-                                    <MessageSquareQuote className="mr-2 h-4 w-4" />
-                                    {t('actions.leaveFeedback')}
-                                </Link>
-                           </Button>
-                        )}
-                         {reg.status === 'FAILED' && (
-                           <Button size="sm" asChild>
-                              <Link href={getRegistrationWizardUrl(reg.eventId, reg.ticketType, 5)}>{t('actions.retryPayment')}</Link>
-                           </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  )})}
-                </TableBody>
-              </Table>
+    <div className="space-y-8 animate-in fade-in duration-700">
+      {/* Welcome Section */}
+      <section className="bg-primary/5 p-6 md:p-8 rounded-3xl border border-primary/10 relative overflow-hidden">
+        <div className="relative z-10">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+            {t('dashboard.welcomeBack', { name: displayName })}
+          </h1>
+          <p className="text-muted-foreground mt-2 max-w-prose">
+            {t('dashboard.personalIntro')}
+          </p>
+        </div>
+        <Sparkles className="absolute -right-4 -bottom-4 h-32 w-32 text-primary/5 pointer-events-none" />
+      </section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <Tabs defaultValue="upcoming" className="w-full">
+            <div className="flex items-center justify-between mb-4 border-b">
+              <TabsList className="bg-transparent border-none p-0 h-auto">
+                <TabsTrigger 
+                  value="upcoming" 
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none pb-2"
+                >
+                  <Calendar className="w-4 h-4 mr-2 ml-2" />
+                  {t('dashboard.upcomingSection')}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="past"
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none pb-2"
+                >
+                  <History className="w-4 h-4 mr-2 ml-2" />
+                  {t('dashboard.pastSection')}
+                </TabsTrigger>
+              </TabsList>
             </div>
-            {/* Mobile Card View */}
-            <div className="md:hidden space-y-4">
-              {registrations.map((reg) => (
-                <RegistrationCard key={reg.id} registration={reg} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-lg text-muted-foreground">
-            <p>{t('dashboard.noRegistrations')}</p>
-            <Button variant="link" asChild className="mt-2">
-                <Link href="/events">{t('dashboard.browseEvents')}</Link>
-            </Button>
-          </div>
-        )}
+
+            <TabsContent value="upcoming" className="mt-0 focus-visible:outline-none">
+              {upcoming.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {upcoming.map((reg) => (
+                    <RegistrationCard key={reg.id} registration={reg} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 border-2 border-dashed rounded-2xl bg-muted/30">
+                  <p className="text-muted-foreground">{t('dashboard.noUpcoming')}</p>
+                  <Button asChild variant="link" className="mt-2">
+                    <Link href="/events">{t('dashboard.browseEvents')}</Link>
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="past" className="mt-0 focus-visible:outline-none">
+              {past.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {past.map((reg) => (
+                    <RegistrationCard key={reg.id} registration={reg} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 border-2 border-dashed rounded-2xl bg-muted/30">
+                  <p className="text-muted-foreground">{t('dashboard.noPast')}</p>
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        <aside className="space-y-6">
+          <Card className="bg-secondary/20 border-none shadow-none">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                {t('dashboard.nextStepTitle')}
+              </CardTitle>
+              <CardDescription>
+                {t('dashboard.nextStepDesc')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full group">
+                <Link href="/events">
+                  {t('dashboard.browseEvents')}
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </aside>
       </div>
     </div>
   );
