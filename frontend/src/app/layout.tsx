@@ -1,3 +1,4 @@
+
 'use client';
 import { usePathname } from 'next/navigation';
 import './globals.css';
@@ -10,6 +11,9 @@ import { QueryProvider } from '@/components/query-provider';
 import { AuthProvider } from '@/lib/auth/auth-provider';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { initializeFirebase, FirebaseClientProvider } from '../../../src/firebase';
+
+const firebase = initializeFirebase();
 
 /**
  * AppShell manages the top-level structure of the application, 
@@ -79,13 +83,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <AuthProvider>
-              <LanguageProvider>
-                <AppShell>
-                  {children}
-                </AppShell>
-              </LanguageProvider>
-            </AuthProvider>
+            <FirebaseClientProvider firebaseApp={firebase.firebaseApp} firestore={firebase.firestore} auth={firebase.auth}>
+              <AuthProvider>
+                <LanguageProvider>
+                  <AppShell>
+                    {children}
+                  </AppShell>
+                </LanguageProvider>
+              </AuthProvider>
+            </FirebaseClientProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>
