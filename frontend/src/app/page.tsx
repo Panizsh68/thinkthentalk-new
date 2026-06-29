@@ -2,18 +2,16 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n/language-provider";
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useEventsQuery } from "@/hooks/use-event-queries";
 import { useTeamMembersQuery } from "@/hooks/use-team-queries";
 import { useSponsorsQuery } from "@/hooks/use-sponsor-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Lightbulb, Users, HeartHandshake, ArrowRight, Quote, Sparkles, Calendar, MapPin, Ticket, Star, Play, CheckCircle2, Trophy, Rocket, ShieldCheck, Mail, Camera, Video, PenTool } from "lucide-react";
+import { Lightbulb, Users, ArrowRight, Quote, Sparkles, Calendar, MapPin, Ticket, Play, CheckCircle2, Trophy, Rocket, ShieldCheck, Mail, Camera, Video, PenTool } from "lucide-react";
 import { getLocalizedTextValue } from "@/lib/i18n/get-localized-text";
 import { formatEventDate, getEventPath, getMinPrice, getFormattedPrice, isEventPast } from "@/lib/event-helpers";
 import type { Event } from "@/lib/types";
@@ -21,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 
 /**
  * 1. HERO SECTION
+ * Using real community photo (group-photo-1)
  */
 function HeroSection() {
   const { t, language } = useLanguage();
@@ -31,7 +30,7 @@ function HeroSection() {
     <section className="relative h-[90vh] min-h-[700px] w-full flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1528605248644-14dd04cb11c7?q=80&w=2070&auto=format&fit=crop"
+          src="/static-images/group-photo-1.jpg"
           alt="Community Gathering"
           fill
           className="object-cover scale-105 animate-pulse-slow opacity-40 grayscale-[0.3]"
@@ -78,7 +77,7 @@ function HeroSection() {
  * 2. UPCOMING EVENTS
  */
 function EventsSection() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { data: events, isLoading, error } = useEventsQuery({
     forHomepage: true,
     showPastEvents: false,
@@ -201,6 +200,7 @@ function ExperienceCard({ event, isFeatured }: { event: Event, isFeatured?: bool
 
 /**
  * 3. SEASON ONE HIGHLIGHT
+ * Real video recap
  */
 function SeasonOneSection() {
   const { t, language } = useLanguage();
@@ -246,17 +246,16 @@ function SeasonOneSection() {
             </Button>
           </div>
 
-          <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl group animate-in zoom-in-95 duration-1000">
-             <Image 
-                src="https://images.unsplash.com/photo-1475721027785-f74ec0f77995?q=80&w=2069&auto=format&fit=crop"
-                alt="Season One Recap"
-                fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+          <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl group animate-in zoom-in-95 duration-1000 bg-black">
+             <video 
+                poster="/static-images/group-photo-2.jpg"
+                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                controls
+                src="/static-images/season-one-recap.mp4"
              />
-             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-500" />
-             <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-2xl transform transition-all duration-500 group-hover:scale-110 cursor-pointer">
-                  <Play className="h-10 w-10 fill-current ml-1" />
+             <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:hidden transition-all">
+                <div className="w-20 h-20 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-2xl transform transition-all duration-500 hover:scale-110">
+                  <Play className="h-8 w-8 fill-current ml-1" />
                 </div>
              </div>
           </div>
@@ -311,17 +310,17 @@ function WhySection() {
 
 /**
  * 5. COMMUNITY GALLERY
- * Visual showcase of real atmosphere.
+ * Real community photos
  */
 function GallerySection() {
   const { t } = useLanguage();
   
   const items = [
-    { url: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2070&auto=format&fit=crop', span: 'col-span-2 row-span-2' },
-    { url: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop', span: 'col-span-1 row-span-1' },
-    { url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2064&auto=format&fit=crop', span: 'col-span-1 row-span-2' },
-    { url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop', span: 'col-span-1 row-span-1' },
-    { url: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1949&auto=format&fit=crop', span: 'col-span-2 row-span-1' },
+    { url: '/static-images/group-photo-1.jpg', span: 'col-span-2 row-span-2' },
+    { url: '/static-images/group-photo-2.jpg', span: 'col-span-1 row-span-1' },
+    { url: '/static-images/group-photo-3.jpg', span: 'col-span-1 row-span-2' },
+    { url: '/static-images/group-photo-4.jpg', span: 'col-span-1 row-span-1' },
+    { url: '/static-images/group-photo-1.jpg', span: 'col-span-2 row-span-1' },
   ];
 
   return (
@@ -355,8 +354,7 @@ function GallerySection() {
  * 6. SUGGEST AN EVENT
  */
 function SuggestSection() {
-  const { t, language } = useLanguage();
-  const isRTL = language === 'fa';
+  const { t } = useLanguage();
 
   return (
     <section className="py-24 md:py-32">
@@ -427,7 +425,7 @@ function CollaborateSection() {
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="relative aspect-square">
              <Image 
-                src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1949&auto=format&fit=crop"
+                src="/static-images/group-photo-3.jpg"
                 alt="Collaboration Team"
                 fill
                 className="object-cover rounded-[3rem] opacity-80"
@@ -523,7 +521,7 @@ function SponsorshipSection() {
  * 9. MEET THE TEAM
  */
 function TeamSection() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { data: team, isLoading } = useTeamMembersQuery();
 
   return (
