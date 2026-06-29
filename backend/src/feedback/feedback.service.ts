@@ -56,7 +56,7 @@ export class FeedbackService {
     return {
       id: form.id,
       eventId: form.eventId,
-      questions: form.questions.map(this.toQuestionDto),
+      questions: form.questions.map((q) => this.toQuestionDto(q)),
       submitted: Boolean(submission),
     };
   }
@@ -92,7 +92,10 @@ export class FeedbackService {
       throw new BadRequestException('Evaluation already submitted.');
     }
 
-    this.validateAnswers(form.questions.map(this.toQuestionDto), answers);
+    this.validateAnswers(
+      form.questions.map((q) => this.toQuestionDto(q)),
+      answers,
+    );
 
     await this.prisma.evaluationSubmission.create({
       data: {
@@ -131,7 +134,7 @@ export class FeedbackService {
       id: form.id,
       eventId: form.eventId,
       submitted: false,
-      questions: form.questions.map(this.toQuestionDto),
+      questions: form.questions.map((q) => this.toQuestionDto(q)),
     };
   }
 
@@ -194,23 +197,14 @@ export class FeedbackService {
     });
     if (!form) return null;
 
-    type SubmissionWithUser = EvaluationSubmission & {
-      user: {
-        id: string;
-        firstNameFa: string | null;
-        lastNameFa: string | null;
-        mobile: string;
-      };
-    };
-
-    const submissions = (await this.prisma.evaluationSubmission.findMany({
+    const submissions = await this.prisma.evaluationSubmission.findMany({
       where: { evaluationFormId: form.id },
       include: { user: true },
-    })) as unknown as SubmissionWithUser[];
+    });
 
-    const questions = form.questions.map(this.toQuestionDto);
+    const questions = form.questions.map((q) => this.toQuestionDto(q));
 
-    return submissions.map((submission: SubmissionWithUser) => ({
+    return submissions.map((submission) => ({
       submission: this.toSubmissionDto(submission),
       user: {
         id: submission.user.id,
@@ -247,7 +241,7 @@ export class FeedbackService {
           throw new BadRequestException('Invalid answers.');
         }
         if (
-          q.type === EvaluationQuestionType.YES_NO &&
+          q.type === (EvaluationQuestionType as any).YES_NO &&
           typeof ans !== 'boolean'
         ) {
           throw new BadRequestException('Invalid answers.');
@@ -382,7 +376,7 @@ export class FeedbackService {
             count += 1;
           }
         });
-      } catch {
+      } catch (err: unknown) {
         // ignore submissions with invalid answer formats
       }
     }
