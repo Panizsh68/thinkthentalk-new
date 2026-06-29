@@ -1,3 +1,4 @@
+
 import {
   BeforeApplicationShutdown,
   Injectable,
@@ -5,6 +6,8 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PoolConfig } from 'mariadb';
 
 @Injectable()
 export class PrismaService
@@ -14,7 +17,18 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
+    const poolConfig: PoolConfig = {
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      connectionLimit: 10,
+    };
+
+    const adapter = new PrismaMariaDb(poolConfig);
     super({
+      adapter,
       log: ['error', 'warn'],
     });
   }
