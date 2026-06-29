@@ -13,7 +13,7 @@ import { PrismaService } from '../infrastructure/database/prisma.service';
 import { EvaluationFormDto } from './dto/evaluation-form.dto';
 import { EvaluationQuestionDto } from './dto/evaluation-question.dto';
 import { EvaluationResponseDto } from './dto/evaluation-response.dto';
-import { EvaluationSubmissionDto } from './evaluation-submission.dto';
+import { EvaluationSubmissionDto } from './dto/evaluation-submission.dto';
 import { randomUUID } from 'crypto';
 
 @Injectable()
