@@ -144,7 +144,33 @@
       "badges": {
         "complete": "پروفایل کامل",
         "incomplete": "نیاز به تکمیل"
-      }
+      },
+      "filters": {
+        "searchPlaceholder": "جستجو با نام، موبایل یا ایمیل...",
+        "profileStatus": "وضعیت پروفایل",
+        "all": "همه وضعیت‌ها",
+        "complete": "پروفایل کامل",
+        "incomplete": "نیاز به تکمیل"
+      },
+      "table": {
+        "user": "کاربر",
+        "profileStatus": "وضعیت پروفایل",
+        "registrations": "تعداد ثبت‌نام",
+        "missing": "فیلدهای ناقص",
+        "lastRegistration": "آخرین فعالیت",
+        "actions": "عملیات"
+      },
+      "profileCard": {
+        "title": "اطلاعات کلی",
+        "completion": "میزان تکمیل پروفایل",
+        "missingFields": "موارد ناقص جهت تکمیل"
+      },
+      "registrations": {
+        "title": "سابقه حضور در رویدادها",
+        "empty": "این کاربر هنوز در رویدادی شرکت نکرده است.",
+        "open": "مشاهده جزئیات"
+      },
+      "latestFormData": "آخرین اطلاعات فرم ثبت‌نام"
     },
     "events": {
       "title": "مدیریت رویدادها",
@@ -158,6 +184,30 @@
         "capacity": "ظرفیت",
         "state": "وضعیت سیستمی"
       },
+      "state": {
+        "active": "فعال",
+        "archived": "بایگانی شده",
+        "deleted": "حذف شده"
+      },
+      "actions": {
+        "archive": "بایگانی",
+        "unarchive": "خروج از بایگانی",
+        "delete": "حذف رویداد",
+        "deletePermanent": "حذف دائمی"
+      },
+      "confirm": {
+        "archiveTitle": "آیا از بایگانی رویداد مطمئن هستید؟",
+        "archiveDescription": "رویدادهای بایگانی شده در لیست عمومی نمایش داده نمی‌شوند.",
+        "unarchiveTitle": "خروج از بایگانی",
+        "unarchiveDescription": "این رویداد مجدداً در سایت نمایش داده خواهد شد.",
+        "deleteTitle": "حذف رویداد",
+        "deleteDescription": "آیا از حذف این رویداد مطمئن هستید؟",
+        "permanentCheckbox": "تایید حذف دائمی از دیتابیس"
+      },
+      "archiveSuccess": "رویداد بایگانی شد",
+      "unarchiveSuccess": "رویداد از بایگانی خارج شد",
+      "deleteSuccess": "رویداد با موفقیت حذف شد",
+      "deleteSuccessPermanent": "رویداد برای همیشه از دیتابیس پاک شد",
       "create": {
         "title": "ایجاد رویداد جدید",
         "subtitle": "برای ایجاد یک رویداد جدید، جزئیات را پر کنید.",
@@ -169,7 +219,79 @@
         "subtitle": "شما در حال ویرایش رویداد هستید: {eventName}",
         "successTitle": "رویداد به‌روزرسانی شد",
         "successDescription": "رویداد '{eventName}' با موفقیت به‌روزرسانی شد."
+      },
+      "form": {
+        "basicInfo": "اطلاعات پایه",
+        "title": "عنوان رویداد",
+        "categories": "دسته‌بندی‌ها",
+        "categoriesDesc": "لیست دسته‌بندی‌ها با کاما جدا شود (مثال: تکنولوژی، ارتباطات).",
+        "content": "محتوا",
+        "summary": "خلاصه",
+        "description": "توضیحات",
+        "locationAndDate": "مکان و تاریخ",
+        "address": "آدرس",
+        "startDateTime": "تاریخ و زمان شروع",
+        "endDateTime": "تاریخ و زمان پایان",
+        "endDateTimeOptional": "اختیاری. اگر رویداد زمان پایان مشخصی ندارد، آن را خالی بگذارید.",
+        "pickDate": "یک تاریخ انتخاب کنید",
+        "capacity": "ظرفیت و بلیت‌ها",
+        "capacityTotal": "ظرفیت کل",
+        "showRemainingCapacity": "نمایش ظرفیت باقی‌مانده",
+        "showRemainingCapacityDesc": "تعداد جای خالی موجود را در صفحه رویداد نمایش دهید.",
+        "saveChanges": "ذخیره تغییرات",
+        "createEvent": "ایجاد رویداد"
+      },
+      "validation": {
+        "nonNegative": "ظرفیت باید یک عدد غیرمنفی باشد."
       }
+    },
+    "actions": {
+      "edit": "ویرایش رویداد",
+      "manageTickets": "مدیریت بلیت‌ها",
+      "manageResources": "مدیریت منابع",
+      "manageFeedback": "مدیریت نظرسنجی"
+    },
+    "registrations": {
+      "table": {
+        "date": "تاریخ ثبت‌نام"
+      },
+      "details": {
+        "paymentTitle": "جزئیات مالی",
+        "gatewayId": "شناسه درگاه",
+        "auditLogTitle": "تاریخچه تغییرات",
+        "changeStatus": "تغییر وضعیت دستی",
+        "confirmStatusChangeTitle": "تایید تغییر وضعیت",
+        "confirmStatusChangeDescription": "آیا از تغییر وضعیت به {newStatus} مطمئن هستید؟"
+      }
+    },
+    "export": {
+      "paymentId": "شناسه پرداخت",
+      "event": "رویداد",
+      "registrationId": "شناسه ثبت‌نام",
+      "amount": "مبلغ",
+      "currency": "واحد پول",
+      "status": "وضعیت",
+      "date": "تاریخ تراکنش",
+      "registrationDate": "تاریخ ثبت‌نام",
+      "mobile": "شماره موبایل",
+      "exportCsv": "خروجی اکسل (CSV)"
+    },
+    "messaging": {
+      "sendSuccessTitle": "پیام ارسال شد",
+      "sendSuccessDescription": "پیام شما برای {count} کاربر ارسال گردید.",
+      "filterRecipients": "فیلتر گیرندگان",
+      "recipientList": "لیست گیرندگان نهایی",
+      "recipientCount": "{selected} از {total} نفر انتخاب شده‌اند",
+      "composeTitle": "متن پیام",
+      "templatePlaceholder": "انتخاب قالب آماده...",
+      "noTemplate": "بدون قالب (متن آزاد)",
+      "subject": "موضوع پیام",
+      "body": "متن پیام",
+      "templateNote": "نکته: متون داخل {} به صورت خودکار جایگذاری می‌شوند.",
+      "channels": "روش‌های ارسال",
+      "sendButton": "ارسال برای {count} نفر",
+      "confirmSendTitle": "تایید ارسال گروهی",
+      "confirmSendDescription": "آیا از ارسال پیام برای {count} نفر اطمینان دارید؟"
     }
   },
   "dashboard": {
@@ -189,12 +311,28 @@
     }
   },
   "profile": {
-    "title": "پروفایل من"
+    "title": "پروفایل من",
+    "subtitle": "اطلاعات حساب کاربری شما"
   },
   "events": {
     "noEventsFound": "رویدادی با این مشخصات یافت نشد."
   },
   "actions": {
-    "clearFilters": "پاک کردن فیلترها"
+    "clearFilters": "پاک کردن فیلترها",
+    "confirm": "تایید",
+    "yes": "بله",
+    "no": "خیر"
+  },
+  "share": {
+    "label": "اشتراک‌گذاری",
+    "system": "اشتراک‌گذاری با موبایل",
+    "whatsapp": "واتس‌اپ",
+    "telegram": "تلگرام",
+    "x": "X (توییتر)",
+    "linkedin": "لینکدین",
+    "email": "ایمیل",
+    "copyLink": "کپی کردن لینک",
+    "linkCopiedTitle": "لینک کپی شد",
+    "linkCopiedDescription": "آدرس رویداد در حافظه کپی شد."
   }
 }

@@ -142,7 +142,33 @@
       "badges": {
         "complete": "Complete Profile",
         "incomplete": "Incomplete Profile"
-      }
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name, mobile, email...",
+        "profileStatus": "Profile Status",
+        "all": "All Statuses",
+        "complete": "Complete Profile",
+        "incomplete": "Incomplete Profile"
+      },
+      "table": {
+        "user": "User",
+        "profileStatus": "Status",
+        "registrations": "Registrations",
+        "missing": "Missing Fields",
+        "lastRegistration": "Last Activity",
+        "actions": "Actions"
+      },
+      "profileCard": {
+        "title": "Profile Summary",
+        "completion": "Profile Completion Status",
+        "missingFields": "Fields to Complete"
+      },
+      "registrations": {
+        "title": "Event Participation History",
+        "empty": "This user hasn't registered for any events yet.",
+        "open": "View Details"
+      },
+      "latestFormData": "Latest Registration Data"
     },
     "events": {
       "title": "Events Management",
@@ -154,8 +180,32 @@
         "type": "Type",
         "status": "Status",
         "capacity": "Capacity",
-        "state": "State"
+        "state": "System State"
       },
+      "state": {
+        "active": "Active",
+        "archived": "Archived",
+        "deleted": "Deleted"
+      },
+      "actions": {
+        "archive": "Archive",
+        "unarchive": "Restore",
+        "delete": "Delete Event",
+        "deletePermanent": "Delete Permanently"
+      },
+      "confirm": {
+        "archiveTitle": "Archive Event?",
+        "archiveDescription": "Archived events are not visible in the public list.",
+        "unarchiveTitle": "Restore Event",
+        "unarchiveDescription": "This event will be visible on the site again.",
+        "deleteTitle": "Delete Event",
+        "deleteDescription": "Are you sure you want to delete this event?",
+        "permanentCheckbox": "Confirm permanent deletion from database"
+      },
+      "archiveSuccess": "Event archived",
+      "unarchiveSuccess": "Event restored",
+      "deleteSuccess": "Event deleted successfully",
+      "deleteSuccessPermanent": "Event permanently removed",
       "create": {
         "title": "Create New Event",
         "subtitle": "Fill in the details to create a new event.",
@@ -167,7 +217,79 @@
         "subtitle": "You are editing the event: {eventName}",
         "successTitle": "Event Updated",
         "successDescription": "The event '{eventName}' has been successfully updated."
+      },
+      "form": {
+        "basicInfo": "Basic Information",
+        "title": "Event Title",
+        "categories": "Categories",
+        "categoriesDesc": "Comma-separated list of categories (e.g., Tech, Communication).",
+        "content": "Content",
+        "summary": "Summary",
+        "description": "Description",
+        "locationAndDate": "Location & Date",
+        "address": "Address",
+        "startDateTime": "Start Date & Time",
+        "endDateTime": "End Date & Time",
+        "endDateTimeOptional": "Optional. Leave empty if the event has no fixed end time.",
+        "pickDate": "Pick a date",
+        "capacity": "Capacity & Tickets",
+        "capacityTotal": "Total Capacity",
+        "showRemainingCapacity": "Show Remaining Capacity",
+        "showRemainingCapacityDesc": "Display the number of available spots on the event page.",
+        "saveChanges": "Save Changes",
+        "createEvent": "Create Event"
+      },
+      "validation": {
+        "nonNegative": "Capacity must be a non-negative number."
       }
+    },
+    "actions": {
+      "edit": "Edit Event",
+      "manageTickets": "Manage Tickets",
+      "manageResources": "Manage Resources",
+      "manageFeedback": "Manage Feedback"
+    },
+    "registrations": {
+      "table": {
+        "date": "Reg. Date"
+      },
+      "details": {
+        "paymentTitle": "Payment Info",
+        "gatewayId": "Gateway ID",
+        "auditLogTitle": "Audit Log",
+        "changeStatus": "Manual Status Update",
+        "confirmStatusChangeTitle": "Confirm Status Change",
+        "confirmStatusChangeDescription": "Are you sure you want to change status to {newStatus}?"
+      }
+    },
+    "export": {
+      "paymentId": "Payment ID",
+      "event": "Event",
+      "registrationId": "Reg. ID",
+      "amount": "Amount",
+      "currency": "Currency",
+      "status": "Status",
+      "date": "Txn. Date",
+      "registrationDate": "Reg. Date",
+      "mobile": "Mobile",
+      "exportCsv": "Export to CSV"
+    },
+    "messaging": {
+      "sendSuccessTitle": "Messages Sent",
+      "sendSuccessDescription": "Sent to {count} users successfully.",
+      "filterRecipients": "Filter Recipients",
+      "recipientList": "Final Recipient List",
+      "recipientCount": "{selected} of {total} selected",
+      "composeTitle": "Compose Message",
+      "templatePlaceholder": "Choose template...",
+      "noTemplate": "Custom Message",
+      "subject": "Subject",
+      "body": "Message Body",
+      "templateNote": "Note: Variables in {} are auto-filled.",
+      "channels": "Delivery Channels",
+      "sendButton": "Send to {count} users",
+      "confirmSendTitle": "Confirm Group Messaging",
+      "confirmSendDescription": "Are you sure you want to send this to {count} users?"
     }
   },
   "dashboard": {
@@ -187,12 +309,28 @@
     }
   },
   "profile": {
-    "title": "My Profile"
+    "title": "My Profile",
+    "subtitle": "Your Account Information"
   },
   "events": {
     "noEventsFound": "No events found matching your criteria."
   },
   "actions": {
-    "clearFilters": "Clear Filters"
+    "clearFilters": "Clear Filters",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "share": {
+    "label": "Share",
+    "system": "Share via System",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "x": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "copyLink": "Copy Link",
+    "linkCopiedTitle": "Link Copied",
+    "linkCopiedDescription": "Event link copied to clipboard."
   }
 }
