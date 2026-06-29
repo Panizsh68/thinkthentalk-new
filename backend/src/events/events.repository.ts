@@ -499,11 +499,13 @@ export class EventsRepository {
       }
     }
     if (filters.category) {
+      // categories field is a comma-separated string in DB
       andConditions.push({
         categories: { contains: filters.category },
       });
     }
     if (filters.categories && filters.categories.length > 0) {
+      // filtering by multiple categories
       andConditions.push({
         OR: filters.categories.map((category) => ({
           categories: { contains: category },

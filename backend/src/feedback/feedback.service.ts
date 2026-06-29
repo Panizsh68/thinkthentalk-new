@@ -206,7 +206,7 @@ export class FeedbackService {
     const submissions = (await this.prisma.evaluationSubmission.findMany({
       where: { evaluationFormId: form.id },
       include: { user: true },
-    })) as SubmissionWithUser[];
+    })) as unknown as SubmissionWithUser[];
 
     const questions = form.questions.map(this.toQuestionDto);
 

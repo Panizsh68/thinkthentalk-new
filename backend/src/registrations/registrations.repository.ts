@@ -49,7 +49,9 @@ export class RegistrationsRepository {
         ...(filters.userId ? { userId: filters.userId } : {}),
         ...(filters.eventId ? { eventId: filters.eventId } : {}),
         ...(filters.status
-          ? { status: filters.status as RegistrationStatus }
+          ? {
+              status: filters.status as RegistrationStatus,
+            }
           : {}),
       },
       include: {

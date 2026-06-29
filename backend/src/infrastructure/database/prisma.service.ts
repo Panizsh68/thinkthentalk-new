@@ -34,7 +34,8 @@ export class PrismaService
       await this.$connect();
       this.logger.log('Prisma client connected successfully to the database.');
     } catch (error: unknown) {
-      this.logger.error('Failed to connect to the database.', error);
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to connect to the database: ${message}`);
     }
   }
 
