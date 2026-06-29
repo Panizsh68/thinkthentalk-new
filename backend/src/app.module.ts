@@ -13,7 +13,7 @@ import { ContentModule } from './content/content.module';
 import { DiscountsModule } from './discounts/discounts.module';
 import { EventsModule } from './events/events.module';
 import { FeedbackModule } from './feedback/feedback.module';
-import { InfrastructureModule } from './infrastructure/infrastructure.module';
+import { PrismaModule } from './infrastructure/database/prisma.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { PaymentsModule } from './payments/payments.module';
 import { RegistrationsModule } from './registrations/registrations.module';
@@ -63,7 +63,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
         },
       ],
     }),
-    InfrastructureModule,
+    PrismaModule,
     CommonModule,
     AuthModule,
     UsersModule,

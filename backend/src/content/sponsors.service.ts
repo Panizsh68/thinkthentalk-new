@@ -87,7 +87,7 @@ export class SponsorsService {
   private toDto = (sponsor: Sponsor): SponsorDto => ({
     id: sponsor.id,
     name: sponsor.nameFa,
-    productOrTagline: "",
+    productOrTagline: '',
     logoUrl: sponsor.logoUrl,
     websiteUrl: sponsor.websiteUrl ?? undefined,
   });

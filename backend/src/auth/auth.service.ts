@@ -128,7 +128,9 @@ export class AuthService {
         );
       } catch (error) {
         this.logger.error('Error during user creation', error);
-        throw new ConflictException('A user with this email might already exist.');
+        throw new ConflictException(
+          'A user with this email might already exist.',
+        );
       }
     }
 

@@ -70,9 +70,7 @@ const envFilePath = [`.env.${nodeEnv}`, '.env'];
         IPPANEL_BASE_URL: Joi.string()
           .uri()
           .default('https://edge.ippanel.com/v1'),
-        IPPANEL_PATTERN_BASE_URL: Joi.string()
-          .uri()
-          .optional(),
+        IPPANEL_PATTERN_BASE_URL: Joi.string().uri().optional(),
         IPPANEL_API_KEY: Joi.string().when('NODE_ENV', {
           is: 'production',
           then: Joi.required(),

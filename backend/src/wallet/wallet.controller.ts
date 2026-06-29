@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, UseGuards, Param, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Param,
+  Patch,
+} from '@nestjs/common';
 import { WalletService } from './wallet.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -32,8 +40,15 @@ export class WalletController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearerAuth')
   @ApiOperation({ summary: 'Request withdrawal' })
-  withdraw(@CurrentUser() user: any, @Body() body: { amount: number, shabaNumber: string }) {
-    return this.walletService.withdrawRequest(user.sub, body.amount, body.shabaNumber);
+  withdraw(
+    @CurrentUser() user: any,
+    @Body() body: { amount: number; shabaNumber: string },
+  ) {
+    return this.walletService.withdrawRequest(
+      user.sub,
+      body.amount,
+      body.shabaNumber,
+    );
   }
 
   @Get('admin/withdrawals')
@@ -50,7 +65,14 @@ export class WalletController {
   @Roles(AdminRole.ADMIN, AdminRole.FINANCE)
   @ApiBearerAuth('bearerAuth')
   @ApiOperation({ summary: 'Update withdrawal status (Admin)' })
-  updateWithdrawal(@Param('id') id: string, @Body() body: { status: WithdrawalStatus, adminNote?: string }) {
-    return this.walletService.updateWithdrawalStatus(id, body.status, body.adminNote);
+  updateWithdrawal(
+    @Param('id') id: string,
+    @Body() body: { status: WithdrawalStatus; adminNote?: string },
+  ) {
+    return this.walletService.updateWithdrawalStatus(
+      id,
+      body.status,
+      body.adminNote,
+    );
   }
 }

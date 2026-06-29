@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { EventIdeasController } from './event-ideas.controller';
 import { EventIdeasService } from './event-ideas.service';

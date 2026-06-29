@@ -1,4 +1,3 @@
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { CreateEventIdeaDto } from './dto/create-event-idea.dto';
@@ -22,7 +21,12 @@ export class EventIdeasService {
     });
   }
 
-  async findAll(filters: { status?: EventIdeaStatus; type?: EventIdeaType; page?: number; limit?: number }) {
+  async findAll(filters: {
+    status?: EventIdeaStatus;
+    type?: EventIdeaType;
+    page?: number;
+    limit?: number;
+  }) {
     const { status, type, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
 

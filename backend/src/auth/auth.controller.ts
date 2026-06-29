@@ -118,11 +118,16 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ user: UserDto }> {
     try {
-      const result = await this.authService.loginWithEmail(body.email, body.password);
+      const result = await this.authService.loginWithEmail(
+        body.email,
+        body.password,
+      );
       res.setHeader('Authorization', `Bearer ${result.token}`);
       return { user: result.user };
     } catch (error) {
-      throw new UnauthorizedException(error instanceof Error ? error.message : 'Login failed');
+      throw new UnauthorizedException(
+        error instanceof Error ? error.message : 'Login failed',
+      );
     }
   }
 
@@ -162,7 +167,9 @@ export class AuthController {
       res.setHeader('Authorization', `Bearer ${result.token}`);
       return { user: result.user };
     } catch (error) {
-      throw new UnauthorizedException(error instanceof Error ? error.message : 'Login failed');
+      throw new UnauthorizedException(
+        error instanceof Error ? error.message : 'Login failed',
+      );
     }
   }
 }

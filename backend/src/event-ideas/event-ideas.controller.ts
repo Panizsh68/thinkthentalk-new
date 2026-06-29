@@ -1,6 +1,20 @@
-
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AdminRole, EventIdeaStatus, EventIdeaType } from '@prisma/client';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -41,7 +55,10 @@ export class EventIdeasController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER)
   @ApiOperation({ summary: 'Update idea status (Admin)' })
-  async updateStatus(@Param('id') id: string, @Body('status') status: EventIdeaStatus) {
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: EventIdeaStatus,
+  ) {
     return this.eventIdeasService.updateStatus(id, status);
   }
 

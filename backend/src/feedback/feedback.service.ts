@@ -353,7 +353,7 @@ export class FeedbackService {
       try {
         const answers = (
           typeof sub.answers === 'string'
-            ? JSON.parse(sub.answers as string)
+            ? JSON.parse(sub.answers)
             : sub.answers
         ) as Record<string, unknown>;
         ratingQuestionIds.forEach((id: string) => {

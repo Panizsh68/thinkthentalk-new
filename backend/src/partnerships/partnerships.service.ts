@@ -1,4 +1,3 @@
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { PartnershipStatus, SponsorshipPlan } from '@prisma/client';
@@ -66,8 +65,14 @@ export class PartnershipsService {
     return { items, total, page, limit };
   }
 
-  async updateCollaborationStatus(id: string, status: PartnershipStatus, notes?: string) {
-    const request = await this.prisma.collaborationRequest.findUnique({ where: { id } });
+  async updateCollaborationStatus(
+    id: string,
+    status: PartnershipStatus,
+    notes?: string,
+  ) {
+    const request = await this.prisma.collaborationRequest.findUnique({
+      where: { id },
+    });
     if (!request) throw new NotFoundException('Request not found');
 
     return this.prisma.collaborationRequest.update({
@@ -80,8 +85,14 @@ export class PartnershipsService {
     });
   }
 
-  async updateSponsorshipStatus(id: string, status: PartnershipStatus, notes?: string) {
-    const request = await this.prisma.sponsorshipRequest.findUnique({ where: { id } });
+  async updateSponsorshipStatus(
+    id: string,
+    status: PartnershipStatus,
+    notes?: string,
+  ) {
+    const request = await this.prisma.sponsorshipRequest.findUnique({
+      where: { id },
+    });
     if (!request) throw new NotFoundException('Request not found');
 
     return this.prisma.sponsorshipRequest.update({

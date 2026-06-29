@@ -29,7 +29,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (status >= 500) {
       this.logger.error(
         `${request.method} ${request.url} failed with status ${status}: ${body.message}`,
-        exception instanceof Error ? exception.stack : JSON.stringify(exception),
+        exception instanceof Error
+          ? exception.stack
+          : JSON.stringify(exception),
       );
     } else {
       this.logger.warn(
@@ -78,7 +80,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         body: {
           message: Array.isArray(message)
             ? message.join(', ')
-            : (message || exception.message || 'Error'),
+            : message || exception.message || 'Error',
           statusCode: exception.getStatus(),
           error: exception.name,
         },

@@ -42,7 +42,7 @@ export const prismaRegistrationToEntity = (
     registration.userId,
     registration.eventId,
     registration.ticketType,
-    registration.status as RegistrationStatus,
+    registration.status,
     registration.formData
       ? (registration.formData as unknown as Record<string, any>)
       : null,
@@ -63,7 +63,7 @@ export const prismaToUserRegistrationEntity = (
     registration.eventId,
     registration.payment?.id || null,
     registration.ticketType,
-    registration.status as RegistrationStatus,
+    registration.status,
     toDate(registration.createdAt),
     {
       title: parseLocalizedText(registration.event.title),
@@ -87,7 +87,7 @@ export const prismaToUserRegistrationDetailsEntity = (
     registration.eventId,
     registration.payment?.id || null,
     registration.ticketType,
-    registration.status as RegistrationStatus,
+    registration.status,
     toDate(registration.createdAt),
     toUserEntity(registration.user),
     registration.formData
@@ -121,7 +121,7 @@ export const paymentToDto = (payment: Payment | null): PaymentDto | null => {
     ticketType: payment.ticketType,
     amount: payment.amount.toNumber(),
     currency: payment.currency,
-    status: payment.status as PaymentStatus,
+    status: payment.status,
     gatewayTransactionId: payment.gatewayTransactionId || undefined,
     createdAt: toDate(payment.createdAt).toISOString(),
     updatedAt: toDate(payment.updatedAt).toISOString(),

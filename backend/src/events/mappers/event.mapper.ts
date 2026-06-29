@@ -18,15 +18,23 @@ import {
 
 export const prismaEventToEventEntity = (
   event: PrismaEvent & {
-    ticketConfigs: (PrismaEventTicketConfig & { saleStartDate?: Date | null; saleEndDate?: Date | null })[];
+    ticketConfigs: (PrismaEventTicketConfig & {
+      saleStartDate?: Date | null;
+      saleEndDate?: Date | null;
+    })[];
     resources: PrismaEventResource[];
   },
 ): EventEntity => {
   const categories = event.categories ? event.categories.split(',') : [];
-  const publicDiscountIds = event.publicDiscountIds ? event.publicDiscountIds.split(',') : [];
+  const publicDiscountIds = event.publicDiscountIds
+    ? event.publicDiscountIds.split(',')
+    : [];
 
   const tickets = event.ticketConfigs.map((ticket) => {
-    const price = typeof ticket.price === 'number' ? ticket.price : (ticket.price as any).toNumber();
+    const price =
+      typeof ticket.price === 'number'
+        ? ticket.price
+        : (ticket.price as any).toNumber();
     return new EventTicketConfigEntity(
       ticket.id,
       ticket.type,
@@ -35,20 +43,23 @@ export const prismaEventToEventEntity = (
       ticket.quantityTotal,
       ticket.quantitySold,
       ticket.saleStartDate || event.startDateTime,
-      ticket.saleEndDate || event.endDateTime || new Date(event.startDateTime.getTime() + 30 * 24 * 60 * 60 * 1000),
+      ticket.saleEndDate ||
+        event.endDateTime ||
+        new Date(event.startDateTime.getTime() + 30 * 24 * 60 * 60 * 1000),
       ticket.earlyBirdEndDate,
       Math.max(ticket.quantityTotal - ticket.quantitySold, 0),
     );
   });
 
-  const resources = event.resources.map((res) =>
-    new EventResourceEntity(
-      res.id,
-      { fa: res.titleFa, en: res.titleEn },
-      res.accessLevel,
-      res.url,
-      res.description,
-    ),
+  const resources = event.resources.map(
+    (res) =>
+      new EventResourceEntity(
+        res.id,
+        { fa: res.titleFa, en: res.titleEn },
+        res.accessLevel,
+        res.url,
+        res.description,
+      ),
   );
 
   return new EventEntity(
@@ -102,7 +113,9 @@ export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
     quantityRemaining: t.quantityRemaining,
     saleStartDate: t.saleStartDate.toISOString(),
     saleEndDate: t.saleEndDate.toISOString(),
-    earlyBirdEndDate: t.earlyBirdEndDate ? t.earlyBirdEndDate.toISOString() : null,
+    earlyBirdEndDate: t.earlyBirdEndDate
+      ? t.earlyBirdEndDate.toISOString()
+      : null,
   })),
   resources: entity.resources.map((r) => ({
     id: r.id,
@@ -120,7 +133,9 @@ export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
   deletedById: entity.deletedById || null,
 });
 
-export const eventFormDataDtoToPrismaInput = (dto: EventFormDataDto): Prisma.EventCreateInput => ({
+export const eventFormDataDtoToPrismaInput = (
+  dto: EventFormDataDto,
+): Prisma.EventCreateInput => ({
   title: serializeLocalizedText(dto.title),
   slug: dto.slug || '',
   summaryFa: dto.summary.fa,
@@ -135,12 +150,20 @@ export const eventFormDataDtoToPrismaInput = (dto: EventFormDataDto): Prisma.Eve
   capacityTotal: dto.capacityTotal,
   capacityRemaining: dto.capacityTotal,
   showRemainingCapacity: dto.showRemainingCapacity,
-  categories: dto.categories ? dto.categories.split(',').map(c => c.trim()).filter(Boolean).join(',') : '',
+  categories: dto.categories
+    ? dto.categories
+        .split(',')
+        .map((c) => c.trim())
+        .filter(Boolean)
+        .join(',')
+    : '',
   publicDiscountIds: (dto.publicDiscountIds || []).join(','),
   posterUrl: dto.posterUrl || undefined,
 });
 
-export const eventUpdateFormDataDtoToPrismaInput = (dto: UpdateEventFormDataDto): Prisma.EventUpdateInput => {
+export const eventUpdateFormDataDtoToPrismaInput = (
+  dto: UpdateEventFormDataDto,
+): Prisma.EventUpdateInput => {
   const updateInput: Prisma.EventUpdateInput = {};
 
   if (dto.title) updateInput.title = serializeLocalizedText(dto.title);
@@ -154,18 +177,25 @@ export const eventUpdateFormDataDtoToPrismaInput = (dto: UpdateEventFormDataDto)
     updateInput.descriptionEn = dto.description.en;
   }
   if (dto.type !== undefined) updateInput.type = dto.type;
-  if (dto.city !== undefined) updateInput.city = dto.city ? serializeLocalizedText(dto.city) : null;
+  if (dto.city !== undefined)
+    updateInput.city = dto.city ? serializeLocalizedText(dto.city) : null;
   if (dto.address !== undefined) updateInput.address = dto.address;
-  if (dto.startDateTime !== undefined) updateInput.startDateTime = new Date(dto.startDateTime);
-  if (dto.endDateTime !== undefined) updateInput.endDateTime = dto.endDateTime ? new Date(dto.endDateTime) : null;
+  if (dto.startDateTime !== undefined)
+    updateInput.startDateTime = new Date(dto.startDateTime);
+  if (dto.endDateTime !== undefined)
+    updateInput.endDateTime = dto.endDateTime
+      ? new Date(dto.endDateTime)
+      : null;
   if (dto.capacityTotal !== undefined) {
     updateInput.capacityTotal = dto.capacityTotal;
     updateInput.capacityRemaining = dto.capacityTotal;
   }
-  if (dto.showRemainingCapacity !== undefined) updateInput.showRemainingCapacity = dto.showRemainingCapacity;
+  if (dto.showRemainingCapacity !== undefined)
+    updateInput.showRemainingCapacity = dto.showRemainingCapacity;
   if (dto.posterUrl !== undefined) updateInput.posterUrl = dto.posterUrl;
   if (dto.categories !== undefined) updateInput.categories = dto.categories;
-  if (dto.publicDiscountIds !== undefined) updateInput.publicDiscountIds = dto.publicDiscountIds.join(',');
+  if (dto.publicDiscountIds !== undefined)
+    updateInput.publicDiscountIds = dto.publicDiscountIds.join(',');
 
   return updateInput;
 };

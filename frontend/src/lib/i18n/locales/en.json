@@ -7,7 +7,10 @@
     "faq": "FAQ",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "myAccount": "My Account"
+    "myAccount": "My Account",
+    "ideas": "Ideas",
+    "collaborate": "Collaborate",
+    "sponsorship": "Sponsorship"
   },
   "actions": {
     "login": "Login",
@@ -59,7 +62,8 @@
     "resourceRegisteredOnly": "For participants only",
     "resourceAvailableAfterRegistration": "Available after registration",
     "eventHasFinished": "This event has already taken place.",
-    "alreadyRegistered": "Already Registered"
+    "alreadyRegistered": "Already Registered",
+    "cityUnknown": "City not specified"
   },
   "tickets": {
     "early_bird": "Early Bird",
@@ -377,6 +381,100 @@
       "edit": "Edit Event",
       "manageTickets": "Manage Tickets",
       "manageResources": "Manage Resources"
+    },
+    "payments": {
+      "title": "Payments",
+      "subtitle": "View and manage all payments.",
+      "totalRevenue": "Total Revenue",
+      "paidTransactions": "Paid Transactions",
+      "mockRefunds": "Mock Refunds",
+      "noPaymentsFound": "No payments found.",
+      "table": {
+        "user": "User",
+        "event": "Event",
+        "amount": "Amount",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions"
+      }
+    },
+    "registrations": {
+      "filters": {
+        "allEvents": "All Events"
+      },
+      "sendMessage": {
+        "sendViaEmail": "Send via Email",
+        "sendViaSms": "Send via SMS"
+      },
+      "table": {
+        "user": "User",
+        "event": "Event",
+        "status": "Status"
+      }
+    },
+    "discounts": {
+      "title": "Discounts",
+      "subtitle": "Create and manage discount codes.",
+      "createNew": "Create New Discount",
+      "noDiscountsFound": "No discounts found.",
+      "table": {
+        "name": "Name",
+        "type": "Type",
+        "value": "Value",
+        "events": "Events",
+        "validity": "Validity",
+        "usage": "Usage",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "messaging": {
+      "title": "Messaging",
+      "subtitle": "Send messages to event attendees."
+    }
+  },
+  "home": {
+    "hero": {
+      "kicker": "Community for Thinkers",
+      "title": "Where Conversations Spark Change",
+      "subtitle": "Join a diverse community of thinkers and engage in meaningful conversations that matter.",
+      "browseButton": "Browse Events"
+    },
+    "events": {
+      "featured": "Featured Events",
+      "spotsLeft": "{count} spots left",
+      "viewAllButton": "View All Events"
+    },
+    "involved": {
+      "title": "Get Involved",
+      "subtitle": "We believe in the power of community. Here’s how you can be a part of ours.",
+      "collaborateDesc": "Partner with us to host events and workshops.",
+      "ideasDesc": "Share your ideas for new event topics and formats.",
+      "sponsorshipDesc": "Support our mission and reach a dedicated audience."
+    },
+    "moments": {
+      "title": "Captured Moments",
+      "subtitle": "Glimpses from our past events and gatherings."
+    },
+    "experience": {
+      "title": "The Experience",
+      "subtitle": "More than just talks, our events are about connection and growth.",
+      "perk1": {
+        "title": "Connect",
+        "desc": "Meet and network with like-minded individuals from various fields."
+      },
+      "perk2": {
+        "title": "Learn",
+        "desc": "Gain new perspectives and insights from expert speakers and peers."
+      },
+      "perk3": {
+        "title": "Grow",
+        "desc": "Develop your communication and critical thinking skills in a supportive environment."
+      },
+      "simulation": {
+        "quote": "This is a simulated dialogue. In a real event, you'd be part of a dynamic, engaging conversation. Each event is a unique opportunity to explore new ideas and connect with others on a deeper level.",
+        "caption": "Simulated conversation from a past event."
+      }
     }
   }
 }

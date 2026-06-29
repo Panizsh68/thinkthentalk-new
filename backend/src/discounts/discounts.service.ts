@@ -218,16 +218,14 @@ export class DiscountsService {
   }
 
   private toDiscountDto(
-    discount:
-      | Prisma.DiscountGetPayload<{ include?: { events?: true } }>
-      | Discount,
+    discount: Prisma.DiscountGetPayload<{ include?: { events?: true } }>,
     applicableEventIds: string[],
   ): DiscountDto {
     return {
       id: discount.id,
       name: discount.name,
       code: discount.code ?? undefined,
-      type: discount.type as DiscountType,
+      type: discount.type,
       value:
         (discount.value as any).toNumber?.() ??
         (discount.value as unknown as number),

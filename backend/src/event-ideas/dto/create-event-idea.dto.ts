@@ -1,7 +1,13 @@
-
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EventIdeaType } from '@prisma/client';
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateEventIdeaDto {
   @ApiPropertyOptional()

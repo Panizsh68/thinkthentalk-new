@@ -16,7 +16,11 @@ export async function getTicketSaleWindows(
 
   try {
     const rows = await prisma.$queryRaw<
-      Array<{ id: string; saleStartDate: Date | null; saleEndDate: Date | null }>
+      Array<{
+        id: string;
+        saleStartDate: Date | null;
+        saleEndDate: Date | null;
+      }>
     >(
       Prisma.sql`
         SELECT id, saleStartDate, saleEndDate

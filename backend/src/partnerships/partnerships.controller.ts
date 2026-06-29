@@ -1,5 +1,13 @@
-
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminRole, PartnershipStatus, SponsorshipPlan } from '@prisma/client';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -29,7 +37,10 @@ export class PartnershipsController {
   @ApiBearerAuth('bearerAuth')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AdminRole.ADMIN)
-  async listCollaborations(@Query('status') status: PartnershipStatus, @Query('page') page: number) {
+  async listCollaborations(
+    @Query('status') status: PartnershipStatus,
+    @Query('page') page: number,
+  ) {
     return this.partnershipsService.listCollaborations({ status, page });
   }
 
@@ -37,7 +48,11 @@ export class PartnershipsController {
   @ApiBearerAuth('bearerAuth')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AdminRole.ADMIN, AdminRole.FINANCE)
-  async listSponsorships(@Query('status') status: PartnershipStatus, @Query('plan') plan: SponsorshipPlan, @Query('page') page: number) {
+  async listSponsorships(
+    @Query('status') status: PartnershipStatus,
+    @Query('plan') plan: SponsorshipPlan,
+    @Query('page') page: number,
+  ) {
     return this.partnershipsService.listSponsorships({ status, plan, page });
   }
 
@@ -46,7 +61,11 @@ export class PartnershipsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AdminRole.ADMIN)
   async updateCollabStatus(@Param('id') id: string, @Body() body: any) {
-    return this.partnershipsService.updateCollaborationStatus(id, body.status, body.notes);
+    return this.partnershipsService.updateCollaborationStatus(
+      id,
+      body.status,
+      body.notes,
+    );
   }
 
   @Patch('admin/sponsorships/:id/status')
@@ -54,6 +73,10 @@ export class PartnershipsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AdminRole.ADMIN, AdminRole.FINANCE)
   async updateSponsorStatus(@Param('id') id: string, @Body() body: any) {
-    return this.partnershipsService.updateSponsorshipStatus(id, body.status, body.notes);
+    return this.partnershipsService.updateSponsorshipStatus(
+      id,
+      body.status,
+      body.notes,
+    );
   }
 }

@@ -142,7 +142,8 @@ export class IppanelService {
 
       const result = this.mapResponse(response.data);
       this.logger.debug(
-        `IPPanel pattern SMS send completed (bulkId=${result.bulkId ?? 'n/a'}, success=${result.success
+        `IPPanel pattern SMS send completed (bulkId=${result.bulkId ?? 'n/a'}, success=${
+          result.success
         }, messageIds=${result.messageIds?.join(',') ?? 'n/a'})`,
       );
       return {
@@ -154,7 +155,8 @@ export class IppanelService {
       if (this.isPatternRejection(error)) {
         const rejection = this.mapErrorResponse(error);
         this.logger.warn(
-          `IPPanel pattern SMS rejected (status=${rejection.statusCode ?? 'n/a'}, message=${rejection.statusMessage ?? 'unknown'
+          `IPPanel pattern SMS rejected (status=${rejection.statusCode ?? 'n/a'}, message=${
+            rejection.statusMessage ?? 'unknown'
           })`,
         );
         return {
@@ -201,7 +203,8 @@ export class IppanelService {
 
       const result = this.mapResponse(response.data);
       this.logger.debug(
-        `IPPanel text SMS send completed (bulkId=${result.bulkId ?? 'n/a'}, success=${result.success
+        `IPPanel text SMS send completed (bulkId=${result.bulkId ?? 'n/a'}, success=${
+          result.success
         }, messageIds=${result.messageIds?.join(',') ?? 'n/a'})`,
       );
       return result;
@@ -260,8 +263,8 @@ export class IppanelService {
         : undefined) ??
       (Array.isArray((data?.data as any)?.message_outbox_ids)
         ? (
-          (data?.data as any).message_outbox_ids as Array<string | number>
-        ).map((id) => String(id))
+            (data?.data as any).message_outbox_ids as Array<string | number>
+          ).map((id) => String(id))
         : undefined);
     const messageIds = inferredMessageIds;
     const metaStatus =

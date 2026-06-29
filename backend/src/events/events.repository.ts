@@ -67,7 +67,7 @@ export class EventsRepository {
   async findEventsForHomepage(limit = 3): Promise<EventEntity[]> {
     const now = new Date();
     const includeRelations = { ticketConfigs: true, resources: true };
-    
+
     const upcomingEventsRaw = await this.prisma.event.findMany({
       where: {
         OR: [{ startDateTime: { gte: now } }, { endDateTime: { gte: now } }],
@@ -78,7 +78,9 @@ export class EventsRepository {
       orderBy: { startDateTime: 'asc' },
       take: limit,
     });
-    const upcomingEvents = await this.addSaleWindows(upcomingEventsRaw);
+    const upcomingEvents = await this.addSaleWindows(
+      upcomingEventsRaw.filter((event) => event.ticketConfigs.length > 0),
+    );
 
     if (upcomingEvents.length >= limit) {
       return upcomingEvents.map(prismaEventToEventEntity);
@@ -100,7 +102,9 @@ export class EventsRepository {
       orderBy: [{ endDateTime: 'desc' }, { startDateTime: 'desc' }],
       take: remaining,
     });
-    const pastEvents = await this.addSaleWindows(pastEventsRaw);
+    const pastEvents = await this.addSaleWindows(
+      pastEventsRaw.filter((event) => event.ticketConfigs.length > 0),
+    );
 
     return [...upcomingEvents, ...pastEvents].map(prismaEventToEventEntity);
   }
@@ -216,29 +220,41 @@ export class EventsRepository {
     });
     if (!existing) return null;
 
-    const normalizedTickets = tickets.map((t) => {
-      const saleStartDate = t.saleStartDate ? new Date(t.saleStartDate) : null;
-      const saleEndDate = t.saleEndDate ? new Date(t.saleEndDate) : null;
+    const normalizedTickets: Prisma.EventTicketConfigCreateManyInput[] =
+      tickets.map((t) => {
+        const saleStartDate = t.saleStartDate
+          ? new Date(t.saleStartDate)
+          : null;
+        const saleEndDate = t.saleEndDate ? new Date(t.saleEndDate) : null;
 
-      return {
-        eventId,
-        type: t.type,
-        price: new Prisma.Decimal(t.price),
-        currency: t.currency,
-        quantityTotal: t.quantityTotal,
-        quantitySold: t.quantitySold || 0,
-        earlyBirdEndDate: t.earlyBirdEndDate ? new Date(t.earlyBirdEndDate) : null,
-        saleStartDate,
-        saleEndDate,
-      };
-    });
+        return {
+          eventId,
+          type: t.type,
+          price: new Prisma.Decimal(t.price),
+          currency: t.currency,
+          quantityTotal: t.quantityTotal,
+          quantitySold: t.quantitySold || 0,
+          earlyBirdEndDate: t.earlyBirdEndDate
+            ? new Date(t.earlyBirdEndDate)
+            : null,
+          saleStartDate,
+          saleEndDate,
+        };
+      });
 
-    const newCapacityTotal = normalizedTickets.reduce((sum, t) => sum + (t.quantityTotal || 0), 0);
-    const newCapacityRemaining = normalizedTickets.reduce((sum, t) => sum + Math.max((t.quantityTotal || 0) - (t.quantitySold || 0), 0), 0);
+    const newCapacityTotal = normalizedTickets.reduce(
+      (sum, t) => sum + (t.quantityTotal || 0),
+      0,
+    );
+    const newCapacityRemaining = normalizedTickets.reduce(
+      (sum, t) =>
+        sum + Math.max((t.quantityTotal || 0) - (t.quantitySold || 0), 0),
+      0,
+    );
 
     await this.prisma.$transaction(async (tx) => {
       await tx.eventTicketConfig.deleteMany({ where: { eventId } });
-      await tx.eventTicketConfig.createMany({ data: normalizedTickets as any });
+      await tx.eventTicketConfig.createMany({ data: normalizedTickets });
 
       await tx.event.update({
         where: { id: eventId },
@@ -288,7 +304,7 @@ export class EventsRepository {
       data: {
         isArchived: archived,
         archivedAt: archived ? new Date() : null,
-        archivedById: archived ? (byUserId || null) : null,
+        archivedById: archived ? byUserId || null : null,
       },
       include: { ticketConfigs: true, resources: true },
     });
@@ -311,10 +327,7 @@ export class EventsRepository {
     return prismaEventToEventEntity(event);
   }
 
-  async hardDeleteEvent(
-    eventId: string,
-    byUserId?: string,
-  ): Promise<EventEntity | null> {
+  async hardDeleteEvent(eventId: string): Promise<EventEntity | null> {
     const event = await this.prisma.event.findUnique({
       where: { id: eventId },
       include: { ticketConfigs: true, resources: true },
@@ -356,7 +369,7 @@ export class EventsRepository {
     if (filters.type) {
       where.type = filters.type;
     }
-    
+
     if (filters.city) {
       const normalizedCity = filters.city.trim();
       if (normalizedCity.length > 0) {
