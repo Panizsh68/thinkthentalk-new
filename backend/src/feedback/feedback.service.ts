@@ -99,7 +99,7 @@ export class FeedbackService {
         evaluationFormId: evaluationId,
         userId,
         eventId: form.eventId,
-        answers: answers as any,
+        answers: JSON.stringify(answers),
       },
     });
 
@@ -322,14 +322,17 @@ export class FeedbackService {
     evaluationFormId: string;
     userId: string;
     eventId: string;
-    answers: any;
+    answers: unknown;
     submittedAt: Date;
   }): EvaluationSubmissionDto => ({
     id: s.id,
     evaluationId: s.evaluationFormId,
     userId: s.userId,
     eventId: s.eventId,
-    answers: s.answers,
+    answers:
+      typeof s.answers === 'string'
+        ? (JSON.parse(s.answers) as Record<string, string | number | boolean>)
+        : (s.answers as Record<string, string | number | boolean>),
     submittedAt: s.submittedAt.toISOString(),
   });
 
@@ -365,14 +368,23 @@ export class FeedbackService {
     let count = 0;
 
     for (const sub of submissions) {
-      const answers = sub.answers as Record<string, unknown>;
-      ratingQuestionIds.forEach((id: string) => {
-        const value = answers[id];
-        if (typeof value === 'number') {
-          total += value;
-          count += 1;
-        }
-      });
+      if (!sub.answers) continue;
+      try {
+        const answers = (
+          typeof sub.answers === 'string'
+            ? JSON.parse(sub.answers)
+            : sub.answers
+        ) as Record<string, unknown>;
+        ratingQuestionIds.forEach((id: string) => {
+          const value = answers[id];
+          if (typeof value === 'number') {
+            total += value;
+            count += 1;
+          }
+        });
+      } catch {
+        // ignore submissions with invalid answer formats
+      }
     }
 
     return {

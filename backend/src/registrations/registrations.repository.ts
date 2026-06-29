@@ -8,7 +8,7 @@ import {
   UserRegistrationDetailsEntity,
   UserRegistrationEntity,
 } from './domain/registration.entity';
-import { Prisma } from '@prisma/client';
+import { RegistrationStatus } from '@prisma/client';
 
 export interface AdminRegistrationFilter {
   userId?: string;
@@ -48,7 +48,9 @@ export class RegistrationsRepository {
       where: {
         ...(filters.userId ? { userId: filters.userId } : {}),
         ...(filters.eventId ? { eventId: filters.eventId } : {}),
-        ...(filters.status ? { status: filters.status as any } : {}),
+        ...(filters.status
+          ? { status: filters.status as RegistrationStatus }
+          : {}),
       },
       include: {
         user: true,
@@ -92,7 +94,7 @@ export class RegistrationsRepository {
     const updated = await this.prisma.registration.update({
       where: { id: registrationId },
       data: {
-        status: data.status as any,
+        status: data.status as RegistrationStatus,
         payment: data.paymentId
           ? { connect: { id: data.paymentId } }
           : data.paymentId === null
@@ -100,7 +102,7 @@ export class RegistrationsRepository {
             : undefined,
         formData:
           data.formData !== undefined
-            ? (data.formData as Prisma.InputJsonValue)
+            ? JSON.stringify(data.formData)
             : undefined,
       },
       include: {

@@ -1,4 +1,14 @@
-import { Registration, Event, Payment, User } from '@prisma/client';
+'use client';
+import {
+  Registration,
+  Event,
+  Payment,
+  User,
+  EventTicketConfig,
+  EventResource,
+  PaymentStatus,
+  RegistrationStatus,
+} from '@prisma/client';
 import { RegistrationFormDataDto } from '../dto/registration-form-data.dto';
 import {
   RegistrationEntity,
@@ -9,11 +19,12 @@ import {
   eventEntityToEventDto,
   prismaEventToEventEntity,
 } from '../../events/mappers/event.mapper';
-import { toUserDto } from '../../users/mappers/user.mapper';
+import { toUserDto, toUserEntity } from '../../users/mappers/user.mapper';
 import { PaymentDto } from '../../payments/dto/payment.dto';
 import { parseLocalizedText } from '../../events/utils/localized-text.helper';
+import { UserEntity } from '../../users/entities/user.entity';
 
-const toDate = (value: any): Date => {
+const toDate = (value: unknown): Date => {
   if (value instanceof Date) return value;
   if (typeof value === 'string' || typeof value === 'number') {
     const d = new Date(value);
@@ -32,9 +43,11 @@ export const prismaRegistrationToEntity = (
     registration.userId,
     registration.eventId,
     registration.ticketType,
-    registration.status,
-    (registration as any).formData ?? null,
-    (registration as any).paymentId ?? null,
+    registration.status as RegistrationStatus,
+    registration.formData
+      ? (registration.formData as Record<string, unknown>)
+      : null,
+    registration.payment?.id ?? null,
     toDate(registration.createdAt),
     toDate(registration.updatedAt),
   );
@@ -42,7 +55,6 @@ export const prismaRegistrationToEntity = (
 export const prismaToUserRegistrationEntity = (
   registration: Registration & {
     event: Pick<Event, 'title' | 'startDateTime'>;
-    paymentId?: string | null;
     payment?: Pick<Payment, 'id'> | null;
   },
 ): UserRegistrationEntity =>
@@ -50,9 +62,9 @@ export const prismaToUserRegistrationEntity = (
     registration.id,
     registration.userId,
     registration.eventId,
-    registration.payment?.id ?? (registration as any).paymentId ?? null,
+    registration.payment?.id ?? null,
     registration.ticketType,
-    registration.status,
+    registration.status as RegistrationStatus,
     toDate(registration.createdAt),
     {
       title: parseLocalizedText(registration.event.title),
@@ -63,7 +75,10 @@ export const prismaToUserRegistrationEntity = (
 export const prismaToUserRegistrationDetailsEntity = (
   registration: Registration & {
     user: User;
-    event: Event & { ticketConfigs?: any; resources?: any };
+    event: Event & {
+      ticketConfigs: EventTicketConfig[];
+      resources: EventResource[];
+    };
     payment: Payment | null;
   },
 ): UserRegistrationDetailsEntity =>
@@ -71,22 +86,20 @@ export const prismaToUserRegistrationDetailsEntity = (
     registration.id,
     registration.userId,
     registration.eventId,
-    (registration as any).paymentId ?? null,
+    registration.payment?.id ?? null,
     registration.ticketType,
-    registration.status,
+    registration.status as RegistrationStatus,
     toDate(registration.createdAt),
-    registration.user,
-    (registration as any).formData ?? null,
-    prismaEventToEventEntity({
-      ...(registration.event as any),
-      ticketConfigs: (registration.event as any).ticketConfigs ?? [],
-      resources: (registration.event as any).resources ?? [],
-    }),
+    toUserEntity(registration.user),
+    registration.formData
+      ? (registration.formData as Record<string, unknown>)
+      : null,
+    prismaEventToEventEntity(registration.event),
     registration.payment,
   );
 
 export const registrationFormDataFromJson = (
-  json: any,
+  json: unknown,
 ): RegistrationFormDataDto | null => {
   if (!json || typeof json !== 'object') return null;
   return json as RegistrationFormDataDto;
@@ -95,24 +108,14 @@ export const registrationFormDataFromJson = (
 export const paymentToDto = (payment: Payment | null): PaymentDto | null => {
   if (!payment) return null;
 
-  const toNumberSafe = (val: any): number => {
-    try {
-      if (val?.toNumber) return val.toNumber();
-      const n = Number(val);
-      return isNaN(n) ? 0 : n;
-    } catch {
-      return 0;
-    }
-  };
-
   return {
     id: payment.id,
     registrationId: payment.registrationId,
     eventId: payment.eventId,
     ticketType: payment.ticketType,
-    amount: toNumberSafe(payment.amount as any),
+    amount: payment.amount.toNumber(),
     currency: payment.currency,
-    status: payment.status,
+    status: payment.status as PaymentStatus,
     gatewayTransactionId: payment.gatewayTransactionId ?? undefined,
     createdAt: toDate(payment.createdAt).toISOString(),
     updatedAt: toDate(payment.updatedAt).toISOString(),
@@ -145,8 +148,8 @@ export const userRegistrationDetailsEntityToDto = (
   ticketType: entity.ticketType,
   status: entity.status,
   createdAt: toDate(entity.createdAt).toISOString(),
-  user: toUserDto(entity.user),
+  user: toUserDto(entity.user as UserEntity),
   formData: registrationFormDataFromJson(entity.formData) ?? undefined,
   event: eventEntityToEventDto(entity.event),
-  payment: entity.payment ? paymentToDto(entity.payment) : undefined,
+  payment: entity.payment ? paymentToDto(entity.payment as Payment) : undefined,
 });

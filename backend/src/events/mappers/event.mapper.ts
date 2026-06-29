@@ -22,12 +22,10 @@ export const prismaEventToEventEntity = (
     resources: PrismaEventResource[];
   },
 ): EventEntity => {
-  const categories = Array.isArray(event.categories)
-    ? (event.categories as unknown[]).map(String)
-    : [];
+  const categories = event.categories ? event.categories.split(',') : [];
 
-  const publicDiscountIds = Array.isArray(event.publicDiscountIds)
-    ? (event.publicDiscountIds as unknown[]).map(String)
+  const publicDiscountIds = event.publicDiscountIds
+    ? event.publicDiscountIds.split(',')
     : [];
 
   const tickets = event.ticketConfigs.map(
@@ -35,7 +33,9 @@ export const prismaEventToEventEntity = (
       new EventTicketConfigEntity(
         ticket.id,
         ticket.type,
-        typeof ticket.price === 'number' ? ticket.price : ticket.price.toNumber(),
+        typeof ticket.price === 'number'
+          ? ticket.price
+          : ticket.price.toNumber(),
         ticket.currency,
         ticket.quantityTotal,
         ticket.quantitySold,
@@ -161,8 +161,8 @@ export const eventFormDataDtoToPrismaInput = (
     capacityTotal: dto.capacityTotal,
     capacityRemaining: dto.capacityTotal,
     showRemainingCapacity: dto.showRemainingCapacity,
-    categories,
-    publicDiscountIds: dto.publicDiscountIds ?? [],
+    categories: categories.join(','),
+    publicDiscountIds: (dto.publicDiscountIds ?? []).join(','),
     posterUrl: dto.posterUrl ?? undefined,
   };
 };
@@ -178,7 +178,7 @@ export const eventUpdateFormDataDtoToPrismaInput = (
           .filter(Boolean)
       : undefined;
 
-  return {
+  const updateInput: Prisma.EventUpdateInput = {
     ...(dto.title ? { title: serializeLocalizedText(dto.title) } : {}),
     ...(dto.slug ? { slug: dto.slug } : {}),
     ...(dto.summary
@@ -213,10 +213,16 @@ export const eventUpdateFormDataDtoToPrismaInput = (
     ...(dto.showRemainingCapacity !== undefined
       ? { showRemainingCapacity: dto.showRemainingCapacity }
       : {}),
-    ...(categories !== undefined ? { categories } : {}),
-    ...(dto.publicDiscountIds !== undefined
-      ? { publicDiscountIds: dto.publicDiscountIds }
-      : {}),
     ...(dto.posterUrl !== undefined ? { posterUrl: dto.posterUrl } : {}),
   };
+
+  if (categories !== undefined) {
+    updateInput.categories = categories.join(',');
+  }
+
+  if (dto.publicDiscountIds !== undefined) {
+    updateInput.publicDiscountIds = dto.publicDiscountIds.join(',');
+  }
+
+  return updateInput;
 };

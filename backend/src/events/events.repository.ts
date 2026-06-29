@@ -491,7 +491,7 @@ export class EventsRepository {
       if (normalizedCity.length > 0) {
         andConditions.push({
           OR: [
-            { city: normalizedCity },
+            { city: { contains: normalizedCity } },
             { city: { contains: `"fa":"${normalizedCity}"` } },
             { city: { contains: `"en":"${normalizedCity}"` } },
           ],
@@ -500,13 +500,13 @@ export class EventsRepository {
     }
     if (filters.category) {
       andConditions.push({
-        categories: { array_contains: [filters.category] },
+        categories: { contains: filters.category },
       });
     }
     if (filters.categories && filters.categories.length > 0) {
       andConditions.push({
         OR: filters.categories.map((category) => ({
-          categories: { array_contains: [category] },
+          categories: { contains: category },
         })),
       });
     }
@@ -570,7 +570,7 @@ export class EventsRepository {
     eventId: string,
     action: string,
     byUserId?: string,
-    meta?: Prisma.InputJsonValue,
+    meta?: any,
   ): Promise<void> {
     await this.prisma.eventAudit.create({
       data: {
@@ -578,7 +578,7 @@ export class EventsRepository {
         eventIdSnapshot: eventId,
         action,
         byUserId: byUserId ?? null,
-        meta,
+        meta: meta ? JSON.stringify(meta) : null,
       },
     });
   }

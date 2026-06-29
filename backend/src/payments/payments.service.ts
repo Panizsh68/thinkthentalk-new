@@ -133,7 +133,7 @@ export class PaymentsService {
 
     const totalAmount = ticketConfig.price.toNumber
       ? ticketConfig.price.toNumber()
-      : (ticketConfig.price as any);
+      : Number(ticketConfig.price);
     const amount = Math.round(dto.amount);
 
     if (amount < 0 || amount > totalAmount) {
@@ -169,7 +169,7 @@ export class PaymentsService {
                 status: isFree
                   ? RegistrationStatus.PAID
                   : RegistrationStatus.PENDING,
-                formData: dto.formData as unknown as Prisma.InputJsonValue,
+                formData: JSON.stringify(dto.formData),
               },
             })
           : await (async () => {
@@ -181,7 +181,7 @@ export class PaymentsService {
                   status: isFree
                     ? RegistrationStatus.PAID
                     : RegistrationStatus.PENDING,
-                  formData: dto.formData as unknown as Prisma.InputJsonValue,
+                  formData: JSON.stringify(dto.formData),
                 } as Prisma.RegistrationUncheckedCreateInput,
               });
 
@@ -268,7 +268,7 @@ export class PaymentsService {
     } catch (error) {
       this.logger.error(
         `Zarinpal requestPayment failed for payment=${result.payment.id}`,
-        error as any,
+        error,
       );
 
       await this.prisma.$transaction(async (tx) => {
@@ -319,9 +319,9 @@ export class PaymentsService {
     }
 
     const amount =
-      payment.amount && (payment.amount as any).toNumber
-        ? (payment.amount as any).toNumber()
-        : (payment.amount as any);
+      typeof payment.amount === 'number'
+        ? payment.amount
+        : payment.amount.toNumber();
 
     if (dto.status === 'FAILED') {
       const updated = await this.prisma.$transaction(async (tx) => {
@@ -380,9 +380,9 @@ export class PaymentsService {
     if (!payment) return null;
 
     const amount =
-      payment.amount && (payment.amount as any).toNumber
-        ? (payment.amount as any).toNumber()
-        : (payment.amount as any);
+      typeof payment.amount === 'number'
+        ? payment.amount
+        : payment.amount.toNumber();
 
     if (dto.status === 'FAILED') {
       const updated = await this.prisma.$transaction(async (tx) => {
@@ -513,7 +513,7 @@ export class PaymentsService {
       registrationId: string;
       eventId: string;
       ticketType: TicketType;
-      amount: any;
+      amount: Prisma.Decimal;
       currency: Currency;
       status: PaymentStatus;
       gatewayTransactionId?: string | null;
@@ -533,9 +533,7 @@ export class PaymentsService {
       registrationId: payment.registrationId,
       eventId: payment.eventId,
       ticketType: payment.ticketType,
-      amount: payment.amount.toNumber
-        ? payment.amount.toNumber()
-        : payment.amount,
+      amount: payment.amount.toNumber(),
       currency: payment.currency,
       status: payment.status,
       gatewayTransactionId: payment.gatewayTransactionId ?? undefined,
