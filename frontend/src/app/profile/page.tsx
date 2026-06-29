@@ -95,9 +95,10 @@ export default function UserProfilePage() {
   const identityStatus = useMemo(() => {
     const email = currentUser?.email;
     const mobile = currentUser?.mobile;
+    // Check if real mobile (not an email used as mobile ID) and real email exists
     return {
       emailLinked: !!email && email.includes('@'),
-      phoneLinked: !!mobile && !mobile.includes('@'),
+      phoneLinked: !!mobile && !mobile.includes('@') && /^09\d{9}$/.test(mobile),
     };
   }, [currentUser]);
 
