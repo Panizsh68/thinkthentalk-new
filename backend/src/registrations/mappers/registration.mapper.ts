@@ -100,7 +100,14 @@ export const prismaToUserRegistrationDetailsEntity = (
 export const registrationFormDataFromJson = (
   json: unknown,
 ): RegistrationFormDataDto | null => {
-  if (!json || typeof json !== 'object') return null;
+  if (!json) return null;
+  if (typeof json === 'string') {
+    try {
+      return JSON.parse(json) as RegistrationFormDataDto;
+    } catch {
+      return null;
+    }
+  }
   return json as RegistrationFormDataDto;
 };
 
