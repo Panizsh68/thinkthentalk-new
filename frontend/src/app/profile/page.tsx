@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/auth/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -93,9 +93,11 @@ export default function UserProfilePage() {
   }, [currentUser, form]);
 
   const identityStatus = useMemo(() => {
+    const email = currentUser?.email;
+    const mobile = currentUser?.mobile;
     return {
-      emailLinked: !!currentUser?.email,
-      phoneLinked: !!currentUser?.mobile && !isEmail(currentUser.mobile),
+      emailLinked: !!email && email.includes('@'),
+      phoneLinked: !!mobile && !mobile.includes('@'),
     };
   }, [currentUser]);
 
