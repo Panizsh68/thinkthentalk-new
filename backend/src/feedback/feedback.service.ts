@@ -6,7 +6,6 @@ import {
 import {
   EvaluationQuestion,
   EvaluationQuestionType,
-  EvaluationSubmission,
   RegistrationStatus,
 } from '@prisma/client';
 import { PrismaService } from '../infrastructure/database/prisma.service';
@@ -377,7 +376,7 @@ export class FeedbackService {
           }
         });
       } catch (err: unknown) {
-        // ignore submissions with invalid answer formats
+        // ignore
       }
     }
 

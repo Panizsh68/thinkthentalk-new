@@ -499,7 +499,7 @@ export class EventsRepository {
       }
     }
     if (filters.category) {
-      // categories field is a comma-separated string in DB
+      // categories field is interpreted as a string in the current client
       andConditions.push({
         categories: { contains: filters.category },
       });
