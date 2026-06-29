@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -73,7 +74,7 @@ export function SidebarLayout({
                         isActive ? "bg-primary/10 text-primary hover:bg-primary/15" : "text-muted-foreground hover:bg-accent"
                       )}
                     >
-                      <Link href={item.href}>
+                      <Link href={item.href} className={cn("flex items-center gap-3 w-full", isRTL && "flex-row-reverse")}>
                         <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
                         <span className="font-medium">{item.label}</span>
                       </Link>
@@ -87,7 +88,7 @@ export function SidebarLayout({
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild className={cn("flex items-center gap-3 px-4 py-6", isRTL ? "flex-row-reverse text-right" : "flex-row text-left")}>
-                  <Link href="/">
+                  <Link href="/" className={cn("flex items-center gap-3 w-full", isRTL && "flex-row-reverse")}>
                     <Home className="h-5 w-5" />
                     <span>{t('nav.home')}</span>
                   </Link>

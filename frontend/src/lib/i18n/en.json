@@ -89,192 +89,100 @@
       "noMembers": "Team information is coming soon."
     }
   },
-  "partnership": {
-    "status": {
-      "PENDING": "Pending",
-      "REVIEWING": "Reviewing",
-      "CONTACTED": "Contacted",
-      "ACCEPTED": "Accepted",
-      "REJECTED": "Rejected"
-    }
-  },
-  "collaborate": {
-    "title": "Join Our Team",
-    "subtitle": "We are always looking for passionate people to help grow our community.",
-    "successTitle": "Application Received",
-    "successDescription": "Thank you for your interest! Our team will review your information and get back to you shortly.",
-    "terms": {
-      "title": "Terms of Collaboration",
-      "content": "<p>At Think Then Talk, we strive to create a space for thoughtful dialogue. Joining us means:</p><ul><li>Commitment to community values and diverse perspectives.</li><li>Ability to work in a team and be responsible.</li><li>A passion for continuous learning.</li></ul>"
+  "admin": {
+    "currency": {
+      "TOMAN": "Toman"
     },
-    "actions": {
-      "acceptAndContinue": "Accept and Continue"
+    "nav": {
+      "dashboard": "Dashboard",
+      "events": "Events",
+      "registrations": "Registrations",
+      "users": "Users",
+      "payments": "Payments",
+      "discounts": "Discounts",
+      "messaging": "Messaging",
+      "ideas": "Ideas",
+      "partnerships": "Partnerships",
+      "contact": "Contact Messages",
+      "feedback": "Feedback",
+      "sponsors": "Sponsors",
+      "team": "Team"
     },
-    "form": {
-      "title": "Collaboration Form",
-      "subtitle": "Tell us a bit about yourself.",
-      "expertise": "Field of Expertise",
-      "expertisePlaceholder": "e.g. Event Management, Content Creation, etc.",
-      "experience": "Relevant Experience",
-      "whyJoin": "Why do you want to join Think Then Talk?",
-      "availability": "Weekly Availability (Hours)",
-      "acceptTerms": "I have read and accept the collaboration terms.",
-      "submit": "Submit Application"
-    }
-  },
-  "sponsorship": {
-    "title": "Become a Sponsor",
-    "subtitle": "Support our events and connect with a community of thoughtful learners.",
-    "successTitle": "Request Received",
-    "successDescription": "Thank you for your interest in supporting us! We will contact you with more details soon.",
-    "actions": {
-      "choosePlan": "Select Plan"
-    },
-    "plans": {
-      "BRONZE": {
-        "name": "Bronze Plan",
-        "subtitle": "Basic support",
-        "price": "Contact us",
-        "perk1": "Logo on website",
-        "perk2": "Mention in social media",
-        "perk3": "1 free ticket"
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "Welcome to the management panel.",
+      "stats": {
+        "upcomingEvents": "Upcoming Events",
+        "upcomingEventsDesc": "Planned event sessions",
+        "totalRegistrations": "Total Registrations",
+        "totalRegistrationsDesc": "All sign-up requests",
+        "paidRegistrations": "Paid Registrations",
+        "paidRegistrationsDesc": "Successful ticket purchases",
+        "totalRevenue": "Total Revenue",
+        "totalRevenueDesc": "Total income from sales"
       },
-      "SILVER": {
-        "name": "Silver Plan",
-        "subtitle": "Enhanced visibility",
-        "price": "Contact us",
-        "perk1": "All Bronze perks",
-        "perk2": "Logo on event slides",
-        "perk3": "3 free tickets"
-      },
-      "GOLD": {
-        "name": "Gold Plan",
-        "subtitle": "Premium partner",
-        "price": "Contact us",
-        "perk1": "All Silver perks",
-        "perk2": "Brief presentation at event",
-        "perk3": "Newsletter feature"
-      },
-      "PLATINUM": {
-        "name": "Platinum Plan",
-        "subtitle": "Strategic partner",
-        "price": "Contact us",
-        "perk1": "All Gold perks",
-        "perk2": "Exclusive event sponsor",
-        "perk3": "Direct network access"
+      "quickActions": {
+        "title": "Quick Actions",
+        "createEvent": "Create New Event",
+        "viewRegistrations": "View Registrations",
+        "manageDiscounts": "Manage Discounts",
+        "viewFeedback": "User Feedback"
       }
     },
-    "form": {
-      "title": "Sponsorship Request",
-      "subtitle": "Submitting request for {plan}",
-      "companyLabel": "Company Name",
-      "nameLabel": "Representative Name",
-      "notes": "Additional Notes",
-      "notesPlaceholder": "Tell us about your goals...",
-      "submit": "Submit Request"
-    }
-  },
-  "ideas": {
-    "title": "Suggest a Topic or Idea",
-    "subtitle": "Share your thoughts on future event topics or how we can improve our formats.",
-    "successTitle": "Suggestion Submitted",
-    "successDescription": "Thanks for your idea! Our team will review it soon.",
-    "types": {
-      "TOPIC": "New Topic",
-      "FORMAT": "Event Format",
-      "VENUE": "Venue Suggestion",
-      "OTHER": "Other"
+    "users": {
+      "title": "User Management",
+      "subtitle": "List of all registered community members.",
+      "badges": {
+        "complete": "Complete Profile",
+        "incomplete": "Incomplete Profile"
+      }
     },
-    "status": {
-      "PENDING": "Pending",
-      "REVIEWED": "Reviewed",
-      "PLANNED": "Planned",
-      "REJECTED": "Rejected"
-    },
-    "form": {
-      "title": "Idea Submission Form",
-      "description": "What topic do you think would be exciting for our next event?",
-      "typeLabel": "Suggestion Type",
-      "titleLabel": "Idea Title",
-      "titlePlaceholder": "e.g., Critical Thinking in Daily Life",
-      "descriptionLabel": "Further Details",
-      "descriptionPlaceholder": "Tell us more about your idea and why it matters...",
-      "submitButton": "Submit Suggestion"
-    },
-    "validation": {
-      "titleLength": "Title must be at least 5 characters.",
-      "descriptionLength": "Description must be at least 20 characters."
-    }
-  },
-  "contact": {
-    "kicker": "We are listening",
-    "title": "Contact Us",
-    "subtitle": "Get in touch with the Think Then Talk team. We’d love to hear from you.",
-    "form": {
-      "title": "Send us a message",
-      "description": "Share your question, suggestion, or feedback and we’ll respond soon.",
-      "nameLabel": "Name (optional)",
-      "namePlaceholder": "Your name",
-      "emailLabel": "Email address",
-      "messageLabel": "Message",
-      "messagePlaceholder": "Tell us how we can help...",
-      "messageHelper": "Message length should be between 10 and 5,000 characters.",
-      "submitLabel": "Send message",
-      "honeypotLabel": "If you see this field please leave it empty",
-      "prefilledNotice": "We pre-filled your information from your profile.",
-      "successMessage": "Your message has been sent. We'll get back to you soon."
-    },
-    "email": {
-      "title": "Prefer email?",
-      "subtitle": "Reach out directly via email and we'll reply shortly."
-    },
-    "social": {
-      "title": "Social channels",
-      "subtitle": "Connect with the community on Instagram or Telegram.",
-      "instagram": "Instagram",
-      "telegram": "Telegram"
-    },
-    "errors": {
-      "generic": "We couldn't send your message. Please try again later.",
-      "nameInvalid": "Name must be shorter than 191 characters.",
-      "emailRequired": "Email is required.",
-      "emailInvalid": "Please enter a valid email address.",
-      "messageLength": "Message must be between 10 and 5,000 characters.",
-      "rateLimit": "Please wait before sending another message."
-    }
-  },
-  "faq": {
-    "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about Think Then Talk and our events.",
-    "categories": {
-      "general": "General",
-      "registration": "Registration & Payments",
-      "events": "Events & Participation"
-    },
-    "questions": {
-      "whatIs": {
-        "q": "What is Think Then Talk?",
-        "a": "Think Then Talk is a community focused on fostering thoughtful conversations, critical thinking, and educational events. We believe in the power of dialogue and continuous learning."
+    "events": {
+      "title": "Events Management",
+      "subtitle": "Create, edit, and manage events.",
+      "createNew": "Create New Event",
+      "table": {
+        "title": "Title",
+        "date": "Date",
+        "type": "Type",
+        "status": "Status",
+        "capacity": "Capacity"
       },
-      "howToJoin": {
-        "q": "How can I join the community?",
-        "a": "The best way to join is by participating in our events! Simply browse our events page, find a topic that interests you, and sign up. You can also follow us on social media to stay updated."
+      "create": {
+        "title": "Create New Event",
+        "subtitle": "Fill in the details to create a new event.",
+        "successTitle": "Event Created",
+        "successDescription": "The event '{eventName}' has been successfully created."
       },
-      "isRegistrationRequired": {
-        "q": "Is registration required for all events?",
-        "a": "Yes, most of our events require prior registration. This helps us manage capacity and provide the necessary resources and materials to all participants."
+      "edit": {
+        "title": "Edit Event",
+        "subtitle": "You are editing the event: {eventName}",
+        "successTitle": "Event Updated",
+        "successDescription": "The event '{eventName}' has been successfully updated."
       },
-      "howToPay": {
-        "q": "How can I pay for paid events?",
-        "a": "We use a secure local payment gateway (Zarinpal) that supports all bank cards. You will be redirected to the payment page after completing the registration form."
+      "form": {
+        "basicInfo": "Basic Information",
+        "title": "Event Title",
+        "categories": "Categories",
+        "categoriesDesc": "Comma-separated list of categories (e.g., Tech, Communication).",
+        "content": "Content",
+        "summary": "Summary",
+        "description": "Description",
+        "locationAndDate": "Location & Date",
+        "address": "Address",
+        "startDateTime": "Start Date & Time",
+        "endDateTime": "End Date & Time",
+        "endDateTimeOptional": "Optional. Leave empty if the event has no fixed end time.",
+        "pickDate": "Pick a date",
+        "capacity": "Capacity & Tickets",
+        "capacityTotal": "Total Capacity",
+        "showRemainingCapacity": "Show Remaining Capacity",
+        "showRemainingCapacityDesc": "Display the number of available spots on the event page.",
+        "saveChanges": "Save Changes",
+        "createEvent": "Create Event"
       },
-      "onlineOrOffline": {
-        "q": "Are the events online or in-person?",
-        "a": "We host both online (via platforms like Google Meet or Zoom) and in-person events (mostly in Tehran). Each event page clearly specifies the format and location."
-      },
-      "refundPolicy": {
-        "q": "Can I cancel my registration and get a refund?",
-        "a": "Refund policies vary by event. Generally, cancellations made at least 48 hours before the event are eligible for a partial or full refund. Please refer to our Terms of Service for full details."
+      "validation": {
+        "nonNegative": "Capacity must be a non-negative number."
       }
     }
   },
@@ -306,288 +214,5 @@
     "deactivate": "Deactivate",
     "delete": "Delete",
     "edit": "Edit"
-  },
-  "language": {
-    "en": "English",
-    "fa": "فارسی"
-  },
-  "events": {
-    "title": "Events",
-    "subtitle": "Browse our upcoming events and join us.",
-    "noEvents": "No events available at the moment.",
-    "noEventsFound": "No events found matching your criteria."
-  },
-  "event": {
-    "online": "Online",
-    "offline": "In-person",
-    "limitedSeats": "Limited seats are available",
-    "spotsLeft": "{count} spots left",
-    "upcoming": "Upcoming",
-    "finished": "Finished",
-    "viewDetails": "View Details",
-    "fromPrice": "Starts from {price}",
-    "tickets": "Tickets",
-    "selectTicket": "Select your ticket to register.",
-    "free": "Free",
-    "noRatings": "No ratings yet",
-    "resourcesTitle": "Resources",
-    "resourcePublic": "Public",
-    "resourceRegisteredOnly": "For participants only",
-    "resourceAvailableAfterRegistration": "Available after registration",
-    "eventHasFinished": "This event has already taken place.",
-    "alreadyRegistered": "Already Registered",
-    "dateTimeSeparator": " @ "
-  },
-  "share": {
-    "label": "Share event",
-    "system": "Share...",
-    "copyLink": "Copy link",
-    "linkCopiedTitle": "Link copied",
-    "linkCopiedDescription": "Event link copied to clipboard.",
-    "whatsapp": "WhatsApp",
-    "telegram": "Telegram",
-    "x": "X (Twitter)",
-    "linkedin": "LinkedIn",
-    "email": "Email"
-  },
-  "tickets": {
-    "early_bird": "Early Bird",
-    "standard": "Standard",
-    "supporter": "Supporter",
-    "soldOut": "Sold Out",
-    "expired": "Offer Expired",
-    "saleEnded": "Sales Ended",
-    "notStarted": "Sales start {date}",
-    "remaining": "{count} left",
-    "earlyBirdEnds": "Ends {date}"
-  },
-  "filters": {
-    "showPast": "Show Past Events",
-    "eventType": "Event Type",
-    "all": "All",
-    "city": "City",
-    "allCities": "All Cities",
-    "category": "Category",
-    "allCategories": "All Categories"
-  },
-  "errors": {
-    "fetchEvents": "There was an error fetching event data. Please try again.",
-    "fetchEvent": "There was an error fetching the event details. Please try again.",
-    "eventNotFound": "Event not found.",
-    "genericTitle": "An error occurred",
-    "fetchRegistrations": "Could not load your registrations. Please try again.",
-    "accessDenied": "Access Denied",
-    "accessDeniedDescription": "You do not have permission to view this page."
-  },
-  "auth": {
-    "loginTitle": "Login or Sign Up",
-    "loginSubtitle": "Enter your mobile number to receive a verification code.",
-    "mobileLabel": "Mobile Number",
-    "sendOtpButton": "Send Code",
-    "otpTitle": "Enter Verification Code",
-    "otpSubtitle": "A code has been sent to",
-    "otpLabel": "Verification Code",
-    "verifyButton": "Login",
-    "otpSentTitle": "Code Sent",
-    "otpSentDescription": "Check your messages for the verification code",
-    "loginSuccessTitle": "Login Successful!",
-    "errors": {
-      "invalidMobile": "Please enter a valid 11-digit mobile number (e.g., 09123456789).",
-      "otpRequired": "Please enter the 6-digit code."
-    }
-  },
-  "registration": {
-    "title": "Event Registration",
-    "confirmReset": "Are you sure you want to start over? All your entered data for this registration will be lost.",
-    "steps": {
-      "personal": "Personal Info",
-      "personalSubtitle": "Please enter your information as it appears on your official documents.",
-      "education": "Education & Job",
-      "educationSubtitle": "Please provide your educational and professional background.",
-      "language": "Language & Referral",
-      "languageSubtitle": "Help us understand your language proficiency and how you found us.",
-      "contact": "Contact Info",
-      "contactSubtitle": "Please provide your contact information.",
-      "rules": "Rules & Terms",
-      "rulesSubtitle": "Please review and accept the terms to continue.",
-      "summary": "Summary & Review",
-      "summarySubtitle": "Please review your information before proceeding to payment."
-    },
-    "summary": {
-      "eventDetails": "Event Details",
-      "eventTitle": "Event",
-      "eventDate": "Date",
-      "ticketType": "Ticket Type",
-      "price": "Price",
-      "edit": "Edit",
-      "yes": "Yes",
-      "no": "No",
-      "paymentButton": "Continue to Payment",
-      "noInfo": "No information provided.",
-      "finalPriceTitle": "Final Price",
-      "subtotal": "Subtotal",
-      "total": "Total"
-    },
-    "fields": {
-      "firstNameFa": "First Name (Persian)",
-      "lastNameFa": "Last Name (Persian)",
-      "firstNameEn": "First Name (English)",
-      "lastNameEn": "Last Name (English)",
-      "age": "Age",
-      "gender": "Gender",
-      "genderMale": "Male",
-      "genderFemale": "Female",
-      "genderOther": "Other",
-      "educationLevel": "Education Level",
-      "fieldOfStudy": "Field of Study",
-      "isEmployed": "I am currently employed",
-      "jobTitle": "Job Title",
-      "educationLevels": {
-        "high-school": "High School",
-        "associate": "Associate Degree",
-        "bachelor": "Bachelor's Degree",
-        "master": "Master's Degree",
-        "phd": "PhD",
-        "other": "Other"
-      },
-      "languageLevel": "English Language Level",
-      "languageLevelsList": {
-        "beginner": "Beginner",
-        "intermediate": "Intermediate",
-        "advanced": "Advanced",
-        "native": "Native/Fluent"
-      },
-      "referralSource": "How did you hear about us?",
-      "referralSources": {
-        "instagram": "Instagram",
-        "telegram": "Telegram",
-        "website": "Website",
-        "friends": "Friends/Acquaintance",
-        "other": "Other"
-      },
-      "referrerName": "Referrer's Name (Optional)",
-      "otherReferralSource": "Please specify",
-      "email": "Email",
-      "acceptRules": "I have read and accept the {terms} and {privacy}.",
-      "termsLink": "Terms of Service",
-      "privacyLink": "Privacy Policy"
-    },
-    "placeholders": {
-      "firstNameFa": "e.g., سارا",
-      "lastNameFa": "e.g., محمدی",
-      "firstNameEn": "e.g., Sara",
-      "lastNameEn": "e.g., Mohammadi",
-      "age": "e.g., 28",
-      "educationLevel": "Select your education level",
-      "fieldOfStudy": "e.g., Computer Science",
-      "jobTitle": "e.g., Software Engineer",
-      "languageLevel": "Select your language level",
-      "referralSource": "Select a source",
-      "referrerName": "e.g., John Doe",
-      "otherReferralSource": "e.g., LinkedIn",
-      "email": "e.g., user@example.com"
-    },
-    "descriptions": {
-      "mobileReadOnly": "Your mobile number is tied to your account and cannot be changed.",
-      "emailOptional": "Optional. We'll use this for event updates."
-    },
-    "validation": {
-      "required": "This field is required.",
-      "positiveNumber": "Please enter a valid age.",
-      "invalidEmail": "Please enter a valid email address.",
-      "rulesRequired": "You must accept the terms and policies to continue."
-    },
-    "errors": {
-      "notAuthenticated": "You must be logged in to register for an event.",
-      "missingInfo": "Event or ticket information is missing. Please try again from the event page.",
-      "incompleteSteps": "Please complete all previous steps before proceeding."
-    },
-    "status": {
-      "paid": "Paid",
-      "pending": "Pending",
-      "failed": "Failed",
-      "cancelled": "Cancelled"
-    }
-  },
-  "payment": {
-    "verifying": "Verifying your payment, please wait...",
-    "invalidRequestTitle": "Invalid Payment Request",
-    "invalidRequestDescription": "Could not verify payment. The link may be invalid or expired.",
-    "successTitle": "Payment Successful!",
-    "successDescription": "Your registration is complete. You will receive a confirmation email shortly with all the details.",
-    "browseMoreEvents": "Browse More Events",
-    "viewMyRegistrations": "View My Registrations",
-    "failedTitle": "Payment Failed",
-    "failedDescription": "Your payment could not be processed. Please try again or go back to review your registration details.",
-    "alreadyProcessedTitle": "Payment Already Processed",
-    "alreadyProcessedDescription": "This payment has already been finalized with a status of:",
-    "finalizing": "Finalizing...",
-    "statusTitle": "Payment Status",
-    "statusDescription": "Finalizing your event registration.",
-    "receiptTitle": "Registration Confirmed",
-    "paymentId": "Payment ID",
-    "howToJoinTitle": "How to Join",
-    "howToJoinDescription": "The link to join the online event will be sent to you via SMS and email one day before the event."
-  },
-  "profile": {
-    "title": "My Profile",
-    "subtitle": "View and edit your profile information. This information will be used to pre-fill event registrations.",
-    "mobileReadOnly": "Your mobile number is your unique identifier and cannot be changed.",
-    "saveButton": "Save Changes",
-    "updateSuccessTitle": "Profile Updated",
-    "updateSuccessDescription": "Your information has been saved successfully.",
-    "languageSectionTitle": "Language",
-    "identity": {
-      "title": "Account Security",
-      "subtitle": "Connect additional login methods to your identity.",
-      "linked": "Linked",
-      "notLinked": "Not Linked",
-      "linkButton": "Link Method",
-      "linkSuccess": "Account linked successfully!",
-      "linkEmailTitle": "Link Email Address",
-      "linkEmailDesc": "Provide an email and password to enable email login for this account.",
-      "linkPhoneTitle": "Link Mobile Number",
-      "linkPhoneDesc": "Provide a mobile number and verify it via SMS to enable phone login."
-    }
-  },
-  "dashboard": {
-    "myRegistrations": "My Registrations",
-    "myRegistrationsSubtitle": "Manage your past and upcoming event experiences.",
-    "noRegistrations": "You haven't registered for any events yet.",
-    "browseEvents": "Browse Events",
-    "welcomeBack": "Welcome back, {name}",
-    "personalIntro": "Your personal space for growth and thoughtful conversation.",
-    "upcomingSection": "Upcoming Experiences",
-    "pastSection": "Past Journeys",
-    "noUpcoming": "You have no upcoming events. Ready for a new experience?",
-    "noPast": "Your journey is just beginning. Your past events will appear here.",
-    "nextStepTitle": "What's next for you?",
-    "nextStepDesc": "Keep exploring new perspectives and connect with the community.",
-    "table": {
-      "event": "Event",
-      "date": "Date",
-      "ticket": "Ticket",
-      "status": "Status",
-      "actions": "Actions"
-    }
-  },
-  "evaluation": {
-    "title": "Event Feedback",
-    "subtitle": "Thank you for attending {eventName}. Please share your feedback.",
-    "textPlaceholder": "Your feedback here...",
-    "alreadySubmittedTitle": "Feedback Submitted",
-    "alreadySubmittedDescription": "Thank you, you have already submitted your feedback for this event.",
-    "successTitle": "Thanks for your feedback",
-    "successDescription": "Your responses were submitted successfully.",
-    "errors": {
-      "notAuthenticated": "Please Login",
-      "loginPrompt": "You must be logged in to submit feedback for this event.",
-      "notEligibleTitle": "Not Eligible for Evaluation",
-      "notEligibleDescription": "You are not eligible to submit feedback. You must have a paid registration and the event must be over.",
-      "formNotFound": "Could not load the evaluation form. It may not be available for this event."
-    },
-    "validation": {
-      "required": "This field is required."
-    }
   }
 }

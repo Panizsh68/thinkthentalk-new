@@ -635,5 +635,102 @@
     "validation": {
       "required": "این فیلد الزامی است."
     }
+  },
+  "admin": {
+    "currency": {
+      "TOMAN": "تومان"
+    },
+    "nav": {
+      "dashboard": "پیشخوان",
+      "events": "رویدادها",
+      "registrations": "ثبت‌نام‌ها",
+      "users": "کاربران",
+      "payments": "تراکنش‌ها",
+      "discounts": "کدهای تخفیف",
+      "messaging": "پیام‌رسانی",
+      "ideas": "ایده‌ها",
+      "partnerships": "همکاری‌ها",
+      "contact": "پیام‌های تماس",
+      "feedback": "بازخوردها",
+      "sponsors": "اسپانسرها",
+      "team": "اعضای تیم"
+    },
+    "dashboard": {
+      "title": "پنل مدیریت",
+      "subtitle": "به بخش مدیریت خوش آمدید.",
+      "stats": {
+        "upcomingEvents": "رویدادهای پیش رو",
+        "upcomingEventsDesc": "تعداد رویدادهای برنامه‌ریزی شده",
+        "totalRegistrations": "کل ثبت‌نام‌ها",
+        "totalRegistrationsDesc": "مجموع تمام درخواست‌ها",
+        "paidRegistrations": "ثبت‌نام‌های نهایی",
+        "paidRegistrationsDesc": "تعداد تراکنش‌های موفق",
+        "totalRevenue": "مجموع درآمد",
+        "totalRevenueDesc": "درآمد کل حاصل از بلیت‌ها"
+      },
+      "quickActions": {
+        "title": "عملیات سریع",
+        "createEvent": "ساخت رویداد جدید",
+        "viewRegistrations": "مشاهده ثبت‌نام‌ها",
+        "manageDiscounts": "مدیریت کد تخفیف",
+        "viewFeedback": "بازخوردهای کاربران"
+      }
+    },
+    "users": {
+      "title": "مدیریت کاربران",
+      "subtitle": "لیست تمام کاربران ثبت شده در سیستم",
+      "badges": {
+        "complete": "پروفایل کامل",
+        "incomplete": "نیاز به تکمیل"
+      }
+    },
+    "events": {
+      "title": "مدیریت رویدادها",
+      "subtitle": "ایجاد، ویرایش و مدیریت رویدادها.",
+      "createNew": "ایجاد رویداد جدید",
+      "table": {
+        "title": "عنوان",
+        "date": "تاریخ",
+        "type": "نوع",
+        "status": "وضعیت",
+        "capacity": "ظرفیت"
+      },
+      "create": {
+        "title": "ایجاد رویداد جدید",
+        "subtitle": "برای ایجاد یک رویداد جدید، جزئیات را پر کنید.",
+        "successTitle": "رویداد ایجاد شد",
+        "successDescription": "رویداد '{eventName}' با موفقیت ایجاد شد."
+      },
+      "edit": {
+        "title": "ویرایش رویداد",
+        "subtitle": "شما در حال ویرایش رویداد هستید: {eventName}",
+        "successTitle": "رویداد به‌روزرسانی شد",
+        "successDescription": "رویداد '{eventName}' با موفقیت به‌روزرسانی شد."
+      },
+      "form": {
+        "basicInfo": "اطلاعات پایه",
+        "title": "عنوان رویداد",
+        "categories": "دسته‌بندی‌ها",
+        "categoriesDesc": "لیست دسته‌بندی‌ها با کاما جدا شود (مثال: تکنولوژی، ارتباطات).",
+        "content": "محتوا",
+        "summary": "خلاصه",
+        "description": "توضیحات",
+        "locationAndDate": "مکان و تاریخ",
+        "address": "آدرس",
+        "startDateTime": "تاریخ و زمان شروع",
+        "endDateTime": "تاریخ و زمان پایان",
+        "endDateTimeOptional": "اختیاری. اگر رویداد زمان پایان مشخصی ندارد، آن را خالی بگذارید.",
+        "pickDate": "یک تاریخ انتخاب کنید",
+        "capacity": "ظرفیت و بلیت‌ها",
+        "capacityTotal": "ظرفیت کل",
+        "showRemainingCapacity": "نمایش ظرفیت باقی‌مانده",
+        "showRemainingCapacityDesc": "تعداد جای خالی موجود را در صفحه رویداد نمایش دهید.",
+        "saveChanges": "ذخیره تغییرات",
+        "createEvent": "ایجاد رویداد"
+      },
+      "validation": {
+        "nonNegative": "ظرفیت باید یک عدد غیرمنفی باشد."
+      }
+    }
   }
 }
