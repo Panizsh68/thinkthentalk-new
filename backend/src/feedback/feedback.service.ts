@@ -12,7 +12,7 @@ import { PrismaService } from '../infrastructure/database/prisma.service';
 import { EvaluationFormDto } from './dto/evaluation-form.dto';
 import { EvaluationQuestionDto } from './dto/evaluation-question.dto';
 import { EvaluationResponseDto } from './dto/evaluation-response.dto';
-import { EvaluationSubmissionDto } from './dto/evaluation-submission.dto';
+import { EvaluationSubmissionDto } from './evaluation-submission.dto';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -121,7 +121,6 @@ export class FeedbackService {
       include: { questions: true },
     });
 
-    // Create the form record on first access so admins can start adding questions right away.
     if (!form) {
       form = await this.prisma.evaluationForm.create({
         data: { eventId },
@@ -285,7 +284,6 @@ export class FeedbackService {
 
     const cleaned = type.trim();
 
-    // Canonical form: drop non-alphanumerics and compare case-insensitively.
     const toCanonical = (val: string) =>
       val.replace(/[^a-zA-Z0-9]+/g, '').toUpperCase();
     const canonical = toCanonical(cleaned);
@@ -310,14 +308,7 @@ export class FeedbackService {
     required: q.required,
   });
 
-  private toSubmissionDto = (s: {
-    id: string;
-    evaluationFormId: string;
-    userId: string;
-    eventId: string;
-    answers: unknown;
-    submittedAt: Date;
-  }): EvaluationSubmissionDto => ({
+  private toSubmissionDto = (s: any): EvaluationSubmissionDto => ({
     id: s.id,
     evaluationId: s.evaluationFormId,
     userId: s.userId,

@@ -258,8 +258,8 @@ export class EventsRepository {
         earlyBirdEndDate: t.earlyBirdEndDate
           ? new Date(t.earlyBirdEndDate)
           : null,
-        _saleStartDate: saleStartDate, // keep for capacity calc
-        _saleEndDate: saleEndDate, // keep for capacity calc
+        _saleStartDate: saleStartDate,
+        _saleEndDate: saleEndDate,
       };
     });
 
@@ -279,49 +279,9 @@ export class EventsRepository {
       ({ _saleStartDate, _saleEndDate, ...rest }) => rest,
     );
 
-    // Detect actual column names once to avoid failing when DB is missing/mapping sale window fields.
-    const saleWindowColumns = await this.prisma.$queryRaw<
-      Array<{ column_name: string }>
-    >`SELECT COLUMN_NAME as column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'EventTicketConfig' AND COLUMN_NAME IN ('saleStartDate','sale_start_date','saleEndDate','sale_end_date')`;
-
-    const columnNameByLower = new Map(
-      saleWindowColumns.map((c) => [
-        c.column_name.toLowerCase(),
-        c.column_name,
-      ]),
-    );
-    const saleStartColumn =
-      columnNameByLower.get('salestartdate') ??
-      columnNameByLower.get('sale_start_date');
-    const saleEndColumn =
-      columnNameByLower.get('saleenddate') ??
-      columnNameByLower.get('sale_end_date');
-    const canPersistSaleWindow = Boolean(saleStartColumn && saleEndColumn);
-
     await this.prisma.$transaction(async (tx) => {
       await tx.eventTicketConfig.deleteMany({ where: { eventId } });
-      // Current Prisma client version does not include saleStartDate/saleEndDate; avoid passing unknown args.
-      await tx.eventTicketConfig.createMany({ data: ticketsToPersist });
-
-      // Manually persist sale window via raw SQL to keep DB in sync until Prisma client is regenerated.
-      if (canPersistSaleWindow) {
-        const updateSql = `UPDATE EventTicketConfig SET ${saleStartColumn} = ?, ${saleEndColumn} = ? WHERE eventId = ? AND type = ?`;
-        for (const ticket of normalizedTickets) {
-          if (ticket._saleStartDate || ticket._saleEndDate) {
-            await tx.$executeRawUnsafe(
-              updateSql,
-              ticket._saleStartDate ?? null,
-              ticket._saleEndDate ?? null,
-              eventId,
-              ticket.type,
-            );
-          }
-        }
-      } else {
-        this.logger.warn(
-          'Skipping ticket sale window update because saleStartDate/saleEndDate columns were not found in EventTicketConfig',
-        );
-      }
+      await tx.eventTicketConfig.createMany({ data: ticketsToPersist as any });
 
       await tx.event.update({
         where: { id: eventId },
@@ -470,7 +430,6 @@ export class EventsRepository {
         ],
       });
     } else if (filters.status !== 'all' && filters.showPastEvents === false) {
-      // Legacy support for public-facing filter
       andConditions.push({ startDateTime: { gte: now } });
     }
 
@@ -499,13 +458,11 @@ export class EventsRepository {
       }
     }
     if (filters.category) {
-      // categories field is interpreted as a string in the current client
       andConditions.push({
         categories: { contains: filters.category },
       });
     }
     if (filters.categories && filters.categories.length > 0) {
-      // filtering by multiple categories
       andConditions.push({
         OR: filters.categories.map((category) => ({
           categories: { contains: category },
