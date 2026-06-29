@@ -34,36 +34,37 @@ function HeroSection() {
   return (
     <section className="relative h-screen min-h-[700px] w-full flex items-center justify-center text-center text-white overflow-hidden">
       {PlaceHolderImages.map((image, index) => (
-        <Image
-          key={image.id}
-          src={image.imageUrl}
-          alt={image.description}
-          fill
-          className={cn(
-            "object-cover transition-opacity ease-in-out scale-105",
-            "[transition-duration:2000ms]",
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          )}
-          data-ai-hint={image.imageHint}
-          priority={index === 0}
-        />
+        <div key={image.id} className="absolute inset-0">
+          <Image
+            src={image.imageUrl}
+            alt={image.description}
+            fill
+            className={cn(
+              "object-cover transition-opacity ease-in-out scale-105",
+              index === currentImageIndex ? "opacity-100" : "opacity-0"
+            )}
+            style={{ transitionDuration: '2000ms' }}
+            data-ai-hint={image.imageHint}
+            priority={index === 0}
+          />
+        </div>
       ))}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
       <div className="relative z-10 container flex max-w-[72rem] flex-col items-center gap-6 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <Badge variant="outline" className="text-white border-white/20 bg-white/10 backdrop-blur-md px-6 py-2 mb-4 text-sm font-medium tracking-widest uppercase">
-          {t('home.hero.kicker', 'A Community for Deeper Conversations')}
+          {t('home.hero.kicker')}
         </Badge>
         <h1 className="text-5xl sm:text-7xl lg:text-8xl text-white tracking-tighter drop-shadow-lg font-bold leading-tight">
-          {t('home.hero.title', 'Where Curiosity Meets Conversation')}
+          {t('home.hero.title')}
         </h1>
         <p className="max-w-[42rem] leading-relaxed sm:text-xl text-slate-100 font-light opacity-90 mx-auto mt-4">
-          {t('home.hero.subtitle', 'Join a curated community of thinkers, creators, and professionals for live events that challenge and inspire. Find your next great conversation.')}
+          {t('home.hero.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
           <Button size="lg" className="h-16 px-10 text-xl rounded-full shadow-2xl hover:shadow-primary/40 transition-all bg-primary hover:bg-primary/90 text-primary-foreground group" onClick={() => router.push('/events')}>
-            {t('home.hero.browseButton', 'Explore Events')}
+            {t('home.hero.browseButton')}
             <ArrowRight className="ml-2 h-6 w-6 transition-transform group-hover:translate-x-1 rtl:rotate-180" />
           </Button>
         </div>
@@ -98,7 +99,7 @@ function ExperienceCard({ event, isFeatured }: { event: Event, isFeatured?: bool
             </div>
           )}
            <div className="absolute top-4 right-4 z-10 flex gap-2">
-            {isFeatured && <Badge variant="default" className="bg-primary text-primary-foreground shadow-md">{t('home.events.featured', 'Featured')}</Badge>}
+            {isFeatured && <Badge variant="default" className="bg-primary text-primary-foreground shadow-md">{t('home.events.featured')}</Badge>}
             <Badge variant={past ? "secondary" : "default"} className="backdrop-blur-md shadow-md bg-background/60 text-foreground">
               {past ? t('event.finished') : t('event.upcoming')}
             </Badge>
@@ -134,7 +135,7 @@ function ExperienceCard({ event, isFeatured }: { event: Event, isFeatured?: bool
         </CardContent>
         <CardFooter className="px-6 pb-6 pt-0">
           <span className="text-base font-bold text-primary flex items-center gap-2 transition-all group-hover:gap-3">
-            {t('event.viewDetails', 'View Details')}
+            {t('event.viewDetails')}
             <ArrowRight className="h-5 w-5 rtl:rotate-180" />
           </span>
         </CardFooter>
@@ -156,8 +157,8 @@ function EventsSection() {
   return (
     <section className="container max-w-screen-2xl py-32">
         <div className="mb-20 text-center space-y-4">
-            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.events.title', 'Explore Our Next Events')}</h2>
-            <p className="text-xl text-muted-foreground font-light max-w-3xl mx-auto">{t('home.events.subtitle', 'Engage in conversations that matter. Each event is a unique opportunity to learn, challenge your perspectives, and connect with like-minded individuals.')}</p>
+            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.events.title')}</h2>
+            <p className="text-xl text-muted-foreground font-light max-w-3xl mx-auto">{t('home.events.subtitle')}</p>
         </div>
 
         {isLoading ? (
@@ -168,10 +169,10 @@ function EventsSection() {
           </div>
         ) : error ? (
           <div className="p-12 rounded-3xl bg-destructive/5 text-center">
-            <p className="text-destructive">{t('errors.fetchEvents', 'Could not load events at this time. Please try again later.')}</p>
+            <p className="text-destructive">{t('errors.fetchEvents')}</p>
           </div>
         ) : events?.length === 0 ? (
-          <p className="text-muted-foreground text-center py-24 bg-secondary/10 rounded-3xl">{t('events.noEvents', 'No upcoming events at the moment. Check back soon!')}</p>
+          <p className="text-muted-foreground text-center py-24 bg-secondary/10 rounded-3xl">{t('events.noEvents')}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
             {events?.map((event, i) => (
@@ -182,7 +183,7 @@ function EventsSection() {
 
         <div className="mt-20 text-center">
             <Button size="lg" variant="outline" className="rounded-full px-12 h-14 border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground transition-all font-bold" asChild>
-                <Link href="/events">{t('home.events.viewAllButton', 'View All Events')}</Link>
+                <Link href="/events">{t('home.events.viewAllButton')}</Link>
             </Button>
         </div>
     </section>
@@ -216,19 +217,19 @@ function TestimonialsSection() {
     <section className="bg-secondary/40 py-32">
       <div className="container max-w-screen-2xl">
         <div className="mb-20 text-center space-y-4">
-          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.testimonials.title', 'Trusted by a Community of Thinkers')}</h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.testimonials.subtitle', 'Here’s what some of our members have to say about their experience.')}</p>
+          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.testimonials.title')}</h2>
+          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.testimonials.subtitle')}</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, i) => (
             <Card key={i} className="border-border/10 bg-background/80 backdrop-blur-md shadow-lg p-8 h-full flex flex-col">
               <div className="flex-grow mb-6">
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 mr-0.5 inline-block" />
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 inline-block" />
-                <p className="text-lg text-foreground/90 mt-4 leading-relaxed">\"{testimonial.quote}\"</p>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, starI) => (
+                    <Star key={starI} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-lg text-foreground/90 mt-4 leading-relaxed">"{testimonial.quote}"</p>
               </div>
               <div className="flex items-center gap-4">
                 <Avatar>
@@ -283,8 +284,8 @@ function InvolvementSection() {
     <section className="bg-secondary/10 py-32">
       <div className="container max-w-screen-2xl">
         <div className="text-center mb-20 space-y-4">
-          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.involved.title', 'Get More Involved')}</h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.involved.subtitle', 'Our community is built by its members. Here’s how you can contribute and shape our future.')}</p>
+          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.involved.title')}</h2>
+          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.involved.subtitle')}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {paths.map((path) => (
@@ -304,7 +305,7 @@ function InvolvementSection() {
                 </CardContent>
                 <CardFooter className="pt-0">
                   <span className="text-sm font-bold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
-                    {t('actions.view', 'Learn More')}
+                    {t('actions.view')}
                     <ArrowRight className={cn("h-4 w-4 transition-transform", isRTL ? "rotate-180" : "")} />
                   </span>
                 </CardFooter>
@@ -324,8 +325,8 @@ function AtmosphereSection() {
       <div className="container max-w-screen-2xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="space-y-4">
-            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.moments.title', 'Capture the Atmosphere')}</h2>
-            <p className="text-xl text-muted-foreground font-light max-w-2xl">{t('home.moments.subtitle', 'A glimpse into the energy and environment of our gatherings.')}</p>
+            <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.moments.title')}</h2>
+            <p className="text-xl text-muted-foreground font-light max-w-2xl">{t('home.moments.subtitle')}</p>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[600px]">
@@ -342,7 +343,8 @@ function AtmosphereSection() {
                 src={image.imageUrl} 
                 alt={image.description} 
                 fill 
-                className="object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
+                className="object-cover transition-transform"
+                style={{ transitionDuration: '2000ms' }}
                 data-ai-hint={image.imageHint}
               />
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-end p-8">
@@ -369,10 +371,10 @@ function ExperienceSection() {
           <div className="space-y-10">
             <div className="space-y-6">
               <Badge variant="secondary" className="px-4 py-1 text-primary">
-                {t('home.experience.title', 'Our Philosophy')}
+                {t('home.experience.title')}
               </Badge>
               <h2 className="text-h2 tracking-tight sm:text-5xl">
-                {t('home.experience.subtitle', 'Designed for Genuine Connection')}
+                {t('home.experience.subtitle')}
               </h2>
             </div>
             

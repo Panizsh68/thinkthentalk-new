@@ -1,4 +1,3 @@
-
 import type { NextConfig } from 'next';
 
 const config: NextConfig = {
@@ -8,6 +7,12 @@ const config: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  experimental: {
+    allowedDevOrigins: [
+      'localhost:9002',
+      '*.cloudworkstations.dev',
+    ],
   },
   async rewrites() {
     const uploadProxyDestination =
