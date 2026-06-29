@@ -62,17 +62,6 @@
         "desc": "Practice empathy and embrace diversity of thought in a welcoming atmosphere."
       }
     },
-    "experience": {
-      "title": "An Evening in Our Community",
-      "subtitle": "A typical journey from the moment you arrive until the closing circle.",
-      "arrival": "Arrival & Welcome Drinks",
-      "iceBreaking": "Ice Breaking & Team Pairing",
-      "games": "Group Activities & Games",
-      "podcast": "Shared Listening Session",
-      "discussion": "Deep Table Discussions",
-      "networking": "Free Flow & Networking",
-      "closing": "Closing Reflection"
-    },
     "suggest": {
       "title": "Architect the Next Journey",
       "subtitle": "Our members shape the future. Have a topic that needs depth? We want to hear your vision.",
@@ -93,33 +82,6 @@
       "title": "Ready to be part of the flow?",
       "subtitle": "There is a seat waiting for you in our next circle. Welcome home, thinker.",
       "cta": "Join Us Today"
-    },
-    "experience_old": {
-      "title": "The Art of Dialogue",
-      "subtitle": "Think Then Talk isn't just an event series. It's a laboratory for collective intelligence and empathy.",
-      "perk1": {
-        "title": "Deep Exploration",
-        "desc": "Moving beyond surface-level small talk into the core of complex topics."
-      },
-      "perk2": {
-        "title": "Curated Community",
-        "desc": "Connecting with individuals who value listening as much as speaking."
-      },
-      "perk3": {
-        "title": "Intellectual Growth",
-        "desc": "Developing tools for critical thinking and articulate expression."
-      },
-      "simulation": {
-        "quote": "In every session, I find that my perspective doesn't just expand—it transforms. It's a rare space where silence is as meaningful as the words spoken.",
-        "caption": "The Community Experience"
-      }
-    },
-    "involved": {
-      "title": "Co-Create the Community",
-      "subtitle": "Shape the future of dialogue with us through these unique paths.",
-      "collaborateDesc": "Join the team of curators and moderators building this sanctuary.",
-      "ideasDesc": "Have a topic that needs depth? Pitch your next conversation idea.",
-      "sponsorshipDesc": "Align your brand with thoughtful growth and intellectual depth."
     },
     "moments": {
       "title": "Captured Moments",
@@ -292,113 +254,113 @@
         "successDescription": "The event '{eventName}' has been successfully updated."
       },
       "form": {
-        "basicInfo": "Basic Information",
+        "basicInfo": "Information",
         "title": "Event Title",
-        "titleFa": "Title (Persian)",
-        "titleEn": "Title (English)",
-        "poster": "Poster Image",
+        "titleFa": "Title (Fa)",
+        "titleEn": "Title (En)",
+        "poster": "Poster",
         "posterUrl": "Poster URL",
-        "posterDesc": "Upload a high-quality cover for the event page.",
-        "selectPosterImage": "Select Image...",
-        "content": "Content & Details",
+        "posterDesc": "Event cover image.",
+        "selectPosterImage": "Select...",
+        "content": "Content",
         "categories": "Categories",
-        "categoriesDesc": "Comma-separated list (e.g., Tech, Communication).",
+        "categoriesDesc": "Comma-separated.",
         "summary": "Summary",
-        "description": "Full Description",
-        "locationAndDate": "Location & Date",
-        "cityFa": "City (Persian)",
-        "cityEn": "City (English)",
-        "cityDesc": "Visible for offline events.",
+        "description": "Full Text",
+        "locationAndDate": "Place & Date",
+        "cityFa": "City (Fa)",
+        "cityEn": "City (En)",
+        "cityDesc": "For offline.",
         "address": "Address",
-        "startDateTime": "Start Date & Time",
-        "endDateTime": "End Date & Time",
-        "endDateTimeOptional": "Optional. Leave empty for open duration.",
-        "pickDate": "Pick a date",
-        "capacity": "Capacity & Spots",
-        "capacityTotal": "Total Capacity",
-        "showRemainingCapacity": "Show Remaining Spots",
-        "showRemainingCapacityDesc": "Display available seats on the event page.",
-        "saveChanges": "Save Changes",
-        "createEvent": "Create Event",
-        "noPublicDiscounts": "No public discounts available.",
+        "startDateTime": "Starts",
+        "endDateTime": "Ends",
+        "endDateTimeOptional": "Optional.",
+        "pickDate": "Select date",
+        "capacity": "Capacity",
+        "capacityTotal": "Total",
+        "showRemainingCapacity": "Show Left",
+        "showRemainingCapacityDesc": "Show spots left.",
+        "saveChanges": "Save",
+        "createEvent": "Create",
+        "noPublicDiscounts": "None.",
         "publicDiscountsTitle": "Auto-Discounts",
-        "publicDiscountsDesc": "Select discounts to automatically apply to this event."
+        "publicDiscountsDesc": "Apply automatically."
       },
       "validation": {
-        "nonNegative": "Capacity must be a non-negative number."
+        "nonNegative": "Min 0."
       }
     },
     "actions": {
-      "edit": "Edit Event",
-      "manageTickets": "Manage Tickets",
-      "manageResources": "Manage Resources",
-      "manageFeedback": "Manage Feedback"
+      "edit": "Edit",
+      "manageTickets": "Tickets",
+      "manageResources": "Files",
+      "manageFeedback": "Survey"
     },
     "registrations": {
       "title": "Registrations",
-      "subtitle": "List of all event sign-ups.",
-      "noRegistrationsFound": "No registrations found matching your criteria.",
+      "subtitle": "Event sign-ups.",
+      "noRegistrationsFound": "None found.",
       "actions": {
-        "openMenu": "Actions",
-        "viewUserDetails": "View Details",
-        "sendMessage": "Send Message"
+        "openMenu": "Menu",
+        "viewUserDetails": "Details",
+        "sendMessage": "Message"
       },
       "table": {
         "user": "User",
         "event": "Event",
         "ticket": "Ticket",
         "status": "Status",
-        "date": "Reg. Date"
+        "date": "Date"
       },
       "details": {
-        "title": "Registration Details",
-        "subtitle": "Details for {userName}",
-        "editUserTitle": "Attendee Information",
-        "editUserSubtitle": "Review or update participant data.",
-        "paymentTitle": "Payment Info",
-        "gatewayId": "Gateway ID",
-        "auditLogTitle": "Audit Log",
-        "changeStatus": "Manual Status Update",
-        "confirmStatusChangeTitle": "Confirm Status Change",
-        "confirmStatusChangeDescription": "Are you sure you want to change status to {newStatus}?",
+        "title": "Details",
+        "subtitle": "For {userName}",
+        "editUserTitle": "Info",
+        "editUserSubtitle": "Review.",
+        "paymentTitle": "Payment",
+        "gatewayId": "Gate ID",
+        "auditLogTitle": "History",
+        "changeStatus": "Manual Status",
+        "confirmStatusChangeTitle": "Confirm",
+        "confirmStatusChangeDescription": "Change to {newStatus}?",
         "close": "Close"
       },
       "sendMessage": {
-        "title": "Send Direct Message",
-        "subtitle": "Messaging participant {userName}",
-        "placeholder": "Type your message here...",
-        "sendViaEmail": "Send via Email",
-        "sendViaSms": "Send via SMS",
-        "sendButton": "Send Message",
-        "successTitle": "Message Queued",
-        "successDescription": "Your message is being sent."
+        "title": "Send",
+        "subtitle": "To {userName}",
+        "placeholder": "Text...",
+        "sendViaEmail": "Email",
+        "sendViaSms": "SMS",
+        "sendButton": "Send",
+        "successTitle": "Queued",
+        "successDescription": "Processing."
       },
       "filters": {
         "eventPlaceholder": "All Events",
         "statusPlaceholder": "All Statuses",
-        "datePlaceholder": "Pick a range",
-        "allEvents": "All Events",
-        "afterDate": "After {date}",
-        "beforeDate": "Before {date}"
+        "datePlaceholder": "Range",
+        "allEvents": "All",
+        "afterDate": "> {date}",
+        "beforeDate": "< {date}"
       }
     },
     "payments": {
       "title": "Payments",
-      "subtitle": "View and manage all financial transactions.",
-      "totalRevenue": "Total Revenue",
-      "paidTransactions": "Paid Transactions",
-      "mockRefunds": "Refunds (Total)",
-      "noPaymentsFound": "No payments found.",
+      "subtitle": "Transactions.",
+      "totalRevenue": "Revenue",
+      "paidTransactions": "Paid",
+      "mockRefunds": "Refunds",
+      "noPaymentsFound": "Empty.",
       "status": {
-        "success": "Success",
-        "pending": "Pending",
-        "failed": "Failed"
+        "success": "Paid",
+        "pending": "Waiting",
+        "failed": "Fail"
       },
       "actions": {
-        "viewRegistration": "View Registration"
+        "viewRegistration": "View"
       },
       "filters": {
-        "statusPlaceholder": "All Statuses"
+        "statusPlaceholder": "All"
       },
       "table": {
         "user": "User",
@@ -410,284 +372,284 @@
     },
     "discounts": {
       "title": "Discounts",
-      "subtitle": "Create and manage discount codes.",
-      "createNew": "Create New Discount",
-      "noDiscountsFound": "No discounts found.",
-      "applySuccessTitle": "Discount Applied",
-      "applyErrorTitle": "Invalid Discount",
-      "statusUpdateSuccess": "Status Updated",
-      "statusUpdateSuccessDesc": "Discount is now {status}",
-      "deleteSuccess": "Discount deleted.",
-      "publicDiscount": "Auto-applied Discount",
-      "codeApplied": "Code '{code}' Applied",
+      "subtitle": "Coupons.",
+      "createNew": "Add Discount",
+      "noDiscountsFound": "Empty.",
+      "applySuccessTitle": "Applied",
+      "applyErrorTitle": "Invalid",
+      "statusUpdateSuccess": "Saved",
+      "statusUpdateSuccessDesc": "Now {status}",
+      "deleteSuccess": "Deleted.",
+      "publicDiscount": "Auto",
+      "codeApplied": "'{code}' OK",
       "applyButton": "Apply",
       "types": {
-        "percent": "Percentage (%)",
-        "fixed": "Fixed Amount"
+        "percent": "%",
+        "fixed": "Fix"
       },
       "status": {
-        "active": "Active",
-        "inactive": "Inactive"
+        "active": "On",
+        "inactive": "Off"
       },
       "table": {
         "name": "Name",
         "type": "Type",
         "value": "Value",
         "events": "Events",
-        "validity": "Validity",
+        "validity": "Dates",
         "usage": "Usage",
-        "status": "Status",
+        "status": "State",
         "actions": "Actions",
-        "allEvents": "All Events",
+        "allEvents": "All",
         "specificEvents": "{count} events",
         "start": "Start",
         "end": "End",
-        "validRange": "Valid from {startDate} to {endDate}"
+        "validRange": "{startDate} to {endDate}"
       },
       "form": {
-        "generalTitle": "General Info",
-        "name": "Discount Name",
-        "nameDesc": "Internal label (e.g., Early Bird 2024).",
-        "isPublic": "Apply Automatically",
-        "isPublicDesc": "Check to apply to all eligible users without a code.",
-        "code": "Discount Code",
-        "valueTitle": "Discount Value",
-        "rulesTitle": "Application Rules",
-        "applicableEvents": "Eligible Events",
-        "applicableEventsDesc": "Select specific events or leave empty for all.",
-        "minAmount": "Minimum Purchase",
-        "minAmountDesc": "Min ticket price required to use this discount.",
+        "generalTitle": "General",
+        "name": "Label",
+        "nameDesc": "Internal.",
+        "isPublic": "Auto-Apply",
+        "isPublicDesc": "For everyone.",
+        "code": "Code",
+        "valueTitle": "Value",
+        "rulesTitle": "Rules",
+        "applicableEvents": "Events",
+        "applicableEventsDesc": "Select or all.",
+        "minAmount": "Min Buy",
+        "minAmountDesc": "Min price.",
         "activationTitle": "Activation",
-        "isActive": "Is Active",
-        "validityTitle": "Validity Period",
-        "startDate": "Start Date",
-        "endDate": "End Date",
-        "limitsTitle": "Usage Limits",
-        "maxUses": "Global Max Usage",
-        "maxUsesDesc": "Total times this code can be used globally.",
-        "maxUsesPerUser": "Max Uses Per User",
-        "maxUsesPerUserDesc": "How many times one person can use it.",
-        "saveChanges": "Save Changes",
-        "createDiscount": "Create Discount"
+        "isActive": "On",
+        "validityTitle": "Validity",
+        "startDate": "Start",
+        "endDate": "End",
+        "limitsTitle": "Limits",
+        "maxUses": "Global Max",
+        "maxUsesDesc": "Total.",
+        "maxUsesPerUser": "User Max",
+        "maxUsesPerUserDesc": "Per person.",
+        "saveChanges": "Save",
+        "createDiscount": "Add"
       },
       "validation": {
-        "positiveValue": "Value must be greater than 0.",
-        "codeRequired": "Code is required for private discounts.",
-        "endDateAfterStart": "End date must be after start date."
+        "positiveValue": "> 0.",
+        "codeRequired": "Required.",
+        "endDateAfterStart": "End > Start."
       },
       "delete": {
-        "confirmTitle": "Delete Discount?",
-        "confirmText": "Are you sure you want to delete '{discountName}'?"
+        "confirmTitle": "Delete?",
+        "confirmText": "Remove '{discountName}'?"
       },
       "errors": {
-        "invalidCode": "This discount code is not valid or expired."
+        "invalidCode": "Invalid/Expired."
       }
     },
     "messaging": {
-      "title": "Bulk Messaging",
-      "subtitle": "Send announcements to event attendees.",
-      "sendSuccessTitle": "Messages Sent",
-      "sendSuccessDescription": "Sent to {count} users successfully.",
-      "filterRecipients": "Filter Recipients",
-      "recipientList": "Final Recipient List",
-      "recipientCount": "{selected} of {total} selected",
-      "composeTitle": "Compose Message",
-      "templatePlaceholder": "Choose template...",
-      "noTemplate": "Custom Message",
-      "subject": "Subject",
-      "body": "Message Body",
-      "templateNote": "Note: Variables in {} are auto-filled.",
-      "channels": "Delivery Channels",
-      "sendButton": "Send to {count} users",
-      "confirmSendTitle": "Confirm Group Messaging",
-      "confirmSendDescription": "Are you sure you want to send this to {count} users?"
+      "title": "Messaging",
+      "subtitle": "Broadcasting.",
+      "sendSuccessTitle": "Sent",
+      "sendSuccessDescription": "Sent to {count}.",
+      "filterRecipients": "Filter",
+      "recipientList": "Recipients",
+      "recipientCount": "{selected}/{total}",
+      "composeTitle": "Draft",
+      "templatePlaceholder": "Template...",
+      "noTemplate": "Custom",
+      "subject": "Sub",
+      "body": "Body",
+      "templateNote": "Use {} variables.",
+      "channels": "Channels",
+      "sendButton": "Send to {count}",
+      "confirmSendTitle": "Confirm",
+      "confirmSendDescription": "Send to {count}?"
     },
     "ideas": {
-      "statusUpdated": "Idea status updated.",
+      "statusUpdated": "OK.",
       "status": {
-        "PENDING": "Pending",
-        "REVIEWED": "Reviewed",
-        "PLANNED": "Planned",
-        "REJECTED": "Rejected"
+        "PENDING": "Wait",
+        "REVIEWED": "OK",
+        "PLANNED": "Set",
+        "REJECTED": "No"
       }
     },
     "partnerships": {
-      "title": "Partnership Requests",
-      "updateSuccess": "Request updated successfully.",
+      "title": "Partners",
+      "updateSuccess": "Saved.",
       "tabs": {
-        "collabs": "Collaborations",
-        "sponsors": "Sponsorships"
+        "collabs": "Individual",
+        "sponsors": "Brands"
       },
       "collabs": {
-        "title": "Team & Moderator Apps",
-        "subtitle": "People interested in joining the team."
+        "title": "Apps",
+        "subtitle": "Join team."
       },
       "sponsors": {
-        "title": "Sponsorship Requests",
-        "subtitle": "Corporate interest for event support."
+        "title": "Sponsors",
+        "subtitle": "Support."
       },
       "table": {
-        "expertise": "Expertise",
+        "expertise": "Expert",
         "plan": "Plan"
       },
       "detail": {
-        "title": "Request Details",
-        "subtitle": "Application profile and content",
-        "content": "Message / Reasons",
-        "updateStatus": "Decision Triage",
-        "notes": "Internal Notes",
-        "notesPlaceholder": "Add your feedback or next steps here..."
+        "title": "Request",
+        "subtitle": "Profile",
+        "content": "Message",
+        "updateStatus": "Triage",
+        "notes": "Internal",
+        "notesPlaceholder": "Next steps..."
       }
     },
     "contact": {
-      "title": "Contact Center",
-      "subtitle": "Incoming messages from the community.",
-      "refresh": "Refresh List",
+      "title": "Inbox",
+      "subtitle": "Community messages.",
+      "refresh": "Update",
       "view": "Read",
       "notifications": {
-        "error": "Failed to load messages.",
-        "statusUpdated": "Status updated.",
-        "archived": "Message archived."
+        "error": "Error.",
+        "statusUpdated": "OK.",
+        "archived": "Stored."
       },
       "filters": {
-        "status": "Filter Status",
-        "statusAll": "All Messages",
-        "searchPlaceholder": "Search sender or text...",
-        "dateFrom": "From Date",
-        "dateTo": "To Date",
-        "reset": "Reset Filters"
+        "status": "Status",
+        "statusAll": "All",
+        "searchPlaceholder": "Search...",
+        "dateFrom": "From",
+        "dateTo": "To",
+        "reset": "Clear"
       },
       "pagination": {
-        "label": "Page {page} of {totalPages}",
-        "previous": "Previous",
+        "label": "{page}/{totalPages}",
+        "previous": "Prev",
         "next": "Next"
       },
       "table": {
-        "empty": "No contact messages found.",
-        "createdAt": "Sent At",
-        "name": "Sender",
-        "email": "Email",
+        "empty": "Empty.",
+        "createdAt": "Date",
+        "name": "From",
+        "email": "Mail",
         "message": "Preview",
         "status": "State",
-        "actions": "Actions"
+        "actions": "Do"
       },
       "status": {
         "NEW": "New",
         "SEEN": "Read",
-        "ARCHIVED": "Archived"
+        "ARCHIVED": "Old"
       },
       "detail": {
-        "title": "Inbound Message",
-        "emailSent": "Auto-Notify",
+        "title": "Message",
+        "emailSent": "Notify",
         "source": "Channel",
-        "ip": "IP Address",
-        "userAgent": "Device",
-        "processedAt": "Processed",
-        "close": "Back to List",
-        "markSeen": "Mark as Read",
-        "markArchived": "Archive Message"
+        "ip": "IP",
+        "userAgent": "Agent",
+        "processedAt": "Done",
+        "close": "Back",
+        "markSeen": "Read",
+        "markArchived": "Archive"
       }
     },
     "feedback": {
-      "title": "Feedback Builder",
-      "subtitle": "Managing evaluation forms for {eventName}",
-      "addQuestion": "Add Question",
-      "deleteQuestion": "Delete",
-      "questionNumber": "Question {num}",
-      "saveForm": "Save Form Structure",
-      "saveSuccessTitle": "Form Saved",
-      "saveSuccessDescription": "Evaluation form updated successfully.",
+      "title": "Survey",
+      "subtitle": "Form for {eventName}",
+      "addQuestion": "Add",
+      "deleteQuestion": "Del",
+      "questionNumber": "Q {num}",
+      "saveForm": "Save",
+      "saveSuccessTitle": "Saved",
+      "saveSuccessDescription": "Updated.",
       "form": {
-        "label": "Question Text",
-        "type": "Input Type",
-        "required": "Required Field"
+        "label": "Text",
+        "type": "Input",
+        "required": "Req"
       },
       "types": {
-        "rating": "Star Rating (1-5)",
-        "text": "Open Text",
-        "yesNo": "Yes / No"
+        "rating": "Stars",
+        "text": "Text",
+        "yesNo": "Y/N"
       },
       "results": {
-        "title": "User Feedback Analysis",
-        "subtitle": "Analysis of post-event evaluations.",
-        "selectEvent": "Select Event to View",
-        "summaryTitle": "Aggregate Statistics",
-        "totalResponses": "Total Submissions",
-        "individualResponses": "Individual Feedback",
-        "noResponses": "No feedback submitted yet for this event."
+        "title": "Feedback",
+        "subtitle": "Analysis.",
+        "selectEvent": "Select Event",
+        "summaryTitle": "Stats",
+        "totalResponses": "Total",
+        "individualResponses": "Details",
+        "noResponses": "None yet."
       },
       "validation": {
-        "labelRequired": "Question text cannot be empty."
+        "labelRequired": "Required."
       }
     },
     "sponsors": {
-      "title": "Sponsor Management",
-      "subtitle": "Manage organizations supporting the community.",
-      "addNew": "Add Sponsor",
+      "title": "Sponsors",
+      "subtitle": "Manage.",
+      "addNew": "Add",
       "actions": {
-        "visit": "Visit Site"
+        "visit": "Site"
       },
       "table": {
-        "logo": "Logo",
+        "logo": "Icon",
         "name": "Name",
-        "tagline": "Product/Tagline",
-        "website": "Website"
+        "tagline": "Slogan",
+        "website": "Web"
       },
       "create": {
-        "title": "Add New Sponsor",
-        "subtitle": "Enter the details for the new partner.",
-        "successTitle": "Sponsor added."
+        "title": "Add",
+        "subtitle": "New partner.",
+        "successTitle": "Added."
       },
       "edit": {
-        "title": "Edit Sponsor",
-        "subtitle": "Updating partner information.",
-        "successTitle": "Changes saved."
+        "title": "Edit",
+        "subtitle": "Update.",
+        "successTitle": "Saved."
       },
       "delete": {
-        "title": "Remove Sponsor",
-        "successTitle": "Sponsor removed.",
-        "confirmTitle": "Delete Sponsor?",
-        "confirmText": "Are you sure you want to remove '{name}'?"
+        "title": "Remove",
+        "successTitle": "Removed.",
+        "confirmTitle": "Delete?",
+        "confirmText": "Remove '{name}'?"
       },
       "form": {
-        "name": "Partner Name",
-        "tagline": "Product or Tagline",
+        "name": "Partner",
+        "tagline": "Slogan",
         "logoUrl": "Logo URL",
-        "websiteUrl": "Website URL"
+        "websiteUrl": "Site URL"
       },
       "validation": {
-        "invalidUrl": "Please enter a valid URL."
+        "invalidUrl": "Invalid."
       }
     },
     "team": {
-      "title": "Team Management",
-      "subtitle": "Curators and moderators of the community.",
-      "addNew": "Add Member",
+      "title": "Team",
+      "subtitle": "Curators.",
+      "addNew": "Add",
       "table": {
-        "photo": "Photo",
+        "photo": "Img",
         "name": "Name",
         "role": "Role"
       },
       "create": {
-        "title": "Add Team Member",
-        "subtitle": "Adding a new mind to the curation team.",
-        "successTitle": "Member added."
+        "title": "Add",
+        "subtitle": "New mind.",
+        "successTitle": "Added."
       },
       "edit": {
-        "title": "Edit Member",
-        "subtitle": "Updating curator profile.",
-        "successTitle": "Member updated."
+        "title": "Edit",
+        "subtitle": "Update.",
+        "successTitle": "Saved."
       },
       "delete": {
-        "title": "Remove Member",
-        "successTitle": "Member removed.",
-        "confirmTitle": "Remove Member?",
-        "confirmText": "Are you sure you want to remove '{name}' from the team?"
+        "title": "Remove",
+        "successTitle": "Removed.",
+        "confirmTitle": "Remove?",
+        "confirmText": "Remove '{name}'?"
       },
       "form": {
         "name": "Full Name",
-        "role": "Role in Community",
-        "photoUrl": "Profile Photo URL"
+        "role": "Role",
+        "photoUrl": "Photo URL"
       }
     }
   },

@@ -21,7 +21,6 @@ import { Badge } from "@/components/ui/badge";
 
 /**
  * 1. HERO SECTION
- * Immersive, gains-oriented entry point with smooth parallax feel.
  */
 function HeroSection() {
   const { t, language } = useLanguage();
@@ -30,7 +29,6 @@ function HeroSection() {
 
   return (
     <section className="relative h-[90vh] min-h-[700px] w-full flex items-center justify-center overflow-hidden">
-      {/* Background with subtle alive feel */}
       <div className="absolute inset-0 z-0">
         <Image
           src="https://images.unsplash.com/photo-1528605248644-14dd04cb11c7?q=80&w=2070&auto=format&fit=crop"
@@ -78,7 +76,6 @@ function HeroSection() {
 
 /**
  * 2. UPCOMING EVENTS
- * Professional cards with seat tracking and difficulty badges.
  */
 function EventsSection() {
   const { t, language } = useLanguage();
@@ -91,7 +88,7 @@ function EventsSection() {
   });
 
   return (
-    <section className="container max-w-screen-2xl py-24 md:py-32">
+    <section className="container max-w-screen-2xl py-24 md:py-32 border-b border-border/40">
         <div className="mb-16 md:mb-24 text-center space-y-4">
             <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.events.title')}</h2>
             <p className="text-xl text-muted-foreground font-light max-w-3xl mx-auto">{t('home.events.subtitle')}</p>
@@ -204,7 +201,6 @@ function ExperienceCard({ event, isFeatured }: { event: Event, isFeatured?: bool
 
 /**
  * 3. SEASON ONE HIGHLIGHT
- * Cinematic section for community storytelling.
  */
 function SeasonOneSection() {
   const { t, language } = useLanguage();
@@ -218,7 +214,7 @@ function SeasonOneSection() {
   ];
 
   return (
-    <section id="season-one" className="py-24 md:py-32 bg-secondary/5 relative overflow-hidden">
+    <section id="season-one" className="py-24 md:py-40 bg-secondary/5 relative overflow-hidden">
       <div className="container max-w-screen-2xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
@@ -272,7 +268,6 @@ function SeasonOneSection() {
 
 /**
  * 4. WHY THINK THEN TALK
- * Benefit-driven cards with icons.
  */
 function WhySection() {
   const { t } = useLanguage();
@@ -315,48 +310,41 @@ function WhySection() {
 }
 
 /**
- * 6. COMMUNITY EXPERIENCE (TIMELINE)
- * Visual walkthrough of an event.
+ * 5. COMMUNITY GALLERY
+ * Visual showcase of real atmosphere.
  */
-function ExperienceTimeline() {
-  const { t, language } = useLanguage();
-  const isRTL = language === 'fa';
+function GallerySection() {
+  const { t } = useLanguage();
   
-  const steps = [
-    { id: 'arrival', icon: MapPin },
-    { id: 'iceBreaking', icon: Users },
-    { id: 'games', icon: Trophy },
-    { id: 'podcast', icon: Play },
-    { id: 'discussion', icon: Quote },
-    { id: 'networking', icon: Sparkles },
-    { id: 'closing', icon: CheckCircle2 },
+  const items = [
+    { url: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2070&auto=format&fit=crop', span: 'col-span-2 row-span-2' },
+    { url: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop', span: 'col-span-1 row-span-1' },
+    { url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2064&auto=format&fit=crop', span: 'col-span-1 row-span-2' },
+    { url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop', span: 'col-span-1 row-span-1' },
+    { url: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1949&auto=format&fit=crop', span: 'col-span-2 row-span-1' },
   ];
 
   return (
     <section className="py-24 md:py-32 bg-secondary/10">
       <div className="container max-w-screen-2xl">
-        <div className="mb-20 text-center space-y-4">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight">{t('home.experience.title')}</h2>
-          <p className="text-xl text-muted-foreground font-light">{t('home.experience.subtitle')}</p>
+        <div className="mb-16 text-center space-y-4">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight">{t('home.moments.title')}</h2>
+          <p className="text-xl text-muted-foreground font-light">{t('home.moments.subtitle')}</p>
         </div>
-
-        <div className="relative">
-          {/* Horizontal Line (Desktop) */}
-          <div className="hidden lg:block absolute top-10 left-0 right-0 h-0.5 bg-border z-0" />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-8 relative z-10">
-            {steps.map((step, i) => (
-              <div key={step.id} className="flex flex-col items-center text-center space-y-6 group">
-                <div className="w-20 h-20 rounded-full bg-background border-4 border-secondary shadow-lg flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-110">
-                  <step.icon className="h-8 w-8 text-primary" />
-                </div>
-                <div className="space-y-2 px-2">
-                   <p className="text-xs font-black uppercase text-primary tracking-widest">Step {i + 1}</p>
-                   <h3 className="font-bold text-lg leading-tight">{t(`home.experience.${step.id}`)}</h3>
-                </div>
-              </div>
-            ))}
-          </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px] md:auto-rows-[300px]">
+          {items.map((item, i) => (
+            <div key={i} className={cn("relative rounded-[2rem] overflow-hidden shadow-lg group", item.span)}>
+              <Image 
+                src={item.url} 
+                alt="Community Moment" 
+                fill 
+                className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -364,8 +352,7 @@ function ExperienceTimeline() {
 }
 
 /**
- * 7. SUGGEST AN EVENT
- * Creative identity for participation.
+ * 6. SUGGEST AN EVENT
  */
 function SuggestSection() {
   const { t, language } = useLanguage();
@@ -421,8 +408,7 @@ function SuggestSection() {
 }
 
 /**
- * 8. COLLABORATE WITH US
- * Team-focused identity.
+ * 7. COLLABORATE WITH US
  */
 function CollaborateSection() {
   const { t, language } = useLanguage();
@@ -485,8 +471,7 @@ function CollaborateSection() {
 }
 
 /**
- * 9. SPONSORSHIP
- * Premium, professional identity for brands.
+ * 8. SPONSORSHIP
  */
 function SponsorshipSection() {
   const { t } = useLanguage();
@@ -535,8 +520,7 @@ function SponsorshipSection() {
 }
 
 /**
- * 10. MEET THE TEAM
- * Moved near the footer.
+ * 9. MEET THE TEAM
  */
 function TeamSection() {
   const { t, language } = useLanguage();
@@ -574,7 +558,7 @@ function TeamSection() {
 }
 
 /**
- * 11. FINAL CTA
+ * 10. FINAL CTA
  */
 function FinalCTASection() {
   const { t, language } = useLanguage();
@@ -613,11 +597,7 @@ export default function HomePage() {
       <EventsSection />
       <SeasonOneSection />
       <WhySection />
-      {/* 
-        Gallery Section is integrated within Atmosphere feel 
-        Note: Community Gallery (Masonry) logic remains here for future scale
-      */}
-      <ExperienceTimeline />
+      <GallerySection />
       <SuggestSection />
       <CollaborateSection />
       <SponsorshipSection />

@@ -62,17 +62,6 @@
         "desc": "تمرینِ شنیدنِ فعال و پذیرشِ تفاوت‌ها در یک فضای دوستانه."
       }
     },
-    "experience": {
-      "title": "یک شب در جامعه ما",
-      "subtitle": "از لحظه ورود تا خداحافظی؛ سفری که در هر رویداد تجربه می‌کنید.",
-      "arrival": "استقبال و پذیرایی اولیه",
-      "iceBreaking": "یخ‌شکنی و آشنایی با هم‌تیمی‌ها",
-      "games": "بازی‌های گروهی و فکری",
-      "podcast": "شنیدنِ جمعیِ بخش‌های برگزیده",
-      "discussion": "گفتگوی عمیق در گروه‌های کوچک",
-      "networking": "ارتباطات آزاد و شبکه‌سازی",
-      "closing": "جمع‌بندی و بازتابِ تجربه"
-    },
     "suggest": {
       "title": "شما معمارِ رویداد بعدی باشید",
       "subtitle": "اعضای جامعه ما، آینده‌ی گفتگوها را شکل می‌دهند. موضوعی در ذهن دارید؟ ما مشتاق شنیدنِ ایده‌های خلاقانه شما هستیم.",
@@ -93,26 +82,6 @@
       "title": "آماده‌اید بخشی از این جریان باشید؟",
       "subtitle": "جای خالی شما در دایره‌ی گفتگوهای ما احساس می‌شود. به جمع متفکران خوش آمدید.",
       "cta": "همین حالا بپیوندید"
-    },
-    "experience_old": {
-      "title": "هنر گفتگو",
-      "subtitle": "«تینک دن تاک» فراتر از یک رویداد است؛ اینجا فضایی برای تمرین تفکر جمعی و همدلی است.",
-      "perk1": {
-        "title": "جستجوی عمیق",
-        "desc": "عبور از لایه‌های سطحی و ورود به هسته موضوعات پیچیده."
-      },
-      "perk2": {
-        "title": "جامعه برگزیده",
-        "desc": "ارتباط با افرادی که برای شنیدن به اندازه گفتن ارزش قائل هستند."
-      },
-      "perk3": {
-        "title": "رشد فکری",
-        "desc": "توضیح ابزارهای تفکر نقادانه و بیان دقیق دیدگاه‌ها."
-      },
-      "simulation": {
-        "quote": "در هر جلسه متوجه می‌شوم که دیدگاه من فقط گسترش نمی‌یابد، بلکه متحول می‌شود. اینجا فضایی است که سکوت به اندازه واژه‌ها معنا دارد.",
-        "caption": "تجربه حضور در جامعه"
-      }
     },
     "involved": {
       "title": "در ساختن جامعه سهیم شوید",
@@ -139,7 +108,7 @@
     },
     "team": {
       "title": "معماران جامعه",
-      "subtitle": "با تیم کیوریتوری و افرادی که هر رویداد را با دقت طراحی می‌کنند آشنا شوید.",
+      "subtitle": "Meet the minds behind the community architecture.",
       "noMembers": "اطلاعات تیم به زودی در دسترس خواهد بود."
     }
   },
@@ -504,8 +473,9 @@
       "statusUpdated": "وضعیت ایده به‌روزرسانی شد.",
       "status": {
         "PENDING": "در انتظار",
-        "REVIEWED": "بررسی شده",
-        "PLANNED": "برنامه‌ریزی شده",
+        "REVIEWING": "در حال بررسی",
+        "CONTACTED": "تماس گرفته شده",
+        "ACCEPTED": "پذیرفته شده",
         "REJECTED": "رد شده"
       }
     },
@@ -529,12 +499,12 @@
         "plan": "پلن"
       },
       "detail": {
-        "title": "جزئیات درخواست",
-        "subtitle": "پروفایل متقاضی و محتوای درخواست",
-        "content": "متن / دلایل همکاری",
-        "updateStatus": "تصمیم‌گیری و تعیین وضعیت",
-        "notes": "یادداشت‌های داخلی",
-        "notesPlaceholder": "بازخورد یا مراحل بعدی را اینجا یادداشت کنید..."
+        "title": "درخواست",
+        "subtitle": "پروفایل",
+        "content": "متن",
+        "updateStatus": "تصمیم‌گیری",
+        "notes": "یادداشت‌ها",
+        "notesPlaceholder": "مراحل بعدی..."
       }
     },
     "contact": {
@@ -796,7 +766,7 @@
     "viewReceipt": "مشاهده رسید",
     "retryPayment": "تلاش مجدد پرداخت",
     "backToSummary": "بازگشت به خلاصه",
-    "leaveFeedback": "ثبت بازخورد",
+    "leaveFeedback": "Leave Feedback",
     "backToDashboard": "بازگشت به خانه",
     "logout": "خروج",
     "login": "ورود",
@@ -819,336 +789,336 @@
     "linkCopiedDescription": "لینک در حافظه کپی شد."
   },
   "errors": {
-    "genericTitle": "خطایی رخ داد",
-    "fetchEvents": "خطا در بارگیری رویدادها.",
-    "fetchEvent": "خطا در بارگیری جزئیات.",
-    "eventNotFound": "رویداد یافت نشد.",
-    "fetchRegistrations": "خطا در بارگیری ثبت‌نام‌ها.",
-    "accessDenied": "دسترسی محدود",
-    "accessDeniedDescription": "شما اجازه دسترسی به این بخش را ندارید."
+    "genericTitle": "Oops!",
+    "fetchEvents": "Error loading events.",
+    "fetchEvent": "Error loading event.",
+    "eventNotFound": "Event not found.",
+    "fetchRegistrations": "Error loading registrations.",
+    "accessDenied": "Access Denied",
+    "accessDeniedDescription": "You don't have permission for this area."
   },
   "registration": {
-    "title": "ثبت‌نام",
-    "confirmReset": "شروع مجدد و حذف داده‌ها؟",
+    "title": "Registration",
+    "confirmReset": "Reset all info?",
     "steps": {
-      "personal": "فردی",
-      "personalSubtitle": "اطلاعات هویتی.",
-      "education": "تحصیلات",
-      "educationSubtitle": "سوابق.",
-      "language": "زبان",
-      "languageSubtitle": "سطح انگلیسی.",
-      "contact": "تماس",
-      "contactSubtitle": "اطلاعات تماس.",
-      "rules": "قوانین",
-      "rulesSubtitle": "تعهدات.",
-      "summary": "خلاصه",
-      "summarySubtitle": "بازبینی نهایی."
+      "personal": "Personal",
+      "personalSubtitle": "ID information.",
+      "education": "Education",
+      "educationSubtitle": "Background.",
+      "language": "Language",
+      "languageSubtitle": "English level.",
+      "contact": "Contact",
+      "contactSubtitle": "Contact info.",
+      "rules": "Terms",
+      "rulesSubtitle": "Policies.",
+      "summary": "Summary",
+      "summarySubtitle": "Review."
     },
     "summary": {
-      "eventDetails": "رویداد",
-      "eventTitle": "رویداد",
-      "eventDate": "تاریخ",
-      "ticketType": "بلیت",
-      "price": "قیمت",
-      "edit": "ویرایش",
-      "noInfo": "وارد نشده",
-      "yes": "بله",
-      "no": "خیر",
-      "paymentButton": "پرداخت و نهایی‌سازی",
-      "finalPriceTitle": "مبلغ نهایی",
-      "subtotal": "مبلغ پایه",
-      "total": "قابل پرداخت"
+      "eventDetails": "Event",
+      "eventTitle": "Event",
+      "eventDate": "Date",
+      "ticketType": "Ticket",
+      "price": "Price",
+      "edit": "Edit",
+      "noInfo": "Not provided",
+      "yes": "Yes",
+      "no": "No",
+      "paymentButton": "Pay Now",
+      "finalPriceTitle": "Total",
+      "subtotal": "Subtotal",
+      "total": "Total"
     },
     "fields": {
-      "firstNameFa": "نام (فارسی)",
-      "lastNameFa": "نام خانوادگی (فارسی)",
-      "firstNameEn": "نام (انگلیسی)",
-      "lastNameEn": "نام خانوادگی (انگلیسی)",
-      "age": "سن",
-      "gender": "جنسیت",
-      "genderMale": "مرد",
-      "genderFemale": "زن",
-      "genderOther": "سایر",
-      "educationLevel": "مقطع",
-      "fieldOfStudy": "رشته",
-      "isEmployed": "شاغل",
-      "jobTitle": "عنوان شغلی",
+      "firstNameFa": "First Name (FA)",
+      "lastNameFa": "Last Name (FA)",
+      "firstNameEn": "First Name (EN)",
+      "lastNameEn": "Last Name (EN)",
+      "age": "Age",
+      "gender": "Gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "educationLevel": "Degree",
+      "fieldOfStudy": "Major",
+      "isEmployed": "Employed",
+      "jobTitle": "Job Title",
       "educationLevels": {
-        "high-school": "دیپلم",
-        "associate": "کاردانی",
-        "bachelor": "کارشناسی",
-        "master": "ارشد",
-        "phd": "دکتری",
-        "other": "سایر"
+        "high-school": "High School",
+        "associate": "Associate",
+        "bachelor": "Bachelor",
+        "master": "Master",
+        "phd": "PhD",
+        "other": "Other"
       },
-      "languageLevel": "سطح زبان",
+      "languageLevel": "English Level",
       "languageLevelsList": {
-        "beginner": "مبتدی",
-        "intermediate": "متوسط",
-        "advanced": "پیشرفته",
-        "native": "مسلط"
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "native": "Fluent"
       },
-      "referralSource": "آشنایی از",
+      "referralSource": "Found via",
       "referralSources": {
-        "instagram": "اینستاگرام",
-        "telegram": "تلگرام",
-        "website": "سایت",
-        "friends": "دوستان",
-        "other": "سایر"
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "website": "Website",
+        "friends": "Friend",
+        "other": "Other"
       },
-      "referrerName": "نام معرف",
-      "otherReferralSource": "مشخص کنید",
-      "email": "ایمیل",
-      "acceptRules": "من {terms} و {privacy} را می‌پذیرم.",
-      "termsLink": "قوانین",
-      "privacyLink": "حریم خصوصی"
+      "referrerName": "Referrer Name",
+      "otherReferralSource": "Specify",
+      "email": "Email",
+      "acceptRules": "I accept the {terms} and {privacy}.",
+      "termsLink": "Terms",
+      "privacyLink": "Privacy"
     },
     "placeholders": {
-      "firstNameFa": "سارا",
-      "lastNameFa": "محمدی",
+      "firstNameFa": "Sara",
+      "lastNameFa": "Mohammadi",
       "firstNameEn": "Sara",
       "lastNameEn": "Mohammadi",
-      "age": "۲۵",
-      "educationLevel": "انتخاب...",
-      "fieldOfStudy": "فیزیک",
-      "jobTitle": "برنامه‌نویس",
-      "languageLevel": "انتخاب...",
-      "referralSource": "انتخاب...",
-      "referrerName": "نام دوست",
-      "otherReferralSource": "گوگل",
+      "age": "25",
+      "educationLevel": "Select...",
+      "fieldOfStudy": "Physics",
+      "jobTitle": "Dev",
+      "languageLevel": "Select...",
+      "referralSource": "Select...",
+      "referrerName": "Friend name",
+      "otherReferralSource": "Google",
       "email": "user@mail.com"
     },
     "descriptions": {
-      "mobileReadOnly": "متصل به حساب.",
-      "emailOptional": "اختیاری."
+      "mobileReadOnly": "Linked to account.",
+      "emailOptional": "Optional."
     },
     "validation": {
-      "required": "الزامی.",
-      "positiveNumber": "سن نامعتبر.",
-      "invalidEmail": "ایمیل نامعتبر.",
-      "rulesRequired": "پذیرش الزامی."
+      "required": "Required.",
+      "positiveNumber": "Invalid age.",
+      "invalidEmail": "Invalid email.",
+      "rulesRequired": "Accept terms."
     },
     "errors": {
-      "notAuthenticated": "لطفا وارد شوید.",
-      "missingInfo": "نقص اطلاعات.",
-      "incompleteSteps": "مراحل قبل را کامل کنید."
+      "notAuthenticated": "Please login.",
+      "missingInfo": "Info missing.",
+      "incompleteSteps": "Complete previous steps."
     },
     "status": {
-      "paid": "پرداخت شده",
-      "pending": "در انتظار",
-      "failed": "ناموفق",
-      "cancelled": "لغو شده"
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
     }
   },
   "payment": {
-    "verifying": "در حال تایید...",
-    "invalidRequestTitle": "نامعتبر",
-    "invalidRequestDescription": "لینک را چک کنید.",
-    "successTitle": "موفقیت‌آمیز!",
-    "successDescription": "ثبت‌نام انجام شد.",
-    "browseMoreEvents": "رویدادهای دیگر",
-    "viewMyRegistrations": "پنل من",
-    "failedTitle": "شکست",
-    "failedDescription": "دوباره تلاش کنید.",
-    "alreadyProcessedTitle": "پردازش شده",
-    "alreadyProcessedDescription": "وضعیت:",
-    "finalizing": "در حال اتمام...",
-    "statusTitle": "وضعیت",
-    "statusDescription": "نتیجه.",
-    "receiptTitle": "رسید",
-    "paymentId": "شناسه پرداخت",
-    "howToJoinTitle": "ورود به جلسه",
-    "howToJoinDescription": "پیامک راهنما ارسال می‌شود."
+    "verifying": "Verifying...",
+    "invalidRequestTitle": "Invalid",
+    "invalidRequestDescription": "Check link.",
+    "successTitle": "Success!",
+    "successDescription": "Registered.",
+    "browseMoreEvents": "More Events",
+    "viewMyRegistrations": "My Panel",
+    "failedTitle": "Failed",
+    "failedDescription": "Try again.",
+    "alreadyProcessedTitle": "Processed",
+    "alreadyProcessedDescription": "Status:",
+    "finalizing": "Finalizing...",
+    "statusTitle": "Status",
+    "statusDescription": "Result.",
+    "receiptTitle": "Receipt",
+    "paymentId": "Payment ID",
+    "howToJoinTitle": "Join",
+    "howToJoinDescription": "Check SMS soon."
   },
   "evaluation": {
-    "title": "نظرسنجی",
+    "title": "Feedback",
     "subtitle": "{eventName}",
-    "textPlaceholder": "پیام شما...",
-    "alreadySubmittedTitle": "ارسال شده",
-    "alreadySubmittedDescription": "قبلا ثبت شده است.",
-    "successTitle": "تشکر",
-    "successDescription": "با موفقیت ثبت شد.",
+    "textPlaceholder": "Message...",
+    "alreadySubmittedTitle": "Sent",
+    "alreadySubmittedDescription": "Already submitted.",
+    "successTitle": "Thanks",
+    "successDescription": "Success.",
     "errors": {
-      "notAuthenticated": "ورود",
-      "loginPrompt": "وارد شوید.",
-      "notEligibleTitle": "دسترسی بسته",
-      "notEligibleDescription": "نیاز به حضور دارد.",
-      "formNotFound": "موجود نیست."
+      "notAuthenticated": "Login",
+      "loginPrompt": "Login to rate.",
+      "notEligibleTitle": "Locked",
+      "notEligibleDescription": "Requires attendance.",
+      "formNotFound": "Not available."
     },
     "validation": {
       "required": "Required."
     }
   },
   "ideas": {
-    "title": "پیشنهاد رویداد",
-    "subtitle": "چشم‌انداز خود را بگویید.",
-    "successTitle": "موفق",
-    "successDescription": "ایده شما ثبت شد.",
+    "title": "Suggest Event",
+    "subtitle": "Share your vision.",
+    "successTitle": "Success",
+    "successDescription": "Thanks for the idea.",
     "form": {
-      "title": "طرح پیشنهادی",
-      "description": "جزئیات",
-      "titleLabel": "عنوان",
-      "titlePlaceholder": "موضوع رویداد",
-      "descriptionLabel": "محتوا",
-      "descriptionPlaceholder": "روند را توضیح دهید",
-      "typeLabel": "دسته",
-      "submitButton": "ارسال ایده"
+      "title": "Proposal",
+      "description": "Details",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Event topic",
+      "descriptionLabel": "Content",
+      "descriptionPlaceholder": "Explain the flow",
+      "typeLabel": "Category",
+      "submitButton": "Submit Idea"
     },
     "types": {
-      "TOPIC": "موضوع",
-      "FORMAT": "ساختار",
-      "VENUE": "مکان",
-      "OTHER": "سایر"
+      "TOPIC": "Topic",
+      "FORMAT": "Format",
+      "VENUE": "Venue",
+      "OTHER": "Other"
     },
     "validation": {
-      "titleLength": "حداقل ۵ کاراکتر.",
-      "descriptionLength": "حداقل ۲۰ کاراکتر."
+      "titleLength": "Min 5 chars.",
+      "descriptionLength": "Min 20 chars."
     }
   },
   "collaborate": {
-    "title": "همکاری",
-    "subtitle": "در ساختن کمک کنید.",
-    "successTitle": "ارسال شد",
-    "successDescription": "بررسی خواهیم کرد.",
+    "title": "Join Team",
+    "subtitle": "Help us build.",
+    "successTitle": "Sent",
+    "successDescription": "We will review.",
     "terms": {
-      "title": "شرایط",
-      "content": "متن شرایط..."
+      "title": "Terms",
+      "content": "Collaboration terms..."
     },
     "actions": {
-      "acceptAndContinue": "ادامه"
+      "acceptAndContinue": "Continue"
     },
     "form": {
-      "title": "درخواست",
-      "subtitle": "درباره خود بگویید.",
-      "expertise": "تخصص",
-      "expertisePlaceholder": "تسهیلگری، اجرا و...",
-      "experience": "تجربه",
-      "whyJoin": "چرا ما؟",
-      "availability": "دسترسی",
-      "acceptTerms": "موافقم.",
-      "submit": "ارسال درخواست"
+      "title": "Application",
+      "subtitle": "Tell us about yourself.",
+      "expertise": "Expertise",
+      "expertisePlaceholder": "Moderation, Ops, etc.",
+      "experience": "Experience",
+      "whyJoin": "Why us?",
+      "availability": "Availability",
+      "acceptTerms": "I agree.",
+      "submit": "Apply"
     }
   },
   "sponsorship": {
-    "title": "اسپانسرینگ",
-    "subtitle": "حمایت از رشد.",
-    "successTitle": "تشکر",
-    "successDescription": "با شما تماس می‌گیریم.",
+    "title": "Sponsorship",
+    "subtitle": "Support growth.",
+    "successTitle": "Thanks",
+    "successDescription": "Team will contact you.",
     "plans": {
-      "BRONZE": { "name": "برنزی", "subtitle": "پایه", "price": "۱ م", "perk1": "لوگو", "perk2": "نام بردن", "perk3": "سایت" },
-      "SILVER": { "name": "نقره‌ای", "subtitle": "رشد", "price": "۵ م", "perk1": "غرفه", "perk2": "خبرنامه", "perk3": "شبکه اجتماعی" },
-      "GOLD": { "name": "طلایی", "subtitle": "اصلی", "price": "۱۰ م", "perk1": "سخنرانی", "perk2": "بنر اصلی", "perk3": "دسترسی ویژه" },
-      "PLATINUM": { "name": "پلاتین", "subtitle": "اختصاصی", "price": "۲۵ م", "perk1": "برند مشترک", "perk2": "غرفه سفارشی", "perk3": "دائمی" }
+      "BRONZE": { "name": "Bronze", "subtitle": "Basic", "price": "1M", "perk1": "Logo", "perk2": "Mentions", "perk3": "Web" },
+      "SILVER": { "name": "Silver", "subtitle": "Growth", "price": "5M", "perk1": "Booth", "perk2": "Newsletter", "perk3": "Social" },
+      "GOLD": { "name": "Gold", "subtitle": "Main", "price": "10M", "perk1": "Keynote", "perk2": "Main banner", "perk3": "VIP access" },
+      "PLATINUM": { "name": "Platinum", "subtitle": "Exclusive", "price": "25M", "perk1": "Co-branding", "perk2": "Custom booth", "perk3": "Lifetime" }
     },
     "actions": {
-      "choosePlan": "انتخاب پلن"
+      "choosePlan": "Select Plan"
     },
     "form": {
-      "title": "ثبت درخواست",
-      "subtitle": "برای پلن {plan}.",
-      "companyLabel": "نام مجموعه / شرکت",
-      "nameLabel": "نام نماینده",
-      "notes": "پیام شما",
-      "notesPlaceholder": "اهداف و چشم‌انداز همکاری...",
-      "submit": "ارسال درخواست"
+      "title": "Submit Request",
+      "subtitle": "For {plan} plan.",
+      "companyLabel": "Company / Organization Name",
+      "nameLabel": "Representative Name",
+      "notes": "Your Message",
+      "notesPlaceholder": "Collaboration goals and vision...",
+      "submit": "Send Request"
     }
   },
   "wallet": {
-    "title": "کیف پول",
-    "balance": "موجودی",
-    "deposit": "شارژ",
-    "withdraw": "برداشت",
-    "depositTitle": "افزایش موجودی",
-    "depositDesc": "افزودن اعتبار.",
-    "payAndCharge": "پرداخت و شارژ",
-    "withdrawTitle": "برداشت",
-    "withdrawDesc": "دریافت نقد.",
-    "shabaLabel": "شماره شبا",
-    "shabaHelper": "با IR شروع شود",
-    "submitWithdraw": "ثبت درخواست",
-    "history": "تاریخچه",
-    "noTransactions": "خالی.",
-    "minDepositError": "حداقل ۱۰۰۰.",
-    "minWithdrawError": "حداقل ۱۰۰۰۰.",
-    "shabaInvalid": "شبا نامعتبر.",
-    "depositSuccess": "موفق.",
-    "withdrawRequestSuccess": "در صف بررسی.",
+    "title": "Wallet",
+    "balance": "Balance",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "depositTitle": "Top Up",
+    "depositDesc": "Add funds.",
+    "payAndCharge": "Charge Wallet",
+    "withdrawTitle": "Withdraw",
+    "withdrawDesc": "Cash out.",
+    "shabaLabel": "Shaba (IBAN)",
+    "shabaHelper": "Starts with IR",
+    "submitWithdraw": "Request Cashout",
+    "history": "History",
+    "noTransactions": "Empty.",
+    "minDepositError": "Min 1000.",
+    "minWithdrawError": "Min 10000.",
+    "shabaInvalid": "Invalid Shaba.",
+    "depositSuccess": "Success.",
+    "withdrawRequestSuccess": "Queued.",
     "txType": {
-      "DEPOSIT": "شارژ",
-      "WITHDRAWAL": "برداشت",
-      "PURCHASE": "خرید",
-      "REFUND": "بازگشت"
+      "DEPOSIT": "Deposit",
+      "WITHDRAWAL": "Withdraw",
+      "PURCHASE": "Payment",
+      "REFUND": "Refund"
     }
   },
   "subscription": {
-    "title": "اشتراک",
-    "subtitle": "دسترسی کامل.",
-    "planPlaceholder": "پلن معمولی",
-    "bestValue": "ویژه",
-    "buyNow": "خرید",
-    "successTitle": "انجام شد",
-    "successDesc": "اشتراک فعال شد.",
-    "activeTitle": "فعال: {plan}",
-    "activeDesc": "تا {date}",
+    "title": "Pass",
+    "subtitle": "Access all.",
+    "planPlaceholder": "Basic tier",
+    "bestValue": "Hot",
+    "buyNow": "Purchase",
+    "successTitle": "Done",
+    "successDesc": "Enjoy access.",
+    "activeTitle": "Active: {plan}",
+    "activeDesc": "Until {date}",
     "perks": {
-      "events": "همه رویدادها",
-      "resources": "منابع پرمیوم",
-      "support": "پشتیبانی VIP"
+      "events": "All Events",
+      "resources": "Premium Docs",
+      "support": "VIP Support"
     }
   },
   "faq": {
-    "title": "راهنما",
-    "subtitle": "سوالات پرتکرار.",
+    "title": "Help",
+    "subtitle": "Common questions.",
     "categories": {
-      "general": "عمومی",
-      "registration": "ثبت‌نام",
-      "events": "رویدادها"
+      "general": "General",
+      "registration": "Signup",
+      "events": "Gatherings"
     },
     "questions": {
-      "whatIs": { "q": "این چیست؟", "a": "یک جامعه گفتگو." },
-      "howToJoin": { "q": "چطور بپیوندم؟", "a": "ثبت‌نام کنید." },
-      "isRegistrationRequired": { "q": "ثبت‌نام لازم است؟", "a": "بله." },
-      "howToPay": { "q": "چطور پرداخت کنم؟", "a": "درگاه بانکی." },
-      "onlineOrOffline": { "q": "نوع؟", "a": "هر دو." },
-      "refundPolicy": { "q": "بازگشت وجه؟", "a": "نداریم." }
+      "whatIs": { "q": "What is this?", "a": "A dialogue community." },
+      "howToJoin": { "q": "How to join?", "a": "Sign up." },
+      "isRegistrationRequired": { "q": "Registration?", "a": "Yes." },
+      "howToPay": { "q": "Payment?", "a": "Gateway." },
+      "onlineOrOffline": { "q": "Type?", "a": "Both." },
+      "refundPolicy": { "q": "Refund?", "a": "None." }
     }
   },
   "contact": {
-    "kicker": "ارتباط مستقیم",
-    "title": "با ما در تماس باشید",
-    "subtitle": "ما همیشه مشتاق شنیدن نظرات، پیشنهادات و صدای شما هستیم.",
+    "kicker": "Reach Out Directly",
+    "title": "Get in Touch",
+    "subtitle": "We are always eager to hear your thoughts, suggestions, and voice.",
     "form": {
-      "title": "ارسال پیام",
-      "description": "برای ما بنویسید.",
-      "nameLabel": "نام",
-      "namePlaceholder": "نام شما",
-      "emailLabel": "ایمیل",
-      "messageLabel": "متن پیام",
-      "messagePlaceholder": "چگونه می‌توانیم به شما کمک کنیم؟",
-      "messageHelper": "بین ۱۰ تا ۵۰۰۰ کاراکتر.",
-      "submitLabel": "ارسال پیام",
-      "successMessage": "پیام شما با موفقیت ارسال شد.",
-      "prefilledNotice": "اطلاعات از پروفایل شما فراخوانی شد.",
-      "honeypotLabel": "نادیده"
+      "title": "Message",
+      "description": "Send us a note.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "messageLabel": "Message",
+      "messagePlaceholder": "How can we help you?",
+      "messageHelper": "10-5000 chars.",
+      "submitLabel": "Send Message",
+      "successMessage": "Message sent successfully.",
+      "prefilledNotice": "Profile data used.",
+      "honeypotLabel": "Ignore"
     },
-    "email": { "title": "پست الکترونیک", "subtitle": "پاسخگویی سریع" },
-    "social": { "title": "شبکه‌های اجتماعی", "subtitle": "ما را دنبال کنید", "instagram": "اینستاگرام", "telegram": "تلگرام" },
+    "email": { "title": "Email", "subtitle": "Quick response" },
+    "social": { "title": "Social Media", "subtitle": "Follow us", "instagram": "Instagram", "telegram": "Telegram" },
     "errors": {
-      "nameInvalid": "نام خیلی طولانی است.",
-      "emailRequired": "ایمیل الزامی است.",
-      "emailInvalid": "ایمیل نامعتبر است.",
-      "messageLength": "طول پیام مجاز نیست.",
-      "rateLimit": "لطفاً کمی صبر کنید.",
-      "generic": "خطایی رخ داد."
+      "nameInvalid": "Name is too long.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Invalid email format.",
+      "messageLength": "Message length is invalid.",
+      "rateLimit": "Please wait a moment.",
+      "generic": "An error occurred."
     }
   },
   "partnership": {
     "status": {
-      "PENDING": "در انتظار",
-      "REVIEWING": "در حال بررسی",
-      "CONTACTED": "تماس گرفته شده",
-      "ACCEPTED": "پذیرفته شده",
-      "REJECTED": "رد شده"
+      "PENDING": "Pending",
+      "REVIEWING": "Reviewing",
+      "CONTACTED": "Contacted",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Rejected"
     }
   }
 }
