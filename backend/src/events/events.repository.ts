@@ -1,4 +1,3 @@
-
 import { Injectable, Logger } from '@nestjs/common';
 import {
   Event as PrismaEvent,

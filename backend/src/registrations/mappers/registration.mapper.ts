@@ -1,4 +1,3 @@
-
 import {
   Registration,
   Event,
@@ -45,7 +44,7 @@ export const prismaRegistrationToEntity = (
     registration.ticketType,
     registration.status as RegistrationStatus,
     registration.formData
-      ? (registration.formData as Record<string, unknown>)
+      ? (registration.formData as unknown as Record<string, unknown>)
       : null,
     registration.payment?.id ?? null,
     toDate(registration.createdAt),
@@ -92,7 +91,7 @@ export const prismaToUserRegistrationDetailsEntity = (
     toDate(registration.createdAt),
     toUserEntity(registration.user),
     registration.formData
-      ? (registration.formData as Record<string, unknown>)
+      ? (registration.formData as unknown as Record<string, unknown>)
       : null,
     prismaEventToEventEntity(registration.event),
     registration.payment,
