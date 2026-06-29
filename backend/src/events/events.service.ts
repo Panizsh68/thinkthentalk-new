@@ -163,7 +163,6 @@ export class EventsService {
   async hardDeleteEvent(eventId: string, adminId?: string) {
     const deleted = await this.eventsRepository.hardDeleteEvent(
       eventId,
-      adminId,
     );
     if (deleted) {
       await this.invalidateEventCaches(eventId);
