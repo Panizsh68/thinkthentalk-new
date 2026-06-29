@@ -1,3 +1,4 @@
+
 {
   "lng": "en-US",
   "nav": {
@@ -56,26 +57,8 @@
       "title": "Upcoming Journeys",
       "subtitle": "Each event is a designed experience. Choose your next step into depth.",
       "viewAllButton": "View All Journeys",
-      "spotsLeft": "{count} spots remaining"
-    },
-    "trust": {
-      "kicker": "Echoes of Dialogue",
-      "title": "The Attendee Experience",
-      "t1": {
-        "name": "Sarah J.",
-        "role": "Designer",
-        "text": "The most meaningful weekend I've had in years. It changed how I approach my work and relationships."
-      },
-      "t2": {
-        "name": "David M.",
-        "role": "Educator",
-        "text": "Finally, a place where depth is the standard, not the exception. The curation is exceptional."
-      },
-      "t3": {
-        "name": "Elena R.",
-        "role": "Writer",
-        "text": "Think Then Talk provides the intellectual friction necessary to sharpen one's own ideas."
-      }
+      "spotsLeft": "{count} spots remaining",
+      "featured": "Featured"
     },
     "sponsors": {
       "title": "Supported By",
@@ -128,6 +111,31 @@
         "viewFeedback": "User Feedback"
       }
     },
+    "filters": {
+      "title": "Filters",
+      "all": "All",
+      "status": {
+        "all": "All Statuses",
+        "upcoming": "Upcoming",
+        "past": "Past",
+        "placeholder": "Filter status..."
+      },
+      "type": {
+        "placeholder": "Filter type..."
+      },
+      "archived": {
+        "placeholder": "Archive Filter...",
+        "active": "Active Only",
+        "archived": "Archived",
+        "all": "All Items"
+      },
+      "deleted": {
+        "placeholder": "Delete Filter...",
+        "active": "Existing",
+        "deleted": "Deleted",
+        "all": "All Items"
+      }
+    },
     "users": {
       "title": "User Management",
       "subtitle": "List of all registered community members.",
@@ -145,7 +153,8 @@
         "date": "Date",
         "type": "Type",
         "status": "Status",
-        "capacity": "Capacity"
+        "capacity": "Capacity",
+        "state": "State"
       },
       "create": {
         "title": "Create New Event",
@@ -158,60 +167,32 @@
         "subtitle": "You are editing the event: {eventName}",
         "successTitle": "Event Updated",
         "successDescription": "The event '{eventName}' has been successfully updated."
-      },
-      "form": {
-        "basicInfo": "Basic Information",
-        "title": "Event Title",
-        "categories": "Categories",
-        "categoriesDesc": "Comma-separated list of categories (e.g., Tech, Communication).",
-        "content": "Content",
-        "summary": "Summary",
-        "description": "Description",
-        "locationAndDate": "Location & Date",
-        "address": "Address",
-        "startDateTime": "Start Date & Time",
-        "endDateTime": "End Date & Time",
-        "endDateTimeOptional": "Optional. Leave empty if the event has no fixed end time.",
-        "pickDate": "Pick a date",
-        "capacity": "Capacity & Tickets",
-        "capacityTotal": "Total Capacity",
-        "showRemainingCapacity": "Show Remaining Capacity",
-        "showRemainingCapacityDesc": "Display the number of available spots on the event page.",
-        "saveChanges": "Save Changes",
-        "createEvent": "Create Event"
-      },
-      "validation": {
-        "nonNegative": "Capacity must be a non-negative number."
       }
     }
   },
+  "dashboard": {
+    "myRegistrations": "My Registrations",
+    "title": "My Account",
+    "welcomeBack": "Welcome Back",
+    "personalIntro": "We're glad to have you in the Think Then Talk community.",
+    "upcomingSection": "Upcoming Events",
+    "pastSection": "History",
+    "noUpcoming": "You haven't registered for any upcoming events yet.",
+    "noPast": "No past registrations found.",
+    "browseEvents": "Discover New Events",
+    "nextStepTitle": "Next Step",
+    "nextStepDesc": "Start a new experience.",
+    "table": {
+      "actions": "Actions"
+    }
+  },
+  "profile": {
+    "title": "My Profile"
+  },
+  "events": {
+    "noEventsFound": "No events found matching your criteria."
+  },
   "actions": {
-    "login": "Login",
-    "logout": "Logout",
-    "register": "Register",
-    "retry": "Retry",
-    "download": "Download",
-    "view": "View",
-    "addToCalendar": "Add to Calendar",
-    "yes": "Yes",
-    "no": "No",
-    "clearFilters": "Clear Filters",
-    "backToEvents": "Back to Events",
-    "back": "Back",
-    "next": "Next",
-    "finishRegistration": "Complete Registration",
-    "reset": "Start Over",
-    "retryPayment": "Retry Payment",
-    "backToSummary": "Back to Summary",
-    "viewEvent": "View Event",
-    "viewReceipt": "View Receipt",
-    "leaveFeedback": "Leave Feedback",
-    "submitFeedback": "Submit Feedback",
-    "backToDashboard": "Back to Dashboard",
-    "confirm": "Confirm",
-    "activate": "Activate",
-    "deactivate": "Deactivate",
-    "delete": "Delete",
-    "edit": "Edit"
+    "clearFilters": "Clear Filters"
   }
 }

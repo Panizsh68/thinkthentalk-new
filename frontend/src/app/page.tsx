@@ -1,3 +1,4 @@
+
 'use client';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -190,65 +191,6 @@ function EventsSection() {
   );
 }
 
-function TestimonialsSection() {
-  const { t } = useLanguage();
-  const testimonials = [
-    {
-      name: "Sarah L.",
-      role: "Product Manager",
-      avatar: "/avatars/01.png",
-      quote: "This community has been a game-changer for me. The discussions are always high-quality and have genuinely changed how I approach my work.",
-    },
-    {
-      name: "David C.",
-      role: "Software Engineer",
-      avatar: "/avatars/02.png",
-      quote: "I was tired of superficial networking events. Think Then Talk is the complete opposite. Real conversations with brilliant people.",
-    },
-    {
-      name: "Fatemeh K.",
-      role: "UX Designer",
-      avatar: "/avatars/03.png",
-      quote: "An incredibly welcoming and intelligent group. The topics are always fascinating and the moderation ensures conversations stay on track and respectful.",
-    },
-  ];
-
-  return (
-    <section className="bg-secondary/40 py-32">
-      <div className="container max-w-screen-2xl">
-        <div className="mb-20 text-center space-y-4">
-          <h2 className="text-h2 tracking-tight sm:text-5xl">{t('home.testimonials.title')}</h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">{t('home.testimonials.subtitle')}</p>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, i) => (
-            <Card key={i} className="border-border/10 bg-background/80 backdrop-blur-md shadow-lg p-8 h-full flex flex-col">
-              <div className="flex-grow mb-6">
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, starI) => (
-                    <Star key={starI} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-lg text-foreground/90 mt-4 leading-relaxed">"{testimonial.quote}"</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                  <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-bold">{testimonial.name}</p>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function InvolvementSection() {
   const { t, language } = useLanguage();
   const isRTL = language === 'fa';
@@ -420,7 +362,6 @@ export default function HomePage() {
     <div className="flex flex-col gap-0 pb-16">
       <HeroSection />
       <EventsSection />
-      <TestimonialsSection />
       <ExperienceSection />
       <AtmosphereSection />
       <InvolvementSection />

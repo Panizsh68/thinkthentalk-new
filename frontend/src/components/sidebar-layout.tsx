@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -45,7 +46,7 @@ export function SidebarLayout({
   return (
     <SidebarProvider>
       <div className={cn("flex min-h-screen bg-background w-full", isRTL ? "font-vazir" : "font-sans")}>
-        <Sidebar side={isRTL ? "right" : "left"} collapsible="icon">
+        <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="transition-all duration-300">
           <SidebarHeader className="h-16 flex items-center justify-center border-b">
             <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
               <Logo className="h-8 w-auto text-primary" />
@@ -95,7 +96,7 @@ export function SidebarLayout({
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset className="flex flex-1 flex-col">
+        <SidebarInset className="flex flex-1 flex-col transition-all duration-300">
           <header className={cn(
             "flex h-16 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur px-4 md:px-6 sticky top-0 z-30",
             isRTL ? "flex-row-reverse" : "flex-row"
