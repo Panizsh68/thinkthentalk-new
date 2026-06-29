@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,10 +13,8 @@ import {
   SidebarInset,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Home, LogOut, User } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
 import { useLanguage } from '@/lib/i18n/language-provider';
@@ -106,35 +103,17 @@ export function SidebarLayout({
             <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
               <SidebarTrigger className="h-9 w-9" />
               <Separator orientation="vertical" className="h-6 hidden md:block" />
+              <h2 className="text-sm font-semibold hidden md:block">
+                {navItems.find(item => pathname.startsWith(item.href))?.label || ''}
+              </h2>
             </div>
             
             <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "flex-row")}>
               <LanguageSwitcher />
               <ThemeToggle />
-              {account && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0 rounded-full">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                        {account.name?.charAt(0) || 'U'}
-                      </div>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align={isRTL ? "start" : "end"}>
-                    <DropdownMenuItem asChild className={cn(isRTL && "flex-row-reverse justify-start")}>
-                      <Link href="/profile">
-                        <User className={cn(isRTL ? "ml-2" : "mr-2", "h-4 w-4")} />
-                        <span>{t('profile.title')}</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onSelect={onLogout} className={cn("text-destructive focus:bg-destructive/10", isRTL && "flex-row-reverse justify-start")}>
-                      <LogOut className={cn(isRTL ? "ml-2" : "mr-2", "h-4 w-4")} />
-                      <span>{t('actions.logout')}</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+              <Button variant="ghost" size="sm" onClick={onLogout} className="text-muted-foreground hover:text-destructive">
+                {t('actions.logout')}
+              </Button>
             </div>
           </header>
           <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
@@ -144,8 +123,4 @@ export function SidebarLayout({
       </div>
     </SidebarProvider>
   );
-}
-
-function DropdownMenuSeparator() {
-  return <div className="h-px bg-muted my-1" />;
 }

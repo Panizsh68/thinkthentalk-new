@@ -1,4 +1,3 @@
-
 import {
   BadRequestException,
   Injectable,
@@ -239,12 +238,6 @@ export class FeedbackService {
         if (q.type === EvaluationQuestionType.TEXT && typeof ans !== 'string') {
           throw new BadRequestException('Invalid answers.');
         }
-        if (
-          q.type === (EvaluationQuestionType as any).YES_NO &&
-          typeof ans !== 'boolean'
-        ) {
-          throw new BadRequestException('Invalid answers.');
-        }
       }
     }
   }
@@ -316,7 +309,10 @@ export class FeedbackService {
     eventId: s.eventId,
     answers:
       typeof s.answers === 'string'
-        ? (JSON.parse(s.answers) as Record<string, string | number | boolean>)
+        ? (JSON.parse(s.answers as string) as Record<
+            string,
+            string | number | boolean
+          >)
         : (s.answers as Record<string, string | number | boolean>),
     submittedAt: s.submittedAt.toISOString(),
   });
@@ -357,7 +353,7 @@ export class FeedbackService {
       try {
         const answers = (
           typeof sub.answers === 'string'
-            ? JSON.parse(sub.answers)
+            ? JSON.parse(sub.answers as string)
             : sub.answers
         ) as Record<string, unknown>;
         ratingQuestionIds.forEach((id: string) => {
