@@ -37,7 +37,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       );
     }
 
-    // Set JSON content type explicitly
     response.status(status).json(body);
   }
 
@@ -45,7 +44,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     status: number;
     body: ErrorResponse;
   } {
-    // Handle array of validation errors (e.g. from ValidationPipe)
     if (
       Array.isArray(exception) &&
       exception.length > 0 &&
@@ -80,7 +78,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         body: {
           message: Array.isArray(message)
             ? message.join(', ')
-            : (message || exception.message),
+            : (message || exception.message || 'Error'),
           statusCode: exception.getStatus(),
           error: exception.name,
         },
@@ -98,7 +96,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     }
 
-    // Generic error fallback
     const genericMessage =
       exception instanceof Error ? exception.message : 'Internal server error';
 
@@ -107,7 +104,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       body: {
         message: genericMessage,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: 'Internal Server Error',
+        error: (exception as any)?.name || 'InternalServerError',
       },
     };
   }

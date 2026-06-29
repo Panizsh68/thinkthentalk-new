@@ -18,59 +18,45 @@ import {
 
 export const prismaEventToEventEntity = (
   event: PrismaEvent & {
-    ticketConfigs: PrismaEventTicketConfig[];
+    ticketConfigs: (PrismaEventTicketConfig & { saleStartDate?: Date | null; saleEndDate?: Date | null })[];
     resources: PrismaEventResource[];
   },
 ): EventEntity => {
   const categories = event.categories ? event.categories.split(',') : [];
+  const publicDiscountIds = event.publicDiscountIds ? event.publicDiscountIds.split(',') : [];
 
-  const publicDiscountIds = event.publicDiscountIds
-    ? event.publicDiscountIds.split(',')
-    : [];
+  const tickets = event.ticketConfigs.map((ticket) => {
+    const price = typeof ticket.price === 'number' ? ticket.price : (ticket.price as any).toNumber();
+    return new EventTicketConfigEntity(
+      ticket.id,
+      ticket.type,
+      price,
+      ticket.currency,
+      ticket.quantityTotal,
+      ticket.quantitySold,
+      ticket.saleStartDate || event.startDateTime,
+      ticket.saleEndDate || event.endDateTime || new Date(event.startDateTime.getTime() + 30 * 24 * 60 * 60 * 1000),
+      ticket.earlyBirdEndDate,
+      Math.max(ticket.quantityTotal - ticket.quantitySold, 0),
+    );
+  });
 
-  const tickets = event.ticketConfigs.map(
-    (ticket) =>
-      new EventTicketConfigEntity(
-        ticket.id,
-        ticket.type,
-        typeof ticket.price === 'number'
-          ? ticket.price
-          : ticket.price.toNumber(),
-        ticket.currency,
-        ticket.quantityTotal,
-        ticket.quantitySold,
-        ticket.saleStartDate ?? event.startDateTime,
-        ticket.saleEndDate ??
-          event.endDateTime ??
-          new Date(event.startDateTime.getTime() + 30 * 24 * 60 * 60 * 1000),
-        ticket.earlyBirdEndDate,
-        Math.max(ticket.quantityTotal - ticket.quantitySold, 0),
-      ),
-  );
-
-  const resources = event.resources.map(
-    (res) =>
-      new EventResourceEntity(
-        res.id,
-        { fa: res.titleFa, en: res.titleEn },
-        res.accessLevel,
-        res.url,
-        res.description,
-      ),
-  );
-
-  const summary = fromLegacyLocalizedText(event.summaryFa, event.summaryEn);
-  const description = fromLegacyLocalizedText(
-    event.descriptionFa,
-    event.descriptionEn,
+  const resources = event.resources.map((res) =>
+    new EventResourceEntity(
+      res.id,
+      { fa: res.titleFa, en: res.titleEn },
+      res.accessLevel,
+      res.url,
+      res.description,
+    ),
   );
 
   return new EventEntity(
     event.id,
     event.slug,
     parseLocalizedText(event.title),
-    summary,
-    description,
+    fromLegacyLocalizedText(event.summaryFa, event.summaryEn),
+    fromLegacyLocalizedText(event.descriptionFa, event.descriptionEn),
     event.type,
     event.startDateTime,
     event.endDateTime,
@@ -95,12 +81,12 @@ export const prismaEventToEventEntity = (
 export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
   id: entity.id,
   slug: entity.slug,
-  title: { fa: entity.title.fa, en: entity.title.en },
-  summary: { fa: entity.summary.fa, en: entity.summary.en },
-  description: { fa: entity.description.fa, en: entity.description.en },
+  title: entity.title,
+  summary: entity.summary,
+  description: entity.description,
   type: entity.type,
-  address: entity.address ?? null,
-  city: entity.city ? { fa: entity.city.fa, en: entity.city.en } : null,
+  address: entity.address || null,
+  city: entity.city || null,
   startDateTime: entity.startDateTime.toISOString(),
   endDateTime: entity.endDateTime ? entity.endDateTime.toISOString() : null,
   capacityTotal: entity.capacityTotal,
@@ -116,113 +102,70 @@ export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
     quantityRemaining: t.quantityRemaining,
     saleStartDate: t.saleStartDate.toISOString(),
     saleEndDate: t.saleEndDate.toISOString(),
-    earlyBirdEndDate: t.earlyBirdEndDate
-      ? t.earlyBirdEndDate.toISOString()
-      : null,
+    earlyBirdEndDate: t.earlyBirdEndDate ? t.earlyBirdEndDate.toISOString() : null,
   })),
   resources: entity.resources.map((r) => ({
     id: r.id,
-    title: { fa: r.title.fa, en: r.title.en },
+    title: r.title,
     accessLevel: r.accessLevel,
     url: r.url,
-    description: r.description ?? undefined,
+    description: r.description || undefined,
   })),
   publicDiscountIds: entity.publicDiscountIds,
-  posterUrl: entity.posterUrl ?? undefined,
+  posterUrl: entity.posterUrl || undefined,
   isArchived: entity.isArchived,
   archivedAt: entity.archivedAt ? entity.archivedAt.toISOString() : null,
-  archivedById: entity.archivedById ?? null,
+  archivedById: entity.archivedById || null,
   deletedAt: entity.deletedAt ? entity.deletedAt.toISOString() : null,
-  deletedById: entity.deletedById ?? null,
+  deletedById: entity.deletedById || null,
 });
 
-export const eventFormDataDtoToPrismaInput = (
-  dto: EventFormDataDto,
-): Prisma.EventCreateInput => {
-  const categories = dto.categories
-    ? dto.categories
-        .split(',')
-        .map((c) => c.trim())
-        .filter(Boolean)
-    : [];
+export const eventFormDataDtoToPrismaInput = (dto: EventFormDataDto): Prisma.EventCreateInput => ({
+  title: serializeLocalizedText(dto.title),
+  slug: dto.slug || '',
+  summaryFa: dto.summary.fa,
+  summaryEn: dto.summary.en || '',
+  descriptionFa: dto.description.fa,
+  descriptionEn: dto.description.en || '',
+  type: dto.type,
+  city: dto.city ? serializeLocalizedText(dto.city) : undefined,
+  address: dto.address || undefined,
+  startDateTime: new Date(dto.startDateTime),
+  endDateTime: dto.endDateTime ? new Date(dto.endDateTime) : undefined,
+  capacityTotal: dto.capacityTotal,
+  capacityRemaining: dto.capacityTotal,
+  showRemainingCapacity: dto.showRemainingCapacity,
+  categories: dto.categories ? dto.categories.split(',').map(c => c.trim()).filter(Boolean).join(',') : '',
+  publicDiscountIds: (dto.publicDiscountIds || []).join(','),
+  posterUrl: dto.posterUrl || undefined,
+});
 
-  return {
-    title: serializeLocalizedText(dto.title),
-    slug: dto.slug ?? '',
-    summaryFa: dto.summary.fa,
-    summaryEn: dto.summary.en ?? '',
-    descriptionFa: dto.description.fa,
-    descriptionEn: dto.description.en ?? '',
-    type: dto.type,
-    city: dto.city ? serializeLocalizedText(dto.city) : undefined,
-    address: dto.address ?? undefined,
-    startDateTime: new Date(dto.startDateTime),
-    endDateTime: dto.endDateTime ? new Date(dto.endDateTime) : undefined,
-    capacityTotal: dto.capacityTotal,
-    capacityRemaining: dto.capacityTotal,
-    showRemainingCapacity: dto.showRemainingCapacity,
-    categories: categories.join(','),
-    publicDiscountIds: (dto.publicDiscountIds ?? []).join(','),
-    posterUrl: dto.posterUrl ?? undefined,
-  };
-};
+export const eventUpdateFormDataDtoToPrismaInput = (dto: UpdateEventFormDataDto): Prisma.EventUpdateInput => {
+  const updateInput: Prisma.EventUpdateInput = {};
 
-export const eventUpdateFormDataDtoToPrismaInput = (
-  dto: UpdateEventFormDataDto,
-): Prisma.EventUpdateInput => {
-  const categories =
-    dto.categories !== undefined
-      ? dto.categories
-          .split(',')
-          .map((c) => c.trim())
-          .filter(Boolean)
-      : undefined;
-
-  const updateInput: Prisma.EventUpdateInput = {
-    ...(dto.title ? { title: serializeLocalizedText(dto.title) } : {}),
-    ...(dto.slug ? { slug: dto.slug } : {}),
-    ...(dto.summary
-      ? {
-          summaryFa: dto.summary.fa,
-          summaryEn: dto.summary.en,
-        }
-      : {}),
-    ...(dto.description
-      ? {
-          descriptionFa: dto.description.fa,
-          descriptionEn: dto.description.en,
-        }
-      : {}),
-    ...(dto.type !== undefined ? { type: dto.type } : {}),
-    ...(dto.city !== undefined
-      ? { city: dto.city ? serializeLocalizedText(dto.city) : null }
-      : {}),
-    ...(dto.address !== undefined ? { address: dto.address } : {}),
-    ...(dto.startDateTime !== undefined
-      ? { startDateTime: new Date(dto.startDateTime) }
-      : {}),
-    ...(dto.endDateTime !== undefined
-      ? { endDateTime: new Date(dto.endDateTime) }
-      : {}),
-    ...(dto.capacityTotal !== undefined
-      ? {
-          capacityTotal: dto.capacityTotal,
-          capacityRemaining: dto.capacityTotal,
-        }
-      : {}),
-    ...(dto.showRemainingCapacity !== undefined
-      ? { showRemainingCapacity: dto.showRemainingCapacity }
-      : {}),
-    ...(dto.posterUrl !== undefined ? { posterUrl: dto.posterUrl } : {}),
-  };
-
-  if (categories !== undefined) {
-    updateInput.categories = categories.join(',');
+  if (dto.title) updateInput.title = serializeLocalizedText(dto.title);
+  if (dto.slug !== undefined) updateInput.slug = dto.slug;
+  if (dto.summary) {
+    updateInput.summaryFa = dto.summary.fa;
+    updateInput.summaryEn = dto.summary.en;
   }
-
-  if (dto.publicDiscountIds !== undefined) {
-    updateInput.publicDiscountIds = dto.publicDiscountIds.join(',');
+  if (dto.description) {
+    updateInput.descriptionFa = dto.description.fa;
+    updateInput.descriptionEn = dto.description.en;
   }
+  if (dto.type !== undefined) updateInput.type = dto.type;
+  if (dto.city !== undefined) updateInput.city = dto.city ? serializeLocalizedText(dto.city) : null;
+  if (dto.address !== undefined) updateInput.address = dto.address;
+  if (dto.startDateTime !== undefined) updateInput.startDateTime = new Date(dto.startDateTime);
+  if (dto.endDateTime !== undefined) updateInput.endDateTime = dto.endDateTime ? new Date(dto.endDateTime) : null;
+  if (dto.capacityTotal !== undefined) {
+    updateInput.capacityTotal = dto.capacityTotal;
+    updateInput.capacityRemaining = dto.capacityTotal;
+  }
+  if (dto.showRemainingCapacity !== undefined) updateInput.showRemainingCapacity = dto.showRemainingCapacity;
+  if (dto.posterUrl !== undefined) updateInput.posterUrl = dto.posterUrl;
+  if (dto.categories !== undefined) updateInput.categories = dto.categories;
+  if (dto.publicDiscountIds !== undefined) updateInput.publicDiscountIds = dto.publicDiscountIds.join(',');
 
   return updateInput;
 };

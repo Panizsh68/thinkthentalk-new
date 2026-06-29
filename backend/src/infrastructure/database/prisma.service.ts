@@ -1,8 +1,8 @@
 import {
-  BeforeApplicationShutdown,
   Injectable,
-  Logger,
   OnModuleInit,
+  BeforeApplicationShutdown,
+  Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
@@ -22,7 +22,7 @@ export class PrismaService
   async onModuleInit() {
     try {
       await this.$connect();
-      this.logger.log('Prisma client connected successfully to the database.');
+      this.logger.log('Prisma client connected successfully.');
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to connect to the database: ${message}`);

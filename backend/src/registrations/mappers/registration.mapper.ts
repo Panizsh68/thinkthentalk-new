@@ -46,7 +46,7 @@ export const prismaRegistrationToEntity = (
     registration.formData
       ? (registration.formData as unknown as Record<string, any>)
       : null,
-    registration.payment?.id ?? null,
+    registration.payment?.id || null,
     toDate(registration.createdAt),
     toDate(registration.updatedAt),
   );
@@ -61,7 +61,7 @@ export const prismaToUserRegistrationEntity = (
     registration.id,
     registration.userId,
     registration.eventId,
-    registration.payment?.id ?? null,
+    registration.payment?.id || null,
     registration.ticketType,
     registration.status as RegistrationStatus,
     toDate(registration.createdAt),
@@ -85,7 +85,7 @@ export const prismaToUserRegistrationDetailsEntity = (
     registration.id,
     registration.userId,
     registration.eventId,
-    registration.payment?.id ?? null,
+    registration.payment?.id || null,
     registration.ticketType,
     registration.status as RegistrationStatus,
     toDate(registration.createdAt),
@@ -93,7 +93,7 @@ export const prismaToUserRegistrationDetailsEntity = (
     registration.formData
       ? (registration.formData as unknown as Record<string, any>)
       : null,
-    prismaEventToEventEntity(registration.event),
+    prismaEventToEventEntity(registration.event as any),
     registration.payment,
   );
 
@@ -115,7 +115,7 @@ export const paymentToDto = (payment: Payment | null): PaymentDto | null => {
     amount: payment.amount.toNumber(),
     currency: payment.currency,
     status: payment.status as PaymentStatus,
-    gatewayTransactionId: payment.gatewayTransactionId ?? undefined,
+    gatewayTransactionId: payment.gatewayTransactionId || undefined,
     createdAt: toDate(payment.createdAt).toISOString(),
     updatedAt: toDate(payment.updatedAt).toISOString(),
   };
@@ -127,7 +127,7 @@ export const userRegistrationEntityToDto = (
   id: entity.id,
   userId: entity.userId,
   eventId: entity.eventId,
-  paymentId: entity.paymentId ?? undefined,
+  paymentId: entity.paymentId || undefined,
   ticketType: entity.ticketType,
   status: entity.status,
   createdAt: toDate(entity.createdAt).toISOString(),
@@ -143,12 +143,12 @@ export const userRegistrationDetailsEntityToDto = (
   id: entity.id,
   userId: entity.userId,
   eventId: entity.eventId,
-  paymentId: entity.paymentId ?? undefined,
+  paymentId: entity.paymentId || undefined,
   ticketType: entity.ticketType,
   status: entity.status,
   createdAt: toDate(entity.createdAt).toISOString(),
   user: toUserDto(entity.user as UserEntity),
-  formData: registrationFormDataFromJson(entity.formData) ?? undefined,
+  formData: registrationFormDataFromJson(entity.formData) || undefined,
   event: eventEntityToEventDto(entity.event),
   payment: entity.payment ? paymentToDto(entity.payment as Payment) : undefined,
 });

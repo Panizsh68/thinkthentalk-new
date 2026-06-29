@@ -67,9 +67,7 @@ export class EventsRepository {
   async findEventsForHomepage(limit = 3): Promise<EventEntity[]> {
     const now = new Date();
     const includeRelations = { ticketConfigs: true, resources: true };
-    const getFinishTime = (event: PrismaEvent) =>
-      (event.endDateTime ?? event.startDateTime).getTime();
-
+    
     const upcomingEventsRaw = await this.prisma.event.findMany({
       where: {
         OR: [{ startDateTime: { gte: now } }, { endDateTime: { gte: now } }],
@@ -77,43 +75,34 @@ export class EventsRepository {
         deletedAt: null,
       },
       include: includeRelations,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { startDateTime: 'asc' },
       take: limit,
     });
     const upcomingEvents = await this.addSaleWindows(upcomingEventsRaw);
-    const upcomingSorted = [...upcomingEvents].sort(
-      (a, b) => a.startDateTime.getTime() - b.startDateTime.getTime(),
-    );
 
-    if (upcomingSorted.length >= limit) {
-      return upcomingSorted.map(prismaEventToEventEntity);
+    if (upcomingEvents.length >= limit) {
+      return upcomingEvents.map(prismaEventToEventEntity);
     }
 
-    const remaining = limit - upcomingSorted.length;
-    const pastEventsRaw =
-      remaining > 0
-        ? await this.prisma.event.findMany({
-            where: {
-              OR: [
-                { endDateTime: { lt: now } },
-                {
-                  AND: [{ endDateTime: null }, { startDateTime: { lt: now } }],
-                },
-              ],
-              isArchived: false,
-              deletedAt: null,
-            },
-            include: includeRelations,
-            orderBy: [{ endDateTime: 'desc' }, { startDateTime: 'desc' }],
-            take: remaining,
-          })
-        : [];
+    const remaining = limit - upcomingEvents.length;
+    const pastEventsRaw = await this.prisma.event.findMany({
+      where: {
+        OR: [
+          { endDateTime: { lt: now } },
+          {
+            AND: [{ endDateTime: null }, { startDateTime: { lt: now } }],
+          },
+        ],
+        isArchived: false,
+        deletedAt: null,
+      },
+      include: includeRelations,
+      orderBy: [{ endDateTime: 'desc' }, { startDateTime: 'desc' }],
+      take: remaining,
+    });
     const pastEvents = await this.addSaleWindows(pastEventsRaw);
-    const pastSorted = [...pastEvents].sort(
-      (a, b) => getFinishTime(b) - getFinishTime(a),
-    );
 
-    return [...upcomingSorted, ...pastSorted].map(prismaEventToEventEntity);
+    return [...upcomingEvents, ...pastEvents].map(prismaEventToEventEntity);
   }
 
   async findEventById(id: string): Promise<EventEntity | null> {
@@ -121,9 +110,7 @@ export class EventsRepository {
       where: { id },
       include: { ticketConfigs: true, resources: true },
     });
-    if (!event) {
-      return null;
-    }
+    if (!event) return null;
     const [enriched] = await this.addSaleWindows([event]);
     return prismaEventToEventEntity(enriched);
   }
@@ -135,9 +122,7 @@ export class EventsRepository {
       },
       include: { ticketConfigs: true, resources: true },
     });
-    if (!event) {
-      return null;
-    }
+    if (!event) return null;
     const [enriched] = await this.addSaleWindows([event]);
     return prismaEventToEventEntity(enriched);
   }
@@ -229,59 +214,31 @@ export class EventsRepository {
       where: { id: eventId },
       include: { ticketConfigs: true },
     });
-    if (!existing) {
-      return null;
-    }
-
-    const existingByType = new Map(
-      (existing.ticketConfigs ?? []).map((t) => [t.type, t]),
-    );
+    if (!existing) return null;
 
     const normalizedTickets = tickets.map((t) => {
-      const prev = existingByType.get(t.type);
-      const quantitySold = t.quantitySold ?? prev?.quantitySold ?? 0;
-      const saleStartDate = t.saleStartDate
-        ? new Date(t.saleStartDate)
-        : existing.startDateTime;
-      const saleEndDate = t.saleEndDate
-        ? new Date(t.saleEndDate)
-        : (existing.endDateTime ??
-          new Date(saleStartDate.getTime() + 30 * 24 * 60 * 60 * 1000));
+      const saleStartDate = t.saleStartDate ? new Date(t.saleStartDate) : null;
+      const saleEndDate = t.saleEndDate ? new Date(t.saleEndDate) : null;
 
       return {
         eventId,
         type: t.type,
-        price: t.price,
+        price: new Prisma.Decimal(t.price),
         currency: t.currency,
         quantityTotal: t.quantityTotal,
-        quantitySold,
-        earlyBirdEndDate: t.earlyBirdEndDate
-          ? new Date(t.earlyBirdEndDate)
-          : null,
-        _saleStartDate: saleStartDate,
-        _saleEndDate: saleEndDate,
+        quantitySold: t.quantitySold || 0,
+        earlyBirdEndDate: t.earlyBirdEndDate ? new Date(t.earlyBirdEndDate) : null,
+        saleStartDate,
+        saleEndDate,
       };
     });
 
-    const newCapacityTotal = normalizedTickets.reduce(
-      (sum, t) => sum + (t.quantityTotal ?? 0),
-      0,
-    );
-    const remainingByTicket = normalizedTickets.map((t) =>
-      Math.max((t.quantityTotal ?? 0) - (t.quantitySold ?? 0), 0),
-    );
-    const newCapacityRemaining = remainingByTicket.reduce(
-      (sum, r) => sum + r,
-      0,
-    );
-
-    const ticketsToPersist = normalizedTickets.map(
-      ({ _saleStartDate, _saleEndDate, ...rest }) => rest,
-    );
+    const newCapacityTotal = normalizedTickets.reduce((sum, t) => sum + (t.quantityTotal || 0), 0);
+    const newCapacityRemaining = normalizedTickets.reduce((sum, t) => sum + Math.max((t.quantityTotal || 0) - (t.quantitySold || 0), 0), 0);
 
     await this.prisma.$transaction(async (tx) => {
       await tx.eventTicketConfig.deleteMany({ where: { eventId } });
-      await tx.eventTicketConfig.createMany({ data: ticketsToPersist as any });
+      await tx.eventTicketConfig.createMany({ data: normalizedTickets as any });
 
       await tx.event.update({
         where: { id: eventId },
@@ -292,8 +249,7 @@ export class EventsRepository {
       });
     });
 
-    const event = await this.findEventById(eventId);
-    return event;
+    return this.findEventById(eventId);
   }
 
   async updateEventResources(
@@ -303,9 +259,7 @@ export class EventsRepository {
     const existing = await this.prisma.event.findUnique({
       where: { id: eventId },
     });
-    if (!existing) {
-      return null;
-    }
+    if (!existing) return null;
 
     await this.prisma.$transaction([
       this.prisma.eventResource.deleteMany({ where: { eventId } }),
@@ -313,16 +267,15 @@ export class EventsRepository {
         data: resources.map((r) => ({
           eventId,
           titleFa: r.title.fa,
-          titleEn: r.title.en ?? '',
+          titleEn: r.title.en || '',
           accessLevel: r.accessLevel,
           url: r.url,
-          description: r.description ?? null,
+          description: r.description || null,
         })),
       }),
     ]);
 
-    const event = await this.findEventById(eventId);
-    return event;
+    return this.findEventById(eventId);
   }
 
   async setArchiveStatus(
@@ -330,33 +283,15 @@ export class EventsRepository {
     archived: boolean,
     byUserId?: string,
   ): Promise<EventEntity | null> {
-    const existing = await this.prisma.event.findUnique({
-      where: { id: eventId },
-      include: { ticketConfigs: true, resources: true },
-    });
-    if (!existing) {
-      return null;
-    }
-
     const event = await this.prisma.event.update({
       where: { id: eventId },
       data: {
         isArchived: archived,
         archivedAt: archived ? new Date() : null,
-        archivedById: archived ? (byUserId ?? null) : null,
+        archivedById: archived ? (byUserId || null) : null,
       },
       include: { ticketConfigs: true, resources: true },
     });
-
-    await this.recordAudit(
-      event.id,
-      archived ? 'ARCHIVE' : 'UNARCHIVE',
-      byUserId,
-      {
-        previousArchived: existing.isArchived,
-        nextArchived: event.isArchived,
-      },
-    );
 
     return prismaEventToEventEntity(event);
   }
@@ -365,26 +300,14 @@ export class EventsRepository {
     eventId: string,
     byUserId?: string,
   ): Promise<EventEntity | null> {
-    const existing = await this.prisma.event.findUnique({
-      where: { id: eventId },
-      include: { ticketConfigs: true, resources: true },
-    });
-    if (!existing) {
-      return null;
-    }
     const event = await this.prisma.event.update({
       where: { id: eventId },
       data: {
         deletedAt: new Date(),
-        deletedById: byUserId ?? null,
+        deletedById: byUserId || null,
       },
       include: { ticketConfigs: true, resources: true },
     });
-
-    await this.recordAudit(event.id, 'SOFT_DELETE', byUserId, {
-      deletedAt: event.deletedAt,
-    });
-
     return prismaEventToEventEntity(event);
   }
 
@@ -396,17 +319,7 @@ export class EventsRepository {
       where: { id: eventId },
       include: { ticketConfigs: true, resources: true },
     });
-    if (!event) {
-      return null;
-    }
-
-    await this.recordAudit(event.id, 'HARD_DELETE', byUserId, {
-      snapshot: {
-        title: event.title,
-        startDateTime: event.startDateTime,
-        endDateTime: event.endDateTime,
-      },
-    });
+    if (!event) return null;
 
     await this.prisma.event.delete({ where: { id: eventId } });
     return prismaEventToEventEntity(event);
@@ -429,8 +342,6 @@ export class EventsRepository {
           { AND: [{ endDateTime: null }, { startDateTime: { lt: now } }] },
         ],
       });
-    } else if (filters.status !== 'all' && filters.showPastEvents === false) {
-      andConditions.push({ startDateTime: { gte: now } });
     }
 
     if (filters.dateFrom || filters.dateTo) {
@@ -445,6 +356,7 @@ export class EventsRepository {
     if (filters.type) {
       where.type = filters.type;
     }
+    
     if (filters.city) {
       const normalizedCity = filters.city.trim();
       if (normalizedCity.length > 0) {
@@ -457,11 +369,7 @@ export class EventsRepository {
         });
       }
     }
-    if (filters.category) {
-      andConditions.push({
-        categories: { contains: filters.category },
-      });
-    }
+
     if (filters.categories && filters.categories.length > 0) {
       andConditions.push({
         OR: filters.categories.map((category) => ({
@@ -487,9 +395,7 @@ export class EventsRepository {
       }
     }
 
-    if (andConditions.length === 1) {
-      Object.assign(where, andConditions[0]);
-    } else if (andConditions.length > 1) {
+    if (andConditions.length > 0) {
       where.AND = andConditions;
     }
 
@@ -499,46 +405,27 @@ export class EventsRepository {
   private async addSaleWindows<
     T extends PrismaEvent & {
       ticketConfigs: PrismaEventTicketConfig[];
-      resources: any;
     },
   >(events: T[]): Promise<T[]> {
-    if (!events || events.length === 0) {
-      return events;
-    }
+    if (!events || events.length === 0) return events;
 
     const ticketIds = events.flatMap(
       (event) => event.ticketConfigs?.map((ticket) => ticket.id) ?? [],
     );
-    if (ticketIds.length === 0) {
+    if (ticketIds.length === 0) return events;
+
+    try {
+      const saleWindows = await getTicketSaleWindows(this.prisma, ticketIds);
+      return events.map((event) => ({
+        ...event,
+        ticketConfigs: (event.ticketConfigs ?? []).map((ticket) => ({
+          ...ticket,
+          saleStartDate: saleWindows.get(ticket.id)?.saleStartDate || null,
+          saleEndDate: saleWindows.get(ticket.id)?.saleEndDate || null,
+        })),
+      })) as T[];
+    } catch {
       return events;
     }
-
-    const saleWindows = await getTicketSaleWindows(this.prisma, ticketIds);
-
-    return events.map((event) => ({
-      ...event,
-      ticketConfigs: (event.ticketConfigs ?? []).map((ticket) => ({
-        ...ticket,
-        saleStartDate: saleWindows.get(ticket.id)?.saleStartDate ?? null,
-        saleEndDate: saleWindows.get(ticket.id)?.saleEndDate ?? null,
-      })),
-    })) as T[];
-  }
-
-  private async recordAudit(
-    eventId: string,
-    action: string,
-    byUserId?: string,
-    meta?: any,
-  ): Promise<void> {
-    await this.prisma.eventAudit.create({
-      data: {
-        eventId,
-        eventIdSnapshot: eventId,
-        action,
-        byUserId: byUserId ?? null,
-        meta: meta ? JSON.stringify(meta) : null,
-      },
-    });
   }
 }
