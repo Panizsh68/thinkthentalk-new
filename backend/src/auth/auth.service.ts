@@ -110,7 +110,6 @@ export class AuthService {
     let user = await this.userRepository.findByEmail(cleanEmail);
 
     if (user) {
-      // User exists -> Login
       if (!user.password) {
         throw new UnauthorizedException(
           'This account does not have a password. Please log in with your mobile number.',
@@ -121,7 +120,6 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials.');
       }
     } else {
-      // User does not exist -> Signup
       const hashedPassword = await bcrypt.hash(password, this.saltRounds);
       try {
         user = await this.userRepository.createUserWithEmailPassword(

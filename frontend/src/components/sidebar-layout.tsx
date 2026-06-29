@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Home, LogOut, User, Menu } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Home, LogOut, User } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
 import { useLanguage } from '@/lib/i18n/language-provider';
@@ -86,10 +86,7 @@ export function SidebarLayout({
           <SidebarFooter className="border-t p-2">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  className={cn("flex items-center gap-3 px-4 py-6", isRTL ? "flex-row-reverse text-right" : "flex-row text-left")}
-                >
+                <SidebarMenuButton asChild className={cn("flex items-center gap-3 px-4 py-6", isRTL ? "flex-row-reverse text-right" : "flex-row text-left")}>
                   <Link href="/">
                     <Home className="h-5 w-5" />
                     <span>{t('nav.home')}</span>
@@ -102,15 +99,12 @@ export function SidebarLayout({
 
         <SidebarInset className="flex flex-1 flex-col">
           <header className={cn(
-            "flex h-16 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur px-4 md:px-6 sticky top-0 z-30 shadow-sm",
+            "flex h-16 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur px-4 md:px-6 sticky top-0 z-30",
             isRTL ? "flex-row-reverse" : "flex-row"
           )}>
             <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
               <SidebarTrigger className="h-9 w-9" />
               <Separator orientation="vertical" className="h-6 hidden md:block" />
-              <h2 className="text-sm font-semibold hidden md:block">
-                {navItems.find(item => pathname.startsWith(item.href))?.label || ''}
-              </h2>
             </div>
             
             <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "flex-row")}>
@@ -119,24 +113,13 @@ export function SidebarLayout({
               {account && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className={cn("flex items-center gap-2 px-2 hover:bg-accent rounded-full", isRTL && "flex-row-reverse")}>
+                    <Button variant="ghost" className="h-8 w-8 p-0 rounded-full">
                       <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
                         {account.name?.charAt(0) || 'U'}
                       </div>
-                      <div className={cn("hidden lg:flex flex-col items-start text-xs", isRTL && "items-end")}>
-                        <span className="font-semibold line-clamp-1">{account.name}</span>
-                        <span className="text-muted-foreground line-clamp-1">{account.email}</span>
-                      </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-56">
-                    <DropdownMenuLabel className={cn("font-normal", isRTL && "text-right")} dir={isRTL ? 'rtl' : 'ltr'}>
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{account.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{account.email}</p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                  <DropdownMenuContent align={isRTL ? "start" : "end"}>
                     <DropdownMenuItem asChild className={cn(isRTL && "flex-row-reverse justify-start")}>
                       <Link href="/profile">
                         <User className={cn(isRTL ? "ml-2" : "mr-2", "h-4 w-4")} />
@@ -154,12 +137,14 @@ export function SidebarLayout({
             </div>
           </header>
           <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {children}
-            </div>
+            {children}
           </main>
         </SidebarInset>
       </div>
     </SidebarProvider>
   );
+}
+
+function DropdownMenuSeparator() {
+  return <div className="h-px bg-muted my-1" />;
 }

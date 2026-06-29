@@ -14,10 +14,6 @@ import { initializeFirebase, FirebaseClientProvider } from '@/firebase';
 
 const firebase = initializeFirebase();
 
-/**
- * AppShell manages the top-level structure of the application, 
- * including language-based direction and common UI components.
- */
 function AppShell({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
   const pathname = usePathname();
@@ -26,7 +22,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const isAdminRoute = pathname?.startsWith('/admin') ?? false;
   const isDashboardRoute = pathname?.startsWith('/dashboard') ?? false;
   const isProfileRoute = pathname?.startsWith('/profile') ?? false;
-  const isPanelRoute = isAdminRoute || isDashboardRoute || isProfileRoute;
+  const isWalletRoute = pathname?.startsWith('/wallet') ?? false;
+  const isPanelRoute = isAdminRoute || isDashboardRoute || isProfileRoute || isWalletRoute;
 
   useEffect(() => {
     setMounted(true);
@@ -34,8 +31,6 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!mounted) return;
-
-    // Apply document-level attributes after hydration
     const dir = isAdminRoute ? 'ltr' : language === 'fa' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = isAdminRoute ? 'en' : (language || 'en');
@@ -70,21 +65,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet" />
         <link rel="icon" href="/static-images/logo.png" />
-        <link rel="apple-touch-icon" href="/static-images/logo.png" />
       </head>
       <body>
-        <a 
-          href="#main-content" 
-          className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground"
-        >
-          Skip to main content
-        </a>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <QueryProvider>
             <FirebaseClientProvider firebaseApp={firebase.firebaseApp} firestore={firebase.firestore} auth={firebase.auth}>
               <AuthProvider>

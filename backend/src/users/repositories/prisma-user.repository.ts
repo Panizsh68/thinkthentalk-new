@@ -111,11 +111,13 @@ export class PrismaUserRepository extends IUserRepository {
     email: string,
     passwordHash: string,
   ): Promise<UserEntity> {
+    // Generate a temporary unique value for mobile because it's required by schema but we don't have it for email signup
+    const tempMobile = `email-user-${email}-${Date.now()}`;
     const user = await this.prisma.user.create({
       data: {
         email: email,
         password: passwordHash,
-        mobile: email, // Temporary placeholder using email as unique mobile if not provided
+        mobile: tempMobile,
       },
     });
     return toUserEntity(user);
