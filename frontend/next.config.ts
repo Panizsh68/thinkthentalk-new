@@ -8,12 +8,6 @@ const config: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    allowedDevOrigins: [
-      'localhost:9002',
-      '*.cloudworkstations.dev',
-    ],
-  },
   async rewrites() {
     const uploadProxyDestination =
       process.env.NODE_ENV === 'development'

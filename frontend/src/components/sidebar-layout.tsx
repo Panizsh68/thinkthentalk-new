@@ -31,7 +31,6 @@ interface NavItem {
 export function SidebarLayout({
   children,
   navItems,
-  account,
   onLogout,
 }: {
   children: React.ReactNode;

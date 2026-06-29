@@ -146,9 +146,9 @@ export default function UserProfilePage() {
               <CardHeader className={cn(isRTL && "text-right")}><CardTitle>{t('registration.steps.personal')}</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <FormField control={form.control} name="firstNameFa" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.firstNameFa')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                <FormField control={form.control} name="lastNameFa" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.lastNameFa')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="lastNameFa" render={({ field }) => ( <FormItem><FormLabel>{t('registration.fields.lastNameFa')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
                 <FormField control={form.control} name="firstNameEn" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.firstNameEn')}</FormLabel><FormControl><Input dir="ltr" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                <FormField control={form.control} name="lastNameEn" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.lastNameEn')}</FormLabel><FormControl><Input dir="ltr" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="lastNameEn" render={({ field }) => ( <FormItem><FormLabel>{t('registration.fields.lastNameEn')}</FormLabel><FormControl><Input dir="ltr" {...field} /></FormControl><FormMessage /></FormItem>)} />
                 <div className="grid grid-cols-2 gap-4">
                   <FormField control={form.control} name="age" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.age')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                   <FormField control={form.control} name="gender" render={({ field }) => (
