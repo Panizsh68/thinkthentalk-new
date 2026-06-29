@@ -115,7 +115,7 @@ export class PrismaUserRepository extends IUserRepository {
       data: {
         email: email,
         password: passwordHash,
-        mobile: email, // Temporary placeholder
+        mobile: email, // Temporary placeholder using email as unique mobile if not provided
       },
     });
     return toUserEntity(user);
