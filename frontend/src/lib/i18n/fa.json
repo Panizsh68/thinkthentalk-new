@@ -1,3 +1,4 @@
+
 {
   "lng": "fa-IR",
   "nav": {
@@ -10,22 +11,22 @@
     "terms": "شرایط استفاده",
     "myAccount": "حساب من",
     "ideas": "پیشنهاد موضوع",
-    "collaborate": "همکاری",
+    "collaborate": "همکاری با تیم",
     "sponsorship": "حمایت مالی",
     "wallet": "کیف پول",
     "subscription": "خرید اشتراک"
   },
   "home": {
     "hero": {
-      "kicker": "جامعه‌ای برای تمرین مکالمه انگلیسی",
-      "title": "با اعتمادبه‌نفس انگلیسی صحبت کنید",
-      "subtitle": "ما در تینک دن تاک دور هم جمع می‌شویم تا در فضایی دوستانه و بدون قضاوت، مکالمه انگلیسی‌مان را تقویت کنیم و دوستان تازه‌ای پیدا کنیم.",
+      "kicker": "جامعه تمرین مکالمه انگلیسی",
+      "title": "با اعتماد‌به‌نفس انگلیسی صحبت کنید",
+      "subtitle": "در تینک دَن تاک دور هم جمع می‌شویم تا بدون ترس از اشتباه، انگلیسی صحبت کنیم، از هم یاد بگیریم و دوستان جدید پیدا کنیم.",
       "primaryCTA": "شرکت در رویداد بعدی",
       "secondaryCTA": "ویدیوهای فصل اول"
     },
     "seasonOne": {
       "title": "در فصل اول چه گذشت؟",
-      "subtitle": "نگاهی به مسیر کوتاهی که در کنار هم طی کردیم؛ از گفتگوهای دو نفره تا نشست‌های بزرگ گروهی.",
+      "subtitle": "نگاهی کوتاه به مسیر کوتاهی که در کنار هم طی کردیم؛ از نشست‌های صمیمی تا گفتگوهای گروهی پرانرژی.",
       "stats": {
         "events": "رویداد برگزار شده",
         "participants": "شرکت‌کننده فعال",
@@ -35,53 +36,53 @@
       "cta": "مشاهده کامل خاطرات"
     },
     "why": {
-      "title": "چرا به تینک دن تاک بپیوندیم؟",
-      "subtitle": "اینجا فضایی است برای یادگیری طبیعی، فراتر از کلاس‌های زبان معمول.",
+      "title": "چرا تینک دَن تاک؟",
+      "subtitle": "یادگیری زبان در کلاس درس متوقف نمی‌شود؛ اینجا جایی برای تجربه واقعی است.",
       "speaking": {
         "title": "تمرین واقعی مکالمه",
-        "desc": "فرصتی برای استفاده از کلماتی که یاد گرفته‌اید در گفتگوهای واقعی و روزمره."
+        "desc": "فرصتی برای استفاده از کلمات و گرامر در گفتگوهای روزمره و واقعی."
       },
       "friends": {
-        "title": "دوستان هم‌مسیر",
-        "desc": "آشنایی با افرادی که مثل شما دغدغه یادگیری و ارتباطات بین‌المللی دارند."
+        "title": "دوستان جدید و هم‌مسیر",
+        "desc": "آشنایی با افرادی که مثل شما به یادگیری و معاشرت علاقه دارند."
       },
       "safe": {
-        "title": "بدون ترس از اشتباه",
-        "desc": "در محیطی امن و صمیمی، بدون نگرانی از غلط‌های گرامری، فقط صحبت کنید."
+        "title": "صحبت بدون ترس",
+        "desc": "در فضایی صمیمی و بدون قضاوت، انگلیسی صحبت کنید و از اشتباه کردن نترسید."
       },
       "critical": {
         "title": "مهارت‌های ارتباطی",
         "desc": "تقویت توانایی بیان نظرات و به چالش کشیدن افکار در یک فضای تعاملی."
       },
       "games": {
-        "title": "یادگیری با بازی",
+        "title": "یادگیری همراه با بازی",
         "desc": "استفاده از بازی‌های گروهی برای شکستن یخ جلسات و لذت‌بخش کردن یادگیری."
       },
       "noJudgment": {
-        "title": "فضای دوستانه",
-        "desc": "اینجا همه در یک سطح هستیم و به همدیگر برای بهتر شدن کمک می‌کنیم."
+        "title": "بدون قضاوت",
+        "desc": "ما اینجا هستیم تا در کنار هم رشد کنیم. همه در یک سطح و حامی یکدیگر هستیم."
       }
     },
     "suggest": {
-      "title": "موضوع رویداد بعدی را شما بگویید",
-      "subtitle": "ما رویدادها را بر اساس سلیقه و نیاز اعضا طراحی می‌کنیم. اگر موضوع جذابی در ذهن دارید، با ما در میان بگذارید.",
+      "title": "موضوع بعدی را شما پیشنهاد دهید",
+      "subtitle": "رویدادهای ما بر اساس سلیقه و نیاز اعضا طراحی می‌شود. اگر موضوع جذابی در ذهن دارید، با ما در میان بگذارید.",
       "cta": "ارسال پیشنهاد موضوع"
     },
     "collaborate": {
-      "title": "به تیم اجرایی ما بپیوندید",
-      "subtitle": "اگر به میزبانی، عکاسی، یا تولید محتوا علاقه‌مند هستید، خوشحال می‌شویم در کنار هم این جامعه را بزرگتر کنیم.",
+      "title": "به تیم ما بپیوندید",
+      "subtitle": "اگر به میزبانی، عکاسی یا تولید محتوا علاقه‌مند هستید، خوشحال می‌شویم در کنار هم این جامعه را بزرگتر کنیم.",
       "cta": "ارسال درخواست همکاری"
     },
     "sponsorship": {
-      "title": "همکاری با برندها و کسب‌وکارها",
-      "subtitle": "تینک دن تاک فرصتی مناسب برای برندهایی است که می‌خواهند با جامعه‌ای پویا، تحصیل‌کرده و دغدغه‌مند در ارتباط باشند.",
+      "title": "فرصت همکاری با برندها",
+      "subtitle": "تینک دَن تاک بستری مناسب برای برندهایی است که می‌خواهند با جامعه‌ای پویا و تحصیل‌کرده در ارتباط باشند.",
       "cta": "دریافت پروپوزال همکاری",
-      "logoTitle": "حامیان و همراهان ما"
+      "logoTitle": "همراهان و حامیان استراتژیک"
     },
     "final": {
       "title": "منتظر شنیدن صدای شما هستیم",
       "subtitle": "فرقی نمی‌کند در چه سطحی هستید، در رویداد بعدی یک صندلی برای شما رزرو شده است.",
-      "cta": "همین حالا شروع کنید"
+      "cta": "همین حالا بپیوندید"
     },
     "moments": {
       "title": "لحظات ثبت شده",
@@ -92,7 +93,7 @@
       "subtitle": "یکی از نشست‌های زیر را انتخاب کنید و به جمع ما بپیوندید.",
       "viewAllButton": "مشاهده همه رویدادها",
       "spotsLeft": "{count} جای خالی",
-      "featured": "ویژه"
+      "featured": "پیشنهادی"
     },
     "sponsors": {
       "title": "حامیان ما",
@@ -100,7 +101,7 @@
       "noSponsors": "در حال حاضر اسپانسری ثبت نشده است."
     },
     "team": {
-      "title": "تیم تینک دن تاک",
+      "title": "تیم تینک دَن تاک",
       "subtitle": "آشنایی با افرادی که پشت صحنه این جامعه را مدیریت می‌کنند.",
       "noMembers": "اطلاعات تیم به زودی اضافه می‌شود."
     }
@@ -116,9 +117,9 @@
       "users": "کاربران",
       "payments": "تراکنش‌ها",
       "discounts": "تخفیف‌ها",
-      "messaging": "پیام‌رسانی",
-      "ideas": "ایده‌ها",
-      "partnerships": "همکاری‌ها",
+      "messaging": "اطلاع‌رسانی",
+      "ideas": "پیشنهادها",
+      "partnerships": "درخواست‌ها",
       "contact": "پیام‌ها",
       "feedback": "نظرسنجی",
       "sponsors": "اسپانسرها",
@@ -126,28 +127,28 @@
     },
     "dashboard": {
       "title": "پنل مدیریت",
-      "subtitle": "مدیریت بخش‌های مختلف جامعه.",
+      "subtitle": "گزارش وضعیت و مدیریت بخش‌های مختلف.",
       "stats": {
         "upcomingEvents": "رویدادهای آتی",
-        "upcomingEventsDesc": "برنامه‌ریزی شده",
+        "upcomingEventsDesc": "در حال برگزاری",
         "totalRegistrations": "کل ثبت‌نام‌ها",
         "totalRegistrationsDesc": "مجموع درخواست‌ها",
         "paidRegistrations": "پرداخت‌های موفق",
         "paidRegistrationsDesc": "ثبت‌نام نهایی",
         "totalRevenue": "درآمد کل",
-        "totalRevenueDesc": "حاصل از فروش بلیت"
+        "totalRevenueDesc": "از فروش بلیت"
       },
       "quickActions": {
         "title": "دسترسی سریع",
         "createEvent": "تعریف رویداد جدید",
         "viewRegistrations": "لیست ثبت‌نام‌ها",
-        "manageDiscounts": "مدیریت کد تخفیف",
+        "manageDiscounts": "مدیریت تخفیف‌ها",
         "viewFeedback": "مشاهده بازخوردها"
       }
     },
     "filters": {
       "title": "فیلترها",
-      "all": "همه",
+      "all": "همه موارد",
       "status": {
         "all": "همه وضعیت‌ها",
         "upcoming": "پیش رو",
@@ -155,11 +156,11 @@
         "placeholder": "وضعیت..."
       },
       "type": {
-        "placeholder": "نوع روidاد..."
+        "placeholder": "نوع..."
       },
       "archived": {
         "placeholder": "بایگانی...",
-        "active": "فقط فعال",
+        "active": "موجود",
         "archived": "بایگانی شده",
         "all": "همه"
       },
@@ -175,7 +176,7 @@
       "subtitle": "لیست اعضای جامعه.",
       "badges": {
         "complete": "پروفایل کامل",
-        "incomplete": "ناقص"
+        "incomplete": "ناقض"
       },
       "filters": {
         "searchPlaceholder": "جستجو (نام، موبایل...)",
@@ -199,20 +200,20 @@
       },
       "registrations": {
         "title": "سابقه حضور",
-        "empty": "سابقه ثبتی یافت نشد.",
+        "empty": "سابقه‌ای یافت نشد.",
         "open": "مشاهده"
       },
       "latestFormData": "آخرین اطلاعات فرم"
     },
     "events": {
-      "title": "مدیریت رویدادها",
-      "subtitle": "تعریف و ویرایش رویدادها.",
-      "createNew": "ایجاد رویداد",
+      "title": "رویدادها",
+      "subtitle": "مدیریت و تعریف جلسات.",
+      "createNew": "افزودن رویداد",
       "archiveSuccess": "بایگانی شد",
       "unarchiveSuccess": "فعال شد",
       "deleteSuccess": "حذف شد",
-      "deleteSuccessPermanent": "کاملاً پاک شد",
-      "noEventsFound": "موردی یافت نشد.",
+      "deleteSuccessPermanent": "دائمی حذف شد",
+      "noEventsFound": "رویدادی یافت نشد.",
       "state": {
         "active": "فعال",
         "archived": "بایگانی",
@@ -234,42 +235,42 @@
       },
       "confirm": {
         "archiveTitle": "بایگانی شود؟",
-        "archiveDescription": "از لیست عمومی خارج می‌شود.",
+        "archiveDescription": "از لیست عمومی حذف می‌شود.",
         "unarchiveTitle": "بازگشت از بایگانی",
         "unarchiveDescription": "مجدداً نمایش داده می‌شود.",
         "deleteTitle": "حذف رویداد",
         "deleteDescription": "آیا مطمئن هستید؟",
-        "permanentCheckbox": "پاک کردن همیشگی از دیتابیس"
+        "permanentCheckbox": "حذف کامل از دیتابیس"
       },
       "create": {
-        "title": "تعریف رویداد",
+        "title": "تعریف رویداد جدید",
         "subtitle": "اطلاعات را وارد کنید.",
         "successTitle": "ایجاد شد",
         "successDescription": "رویداد با موفقیت ثبت شد."
       },
       "edit": {
-        "title": "ویرایش",
+        "title": "ویرایش رویداد",
         "subtitle": "در حال ویرایش: {eventName}",
         "successTitle": "ذخیره شد",
         "successDescription": "تغییرات با موفقیت ثبت شد."
       },
       "form": {
-        "basicInfo": "اطلاعات پایه",
+        "basicInfo": "اطلاعات اصلی",
         "title": "نام رویداد",
-        "titleFa": "نام (فارسی)",
-        "titleEn": "نام (انگلیسی)",
+        "titleFa": "فارسی",
+        "titleEn": "انگلیسی",
         "poster": "پوستر",
         "posterUrl": "لینک تصویر",
-        "posterDesc": "تصویر اصلی رویداد.",
+        "posterDesc": "تصویر اصلی.",
         "selectPosterImage": "انتخاب فایل...",
-        "content": "جزئیات",
+        "content": "محتوا",
         "categories": "دسته‌بندی",
         "categoriesDesc": "با کاما جدا کنید.",
         "summary": "خلاصه",
         "description": "توضیحات کامل",
         "locationAndDate": "زمان و مکان",
-        "cityFa": "شهر (فارسی)",
-        "cityEn": "شهر (انگلیسی)",
+        "cityFa": "شهر (فا)",
+        "cityEn": "شهر (en)",
         "cityDesc": "برای حضوری.",
         "address": "آدرس",
         "startDateTime": "زمان شروع",
@@ -281,10 +282,10 @@
         "showRemainingCapacity": "نمایش ظرفیت",
         "showRemainingCapacityDesc": "نمایش جای خالی.",
         "saveChanges": "ذخیره",
-        "createEvent": "ثبت رویداد",
+        "createEvent": "ثبت نهایی",
         "noPublicDiscounts": "موردی نیست.",
         "publicDiscountsTitle": "تخفیف خودکار",
-        "publicDiscountsDesc": "اعمال روی همه بلیت‌ها."
+        "publicDiscountsDesc": "روی بلیت‌ها."
       },
       "validation": {
         "nonNegative": "باید مثبت باشد."
@@ -297,29 +298,29 @@
       "manageFeedback": "نظرسنجی"
     },
     "registrations": {
-      "title": "لیست شرکت‌کنندگان",
+      "title": "شرکت‌کنندگان",
       "subtitle": "افراد ثبت‌نام شده.",
       "noRegistrationsFound": "موردی یافت نشد.",
       "actions": {
         "openMenu": "منو",
         "viewUserDetails": "جزئیات",
-        "sendMessage": "ارسال پیام"
+        "sendMessage": "پیام"
       },
       "table": {
         "user": "کاربر",
         "event": "رویداد",
         "ticket": "نوع بلیت",
         "status": "وضعیت",
-        "date": "تاریخ ثبت"
+        "date": "زمان ثبت"
       },
       "details": {
         "title": "جزئیات",
         "subtitle": "مربوط به {userName}",
         "editUserTitle": "اطلاعات فردی",
-        "editUserSubtitle": "بازبینی داده‌ها.",
+        "editUserSubtitle": "بازبینی.",
         "paymentTitle": "وضعیت مالی",
-        "gatewayId": "کد پیگیری",
-        "auditLogTitle": "تاریخچه",
+        "gatewayId": "شناسه پرداخت",
+        "auditLogTitle": "گزارش فعالیت",
         "changeStatus": "تغییر وضعیت",
         "confirmStatusChangeTitle": "تایید",
         "confirmStatusChangeDescription": "تغییر به {newStatus}؟",
@@ -336,8 +337,8 @@
         "successDescription": "پیام در صف قرار گرفت."
       },
       "filters": {
-        "eventPlaceholder": "انتخاب رویداد",
-        "statusPlaceholder": "انتخاب وضعیت",
+        "eventPlaceholder": "رویداد",
+        "statusPlaceholder": "وضعیت",
         "datePlaceholder": "بازه زمانی",
         "allEvents": "همه",
         "afterDate": "بعد از {date}",
@@ -346,11 +347,11 @@
     },
     "payments": {
       "title": "تراکنش‌ها",
-      "subtitle": "گزارش مالی.",
-      "totalRevenue": "کل درآمد",
+      "subtitle": "تاریخچه پرداخت‌ها.",
+      "totalRevenue": "درآمد کل",
       "paidTransactions": "تعداد موفق",
-      "mockRefunds": "بازگشتی‌ها",
-      "noPaymentsFound": "تراکنشی نیست.",
+      "mockRefunds": "برگشتی‌ها",
+      "noPaymentsFound": "موردی نیست.",
       "status": {
         "success": "موفق",
         "pending": "در انتظار",
@@ -374,15 +375,15 @@
       "title": "کدهای تخفیف",
       "subtitle": "مدیریت آفرها.",
       "createNew": "افزودن کد",
-      "noDiscountsFound": "کدی تعریف نشده.",
+      "noDiscountsFound": "کدی یافت نشد.",
       "applySuccessTitle": "اعمال شد",
-      "applyErrorTitle": "نامعتبر",
-      "statusUpdateSuccess": "ذخیره شد",
-      "statusUpdateSuccessDesc": "تغییر یافت به {status}",
+      "applyErrorTitle": "خطا",
+      "statusUpdateSuccess": "بروزرسانی شد",
+      "statusUpdateSuccessDesc": "وضعیت: {status}",
       "deleteSuccess": "پاک شد.",
-      "publicDiscount": "عمومی",
+      "publicDiscount": "تخفیف عمومی",
       "codeApplied": "کد '{code}'",
-      "applyButton": "تایید کد",
+      "applyButton": "بررسی کد",
       "types": {
         "percent": "درصد",
         "fixed": "مبلغ"
@@ -409,14 +410,14 @@
       "form": {
         "generalTitle": "اطلاعات کلی",
         "name": "نام کد",
-        "nameDesc": "برای استفاده داخلی.",
-        "isPublic": "تخفیف خودکار",
-        "isPublicDesc": "بدون نیاز به وارد کردن کد.",
+        "nameDesc": "نام داخلی.",
+        "isPublic": "اعمال خودکار",
+        "isPublicDesc": "بدون کد.",
         "code": "عبارت کد",
-        "valueTitle": "مقدار تخفیف",
+        "valueTitle": "مقدار",
         "rulesTitle": "قوانین",
         "applicableEvents": "رویدادها",
-        "applicableEventsDesc": "انتخاب کنید.",
+        "applicableEventsDesc": "انتخاب.",
         "minAmount": "حداقل خرید",
         "minAmountDesc": "کف مبلغ بلیت.",
         "activationTitle": "فعالسازی",
@@ -424,13 +425,13 @@
         "validityTitle": "بازه زمانی",
         "startDate": "شروع",
         "endDate": "پایان",
-        "limitsTitle": "محدودیت",
+        "limitsTitle": "محدودیت‌ها",
         "maxUses": "تعداد کل",
         "maxUsesDesc": "سقف استفاده.",
-        "maxUsesPerUser": "سقف کاربر",
+        "maxUsesPerUser": "سقف هر کاربر",
         "maxUsesPerUserDesc": "برای هر نفر.",
         "saveChanges": "ذخیره",
-        "createDiscount": "ثبت تخفیف"
+        "createDiscount": "ثبت"
       },
       "validation": {
         "positiveValue": "مثبت باشد.",
@@ -439,22 +440,22 @@
       },
       "delete": {
         "confirmTitle": "حذف شود؟",
-        "confirmText": "حذف '{discountName}'؟"
+        "confirmText": "پاک کردن '{discountName}'؟"
       },
       "errors": {
         "invalidCode": "کد اشتباه یا منقضی است."
       }
     },
     "messaging": {
-      "title": "اطلاع‌رسانی",
-      "subtitle": "ارسال پیام گروهی.",
+      "title": "پیام گروهی",
+      "subtitle": "ارسال نوتیفیکیشن.",
       "sendSuccessTitle": "ارسال شد",
-      "sendSuccessDescription": "ارسال برای {count} نفر.",
+      "sendSuccessDescription": "برای {count} نفر.",
       "filterRecipients": "فیلتر گیرندگان",
       "recipientList": "لیست نهایی",
       "recipientCount": "{selected} از {total}",
       "composeTitle": "متن پیام",
-      "templatePlaceholder": "انتخاب قالب...",
+      "templatePlaceholder": "قالب...",
       "noTemplate": "دستی",
       "subject": "موضوع",
       "body": "متن",
@@ -462,12 +463,12 @@
       "channels": "روش ارسال",
       "sendButton": "ارسال برای {count} نفر",
       "confirmSendTitle": "تایید نهایی",
-      "confirmSendDescription": "پیام برای {count} نفر ارسال شود؟"
+      "confirmSendDescription": "برای {count} نفر ارسال شود؟"
     },
     "ideas": {
       "statusUpdated": "بروز شد.",
       "status": {
-        "PENDING": "انتظار",
+        "PENDING": "در انتظار",
         "REVIEWED": "بررسی شده",
         "PLANNED": "تایید نهایی",
         "REJECTED": "رد شده"
@@ -486,19 +487,19 @@
       },
       "sponsors": {
         "title": "درخواست اسپانسرینگ",
-        "subtitle": "حمایت مالی."
+        "subtitle": "حمایت برند."
       },
       "table": {
         "expertise": "تخصص",
         "plan": "پلن"
       },
       "detail": {
-        "title": "بررسی",
+        "title": "بررسی درخواست",
         "subtitle": "پروفایل",
         "content": "متن",
         "updateStatus": "وضعیت",
         "notes": "یادداشت",
-        "notesPlaceholder": "توضیحات داخلی..."
+        "notesPlaceholder": "یادداشت داخلی..."
       }
     },
     "contact": {
@@ -509,7 +510,7 @@
       "notifications": {
         "error": "خطا.",
         "statusUpdated": "انجام شد.",
-        "archived": "بایگانی شد."
+        "archived": "آرشیو شد."
       },
       "filters": {
         "status": "وضعیت",
@@ -525,13 +526,13 @@
         "next": "بعد"
       },
       "table": {
-        "empty": "خالی.",
+        "empty": "پیامی یافت نشد.",
         "createdAt": "زمان",
         "name": "فرستنده",
         "email": "ایمیل",
         "message": "پیام",
         "status": "وضعیت",
-        "actions": "کار"
+        "actions": "عملیات"
       },
       "status": {
         "NEW": "جدید",
@@ -540,14 +541,14 @@
       },
       "detail": {
         "title": "پیام",
-        "emailSent": "اطلاع‌رسانی",
+        "emailSent": "اطلاع‌رسانی شده",
         "source": "منبع",
-        "ip": "آدرس IP",
+        "ip": "IP",
         "userAgent": "مرورگر",
         "processedAt": "بررسی در",
         "close": "برگشت",
         "markSeen": "خوانده شد",
-        "markArchived": "بایگانی"
+        "markArchived": "آرشیو"
       }
     },
     "feedback": {
@@ -558,33 +559,33 @@
       "questionNumber": "سوال {num}",
       "saveForm": "ذخیره",
       "saveSuccessTitle": "ذخیره شد",
-      "saveSuccessDescription": "بروزرسانی شد.",
+      "saveSuccessDescription": "تغییرات اعمال شد.",
       "form": {
         "label": "متن سوال",
         "type": "ورودی",
         "required": "اجباری"
       },
       "types": {
-        "rating": "ستاره",
+        "rating": "امتیاز",
         "text": "متن",
         "yesNo": "بله/خیر"
       },
       "results": {
-        "title": "تحلیل",
-        "subtitle": "نتایج نظرسنجی.",
+        "title": "تحلیل نتایج",
+        "subtitle": "خلاصه بازخوردها.",
         "selectEvent": "انتخاب رویداد",
         "summaryTitle": "آمار کلی",
-        "totalResponses": "کل پاسخ‌ها",
+        "totalResponses": "تعداد پاسخ‌ها",
         "individualResponses": "پاسخ‌های فردی",
-        "noResponses": "هنوز ثبت نشده."
+        "noResponses": "داده‌ای یافت نشد."
       },
       "validation": {
-        "labelRequired": "متن الزامی است."
+        "labelRequired": "متن سوال الزامی است."
       }
     },
     "sponsors": {
       "title": "اسپانسرها",
-      "subtitle": "مدیریت برندها.",
+      "subtitle": "مدیریت حامیان.",
       "addNew": "افزودن",
       "actions": {
         "visit": "سایت"
@@ -596,13 +597,13 @@
         "website": "وب"
       },
       "create": {
-        "title": "افزودن",
+        "title": "افزودن حامی",
         "subtitle": "برند جدید.",
-        "successTitle": "اضافه شد."
+        "successTitle": "ثبت شد."
       },
       "edit": {
         "title": "ویرایش",
-        "subtitle": "بروزرسانی.",
+        "subtitle": "بروزرسانی اطلاعات.",
         "successTitle": "ذخیره شد."
       },
       "delete": {
@@ -618,12 +619,12 @@
         "websiteUrl": "لینک سایت"
       },
       "validation": {
-        "invalidUrl": "نامعتبر."
+        "invalidUrl": "لینک نامعتبر."
       }
     },
     "team": {
       "title": "تیم ما",
-      "subtitle": "گردانندگان.",
+      "subtitle": "مدیریت گردانندگان.",
       "addNew": "افزودن",
       "table": {
         "photo": "عکس",
@@ -631,25 +632,25 @@
         "role": "نقش"
       },
       "create": {
-        "title": "افزودن",
-        "subtitle": "عضو جدید.",
-        "successTitle": "اضافه شد."
+        "title": "افزودن عضو",
+        "subtitle": "فرد جدید.",
+        "successTitle": "ثبت شد."
       },
       "edit": {
         "title": "ویرایش",
-        "subtitle": "بروزرسانی.",
+        "subtitle": "بروزرسانی نقش.",
         "successTitle": "ذخیره شد."
       },
       "delete": {
         "title": "حذف",
         "successTitle": "حذف شد.",
-        "confirmTitle": "حذف؟",
+        "confirmTitle": "پاک شود؟",
         "confirmText": "حذف '{name}'؟"
       },
       "form": {
         "name": "نام کامل",
         "role": "عنوان نقش",
-        "photoUrl": "لینک عکس"
+        "photoUrl": "لینک تصویر"
       }
     }
   },
@@ -657,14 +658,14 @@
     "myRegistrations": "ثبت‌نام‌های من",
     "title": "حساب کاربری",
     "welcomeBack": "خوش آمدید",
-    "personalIntro": "خوشحالیم که بخشی از جامعه تینک دن تاک هستید.",
-    "upcomingSection": "برنامه‌های آتی",
-    "pastSection": "تاریخچه",
+    "personalIntro": "خوشحالیم که در جامعه تینک دَن تاک همراه ما هستید.",
+    "upcomingSection": "رویدادهای پیش رو",
+    "pastSection": "تاریخچه حضور",
     "noUpcoming": "هنوز در رویدادی ثبت‌نام نکرده‌اید.",
     "noPast": "سابقه حضوری ندارید.",
-    "browseEvents": "رویدادهای جدید",
+    "browseEvents": "مشاهده رویدادها",
     "nextStepTitle": "گام بعدی",
-    "nextStepDesc": "در گفتگوی بعدی همراه ما باشید.",
+    "nextStepDesc": "در گفتگوی بعدی با ما همراه شوید.",
     "table": {
       "actions": "عملیات",
       "date": "تاریخ",
@@ -696,7 +697,7 @@
     "offline": "حضوری",
     "limitedSeats": "ظرفیت محدود",
     "spotsLeft": "{count} جای خالی",
-    "upcoming": "در پیش",
+    "upcoming": "پیش رو",
     "finished": "پایان یافته",
     "viewDetails": "مشاهده جزئیات",
     "free": "رایگان",
@@ -705,18 +706,18 @@
     "resourcePublic": "عمومی",
     "resourceRegisteredOnly": "مختص اعضا",
     "resourceAvailableAfterRegistration": "پس از ثبت‌نام",
-    "eventHasFinished": "این رویداد برگزار شده است.",
-    "alreadyRegistered": "قبلا ثبت‌نام کرده‌اید",
+    "eventHasFinished": "این رویداد به پایان رسیده است.",
+    "alreadyRegistered": "قبلاً ثبت‌نام شده",
     "cityUnknown": "آنلاین",
     "tickets": "بلیت‌ها",
-    "selectTicket": "انتخاب نوع بلیت:"
+    "selectTicket": "انتخاب بلیت:"
   },
   "tickets": {
     "early_bird": "ثبت‌نام زودهنگام",
     "standard": "معمولی",
     "supporter": "حمایتی",
-    "soldOut": "تکمیل ظرفیت",
-    "expired": "مهلت تمام شد",
+    "soldOut": "تکمیل شد",
+    "expired": "منقضی شده",
     "earlyBirdEnds": "تا {date}",
     "remaining": "{count} ظرفیت",
     "notStarted": "شروع از {date}",
@@ -732,14 +733,14 @@
     "allCategories": "همه موضوعات"
   },
   "auth": {
-    "loginTitle": "ورود / ثبت‌نام",
+    "loginTitle": "ورود یا ثبت‌نام",
     "loginSubtitle": "شماره موبایل خود را وارد کنید.",
     "mobileLabel": "شماره موبایل",
     "sendOtpButton": "دریافت کد",
     "otpTitle": "تایید هویت",
     "otpSubtitle": "کد تایید ارسال شد به",
     "otpLabel": "کد تایید",
-    "verifyButton": "ورود",
+    "verifyButton": "ورود به حساب",
     "otpSentTitle": "ارسال شد",
     "otpSentDescription": "پیامک را چک کنید.",
     "loginSuccessTitle": "خوش آمدید!",
@@ -755,11 +756,11 @@
     "no": "خیر",
     "back": "بازگشت",
     "next": "بعدی",
-    "reset": "تنظیم مجدد",
+    "reset": "پاک کردن",
     "viewEvent": "مشاهده",
     "viewReceipt": "رسید",
     "retryPayment": "تلاش مجدد",
-    "backToSummary": "بازگشت",
+    "backToSummary": "برگشت به خلاصه",
     "leaveFeedback": "ثبت بازخورد",
     "backToDashboard": "پیشخوان",
     "logout": "خروج",
@@ -772,7 +773,7 @@
   },
   "share": {
     "label": "اشتراک‌گذاری",
-    "system": "ارسال",
+    "system": "ارسال با سیستم",
     "whatsapp": "واتس‌اپ",
     "telegram": "تلگرام",
     "x": "ایکس (توییتر)",
@@ -796,45 +797,45 @@
     "confirmReset": "اطلاعات پاک شود؟",
     "steps": {
       "personal": "هویت",
-      "personalSubtitle": "اطلاعات فردی.",
+      "personalSubtitle": "اطلاعات فردی شما.",
       "education": "تحصیلات",
-      "educationSubtitle": "سوابق.",
+      "educationSubtitle": "سوابق علمی و شغلی.",
       "language": "زبان",
-      "languageSubtitle": "سطح انگلیسی.",
+      "languageSubtitle": "سطح زبان شما.",
       "contact": "تماس",
-      "contactSubtitle": "اطلاعات ارتباطی.",
+      "contactSubtitle": "راه‌های ارتباطی.",
       "rules": "قوانین",
       "rulesSubtitle": "شرایط حضور.",
       "summary": "تایید",
-      "summarySubtitle": "بازبینی نهایی."
+      "summarySubtitle": "بررسی نهایی."
     },
     "summary": {
       "eventDetails": "رویداد",
       "eventTitle": "نام برنامه",
       "eventDate": "زمان",
-      "ticketType": "بلیت",
+      "ticketType": "نوع دسترسی",
       "price": "قیمت",
       "edit": "ویرایش",
       "noInfo": "ثبت نشده",
       "yes": "بله",
       "no": "خیر",
-      "paymentButton": "پرداخت و ثبت‌نام",
+      "paymentButton": "پرداخت و ثبت‌نام نهایی",
       "finalPriceTitle": "مبلغ نهایی",
       "subtotal": "مبلغ کل",
-      "total": "جمع"
+      "total": "قابل پرداخت"
     },
     "fields": {
       "firstNameFa": "نام (فارسی)",
       "lastNameFa": "نام خانوادگی (فارسی)",
-      "firstNameEn": "نام (انگلیسی)",
-      "lastNameEn": "نام خانوادگی (انگلیسی)",
+      "firstNameEn": "نام (English)",
+      "lastNameEn": "نام خانوادگی (English)",
       "age": "سن",
       "gender": "جنسیت",
       "genderMale": "مرد",
       "genderFemale": "زن",
       "genderOther": "سایر",
       "educationLevel": "تحصیلات",
-      "fieldOfStudy": "رشته",
+      "fieldOfStudy": "رشته تحصیلی",
       "isEmployed": "شاغل هستم",
       "jobTitle": "عنوان شغلی",
       "educationLevels": {
@@ -856,88 +857,88 @@
       "referralSources": {
         "instagram": "اینستاگرام",
         "telegram": "تلگرام",
-        "website": "سایت",
+        "website": "وب‌سایت",
         "friends": "دوستان",
         "other": "سایر"
       },
       "referrerName": "نام معرف",
       "otherReferralSource": "توضیح",
       "email": "ایمیل",
-      "acceptRules": "قوانین و {terms} را می‌پذیرم.",
-      "termsLink": "شرایط",
+      "acceptRules": "شرایط و {terms} را می‌پذیرم.",
+      "termsLink": "قوانین",
       "privacyLink": "حریم خصوصی"
     },
     "placeholders": {
-      "firstNameFa": "سارا",
-      "lastNameFa": "محمدی",
-      "firstNameEn": "Sara",
-      "lastNameEn": "Mohammadi",
-      "age": "۲۵",
-      "educationLevel": "انتخاب...",
-      "fieldOfStudy": "مثلا مدیریت",
-      "jobTitle": "مثلا طراح",
-      "languageLevel": "انتخاب...",
-      "referralSource": "انتخاب...",
+      "firstNameFa": "مثلاً: سارا",
+      "lastNameFa": "مثلاً: محمدی",
+      "firstNameEn": "e.g. Sara",
+      "lastNameEn": "e.g. Mohammadi",
+      "age": "مثلاً: ۲۵",
+      "educationLevel": "انتخاب کنید...",
+      "fieldOfStudy": "نام رشته",
+      "jobTitle": "عنوان شغلی شما",
+      "languageLevel": "انتخاب کنید...",
+      "referralSource": "انتخاب کنید...",
       "referrerName": "نام دوست",
-      "otherReferralSource": "گوگل",
+      "otherReferralSource": "نام منبع",
       "email": "mail@example.com"
     },
     "descriptions": {
-      "mobileReadOnly": "ثبت شده در سیستم.",
-      "emailOptional": "برای اطلاع‌رسانی."
+      "mobileReadOnly": "ثبت شده در پروفایل.",
+      "emailOptional": "برای دریافت اخبار."
     },
     "validation": {
-      "required": "الزامی.",
-      "positiveNumber": "عدد معتبر.",
-      "invalidEmail": "ایمیل اشتباه.",
+      "required": "الزامی است.",
+      "positiveNumber": "عدد معتبر وارد کنید.",
+      "invalidEmail": "ایمیل صحیح نیست.",
       "rulesRequired": "پذیرش الزامی است."
     },
     "errors": {
       "notAuthenticated": "وارد شوید.",
-      "missingInfo": "اطلاعات ناقص.",
+      "missingInfo": "اطلاعات ناقص است.",
       "incompleteSteps": "مراحل را کامل کنید."
     },
     "status": {
       "paid": "ثبت شده",
       "pending": "در انتظار",
       "failed": "ناموفق",
-      "cancelled": "لغوشده"
+      "cancelled": "لغو شد"
     }
   },
   "payment": {
     "verifying": "در حال تایید...",
-    "invalidRequestTitle": "نامعتبر",
-    "invalidRequestDescription": "خطا در لینک.",
+    "invalidRequestTitle": "درخواست نامعتبر",
+    "invalidRequestDescription": "خطا در لینک پرداخت.",
     "successTitle": "پرداخت موفق!",
     "successDescription": "ثبت‌نام شما نهایی شد.",
-    "browseMoreEvents": "سایر رویدادها",
-    "viewMyRegistrations": "حساب من",
-    "failedTitle": "ناموفق",
-    "failedDescription": "مجدداً تلاش کنید.",
+    "browseMoreEvents": "رویدادهای دیگر",
+    "viewMyRegistrations": "حساب کاربری",
+    "failedTitle": "پرداخت ناموفق",
+    "failedDescription": "پردازش نشد. دوباره تلاش کنید.",
     "alreadyProcessedTitle": "انجام شده",
     "alreadyProcessedDescription": "وضعیت نهایی:",
     "finalizing": "نهایی‌سازی...",
-    "statusTitle": "وضعیت",
-    "statusDescription": "نتیجه پرداخت.",
-    "receiptTitle": "رسید",
-    "paymentId": "کد تراکنش",
+    "statusTitle": "وضعیت پرداخت",
+    "statusDescription": "نتیجه ثبت‌نام.",
+    "receiptTitle": "رسید ثبت‌نام",
+    "paymentId": "شناسه تراکنش",
     "howToJoinTitle": "نحوه حضور",
-    "howToJoinDescription": "اطلاعات بیشتر پیامک می‌شود."
+    "howToJoinDescription": "اطلاعات بیشتر به زودی پیامک می‌شود."
   },
   "evaluation": {
-    "title": "نظرسنجی",
+    "title": "بازخورد",
     "subtitle": "{eventName}",
     "textPlaceholder": "یادداشت شما...",
     "alreadySubmittedTitle": "ارسال شده",
-    "alreadySubmittedDescription": "قبلا ثبت کرده‌اید.",
+    "alreadySubmittedDescription": "قبلاً ثبت کرده‌اید.",
     "successTitle": "ممنون",
-    "successDescription": "ثبت شد.",
+    "successDescription": "بازخورد ثبت شد.",
     "errors": {
       "notAuthenticated": "وارد شوید",
       "loginPrompt": "نیاز به ورود.",
       "notEligibleTitle": "عدم دسترسی",
       "notEligibleDescription": "مختص شرکت‌کنندگان.",
-      "formNotFound": "موجود نیست."
+      "formNotFound": "یافت نشد."
     },
     "validation": {
       "required": "الزامی."
@@ -945,12 +946,12 @@
   },
   "ideas": {
     "title": "پیشنهاد موضوع",
-    "subtitle": "ایده‌هایتان را بگویید.",
+    "subtitle": "ایده‌هایتان را به ما بگویید.",
     "successTitle": "ممنون",
-    "successDescription": "ایده شما دریافت شد.",
+    "successDescription": "ایده شما ثبت شد.",
     "form": {
       "title": "فرم پیشنهاد",
-      "description": "جزئیات",
+      "description": "جزئیات ایده",
       "titleLabel": "عنوان",
       "titlePlaceholder": "موضوع پیشنهادی",
       "descriptionLabel": "توضیح",
@@ -959,62 +960,62 @@
       "submitButton": "ارسال ایده"
     },
     "types": {
-      "TOPIC": "موضوع",
-      "FORMAT": "فرمت برگزاری",
-      "VENUE": "مکان",
+      "TOPIC": "موضوع جدید",
+      "FORMAT": "شیوه برگزاری",
+      "VENUE": "مکان برگزاری",
       "OTHER": "سایر"
     },
     "validation": {
-      "titleLength": "حداقل ۵ کاراکتر.",
-      "descriptionLength": "حداقل ۲۰ کاراکتر."
+      "titleLength": "حداقل ۵ حرف.",
+      "descriptionLength": "حداقل ۲۰ حرف."
     }
   },
   "collaborate": {
     "title": "همکاری با ما",
-    "subtitle": "در تیم تینک دن تاک.",
+    "subtitle": "در تیم تینک دَن تاک.",
     "successTitle": "دریافت شد",
     "successDescription": "بررسی می‌کنیم.",
     "terms": {
-      "title": "شرایط",
-      "content": "متن شرایط همکاری..."
+      "title": "شرایط همکاری",
+      "content": "متن قوانین..."
     },
     "actions": {
-      "acceptAndContinue": "قبول و ادامه"
+      "acceptAndContinue": "پذیرش و ادامه"
     },
     "form": {
-      "title": "فرم درخواست",
+      "title": "درخواست همکاری",
       "subtitle": "کمی از خودتان بگویید.",
-      "expertise": "تخصص",
+      "expertise": "تخصص شما",
       "expertisePlaceholder": "اجرا، عکاسی و...",
       "experience": "سابقه",
       "whyJoin": "چرا ما؟",
       "availability": "زمان‌های آزاد",
       "acceptTerms": "می‌پذیرم.",
-      "submit": "ارسال"
+      "submit": "ارسال درخواست"
     }
   },
   "sponsorship": {
     "title": "اسپانسرینگ",
-    "subtitle": "حمایت از جامعه رشد.",
+    "subtitle": "حمایت از رشد جامعه.",
     "successTitle": "ممنون",
     "successDescription": "با شما تماس می‌گیریم.",
     "plans": {
-      "BRONZE": { "name": "برنز", "subtitle": "پایه", "price": "۱ م", "perk1": "درج لوگو", "perk2": "معرفی", "perk3": "لینک سایت" },
-      "SILVER": { "name": "نقره‌ای", "subtitle": "رشد", "price": "۵ م", "perk1": "استند", "perk2": "خبرنامه", "perk3": "شبکه‌های اجتماعی" },
-      "GOLD": { "name": "طلایی", "subtitle": "ویژه", "price": "۱۰ م", "perk1": "سخنرانی", "perk2": "بنر اصلی", "perk3": "دسترسی VIP" },
-      "PLATINUM": { "name": "پلاتین", "subtitle": "اختصاصی", "price": "۲۵ م", "perk1": "نام مشترک", "perk2": "غرفه اختصاصی", "perk3": "دائمی" }
+      "BRONZE": { "name": "برنز", "subtitle": "پایه", "price": "۱ م", "perk1": "لوگو", "perk2": "معرفی", "perk3": "لینک" },
+      "SILVER": { "name": "نقره‌ای", "subtitle": "رشد", "price": "۵ م", "perk1": "استند", "perk2": "ایمیل", "perk3": "شبکه‌های اجتماعی" },
+      "GOLD": { "name": "طلایی", "subtitle": "ویژه", "price": "۱۰ م", "perk1": "سخنرانی", "perk2": "بنر", "perk3": "دسترسی VIP" },
+      "PLATINUM": { "name": "پلاتین", "subtitle": "اختصاصی", "price": "۲۵ م", "perk1": "نام مشترک", "perk2": "غرفه", "perk3": "دائمی" }
     },
     "actions": {
-      "choosePlan": "انتخاب پلن"
+      "choosePlan": "انتخاب"
     },
     "form": {
       "title": "درخواست همکاری",
-      "subtitle": "برای پلن {plan}.",
-      "companyLabel": "نام شرکت / برند",
+      "subtitle": "پلن {plan}.",
+      "companyLabel": "نام برند",
       "nameLabel": "نام نماینده",
       "notes": "پیام شما",
-      "notesPlaceholder": "اهداف همکاری...",
-      "submit": "ارسال درخواست"
+      "notesPlaceholder": "اهداف...",
+      "submit": "ارسال"
     }
   },
   "wallet": {
@@ -1022,97 +1023,97 @@
     "balance": "موجودی",
     "deposit": "شارژ",
     "withdraw": "برداشت",
-    "depositTitle": "افزایش موجودی",
+    "depositTitle": "افزایش اعتبار",
     "depositDesc": "مبلغ را وارد کنید.",
-    "payAndCharge": "پرداخت و شارژ",
+    "payAndCharge": "پرداخت",
     "withdrawTitle": "درخواست واریز",
-    "withdrawDesc": "تسویه موجودی.",
+    "withdrawDesc": "تسویه حساب.",
     "shabaLabel": "شماره شبا",
-    "shabaHelper": "با IR شروع شود",
+    "shabaHelper": "IR...",
     "submitWithdraw": "ثبت درخواست",
     "history": "تراکنش‌ها",
     "noTransactions": "خالی.",
     "minDepositError": "حداقل ۱۰۰۰.",
     "minWithdrawError": "حداقل ۱۰۰۰۰.",
     "shabaInvalid": "شبا اشتباه است.",
-    "depositSuccess": "موفق.",
+    "depositSuccess": "انجام شد.",
     "withdrawRequestSuccess": "ثبت شد.",
     "txType": {
       "DEPOSIT": "شارژ",
       "WITHDRAWAL": "برداشت",
-      "PURCHASE": "پرداخت",
+      "PURCHASE": "خرید",
       "REFUND": "برگشتی"
     }
   },
   "subscription": {
     "title": "اشتراک",
     "subtitle": "دسترسی نامحدود.",
-    "planPlaceholder": "پلن پایه",
+    "planPlaceholder": "پایه",
     "bestValue": "ویژه",
     "buyNow": "خرید",
-    "successTitle": "مبارک است",
-    "successDesc": "دسترسی فعال شد.",
+    "successTitle": "تبریک",
+    "successDesc": "فعال شد.",
     "activeTitle": "فعال: {plan}",
-    "activeDesc": "تا تاریخ {date}",
+    "activeDesc": "تا: {date}",
     "perks": {
       "events": "همه رویدادها",
-      "resources": "فایل‌های پرمیوم",
-      "support": "پشتیبانی VIP"
+      "resources": "فایل‌ها",
+      "support": "VIP"
     }
   },
   "faq": {
     "title": "سوالات متداول",
-    "subtitle": "پاسخ به ابهامات شما.",
+    "subtitle": "پاسخ به سوالات شما.",
     "categories": {
       "general": "عمومی",
       "registration": "ثبت‌نام",
-      "events": "نشست‌ها"
+      "events": "رویدادها"
     },
     "questions": {
-      "whatIs": { "q": "اینجا کجاست؟", "a": "یک جامعه برای مکالمه." },
-      "howToJoin": { "q": "چطور بیایم؟", "a": "ثبت‌نام کنید." },
-      "isRegistrationRequired": { "q": "ثبت‌نام لازمه؟", "a": "بله." },
-      "howToPay": { "q": "پرداخت چجوریه؟", "a": "درگاه بانکی." },
-      "onlineOrOffline": { "q": "آنلاینه یا حضوری؟", "a": "هر دو." },
-      "refundPolicy": { "q": "کنسلی داره؟", "a": "خیر." }
+      "whatIs": { "q": "اینجا کجاست؟", "a": "جامعه تمرین مکالمه." },
+      "howToJoin": { "q": "چطور بیایم؟", "a": "ثبت‌نام آنلاین." },
+      "isRegistrationRequired": { "q": "اجباریه؟", "a": "بله." },
+      "howToPay": { "q": "پرداخت؟", "a": "درگاه بانکی." },
+      "onlineOrOffline": { "q": "کدام؟", "a": "هر دو." },
+      "refundPolicy": { "q": "کنسلی؟", "a": "نداریم." }
     }
   },
   "contact": {
-    "kicker": "با ما در ارتباط باشید",
-    "title": "تماس با ما",
-    "subtitle": "نظرات، پیشنهادات و سوالاتتان را بشنویم خوشحال می‌شویم.",
+    "kicker": "ارتباط با ما",
+    "title": "تماس بگیرید",
+    "subtitle": "نظرات و سوالاتتان را بشنویم خوشحال می‌شویم.",
     "form": {
       "title": "ارسال پیام",
-      "description": "یادداشت خود را بگذارید.",
+      "description": "متن خود را بگذارید.",
       "nameLabel": "نام",
       "namePlaceholder": "نام شما",
       "emailLabel": "ایمیل",
-      "messageLabel": "متن پیام",
-      "messagePlaceholder": "چطور می‌توانیم کمکتان کنیم؟",
-      "messageHelper": "۱۰ تا ۵۰۰۰ کاراکتر.",
-      "submitLabel": "ارسال پیام",
-      "successMessage": "پیام با موفقیت دریافت شد.",
+      "messageLabel": "متن",
+      "messagePlaceholder": "چطور کمک کنیم؟",
+      "messageHelper": "۱۰-۵۰۰۰ حرف.",
+      "submitLabel": "ارسال",
+      "successMessage": "دریافت شد.",
       "prefilledNotice": "اطلاعات پروفایل اعمال شد.",
       "honeypotLabel": "نادیده بگیرید"
     },
     "email": { "title": "ایمیل", "subtitle": "پاسخ سریع" },
-    "social": { "title": "شبکه‌های اجتماعی", "subtitle": "ما را دنبال کنید", "instagram": "اینستاگرام", "telegram": "تلگرام" },
+    "social": { "title": "شبکه‌های اجتماعی", "subtitle": "دنبال کنید", "instagram": "IG", "telegram": "TG" },
     "errors": {
       "nameInvalid": "نام طولانی است.",
-      "emailRequired": "ایمیل الزامی است.",
-      "emailInvalid": "فرمت ایمیل اشتباه است.",
-      "messageLength": "تعداد حروف نامناسب است.",
+      "emailRequired": "ایمیل لازم است.",
+      "emailInvalid": "اشتباه است.",
+      "messageLength": "نامناسب.",
       "rateLimit": "کمی صبر کنید.",
-      "generic": "خطایی رخ داد."
+      "generic": "خطا."
     }
   },
   "partnership": {
     "status": {
       "PENDING": "در انتظار",
-      "REVIEWING": "در حال بررسی",
-      "CONTACTED": "تماس گرفته شد",
-      "ACCEPTED": "تایید شده",
-      "REJECTED": "رد شده"
+      "REVIEWING": "بررسی",
+      "CONTACTED": "تماس گرفته شده",
+      "ACCEPTED": "تایید",
+      "REJECTED": "رد"
     }
   }
 }
