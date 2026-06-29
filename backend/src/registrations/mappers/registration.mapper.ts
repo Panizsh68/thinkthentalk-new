@@ -44,10 +44,7 @@ export const prismaRegistrationToEntity = (
     registration.ticketType,
     registration.status as RegistrationStatus,
     registration.formData
-      ? (JSON.parse(registration.formData as string) as unknown as Record<
-          string,
-          unknown
-        >)
+      ? (registration.formData as unknown as Record<string, any>)
       : null,
     registration.payment?.id ?? null,
     toDate(registration.createdAt),
@@ -94,10 +91,7 @@ export const prismaToUserRegistrationDetailsEntity = (
     toDate(registration.createdAt),
     toUserEntity(registration.user),
     registration.formData
-      ? (JSON.parse(registration.formData as string) as unknown as Record<
-          string,
-          any
-        >)
+      ? (registration.formData as unknown as Record<string, any>)
       : null,
     prismaEventToEventEntity(registration.event),
     registration.payment,
