@@ -17,13 +17,84 @@
   },
   "home": {
     "hero": {
-      "kicker": "A Sanctuary for Intelligence",
+      "kicker": "A Sanctuary for Intelligence & Authenticity",
       "title": "Where Thought Finds its Voice",
-      "subtitle": "Step into a curated world of deep dialogues. We bridge perspectives and ignite growth through the art of collective thinking.",
-      "browseButton": "Discover the Experience",
-      "signupButton": "Join Us"
+      "subtitle": "Step into a world of curated, deep dialogues. We bridge perspectives and ignite growth through the art of collective thinking.",
+      "primaryCTA": "Join Upcoming Event",
+      "secondaryCTA": "Watch Season One"
+    },
+    "seasonOne": {
+      "title": "Season One: A Shared Journey",
+      "subtitle": "A glimpse into what we built together. Thousands of minutes of dialogue, hundreds of smiles, and connections that last.",
+      "stats": {
+        "events": "Events Hosted",
+        "participants": "Active Members",
+        "hours": "Hours of Deep Talk",
+        "photos": "Moments Captured"
+      },
+      "cta": "Watch Full Season Recap"
+    },
+    "why": {
+      "title": "Why Think Then Talk?",
+      "subtitle": "More than just a gathering; it's a designed space for human flourishing.",
+      "speaking": {
+        "title": "Practice Speaking",
+        "desc": "A judgement-free space to polish your thoughts and articulate complex ideas clearly."
+      },
+      "friends": {
+        "title": "Real Connections",
+        "desc": "Meet individuals who value active listening and genuine curiosity over surface talk."
+      },
+      "safe": {
+        "title": "Psychological Safety",
+        "desc": "A secure environment where vulnerability is a strength and everyone is heard."
+      },
+      "critical": {
+        "title": "Critical Thinking",
+        "desc": "Learn the art of asking better questions and challenging your own assumptions."
+      },
+      "games": {
+        "title": "Playful Learning",
+        "desc": "We use curated games and activities to break communication barriers and spark joy."
+      },
+      "noJudgment": {
+        "title": "No Judgment",
+        "desc": "Practice empathy and embrace diversity of thought in a welcoming atmosphere."
+      }
     },
     "experience": {
+      "title": "An Evening in Our Community",
+      "subtitle": "A typical journey from the moment you arrive until the closing circle.",
+      "arrival": "Arrival & Welcome Drinks",
+      "iceBreaking": "Ice Breaking & Team Pairing",
+      "games": "Group Activities & Games",
+      "podcast": "Shared Listening Session",
+      "discussion": "Deep Table Discussions",
+      "networking": "Free Flow & Networking",
+      "closing": "Closing Reflection"
+    },
+    "suggest": {
+      "title": "Architect the Next Journey",
+      "subtitle": "Our members shape the future. Have a topic that needs depth? We want to hear your vision.",
+      "cta": "Pitch an Event Idea"
+    },
+    "collaborate": {
+      "title": "Join the Curation Team",
+      "subtitle": "We are looking for dedicated minds for moderation, operations, and content creation.",
+      "cta": "Apply to the Team"
+    },
+    "sponsorship": {
+      "title": "Support Intellectual Growth",
+      "subtitle": "Align your brand with intelligence and community impact. We host strategic partnerships with visionary organizations.",
+      "cta": "Get Sponsorship Deck",
+      "logoTitle": "Our Strategic Partners"
+    },
+    "final": {
+      "title": "Ready to be part of the flow?",
+      "subtitle": "There is a seat waiting for you in our next circle. Welcome home, thinker.",
+      "cta": "Join Us Today"
+    },
+    "experience_old": {
       "title": "The Art of Dialogue",
       "subtitle": "Think Then Talk isn't just an event series. It's a laboratory for collective intelligence and empathy.",
       "perk1": {
@@ -51,7 +122,7 @@
       "sponsorshipDesc": "Align your brand with thoughtful growth and intellectual depth."
     },
     "moments": {
-      "title": "Community Atmosphere",
+      "title": "Captured Moments",
       "subtitle": "Glimpses into the energy and focus of our past gatherings."
     },
     "events": {
@@ -618,18 +689,6 @@
         "role": "Role in Community",
         "photoUrl": "Profile Photo URL"
       }
-    },
-    "export": {
-      "exportCsv": "Export CSV",
-      "paymentId": "Payment ID",
-      "event": "Event",
-      "registrationId": "Reg ID",
-      "amount": "Amount",
-      "currency": "Currency",
-      "status": "Status",
-      "date": "Date",
-      "registrationDate": "Reg Date",
-      "mobile": "Mobile"
     }
   },
   "dashboard": {
@@ -987,13 +1046,13 @@
       "choosePlan": "Select Plan"
     },
     "form": {
-      "title": "Request",
+      "title": "Submit Request",
       "subtitle": "For {plan} plan.",
-      "companyLabel": "Company",
-      "nameLabel": "Rep Name",
-      "notes": "Message",
-      "notesPlaceholder": "Goals...",
-      "submit": "Submit Request"
+      "companyLabel": "Company / Organization Name",
+      "nameLabel": "Representative Name",
+      "notes": "Your Message",
+      "notesPlaceholder": "Collaboration goals and vision...",
+      "submit": "Send Request"
     }
   },
   "wallet": {
@@ -1057,9 +1116,9 @@
     }
   },
   "contact": {
-    "kicker": "Reach Out",
-    "title": "Contact Us",
-    "subtitle": "We listen.",
+    "kicker": "Reach Out Directly",
+    "title": "Get in Touch",
+    "subtitle": "We are always eager to hear your thoughts, suggestions, and voice.",
     "form": {
       "title": "Message",
       "description": "Send us a note.",
@@ -1067,22 +1126,22 @@
       "namePlaceholder": "Your name",
       "emailLabel": "Email",
       "messageLabel": "Message",
-      "messagePlaceholder": "How can we help?",
+      "messagePlaceholder": "How can we help you?",
       "messageHelper": "10-5000 chars.",
-      "submitLabel": "Send",
-      "successMessage": "Sent.",
+      "submitLabel": "Send Message",
+      "successMessage": "Message sent successfully.",
       "prefilledNotice": "Profile data used.",
       "honeypotLabel": "Ignore"
     },
-    "email": { "title": "Direct", "subtitle": "Mail us" },
-    "social": { "title": "Social", "subtitle": "Follow", "instagram": "Insta", "telegram": "Tele" },
+    "email": { "title": "Email", "subtitle": "Quick response" },
+    "social": { "title": "Social Media", "subtitle": "Follow us", "instagram": "Instagram", "telegram": "Telegram" },
     "errors": {
-      "nameInvalid": "Too long.",
-      "emailRequired": "Required.",
-      "emailInvalid": "Invalid.",
-      "messageLength": "Check length.",
-      "rateLimit": "Wait.",
-      "generic": "Error."
+      "nameInvalid": "Name is too long.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Invalid email format.",
+      "messageLength": "Message length is invalid.",
+      "rateLimit": "Please wait a moment.",
+      "generic": "An error occurred."
     }
   },
   "partnership": {

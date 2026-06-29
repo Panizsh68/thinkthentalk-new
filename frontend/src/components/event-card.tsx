@@ -1,9 +1,8 @@
-
 'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, MapPin, Ticket, Users, Image as ImageIcon } from 'lucide-react';
+import { Calendar, MapPin, Ticket, Users, Image as ImageIcon, Sparkles } from 'lucide-react';
 
 import type { Event } from '@/lib/types';
 import { useLanguage } from '@/lib/i18n/language-provider';
@@ -22,6 +21,7 @@ interface EventCardProps {
 
 export function EventCard({ event }: EventCardProps) {
   const { language, t } = useLanguage();
+  const isRTL = language === 'fa';
   const past = isEventPast(event);
   const minPrice = getMinPrice(event.tickets);
 
@@ -34,82 +34,85 @@ export function EventCard({ event }: EventCardProps) {
     : `${t('event.offline')} - ${cityLabel}`;
   const title = getLocalizedTextValue(event.title, language);
   const summary = getLocalizedTextValue(event.summary, language, event.summary.en);
-  const description = getLocalizedTextValue(event.description, language, event.description.en);
+  
   const summaryParagraphs =
-    renderParagraphs(summary, 'event-paragraph text-sm text-muted-foreground') ||
+    renderParagraphs(summary, 'event-paragraph text-sm text-muted-foreground line-clamp-2') ||
     null;
-  const descriptionParagraphs =
-    renderParagraphs(
-      description,
-      'event-paragraph text-xs text-muted-foreground/80',
-    ) || null;
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg" data-testid={`event-card-${event.id}`}>
-        {event.posterUrl ? (
-            <div className="aspect-video relative overflow-hidden">
-                <Image 
-                    src={event.posterUrl} 
-                    alt={title} 
-                    fill 
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+    <Link href={getEventPath(event)} className="group h-full block">
+      <Card className="flex h-full flex-col border-none shadow-lg overflow-hidden transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 rounded-[2rem] bg-card" data-testid={`event-card-${event.id}`}>
+        <div className="aspect-video relative overflow-hidden">
+          {event.posterUrl ? (
+            <Image 
+              src={event.posterUrl} 
+              alt={title} 
+              fill 
+              className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="w-full h-full bg-secondary/50 flex items-center justify-center">
+              <Sparkles className="h-12 w-12 text-primary/10" />
             </div>
-        ) : (
-            <div className="aspect-video bg-muted flex items-center justify-center">
-                <ImageIcon className="w-12 h-12 text-muted-foreground/50" />
-            </div>
-        )}
-      <CardHeader className="space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className="text-h4 leading-tight">{title}</CardTitle>
-          <Badge variant={past ? 'secondary' : 'default'}>
-            {past ? t('event.finished') : t('event.upcoming')}
-          </Badge>
-        </div>
-        <div className="space-y-2">
-          {summaryParagraphs ?? (
-            <p className="text-sm text-muted-foreground">{summary}</p>
           )}
-        </div>
-        {descriptionParagraphs && (
-          <div className="text-xs text-muted-foreground/80 max-h-24 overflow-hidden">
-            {descriptionParagraphs}
+          <div className="absolute top-4 right-4 z-10 flex gap-2">
+            <Badge variant={past ? 'secondary' : 'default'} className="backdrop-blur-md bg-white/70 dark:bg-black/70 text-foreground border-none">
+              {past ? t('event.finished') : t('event.upcoming')}
+            </Badge>
           </div>
-        )}
-      </CardHeader>
-      <CardContent className="flex-grow space-y-3">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4" />
-          <span>
-            {dateTimeLabel}
-          </span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4" />
-          <span>
-            {locationLabel}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Users className="h-4 w-4" />
-            <span>
-                {event.showRemainingCapacity ? t('event.spotsLeft', { count: event.capacityRemaining }) : t('event.limitedSeats')}
-            </span>
-        </div>
-        {minPrice !== null && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Ticket className="h-4 w-4" />
-                <span>{getFormattedPrice(minPrice, event.tickets[0].currency, t)}</span>
-            </div>
-        )}
 
-      </CardContent>
-      <CardFooter>
-        <Button asChild className="w-full" data-testid={`event-details-link-${event.id}`}>
-          <Link href={getEventPath(event)}>{t('event.viewDetails')}</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardHeader className="space-y-4 p-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-primary">
+              <Calendar className="h-3.5 w-3.5" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">{dateTimeLabel}</span>
+            </div>
+            <CardTitle className="text-xl font-black leading-tight group-hover:text-primary transition-colors">{title}</CardTitle>
+          </div>
+          <div className="space-y-2">
+            {summaryParagraphs ?? (
+              <p className="text-sm text-muted-foreground line-clamp-2">{summary}</p>
+            )}
+          </div>
+        </CardHeader>
+
+        <CardContent className="flex-grow p-6 pt-0 space-y-4">
+          <div className="flex flex-wrap gap-4 text-xs font-bold text-muted-foreground/80">
+            <div className="flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5" />
+              {locationLabel}
+            </div>
+            {event.showRemainingCapacity && event.capacityRemaining > 0 && (
+              <div className="flex items-center gap-1.5 text-accent-foreground">
+                <Users className="h-3.5 w-3.5" />
+                {t('event.spotsLeft', { count: event.capacityRemaining })}
+              </div>
+            )}
+          </div>
+          
+          <div className="flex items-center justify-between pt-4 border-t border-border/50">
+            <div className="flex items-center gap-2">
+              <Ticket className="h-4 w-4 text-primary" />
+              <span className="font-black text-lg">
+                {minPrice !== null ? getFormattedPrice(minPrice, event.tickets[0].currency, t) : t('event.free')}
+              </span>
+            </div>
+            <div className="flex items-center text-primary font-bold text-sm gap-1 transition-all group-hover:gap-2">
+               {t('event.viewDetails')}
+               <ArrowRight className={cn("h-4 w-4", isRTL && "rotate-180")} />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+function ArrowRight(props: any) {
+  return (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
   );
 }
