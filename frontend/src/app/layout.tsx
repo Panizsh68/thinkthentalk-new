@@ -22,7 +22,11 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  
   const isAdminRoute = pathname?.startsWith('/admin') ?? false;
+  const isDashboardRoute = pathname?.startsWith('/dashboard') ?? false;
+  const isProfileRoute = pathname?.startsWith('/profile') ?? false;
+  const isPanelRoute = isAdminRoute || isDashboardRoute || isProfileRoute;
 
   useEffect(() => {
     setMounted(true);
@@ -42,11 +46,11 @@ function AppShell({ children }: { children: React.ReactNode }) {
       "flex min-h-screen flex-col",
       !isAdminRoute && language === 'fa' && "font-vazir"
     )}>
-      <AppHeader />
+      {!isPanelRoute && <AppHeader />}
       <main id="main-content" className="flex-grow">
         {children}
       </main>
-      <AppFooter />
+      {!isPanelRoute && <AppFooter />}
       <Toaster />
     </div>
   );
