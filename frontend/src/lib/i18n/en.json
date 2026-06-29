@@ -6,10 +6,10 @@
     "about": "About",
     "contact": "Contact",
     "faq": "FAQ",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
+    "privacy": "Privacy",
+    "terms": "Terms",
     "myAccount": "My Account",
-    "ideas": "Suggest Event",
+    "ideas": "Suggest Topic",
     "collaborate": "Collaborate",
     "sponsorship": "Sponsorship",
     "wallet": "Wallet",
@@ -17,92 +17,92 @@
   },
   "home": {
     "hero": {
-      "kicker": "A Sanctuary for Intelligence & Authenticity",
-      "title": "Where Thought Finds its Voice",
-      "subtitle": "Step into a world of curated, deep dialogues. We bridge perspectives and ignite growth through the art of collective thinking.",
-      "primaryCTA": "Join Upcoming Event",
-      "secondaryCTA": "Watch Season One"
+      "kicker": "English Speaking Community",
+      "title": "Speak English with Confidence",
+      "subtitle": "Join a vibrant community where you can practice English speaking, make new friends, and learn through real interactions.",
+      "primaryCTA": "Join Next Event",
+      "secondaryCTA": "Season One Recap"
     },
     "seasonOne": {
-      "title": "Season One: A Shared Journey",
-      "subtitle": "A glimpse into what we built together. Thousands of minutes of dialogue, hundreds of smiles, and connections that last.",
+      "title": "Season One Highlights",
+      "subtitle": "A quick look at our first chapter together—from small meetups to large group discussions.",
       "stats": {
         "events": "Events Hosted",
         "participants": "Active Members",
-        "hours": "Hours of Deep Talk",
+        "hours": "Hours of Discussion",
         "photos": "Moments Captured"
       },
-      "cta": "Watch Full Season Recap"
+      "cta": "Watch Memories"
     },
     "why": {
-      "title": "Why Think Then Talk?",
-      "subtitle": "More than just a gathering; it's a designed space for human flourishing.",
+      "title": "Why Join Us?",
+      "subtitle": "Natural learning, beyond the traditional classroom experience.",
       "speaking": {
-        "title": "Practice Speaking",
-        "desc": "A judgement-free space to polish your thoughts and articulate complex ideas clearly."
+        "title": "Real Speaking Practice",
+        "desc": "Actually use your vocabulary in natural, daily conversations."
       },
       "friends": {
-        "title": "Real Connections",
-        "desc": "Meet individuals who value active listening and genuine curiosity over surface talk."
+        "title": "Like-minded Friends",
+        "desc": "Connect with people who share your passion for learning and global connection."
       },
       "safe": {
-        "title": "Psychological Safety",
-        "desc": "A secure environment where vulnerability is a strength and everyone is heard."
+        "title": "No Fear of Mistakes",
+        "desc": "Speak freely in a supportive environment. Mistakes are part of the process."
       },
       "critical": {
-        "title": "Critical Thinking",
-        "desc": "Learn the art of asking better questions and challenging your own assumptions."
+        "title": "Communication Skills",
+        "desc": "Improve your ability to express opinions and engage in interactive debates."
       },
       "games": {
-        "title": "Playful Learning",
-        "desc": "We use curated games and activities to break communication barriers and spark joy."
+        "title": "Learn Through Fun",
+        "desc": "Group games and activities that break the ice and make learning enjoyable."
       },
       "noJudgment": {
-        "title": "No Judgment",
-        "desc": "Practice empathy and embrace diversity of thought in a welcoming atmosphere."
+        "title": "Zero Judgment",
+        "desc": "We are all here to grow. Everyone is welcome and supported."
       }
     },
     "suggest": {
-      "title": "Architect the Next Journey",
-      "subtitle": "Our members shape the future. Have a topic that needs depth? We want to hear your vision.",
-      "cta": "Pitch an Event Idea"
+      "title": "Shape Future Events",
+      "subtitle": "We build our sessions around your interests. Have a great topic in mind? Share it with us.",
+      "cta": "Submit Topic Idea"
     },
     "collaborate": {
-      "title": "Join the Curation Team",
-      "subtitle": "We are looking for dedicated minds for moderation, operations, and content creation.",
-      "cta": "Apply to the Team"
+      "title": "Join the Team",
+      "subtitle": "Passionate about hosting, photography, or content creation? We'd love to have you on board.",
+      "cta": "Apply to Collaborate"
     },
     "sponsorship": {
-      "title": "Support Intellectual Growth",
-      "subtitle": "Align your brand with intelligence and community impact. We host strategic partnerships with visionary organizations.",
+      "title": "Partner with Us",
+      "subtitle": "Strategic opportunities for brands to connect with an educated, active, and global-minded community.",
       "cta": "Get Sponsorship Deck",
       "logoTitle": "Our Strategic Partners"
     },
     "final": {
-      "title": "Ready to be part of the flow?",
-      "subtitle": "There is a seat waiting for you in our next circle. Welcome home, thinker.",
-      "cta": "Join Us Today"
+      "title": "Ready to Speak Up?",
+      "subtitle": "No matter your level, there's always a seat for you in our next circle.",
+      "cta": "Join Today"
     },
     "moments": {
       "title": "Captured Moments",
-      "subtitle": "Glimpses into the energy and focus of our past gatherings."
+      "subtitle": "Glimpses of energy and friendship from our past sessions."
     },
     "events": {
-      "title": "Upcoming Journeys",
-      "subtitle": "Each event is a designed experience. Choose your next step into depth.",
-      "viewAllButton": "View All Journeys",
-      "spotsLeft": "{count} spots remaining",
+      "title": "Upcoming Sessions",
+      "subtitle": "Pick a session and join the conversation.",
+      "viewAllButton": "View All Events",
+      "spotsLeft": "{count} spots left",
       "featured": "Featured"
     },
     "sponsors": {
-      "title": "Supported By",
-      "subtitle": "Trusted partners who believe in the power of conversation",
-      "noSponsors": "No sponsors added yet."
+      "title": "Our Supporters",
+      "subtitle": "Brands that believe in the power of conversation.",
+      "noSponsors": "No sponsors yet."
     },
     "team": {
-      "title": "The Curators",
-      "subtitle": "Meet the minds behind the community architecture.",
-      "noMembers": "Team information is coming soon."
+      "title": "Meet the Curators",
+      "subtitle": "The people behind the scenes of our community.",
+      "noMembers": "Team info coming soon."
     }
   },
   "admin": {
@@ -119,29 +119,29 @@
       "messaging": "Messaging",
       "ideas": "Ideas",
       "partnerships": "Partnerships",
-      "contact": "Contact Messages",
+      "contact": "Messages",
       "feedback": "Feedback",
       "sponsors": "Sponsors",
       "team": "Team"
     },
     "dashboard": {
-      "title": "Admin Dashboard",
-      "subtitle": "Welcome to the management panel.",
+      "title": "Admin Panel",
+      "subtitle": "Manage your community modules.",
       "stats": {
-        "upcomingEvents": "Upcoming Events",
-        "upcomingEventsDesc": "Planned event sessions",
-        "totalRegistrations": "Total Registrations",
-        "totalRegistrationsDesc": "All sign-up requests",
-        "paidRegistrations": "Paid Registrations",
-        "paidRegistrationsDesc": "Successful ticket purchases",
-        "totalRevenue": "Total Revenue",
-        "totalRevenueDesc": "Total income from sales"
+        "upcomingEvents": "Upcoming",
+        "upcomingEventsDesc": "Planned sessions",
+        "totalRegistrations": "Total Regs",
+        "totalRegistrationsDesc": "All requests",
+        "paidRegistrations": "Paid",
+        "paidRegistrationsDesc": "Finalized",
+        "totalRevenue": "Revenue",
+        "totalRevenueDesc": "From ticket sales"
       },
       "quickActions": {
         "title": "Quick Actions",
-        "createEvent": "Create New Event",
-        "viewRegistrations": "View Registrations",
-        "manageDiscounts": "Manage Discounts",
+        "createEvent": "Define Event",
+        "viewRegistrations": "Sign-ups",
+        "manageDiscounts": "Coupons",
         "viewFeedback": "User Feedback"
       }
     },
@@ -152,67 +152,67 @@
         "all": "All Statuses",
         "upcoming": "Upcoming",
         "past": "Past",
-        "placeholder": "Filter status..."
+        "placeholder": "Status..."
       },
       "type": {
-        "placeholder": "Filter type..."
+        "placeholder": "Type..."
       },
       "archived": {
-        "placeholder": "Archive Filter...",
-        "active": "Active Only",
+        "placeholder": "Archive...",
+        "active": "Active",
         "archived": "Archived",
-        "all": "All Items"
+        "all": "All"
       },
       "deleted": {
-        "placeholder": "Delete Filter...",
+        "placeholder": "Deleted...",
         "active": "Existing",
         "deleted": "Deleted",
-        "all": "All Items"
+        "all": "All"
       }
     },
     "users": {
       "title": "User Management",
-      "subtitle": "List of all registered community members.",
+      "subtitle": "Community member list.",
       "badges": {
-        "complete": "Complete Profile",
-        "incomplete": "Incomplete Profile"
+        "complete": "Complete",
+        "incomplete": "Incomplete"
       },
       "filters": {
-        "searchPlaceholder": "Search by name, mobile, email...",
-        "profileStatus": "Profile Status",
-        "all": "All Statuses",
-        "complete": "Complete Profile",
-        "incomplete": "Incomplete Profile"
+        "searchPlaceholder": "Search...",
+        "profileStatus": "Status",
+        "all": "All",
+        "complete": "Complete",
+        "incomplete": "Incomplete"
       },
       "table": {
         "user": "User",
         "profileStatus": "Status",
-        "registrations": "Registrations",
-        "missing": "Missing Fields",
+        "registrations": "Regs",
+        "missing": "Missing",
         "lastRegistration": "Last Activity",
         "actions": "Actions"
       },
       "profileCard": {
-        "title": "Profile Summary",
-        "completion": "Profile Completion Status",
-        "missingFields": "Fields to Complete"
+        "title": "Summary",
+        "completion": "Progress",
+        "missingFields": "To complete"
       },
       "registrations": {
-        "title": "Event Participation History",
-        "empty": "This user hasn't registered for any events yet.",
-        "open": "View Details"
+        "title": "History",
+        "empty": "No history.",
+        "open": "View"
       },
-      "latestFormData": "Latest Registration Data"
+      "latestFormData": "Latest Form Data"
     },
     "events": {
-      "title": "Events Management",
-      "subtitle": "Create, edit, and manage events.",
-      "createNew": "Create New Event",
-      "archiveSuccess": "Event archived",
-      "unarchiveSuccess": "Event restored",
-      "deleteSuccess": "Event deleted successfully",
-      "deleteSuccessPermanent": "Event permanently removed",
-      "noEventsFound": "No events found matching your criteria.",
+      "title": "Events",
+      "subtitle": "Manage and define.",
+      "createNew": "Add Event",
+      "archiveSuccess": "Archived",
+      "unarchiveSuccess": "Activated",
+      "deleteSuccess": "Removed",
+      "deleteSuccessPermanent": "Purged",
+      "noEventsFound": "Not found.",
       "state": {
         "active": "Active",
         "archived": "Archived",
@@ -223,71 +223,71 @@
         "date": "Date",
         "type": "Type",
         "status": "Status",
-        "capacity": "Capacity",
-        "state": "System State"
+        "capacity": "Cap",
+        "state": "State"
       },
       "actions": {
         "archive": "Archive",
         "unarchive": "Restore",
-        "delete": "Delete Event",
-        "deletePermanent": "Delete Permanently"
+        "delete": "Remove",
+        "deletePermanent": "Purge"
       },
       "confirm": {
-        "archiveTitle": "Archive Event?",
-        "archiveDescription": "Archived events are not visible in the public list.",
-        "unarchiveTitle": "Restore Event",
-        "unarchiveDescription": "This event will be visible on the site again.",
-        "deleteTitle": "Delete Event",
-        "deleteDescription": "Are you sure you want to delete this event?",
-        "permanentCheckbox": "Confirm permanent deletion from database"
+        "archiveTitle": "Archive?",
+        "archiveDescription": "Hidden from list.",
+        "unarchiveTitle": "Restore?",
+        "unarchiveDescription": "Visible again.",
+        "deleteTitle": "Remove?",
+        "deleteDescription": "Are you sure?",
+        "permanentCheckbox": "Permanently delete from DB"
       },
       "create": {
-        "title": "Create New Event",
-        "subtitle": "Fill in the details to create a new event.",
-        "successTitle": "Event Created",
-        "successDescription": "The event '{eventName}' has been successfully created."
+        "title": "Create",
+        "subtitle": "Fill details.",
+        "successTitle": "Created",
+        "successDescription": "Event saved."
       },
       "edit": {
-        "title": "Edit Event",
-        "subtitle": "You are editing the event: {eventName}",
-        "successTitle": "Event Updated",
-        "successDescription": "The event '{eventName}' has been successfully updated."
+        "title": "Edit",
+        "subtitle": "Editing: {eventName}",
+        "successTitle": "Saved",
+        "successDescription": "Changes applied."
       },
       "form": {
-        "basicInfo": "Information",
-        "title": "Event Title",
-        "titleFa": "Title (Fa)",
-        "titleEn": "Title (En)",
+        "basicInfo": "Info",
+        "title": "Name",
+        "titleFa": "FA",
+        "titleEn": "EN",
         "poster": "Poster",
-        "posterUrl": "Poster URL",
-        "posterDesc": "Event cover image.",
+        "posterUrl": "URL",
+        "posterDesc": "Main image.",
         "selectPosterImage": "Select...",
-        "content": "Content",
-        "categories": "Categories",
-        "categoriesDesc": "Comma-separated.",
+        "content": "Details",
+        "categories": "Tags",
+        "categoriesDesc": "Comma-sep.",
         "summary": "Summary",
-        "description": "Full Text",
-        "locationAndDate": "Place & Date",
-        "cityFa": "City (Fa)",
-        "cityEn": "City (En)",
+        "description": "Text",
+        "locationAndDate": "Place",
+        "cityFa": "City FA",
+        "cityEn": "City EN",
         "cityDesc": "For offline.",
-        "address": "Address",
-        "startDateTime": "Starts",
-        "endDateTime": "Ends",
-        "endDateTimeOptional": "Optional.",
-        "pickDate": "Select date",
-        "capacity": "Capacity",
+        "address": "Addr",
+        "startDateTime": "Start",
+        "endDateTime": "End",
+        "endDateTimeOptional": "Opt.",
+        "pickDate": "Select",
+        "capacity": "Cap",
         "capacityTotal": "Total",
-        "showRemainingCapacity": "Show Left",
-        "showRemainingCapacityDesc": "Show spots left.",
+        "showRemainingCapacity": "Show Cap",
+        "showRemainingCapacityDesc": "Show spots.",
         "saveChanges": "Save",
-        "createEvent": "Create",
+        "createEvent": "Register",
         "noPublicDiscounts": "None.",
-        "publicDiscountsTitle": "Auto-Discounts",
-        "publicDiscountsDesc": "Apply automatically."
+        "publicDiscountsTitle": "Auto-Discount",
+        "publicDiscountsDesc": "All tickets."
       },
       "validation": {
-        "nonNegative": "Min 0."
+        "nonNegative": "Positive."
       }
     },
     "actions": {
@@ -297,9 +297,9 @@
       "manageFeedback": "Survey"
     },
     "registrations": {
-      "title": "Registrations",
-      "subtitle": "Event sign-ups.",
-      "noRegistrationsFound": "None found.",
+      "title": "Participants",
+      "subtitle": "Signed-up.",
+      "noRegistrationsFound": "Not found.",
       "actions": {
         "openMenu": "Menu",
         "viewUserDetails": "Details",
@@ -308,36 +308,36 @@
       "table": {
         "user": "User",
         "event": "Event",
-        "ticket": "Ticket",
-        "status": "Status",
+        "ticket": "Type",
+        "status": "State",
         "date": "Date"
       },
       "details": {
         "title": "Details",
         "subtitle": "For {userName}",
-        "editUserTitle": "Info",
+        "editUserTitle": "Personal",
         "editUserSubtitle": "Review.",
-        "paymentTitle": "Payment",
+        "paymentTitle": "Finance",
         "gatewayId": "Gate ID",
-        "auditLogTitle": "History",
-        "changeStatus": "Manual Status",
+        "auditLogTitle": "Log",
+        "changeStatus": "Status",
         "confirmStatusChangeTitle": "Confirm",
-        "confirmStatusChangeDescription": "Change to {newStatus}?",
+        "confirmStatusChangeDescription": "To {newStatus}?",
         "close": "Close"
       },
       "sendMessage": {
-        "title": "Send",
+        "title": "Direct",
         "subtitle": "To {userName}",
         "placeholder": "Text...",
         "sendViaEmail": "Email",
         "sendViaSms": "SMS",
         "sendButton": "Send",
         "successTitle": "Queued",
-        "successDescription": "Processing."
+        "successDescription": "In line."
       },
       "filters": {
-        "eventPlaceholder": "All Events",
-        "statusPlaceholder": "All Statuses",
+        "eventPlaceholder": "Event",
+        "statusPlaceholder": "Status",
         "datePlaceholder": "Range",
         "allEvents": "All",
         "afterDate": "> {date}",
@@ -346,46 +346,46 @@
     },
     "payments": {
       "title": "Payments",
-      "subtitle": "Transactions.",
+      "subtitle": "Finance Log.",
       "totalRevenue": "Revenue",
       "paidTransactions": "Paid",
       "mockRefunds": "Refunds",
-      "noPaymentsFound": "Empty.",
+      "noPaymentsFound": "None.",
       "status": {
         "success": "Paid",
         "pending": "Waiting",
         "failed": "Fail"
       },
       "actions": {
-        "viewRegistration": "View"
+        "viewRegistration": "Reg"
       },
       "filters": {
-        "statusPlaceholder": "All"
+        "statusPlaceholder": "State"
       },
       "table": {
         "user": "User",
         "event": "Event",
-        "amount": "Amount",
-        "status": "Status",
-        "date": "Date"
+        "amount": "Value",
+        "status": "State",
+        "date": "Time"
       }
     },
     "discounts": {
       "title": "Discounts",
-      "subtitle": "Coupons.",
-      "createNew": "Add Discount",
+      "subtitle": "Manage offers.",
+      "createNew": "Add",
       "noDiscountsFound": "Empty.",
       "applySuccessTitle": "Applied",
       "applyErrorTitle": "Invalid",
       "statusUpdateSuccess": "Saved",
-      "statusUpdateSuccessDesc": "Now {status}",
+      "statusUpdateSuccessDesc": "To {status}",
       "deleteSuccess": "Deleted.",
       "publicDiscount": "Auto",
-      "codeApplied": "'{code}' OK",
+      "codeApplied": "Code '{code}'",
       "applyButton": "Apply",
       "types": {
         "percent": "%",
-        "fixed": "Fix"
+        "fixed": "Amt"
       },
       "status": {
         "active": "On",
@@ -394,170 +394,170 @@
       "table": {
         "name": "Name",
         "type": "Type",
-        "value": "Value",
+        "value": "Val",
         "events": "Events",
         "validity": "Dates",
         "usage": "Usage",
         "status": "State",
-        "actions": "Actions",
+        "actions": "Doing",
         "allEvents": "All",
-        "specificEvents": "{count} events",
+        "specificEvents": "{count} evs",
         "start": "Start",
         "end": "End",
-        "validRange": "{startDate} to {endDate}"
+        "validRange": "{startDate} - {endDate}"
       },
       "form": {
         "generalTitle": "General",
         "name": "Label",
         "nameDesc": "Internal.",
-        "isPublic": "Auto-Apply",
-        "isPublicDesc": "For everyone.",
-        "code": "Code",
+        "isPublic": "Auto-apply",
+        "isPublicDesc": "No code req.",
+        "code": "Phrase",
         "valueTitle": "Value",
         "rulesTitle": "Rules",
         "applicableEvents": "Events",
-        "applicableEventsDesc": "Select or all.",
-        "minAmount": "Min Buy",
-        "minAmountDesc": "Min price.",
+        "applicableEventsDesc": "Select.",
+        "minAmount": "Min Price",
+        "minAmountDesc": "Ticket min.",
         "activationTitle": "Activation",
-        "isActive": "On",
+        "isActive": "Active",
         "validityTitle": "Validity",
         "startDate": "Start",
         "endDate": "End",
         "limitsTitle": "Limits",
-        "maxUses": "Global Max",
-        "maxUsesDesc": "Total.",
-        "maxUsesPerUser": "User Max",
-        "maxUsesPerUserDesc": "Per person.",
+        "maxUses": "Total",
+        "maxUsesDesc": "Limit.",
+        "maxUsesPerUser": "Per User",
+        "maxUsesPerUserDesc": "Limit.",
         "saveChanges": "Save",
         "createDiscount": "Add"
       },
       "validation": {
-        "positiveValue": "> 0.",
+        "positiveValue": "Positive.",
         "codeRequired": "Required.",
-        "endDateAfterStart": "End > Start."
+        "endDateAfterStart": "Invalid."
       },
       "delete": {
         "confirmTitle": "Delete?",
         "confirmText": "Remove '{discountName}'?"
       },
       "errors": {
-        "invalidCode": "Invalid/Expired."
+        "invalidCode": "Bad/Expired."
       }
     },
     "messaging": {
-      "title": "Messaging",
-      "subtitle": "Broadcasting.",
+      "title": "Broadcast",
+      "subtitle": "Bulk sending.",
       "sendSuccessTitle": "Sent",
-      "sendSuccessDescription": "Sent to {count}.",
+      "sendSuccessDescription": "To {count}.",
       "filterRecipients": "Filter",
-      "recipientList": "Recipients",
-      "recipientCount": "{selected}/{total}",
+      "recipientList": "Final List",
+      "recipientCount": "{selected} / {total}",
       "composeTitle": "Draft",
       "templatePlaceholder": "Template...",
-      "noTemplate": "Custom",
+      "noTemplate": "Manual",
       "subject": "Sub",
       "body": "Body",
-      "templateNote": "Use {} variables.",
-      "channels": "Channels",
+      "templateNote": "Use {} placeholders.",
+      "channels": "Channel",
       "sendButton": "Send to {count}",
       "confirmSendTitle": "Confirm",
-      "confirmSendDescription": "Send to {count}?"
+      "confirmSendDescription": "Send to {count} users?"
     },
     "ideas": {
-      "statusUpdated": "OK.",
+      "statusUpdated": "Updated.",
       "status": {
-        "PENDING": "Wait",
-        "REVIEWED": "OK",
-        "PLANNED": "Set",
+        "PENDING": "Waiting",
+        "REVIEWED": "Checked",
+        "PLANNED": "Approved",
         "REJECTED": "No"
       }
     },
     "partnerships": {
-      "title": "Partners",
+      "title": "Requests",
       "updateSuccess": "Saved.",
       "tabs": {
         "collabs": "Individual",
         "sponsors": "Brands"
       },
       "collabs": {
-        "title": "Apps",
-        "subtitle": "Join team."
+        "title": "Collaboration",
+        "subtitle": "Joining team."
       },
       "sponsors": {
-        "title": "Sponsors",
-        "subtitle": "Support."
+        "title": "Sponsorship",
+        "subtitle": "Brand support."
       },
       "table": {
         "expertise": "Expert",
         "plan": "Plan"
       },
       "detail": {
-        "title": "Request",
+        "title": "Review",
         "subtitle": "Profile",
-        "content": "Message",
-        "updateStatus": "Triage",
+        "content": "Text",
+        "updateStatus": "State",
         "notes": "Internal",
-        "notesPlaceholder": "Next steps..."
+        "notesPlaceholder": "Private notes..."
       }
     },
     "contact": {
-      "title": "Inbox",
-      "subtitle": "Community messages.",
-      "refresh": "Update",
+      "title": "Messages",
+      "subtitle": "Inbox.",
+      "refresh": "Sync",
       "view": "Read",
       "notifications": {
         "error": "Error.",
-        "statusUpdated": "OK.",
-        "archived": "Stored."
+        "statusUpdated": "Done.",
+        "archived": "Moved."
       },
       "filters": {
-        "status": "Status",
+        "status": "State",
         "statusAll": "All",
         "searchPlaceholder": "Search...",
         "dateFrom": "From",
         "dateTo": "To",
-        "reset": "Clear"
+        "reset": "Reset"
       },
       "pagination": {
-        "label": "{page}/{totalPages}",
+        "label": "{page} / {totalPages}",
         "previous": "Prev",
         "next": "Next"
       },
       "table": {
         "empty": "Empty.",
-        "createdAt": "Date",
+        "createdAt": "Time",
         "name": "From",
-        "email": "Mail",
-        "message": "Preview",
+        "email": "Email",
+        "message": "Note",
         "status": "State",
         "actions": "Do"
       },
       "status": {
         "NEW": "New",
         "SEEN": "Read",
-        "ARCHIVED": "Old"
+        "ARCHIVED": "Archive"
       },
       "detail": {
         "title": "Message",
-        "emailSent": "Notify",
+        "emailSent": "Notified",
         "source": "Channel",
         "ip": "IP",
         "userAgent": "Agent",
-        "processedAt": "Done",
+        "processedAt": "Checked at",
         "close": "Back",
         "markSeen": "Read",
         "markArchived": "Archive"
       }
     },
     "feedback": {
-      "title": "Survey",
-      "subtitle": "Form for {eventName}",
-      "addQuestion": "Add",
+      "title": "Evaluations",
+      "subtitle": "Forms for {eventName}",
+      "addQuestion": "Add Q",
       "deleteQuestion": "Del",
       "questionNumber": "Q {num}",
       "saveForm": "Save",
-      "saveSuccessTitle": "Saved",
+      "saveSuccessTitle": "Done",
       "saveSuccessDescription": "Updated.",
       "form": {
         "label": "Text",
@@ -570,35 +570,35 @@
         "yesNo": "Y/N"
       },
       "results": {
-        "title": "Feedback",
-        "subtitle": "Analysis.",
-        "selectEvent": "Select Event",
+        "title": "Insights",
+        "subtitle": "Survey results.",
+        "selectEvent": "Choose event",
         "summaryTitle": "Stats",
         "totalResponses": "Total",
         "individualResponses": "Details",
-        "noResponses": "None yet."
+        "noResponses": "No data."
       },
       "validation": {
-        "labelRequired": "Required."
+        "labelRequired": "Text req."
       }
     },
     "sponsors": {
-      "title": "Sponsors",
-      "subtitle": "Manage.",
+      "title": "Partners",
+      "subtitle": "Brand management.",
       "addNew": "Add",
       "actions": {
-        "visit": "Site"
+        "visit": "Web"
       },
       "table": {
-        "logo": "Icon",
-        "name": "Name",
+        "logo": "Img",
+        "name": "Brand",
         "tagline": "Slogan",
         "website": "Web"
       },
       "create": {
         "title": "Add",
-        "subtitle": "New partner.",
-        "successTitle": "Added."
+        "subtitle": "New brand.",
+        "successTitle": "Done."
       },
       "edit": {
         "title": "Edit",
@@ -607,22 +607,22 @@
       },
       "delete": {
         "title": "Remove",
-        "successTitle": "Removed.",
+        "successTitle": "Purged.",
         "confirmTitle": "Delete?",
-        "confirmText": "Remove '{name}'?"
+        "confirmText": "Purge '{name}'?"
       },
       "form": {
-        "name": "Partner",
-        "tagline": "Slogan",
+        "name": "Brand Name",
+        "tagline": "Product",
         "logoUrl": "Logo URL",
-        "websiteUrl": "Site URL"
+        "websiteUrl": "Site"
       },
       "validation": {
         "invalidUrl": "Invalid."
       }
     },
     "team": {
-      "title": "Team",
+      "title": "Our Team",
       "subtitle": "Curators.",
       "addNew": "Add",
       "table": {
@@ -633,7 +633,7 @@
       "create": {
         "title": "Add",
         "subtitle": "New mind.",
-        "successTitle": "Added."
+        "successTitle": "Done."
       },
       "edit": {
         "title": "Edit",
@@ -643,191 +643,191 @@
       "delete": {
         "title": "Remove",
         "successTitle": "Removed.",
-        "confirmTitle": "Remove?",
-        "confirmText": "Remove '{name}'?"
+        "confirmTitle": "Purge?",
+        "confirmText": "Purge '{name}'?"
       },
       "form": {
         "name": "Full Name",
-        "role": "Role",
-        "photoUrl": "Photo URL"
+        "role": "Title",
+        "photoUrl": "Image URL"
       }
     }
   },
   "dashboard": {
-    "myRegistrations": "My Registrations",
-    "title": "My Account",
+    "myRegistrations": "My Experiences",
+    "title": "Account",
     "welcomeBack": "Welcome Back",
-    "personalIntro": "We're glad to have you in the Think Then Talk community.",
-    "upcomingSection": "Upcoming Events",
+    "personalIntro": "Glad to have you in the Think Then Talk circle.",
+    "upcomingSection": "Next Up",
     "pastSection": "History",
-    "noUpcoming": "You haven't registered for any upcoming events yet.",
-    "noPast": "No past registrations found.",
-    "browseEvents": "Discover New Events",
+    "noUpcoming": "No active registrations.",
+    "noPast": "No history yet.",
+    "browseEvents": "Browse Events",
     "nextStepTitle": "Next Step",
-    "nextStepDesc": "Start a new experience.",
+    "nextStepDesc": "Join the next conversation.",
     "table": {
-      "actions": "Actions",
-      "date": "Date",
-      "ticket": "Ticket"
+      "actions": "Do",
+      "date": "Time",
+      "ticket": "Path"
     }
   },
   "profile": {
-    "title": "My Profile",
-    "subtitle": "Your Account Information",
+    "title": "Profile",
+    "subtitle": "Member Details",
     "saveButton": "Save Changes",
-    "updateSuccessTitle": "Profile Saved",
-    "updateSuccessDescription": "Your information has been updated.",
-    "mobileReadOnly": "Mobile number cannot be changed.",
+    "updateSuccessTitle": "Saved",
+    "updateSuccessDescription": "Updates applied.",
+    "mobileReadOnly": "Mobile cannot be changed.",
     "identity": {
-      "title": "Account Security",
-      "subtitle": "Connected login methods.",
+      "title": "Security",
+      "subtitle": "Login methods.",
       "linked": "Linked",
       "notLinked": "Not Linked"
     }
   },
   "events": {
-    "title": "Our Journeys",
-    "subtitle": "Explore curated dialogues and designed experiences.",
-    "noEventsFound": "No events found matching your criteria.",
-    "noEvents": "No events listed yet."
+    "title": "Sessions",
+    "subtitle": "Learn naturally. Speak freely.",
+    "noEventsFound": "No results.",
+    "noEvents": "No events listed."
   },
   "event": {
     "online": "Online",
     "offline": "In-person",
-    "limitedSeats": "Limited seats",
-    "spotsLeft": "{count} spots left",
-    "upcoming": "Upcoming",
-    "finished": "Finished",
-    "viewDetails": "View Details",
+    "limitedSeats": "Limited",
+    "spotsLeft": "{count} left",
+    "upcoming": "Active",
+    "finished": "Done",
+    "viewDetails": "Details",
     "free": "Free",
-    "noRatings": "No ratings yet",
-    "resourcesTitle": "Resources",
+    "noRatings": "No rating",
+    "resourcesTitle": "Files",
     "resourcePublic": "Public",
-    "resourceRegisteredOnly": "For participants",
-    "resourceAvailableAfterRegistration": "Register to access",
-    "eventHasFinished": "This event has already taken place.",
-    "alreadyRegistered": "Already Registered",
+    "resourceRegisteredOnly": "Members",
+    "resourceAvailableAfterRegistration": "Register to view",
+    "eventHasFinished": "Session completed.",
+    "alreadyRegistered": "Already In",
     "cityUnknown": "Online",
-    "tickets": "Tickets",
-    "selectTicket": "Choose your path:"
+    "tickets": "Access",
+    "selectTicket": "Choose path:"
   },
   "tickets": {
     "early_bird": "Early Bird",
-    "standard": "Standard",
+    "standard": "Regular",
     "supporter": "Supporter",
     "soldOut": "Sold Out",
-    "expired": "Offer Expired",
-    "earlyBirdEnds": "Ends {date}",
+    "expired": "Closed",
+    "earlyBirdEnds": "Until {date}",
     "remaining": "{count} left",
     "notStarted": "Starts {date}",
-    "saleEnded": "Sales closed"
+    "saleEnded": "Closed"
   },
   "filters": {
-    "showPast": "Show Past Events",
-    "eventType": "Event Type",
+    "showPast": "Show Past",
+    "eventType": "Type",
     "all": "All",
     "city": "City",
     "allCities": "All Cities",
-    "category": "Category",
-    "allCategories": "All Categories"
+    "category": "Topic",
+    "allCategories": "All Topics"
   },
   "auth": {
-    "loginTitle": "Login or Sign Up",
-    "loginSubtitle": "Enter your mobile number to receive a verification code.",
-    "mobileLabel": "Mobile Number",
-    "sendOtpButton": "Send Code",
-    "otpTitle": "Verification",
+    "loginTitle": "Welcome",
+    "loginSubtitle": "Enter mobile to proceed.",
+    "mobileLabel": "Mobile",
+    "sendOtpButton": "Get Code",
+    "otpTitle": "Verify",
     "otpSubtitle": "Code sent to",
-    "otpLabel": "Code",
+    "otpLabel": "Verification Code",
     "verifyButton": "Login",
-    "otpSentTitle": "Code Sent",
-    "otpSentDescription": "Check your messages.",
+    "otpSentTitle": "Sent",
+    "otpSentDescription": "Check SMS.",
     "loginSuccessTitle": "Welcome!",
     "errors": {
-      "invalidMobile": "Enter a valid 11-digit mobile (09...)",
-      "otpRequired": "Enter the 6-digit code."
+      "invalidMobile": "Invalid number.",
+      "otpRequired": "Required."
     }
   },
   "actions": {
-    "clearFilters": "Clear Filters",
+    "clearFilters": "Clear",
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No",
     "back": "Back",
     "next": "Next",
     "reset": "Reset",
-    "viewEvent": "View Event",
-    "viewReceipt": "View Receipt",
-    "retryPayment": "Retry Payment",
-    "backToSummary": "Back to Summary",
-    "leaveFeedback": "Leave Feedback",
-    "backToDashboard": "Back Home",
-    "logout": "Logout",
+    "viewEvent": "View",
+    "viewReceipt": "Receipt",
+    "retryPayment": "Retry",
+    "backToSummary": "Back",
+    "leaveFeedback": "Feedback",
+    "backToDashboard": "Home",
+    "logout": "Exit",
     "login": "Login",
-    "view": "View",
-    "backToEvents": "All Events",
+    "view": "Open",
+    "backToEvents": "Sessions",
     "submitFeedback": "Submit",
-    "download": "Download",
-    "addToCalendar": "Add to Calendar"
+    "download": "Get",
+    "addToCalendar": "Calendar"
   },
   "share": {
     "label": "Share",
-    "system": "System Share",
+    "system": "Share",
     "whatsapp": "WhatsApp",
     "telegram": "Telegram",
-    "x": "X (Twitter)",
+    "x": "X",
     "linkedin": "LinkedIn",
     "email": "Email",
-    "copyLink": "Copy Link",
+    "copyLink": "Link",
     "linkCopiedTitle": "Copied",
-    "linkCopiedDescription": "Link in clipboard."
+    "linkCopiedDescription": "Saved to clipboard."
   },
   "errors": {
-    "genericTitle": "Oops!",
-    "fetchEvents": "Error loading events.",
-    "fetchEvent": "Error loading event.",
-    "eventNotFound": "Event not found.",
-    "fetchRegistrations": "Error loading registrations.",
-    "accessDenied": "Access Denied",
-    "accessDeniedDescription": "You don't have permission for this area."
+    "genericTitle": "Error!",
+    "fetchEvents": "Loading failed.",
+    "fetchEvent": "Details error.",
+    "eventNotFound": "Not found.",
+    "fetchRegistrations": "Sync error.",
+    "accessDenied": "Locked",
+    "accessDeniedDescription": "No permission."
   },
   "registration": {
     "title": "Registration",
-    "confirmReset": "Reset all info?",
+    "confirmReset": "Clear data?",
     "steps": {
-      "personal": "Personal",
-      "personalSubtitle": "ID information.",
-      "education": "Education",
+      "personal": "ID",
+      "personalSubtitle": "Personal details.",
+      "education": "Status",
       "educationSubtitle": "Background.",
-      "language": "Language",
-      "languageSubtitle": "English level.",
+      "language": "English",
+      "languageSubtitle": "Skill level.",
       "contact": "Contact",
-      "contactSubtitle": "Contact info.",
+      "contactSubtitle": "Reach info.",
       "rules": "Terms",
-      "rulesSubtitle": "Policies.",
-      "summary": "Summary",
-      "summarySubtitle": "Review."
+      "rulesSubtitle": "Usage rules.",
+      "summary": "Check",
+      "summarySubtitle": "Review details."
     },
     "summary": {
       "eventDetails": "Event",
-      "eventTitle": "Event",
-      "eventDate": "Date",
-      "ticketType": "Ticket",
+      "eventTitle": "Name",
+      "eventDate": "Time",
+      "ticketType": "Access",
       "price": "Price",
       "edit": "Edit",
-      "noInfo": "Not provided",
+      "noInfo": "Empty",
       "yes": "Yes",
       "no": "No",
-      "paymentButton": "Pay Now",
-      "finalPriceTitle": "Total",
+      "paymentButton": "Pay & Finish",
+      "finalPriceTitle": "Total Due",
       "subtotal": "Subtotal",
-      "total": "Total"
+      "total": "Sum"
     },
     "fields": {
-      "firstNameFa": "First Name (FA)",
-      "lastNameFa": "Last Name (FA)",
-      "firstNameEn": "First Name (EN)",
-      "lastNameEn": "Last Name (EN)",
+      "firstNameFa": "First (FA)",
+      "lastNameFa": "Last (FA)",
+      "firstNameEn": "First (EN)",
+      "lastNameEn": "Last (EN)",
       "age": "Age",
       "gender": "Gender",
       "genderMale": "Male",
@@ -838,281 +838,281 @@
       "isEmployed": "Employed",
       "jobTitle": "Job Title",
       "educationLevels": {
-        "high-school": "High School",
-        "associate": "Associate",
-        "bachelor": "Bachelor",
-        "master": "Master",
+        "high-school": "HS",
+        "associate": "Assoc",
+        "bachelor": "Bach",
+        "master": "Masters",
         "phd": "PhD",
         "other": "Other"
       },
-      "languageLevel": "English Level",
+      "languageLevel": "English Skill",
       "languageLevelsList": {
-        "beginner": "Beginner",
-        "intermediate": "Intermediate",
-        "advanced": "Advanced",
+        "beginner": "Basic",
+        "intermediate": "Inter",
+        "advanced": "Adv",
         "native": "Fluent"
       },
-      "referralSource": "Found via",
+      "referralSource": "Referral",
       "referralSources": {
-        "instagram": "Instagram",
-        "telegram": "Telegram",
-        "website": "Website",
-        "friends": "Friend",
+        "instagram": "IG",
+        "telegram": "TG",
+        "website": "Web",
+        "friends": "Friends",
         "other": "Other"
       },
-      "referrerName": "Referrer Name",
-      "otherReferralSource": "Specify",
+      "referrerName": "Referrer",
+      "otherReferralSource": "Notes",
       "email": "Email",
-      "acceptRules": "I accept the {terms} and {privacy}.",
+      "acceptRules": "I accept {terms}.",
       "termsLink": "Terms",
       "privacyLink": "Privacy"
     },
     "placeholders": {
       "firstNameFa": "Sara",
-      "lastNameFa": "Mohammadi",
+      "lastNameFa": "Doe",
       "firstNameEn": "Sara",
-      "lastNameEn": "Mohammadi",
+      "lastNameEn": "Doe",
       "age": "25",
       "educationLevel": "Select...",
-      "fieldOfStudy": "Physics",
-      "jobTitle": "Dev",
+      "fieldOfStudy": "Major name",
+      "jobTitle": "Title",
       "languageLevel": "Select...",
       "referralSource": "Select...",
-      "referrerName": "Friend name",
-      "otherReferralSource": "Google",
-      "email": "user@mail.com"
+      "referrerName": "Name",
+      "otherReferralSource": "Notes",
+      "email": "mail@domain.com"
     },
     "descriptions": {
-      "mobileReadOnly": "Linked to account.",
-      "emailOptional": "Optional."
+      "mobileReadOnly": "System ID.",
+      "emailOptional": "For updates."
     },
     "validation": {
       "required": "Required.",
-      "positiveNumber": "Invalid age.",
-      "invalidEmail": "Invalid email.",
-      "rulesRequired": "Accept terms."
+      "positiveNumber": "Invalid.",
+      "invalidEmail": "Bad format.",
+      "rulesRequired": "Must accept."
     },
     "errors": {
-      "notAuthenticated": "Please login.",
-      "missingInfo": "Info missing.",
-      "incompleteSteps": "Complete previous steps."
+      "notAuthenticated": "Login.",
+      "missingInfo": "Incomplete.",
+      "incompleteSteps": "Finish steps."
     },
     "status": {
       "paid": "Paid",
-      "pending": "Pending",
-      "failed": "Failed",
-      "cancelled": "Cancelled"
+      "pending": "Waiting",
+      "failed": "Fail",
+      "cancelled": "No"
     }
   },
   "payment": {
-    "verifying": "Verifying...",
-    "invalidRequestTitle": "Invalid",
-    "invalidRequestDescription": "Check link.",
+    "verifying": "Checking...",
+    "invalidRequestTitle": "Bad Link",
+    "invalidRequestDescription": "Check URL.",
     "successTitle": "Success!",
-    "successDescription": "Registered.",
-    "browseMoreEvents": "More Events",
-    "viewMyRegistrations": "My Panel",
+    "successDescription": "You're in.",
+    "browseMoreEvents": "More Sessions",
+    "viewMyRegistrations": "Account",
     "failedTitle": "Failed",
     "failedDescription": "Try again.",
-    "alreadyProcessedTitle": "Processed",
-    "alreadyProcessedDescription": "Status:",
-    "finalizing": "Finalizing...",
+    "alreadyProcessedTitle": "Done",
+    "alreadyProcessedDescription": "Final state:",
+    "finalizing": "Wrapping up...",
     "statusTitle": "Status",
-    "statusDescription": "Result.",
+    "statusDescription": "Outcome.",
     "receiptTitle": "Receipt",
-    "paymentId": "Payment ID",
-    "howToJoinTitle": "Join",
+    "paymentId": "Tx ID",
+    "howToJoinTitle": "Join Info",
     "howToJoinDescription": "Check SMS soon."
   },
   "evaluation": {
-    "title": "Feedback",
+    "title": "Review",
     "subtitle": "{eventName}",
-    "textPlaceholder": "Message...",
+    "textPlaceholder": "Your notes...",
     "alreadySubmittedTitle": "Sent",
-    "alreadySubmittedDescription": "Already submitted.",
+    "alreadySubmittedDescription": "Already graded.",
     "successTitle": "Thanks",
-    "successDescription": "Success.",
+    "successDescription": "Applied.",
     "errors": {
       "notAuthenticated": "Login",
-      "loginPrompt": "Login to rate.",
+      "loginPrompt": "Sign in.",
       "notEligibleTitle": "Locked",
-      "notEligibleDescription": "Requires attendance.",
-      "formNotFound": "Not available."
+      "notEligibleDescription": "Attendees only.",
+      "formNotFound": "Missing."
     },
     "validation": {
-      "required": "Required."
+      "required": "Req."
     }
   },
   "ideas": {
-    "title": "Suggest Event",
-    "subtitle": "Share your vision.",
-    "successTitle": "Success",
-    "successDescription": "Thanks for the idea.",
+    "title": "Suggest",
+    "subtitle": "Share ideas.",
+    "successTitle": "Thanks",
+    "successDescription": "Received.",
     "form": {
-      "title": "Proposal",
+      "title": "Idea Form",
       "description": "Details",
-      "titleLabel": "Title",
-      "titlePlaceholder": "Event topic",
+      "titleLabel": "Sub",
+      "titlePlaceholder": "Topic",
       "descriptionLabel": "Content",
-      "descriptionPlaceholder": "Explain the flow",
-      "typeLabel": "Category",
-      "submitButton": "Submit Idea"
+      "descriptionPlaceholder": "Explain idea",
+      "typeLabel": "Cat",
+      "submitButton": "Send"
     },
     "types": {
       "TOPIC": "Topic",
-      "FORMAT": "Format",
-      "VENUE": "Venue",
+      "FORMAT": "Flow",
+      "VENUE": "Place",
       "OTHER": "Other"
     },
     "validation": {
-      "titleLength": "Min 5 chars.",
-      "descriptionLength": "Min 20 chars."
+      "titleLength": "Min 5.",
+      "descriptionLength": "Min 20."
     }
   },
   "collaborate": {
     "title": "Join Team",
-    "subtitle": "Help us build.",
-    "successTitle": "Sent",
-    "successDescription": "We will review.",
+    "subtitle": "Help us.",
+    "successTitle": "Got it",
+    "successDescription": "Reviewing.",
     "terms": {
       "title": "Terms",
-      "content": "Collaboration terms..."
+      "content": "Rules..."
     },
     "actions": {
-      "acceptAndContinue": "Continue"
+      "acceptAndContinue": "Accept"
     },
     "form": {
-      "title": "Application",
-      "subtitle": "Tell us about yourself.",
-      "expertise": "Expertise",
-      "expertisePlaceholder": "Moderation, Ops, etc.",
-      "experience": "Experience",
-      "whyJoin": "Why us?",
-      "availability": "Availability",
+      "title": "Join",
+      "subtitle": "About you.",
+      "expertise": "Skill",
+      "expertisePlaceholder": "Role...",
+      "experience": "History",
+      "whyJoin": "Reason",
+      "availability": "Time",
       "acceptTerms": "I agree.",
       "submit": "Apply"
     }
   },
   "sponsorship": {
-    "title": "Sponsorship",
-    "subtitle": "Support growth.",
+    "title": "Sponsor",
+    "subtitle": "Brand support.",
     "successTitle": "Thanks",
-    "successDescription": "Team will contact you.",
+    "successDescription": "Contact soon.",
     "plans": {
-      "BRONZE": { "name": "Bronze", "subtitle": "Basic", "price": "1M", "perk1": "Logo", "perk2": "Mentions", "perk3": "Web" },
-      "SILVER": { "name": "Silver", "subtitle": "Growth", "price": "5M", "perk1": "Booth", "perk2": "Newsletter", "perk3": "Social" },
-      "GOLD": { "name": "Gold", "subtitle": "Main", "price": "10M", "perk1": "Keynote", "perk2": "Main banner", "perk3": "VIP access" },
-      "PLATINUM": { "name": "Platinum", "subtitle": "Exclusive", "price": "25M", "perk1": "Co-branding", "perk2": "Custom booth", "perk3": "Lifetime" }
+      "BRONZE": { "name": "Bronze", "subtitle": "Basic", "price": "1M", "perk1": "Logo", "perk2": "Intro", "perk3": "Link" },
+      "SILVER": { "name": "Silver", "subtitle": "Growth", "price": "5M", "perk1": "Stand", "perk2": "Email", "perk3": "Social" },
+      "GOLD": { "name": "Gold", "subtitle": "VIP", "price": "10M", "perk1": "Speech", "perk2": "Banner", "perk3": "VIP access" },
+      "PLATINUM": { "name": "Plat", "subtitle": "Full", "price": "25M", "perk1": "Co-brand", "perk2": "Booth", "perk3": "Lifetime" }
     },
     "actions": {
-      "choosePlan": "Select Plan"
+      "choosePlan": "Select"
     },
     "form": {
-      "title": "Submit Request",
-      "subtitle": "For {plan} plan.",
-      "companyLabel": "Company / Organization Name",
-      "nameLabel": "Representative Name",
-      "notes": "Your Message",
-      "notesPlaceholder": "Collaboration goals and vision...",
-      "submit": "Send Request"
+      "title": "Partner",
+      "subtitle": "Plan {plan}.",
+      "companyLabel": "Brand Name",
+      "nameLabel": "Rep Name",
+      "notes": "Message",
+      "notesPlaceholder": "Goals...",
+      "submit": "Request"
     }
   },
   "wallet": {
     "title": "Wallet",
-    "balance": "Balance",
-    "deposit": "Deposit",
-    "withdraw": "Withdraw",
-    "depositTitle": "Top Up",
-    "depositDesc": "Add funds.",
-    "payAndCharge": "Charge Wallet",
+    "balance": "Total",
+    "deposit": "Add",
+    "withdraw": "Out",
+    "depositTitle": "Add Funds",
+    "depositDesc": "Amount.",
+    "payAndCharge": "Charge",
     "withdrawTitle": "Withdraw",
     "withdrawDesc": "Cash out.",
-    "shabaLabel": "Shaba (IBAN)",
-    "shabaHelper": "Starts with IR",
-    "submitWithdraw": "Request Cashout",
-    "history": "History",
-    "noTransactions": "Empty.",
+    "shabaLabel": "Shaba",
+    "shabaHelper": "IR...",
+    "submitWithdraw": "Request",
+    "history": "Logs",
+    "noTransactions": "None.",
     "minDepositError": "Min 1000.",
     "minWithdrawError": "Min 10000.",
-    "shabaInvalid": "Invalid Shaba.",
+    "shabaInvalid": "Bad Shaba.",
     "depositSuccess": "Success.",
     "withdrawRequestSuccess": "Queued.",
     "txType": {
-      "DEPOSIT": "Deposit",
-      "WITHDRAWAL": "Withdraw",
-      "PURCHASE": "Payment",
-      "REFUND": "Refund"
+      "DEPOSIT": "Add",
+      "WITHDRAWAL": "Out",
+      "PURCHASE": "Pay",
+      "REFUND": "Back"
     }
   },
   "subscription": {
     "title": "Pass",
-    "subtitle": "Access all.",
-    "planPlaceholder": "Basic tier",
+    "subtitle": "Full access.",
+    "planPlaceholder": "Basic",
     "bestValue": "Hot",
-    "buyNow": "Purchase",
-    "successTitle": "Done",
-    "successDesc": "Enjoy access.",
-    "activeTitle": "Active: {plan}",
-    "activeDesc": "Until {date}",
+    "buyNow": "Buy",
+    "successTitle": "Welcome",
+    "successDesc": "Active.",
+    "activeTitle": "Plan: {plan}",
+    "activeDesc": "End: {date}",
     "perks": {
-      "events": "All Events",
-      "resources": "Premium Docs",
-      "support": "VIP Support"
+      "events": "All evs",
+      "resources": "Files",
+      "support": "VIP"
     }
   },
   "faq": {
-    "title": "Help",
-    "subtitle": "Common questions.",
+    "title": "FAQ",
+    "subtitle": "Answers.",
     "categories": {
-      "general": "General",
-      "registration": "Signup",
-      "events": "Gatherings"
+      "general": "Main",
+      "registration": "Reg",
+      "events": "Sessions"
     },
     "questions": {
-      "whatIs": { "q": "What is this?", "a": "A dialogue community." },
-      "howToJoin": { "q": "How to join?", "a": "Sign up." },
-      "isRegistrationRequired": { "q": "Registration?", "a": "Yes." },
-      "howToPay": { "q": "Payment?", "a": "Gateway." },
-      "onlineOrOffline": { "q": "Type?", "a": "Both." },
+      "whatIs": { "q": "What's this?", "a": "Speaking community." },
+      "howToJoin": { "q": "How?", "a": "Sign up." },
+      "isRegistrationRequired": { "q": "Required?", "a": "Yes." },
+      "howToPay": { "q": "Pay?", "a": "Bank." },
+      "onlineOrOffline": { "q": "Online?", "a": "Both." },
       "refundPolicy": { "q": "Refund?", "a": "None." }
     }
   },
   "contact": {
-    "kicker": "Reach Out Directly",
-    "title": "Get in Touch",
-    "subtitle": "We are always eager to hear your thoughts, suggestions, and voice.",
+    "kicker": "Contact Us",
+    "title": "Reach Out",
+    "subtitle": "Questions? Feedback? Let's talk.",
     "form": {
-      "title": "Message",
-      "description": "Send us a note.",
+      "title": "Note",
+      "description": "Send msg.",
       "nameLabel": "Name",
-      "namePlaceholder": "Your name",
+      "namePlaceholder": "Name",
       "emailLabel": "Email",
-      "messageLabel": "Message",
-      "messagePlaceholder": "How can we help you?",
-      "messageHelper": "10-5000 chars.",
-      "submitLabel": "Send Message",
-      "successMessage": "Message sent successfully.",
-      "prefilledNotice": "Profile data used.",
+      "messageLabel": "Body",
+      "messagePlaceholder": "How can we help?",
+      "messageHelper": "10-5000.",
+      "submitLabel": "Send",
+      "successMessage": "Received.",
+      "prefilledNotice": "Profile used.",
       "honeypotLabel": "Ignore"
     },
-    "email": { "title": "Email", "subtitle": "Quick response" },
-    "social": { "title": "Social Media", "subtitle": "Follow us", "instagram": "Instagram", "telegram": "Telegram" },
+    "email": { "title": "Email", "subtitle": "Quick reply" },
+    "social": { "title": "Social", "subtitle": "Follow", "instagram": "IG", "telegram": "TG" },
     "errors": {
-      "nameInvalid": "Name is too long.",
-      "emailRequired": "Email is required.",
-      "emailInvalid": "Invalid email format.",
-      "messageLength": "Message length is invalid.",
-      "rateLimit": "Please wait a moment.",
-      "generic": "An error occurred."
+      "nameInvalid": "Too long.",
+      "emailRequired": "Req.",
+      "emailInvalid": "Bad email.",
+      "messageLength": "Bad len.",
+      "rateLimit": "Wait.",
+      "generic": "Error."
     }
   },
   "partnership": {
     "status": {
       "PENDING": "Pending",
-      "REVIEWING": "Reviewing",
-      "CONTACTED": "Contacted",
-      "ACCEPTED": "Accepted",
-      "REJECTED": "Rejected"
+      "REVIEWING": "Checking",
+      "CONTACTED": "Chatted",
+      "ACCEPTED": "Yes",
+      "REJECTED": "No"
     }
   }
 }
