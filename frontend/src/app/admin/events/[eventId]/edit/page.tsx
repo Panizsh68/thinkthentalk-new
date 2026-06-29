@@ -1,4 +1,3 @@
-
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +14,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -343,7 +343,7 @@ export default function EditEventPage() {
           <CardHeader><CardTitle>{t('admin.events.form.poster')}</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <FormLabel>{t('admin.events.form.posterUrl')}</FormLabel>
+              <Label>{t('admin.events.form.posterUrl')}</Label>
               <Input
                 type="file"
                 accept="image/*"

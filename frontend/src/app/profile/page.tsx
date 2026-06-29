@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -373,11 +374,11 @@ export default function UserProfilePage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <FormLabel>{t('registration.fields.email')}</FormLabel>
+              <Label>{t('registration.fields.email')}</Label>
               <Input value={emailToLink} onChange={(e) => setEmailToLink(e.target.value)} placeholder="user@example.com" dir="ltr" />
             </div>
             <div className="space-y-2">
-              <FormLabel>Password</FormLabel>
+              <Label>Password</Label>
               <Input type="password" value={passwordToLink} onChange={(e) => setPasswordToLink(e.target.value)} placeholder="••••••••" dir="ltr" />
             </div>
           </div>
@@ -401,13 +402,13 @@ export default function UserProfilePage() {
           <div className="space-y-4 py-4">
             {linkingStep === 'input' ? (
               <div className="space-y-2">
-                <FormLabel>{t('auth.mobileLabel')}</FormLabel>
+                <Label>{t('auth.mobileLabel')}</Label>
                 <Input value={phoneToLink} onChange={(e) => setPhoneToLink(e.target.value)} placeholder="+989123456789" dir="ltr" />
                 <p className="text-xs text-muted-foreground">Use international format (e.g., +98...)</p>
               </div>
             ) : (
               <div className="space-y-2">
-                <FormLabel>{t('auth.otpLabel')}</FormLabel>
+                <Label>{t('auth.otpLabel')}</Label>
                 <Input value={phoneOtp} onChange={(e) => setPhoneOtp(e.target.value)} placeholder="123456" dir="ltr" maxLength={6} />
               </div>
             )}
