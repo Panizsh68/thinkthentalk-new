@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n/language-provider";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useEventsQuery } from "@/hooks/use-event-queries";
@@ -10,16 +10,15 @@ import { useTeamMembersQuery } from "@/hooks/use-team-queries";
 import { useSponsorsQuery } from "@/hooks/use-sponsor-queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Lightbulb, Users, ArrowRight, Quote, Sparkles, Calendar, MapPin, Ticket, Play, CheckCircle2, Trophy, Rocket, ShieldCheck, Mail, Camera, Video, PenTool } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Lightbulb, Users, ArrowRight, Quote, Sparkles, Calendar, MapPin, Play, CheckCircle2, Trophy, ShieldCheck, Camera, PenTool, Rocket } from "lucide-react";
 import { getLocalizedTextValue } from "@/lib/i18n/get-localized-text";
-import { formatEventDate, getEventPath, getMinPrice, getFormattedPrice, isEventPast } from "@/lib/event-helpers";
+import { formatEventDate, getEventPath, getMinPrice, getFormattedPrice } from "@/lib/event-helpers";
 import type { Event } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
 /**
  * 1. HERO SECTION
- * Using real community photo (group-photo-1)
  */
 function HeroSection() {
   const { t, language } = useLanguage();
@@ -39,7 +38,7 @@ function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/90 to-background" />
       </div>
 
-      <div className="relative z-10 container flex max-w-[72rem] flex-col items-center gap-6 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="relative z-10 container flex max-w-[72rem] flex-col items-center gap-6 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000 px-4">
         <Badge variant="outline" className="px-4 py-1 border-primary/30 bg-primary/5 backdrop-blur-sm text-primary font-bold uppercase tracking-wider mb-2">
           {t('home.hero.kicker')}
         </Badge>
@@ -89,7 +88,7 @@ function EventsSection() {
   });
 
   return (
-    <section className="container max-w-screen-2xl py-20 md:py-28 border-b border-border/40">
+    <section className="container max-w-screen-2xl py-20 md:py-28 border-b border-border/40 px-4">
         <div className="mb-12 md:mb-20 text-center space-y-4">
             <h2 className="text-3xl md:text-5xl font-black tracking-tight">{t('home.events.title')}</h2>
             <p className="text-lg text-muted-foreground font-medium max-w-2xl mx-auto">{t('home.events.subtitle')}</p>
@@ -189,11 +188,9 @@ function ExperienceCard({ event, isFeatured }: { event: Event, isFeatured?: bool
 
 /**
  * 3. SEASON ONE HIGHLIGHT
- * Primary video element
  */
 function SeasonOneSection() {
   const { t, language } = useLanguage();
-  const isRTL = language === 'fa';
 
   const stats = [
     { label: t('home.seasonOne.stats.events'), value: '۲۰+', icon: Calendar },
@@ -203,7 +200,7 @@ function SeasonOneSection() {
   ];
 
   return (
-    <section id="season-one" className="py-20 md:py-32 bg-secondary/5">
+    <section id="season-one" className="py-20 md:py-32 bg-secondary/5 px-4">
       <div className="container max-w-screen-2xl">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
@@ -264,7 +261,7 @@ function WhySection() {
   ];
 
   return (
-    <section className="py-20 md:py-32 border-b border-border/40">
+    <section className="py-20 md:py-32 border-b border-border/40 px-4">
       <div className="container max-w-screen-2xl">
         <div className="mb-12 md:mb-20 text-center max-w-2xl mx-auto space-y-4">
           <h2 className="text-3xl md:text-5xl font-black tracking-tight">{t('home.why.title')}</h2>
@@ -294,7 +291,6 @@ function WhySection() {
 
 /**
  * 5. COMMUNITY GALLERY
- * Using real community photos 1-4
  */
 function GallerySection() {
   const { t } = useLanguage();
@@ -308,7 +304,7 @@ function GallerySection() {
   ];
 
   return (
-    <section className="py-20 md:py-32 bg-secondary/10">
+    <section className="py-20 md:py-32 bg-secondary/10 px-4">
       <div className="container max-w-screen-2xl">
         <div className="mb-12 text-center space-y-2">
           <h2 className="text-3xl md:text-5xl font-black tracking-tight">{t('home.moments.title')}</h2>
@@ -338,51 +334,42 @@ function GallerySection() {
  * 6. SUGGEST AN EVENT
  */
 function SuggestSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isRTL = language === 'fa';
+
+  const suggestionCards = [
+    { label: t('home.suggest.cards.flow'), icon: PenTool },
+    { label: t('home.suggest.cards.prompts'), icon: Quote },
+    { label: t('home.suggest.cards.venues'), icon: MapPin },
+    { label: t('home.suggest.cards.chapters'), icon: Rocket },
+  ];
 
   return (
-    <section className="py-20 md:py-32">
+    <section className="py-20 md:py-24 px-4">
       <div className="container max-w-screen-2xl">
-        <Card className="bg-gradient-to-br from-primary/5 via-transparent to-background border-primary/10 rounded-[2.5rem] p-8 md:p-16 overflow-hidden relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center">
-                  <Lightbulb className="h-6 w-6 text-primary" />
-                </div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tight">{t('home.suggest.title')}</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
-                  {t('home.suggest.subtitle')}
-                </p>
-              </div>
-              <Button size="lg" className="h-12 px-8 rounded-full font-bold shadow-md" asChild>
-                <Link href="/ideas">{t('home.suggest.cta')}</Link>
-              </Button>
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center bg-primary/5 rounded-[2.5rem] p-8 md:p-12 border border-primary/10 overflow-hidden relative">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t('home.suggest.title')}</h2>
+              <p className="text-lg text-muted-foreground font-medium leading-relaxed max-w-md">
+                {t('home.suggest.subtitle')}
+              </p>
             </div>
-            <div className="grid grid-cols-2 gap-3 opacity-80">
-               <div className="space-y-3 pt-8">
-                  <div className="aspect-square bg-background border rounded-2xl p-4 flex flex-col justify-between shadow-sm">
-                    <PenTool className="h-6 w-6 text-primary/40" />
-                    <p className="font-bold text-xs">Design the flow.</p>
-                  </div>
-                  <div className="aspect-square bg-primary text-primary-foreground rounded-2xl p-4 flex flex-col justify-between shadow-lg">
-                    <Quote className="h-6 w-6 opacity-40" />
-                    <p className="font-bold text-xs">Pitch prompts.</p>
-                  </div>
-               </div>
-               <div className="space-y-3">
-                  <div className="aspect-square bg-background border rounded-2xl p-4 flex flex-col justify-between shadow-sm">
-                    <MapPin className="h-6 w-6 text-primary/40" />
-                    <p className="font-bold text-xs">Propose venues.</p>
-                  </div>
-                  <div className="aspect-square bg-secondary text-secondary-foreground border rounded-2xl p-4 flex flex-col justify-between shadow-sm">
-                    <Rocket className="h-6 w-6 opacity-40" />
-                    <p className="font-bold text-xs">Launch chapters.</p>
-                  </div>
-               </div>
-            </div>
+            <Button size="lg" className="rounded-full font-bold shadow-md" asChild>
+              <Link href="/ideas">{t('home.suggest.cta')}</Link>
+            </Button>
           </div>
-        </Card>
+          <div className="grid grid-cols-2 gap-4">
+              {suggestionCards.map((card, i) => (
+                <div key={i} className="bg-background border rounded-2xl p-5 flex flex-col items-center justify-center gap-3 text-center shadow-sm hover:border-primary/40 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <card.icon className="h-5 w-5" />
+                  </div>
+                  <span className="text-sm font-bold text-foreground/80">{card.label}</span>
+                </div>
+              ))}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -390,39 +377,38 @@ function SuggestSection() {
 
 /**
  * 7. COLLABORATE WITH US
- * Using group-photo-3
  */
 function CollaborateSection() {
   const { t, language } = useLanguage();
   const isRTL = language === 'fa';
   
   return (
-    <section className="py-20 md:py-32 bg-foreground text-background rounded-[3rem] mx-4 md:mx-10 overflow-hidden shadow-xl">
+    <section className="py-20 md:py-24 px-4">
       <div className="container max-w-screen-2xl">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div className="relative aspect-square">
+        <div className="bg-foreground text-background rounded-[2.5rem] p-8 md:p-12 overflow-hidden shadow-xl grid lg:grid-cols-[1fr_1.5fr] gap-12 items-center">
+          <div className="relative aspect-square md:aspect-video lg:aspect-square">
              <Image 
                 src="/static-images/group-photo-3.jpg"
                 alt="Community Collaboration"
                 fill
-                className="object-cover rounded-[2rem] opacity-70"
+                className="object-cover rounded-[1.5rem] opacity-70"
              />
           </div>
 
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <Badge variant="outline" className="text-primary border-primary px-4 py-1 rounded-full font-bold uppercase tracking-widest text-[10px]">
-                Join the Team
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <Badge variant="outline" className="text-primary border-primary px-3 py-1 rounded-full font-bold uppercase tracking-widest text-[10px]">
+                Work with us
               </Badge>
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight">
                 {t('home.collaborate.title')}
               </h2>
-              <p className="text-lg opacity-80 font-medium leading-relaxed max-w-lg">
+              <p className="text-lg opacity-80 font-medium leading-relaxed max-w-xl">
                 {t('home.collaborate.subtitle')}
               </p>
             </div>
 
-            <Button size="lg" variant="secondary" className="rounded-full h-12 px-8 font-bold group" asChild>
+            <Button size="lg" variant="secondary" className="rounded-full font-bold group" asChild>
                <Link href="/collaborate">
                 {t('home.collaborate.cta')}
                 <ArrowRight className={cn("ml-2 h-4 w-4 transition-transform group-hover:translate-x-1", isRTL && "rotate-180")} />
@@ -443,31 +429,29 @@ function SponsorshipSection() {
   const { data: sponsors, isLoading } = useSponsorsQuery();
 
   return (
-    <section className="py-20 md:py-32">
+    <section className="py-20 md:py-32 bg-primary/[0.02] border-y border-border/40 px-4">
       <div className="container max-w-screen-2xl">
-        <div className="flex flex-col lg:flex-row gap-12 items-end justify-between mb-16">
-          <div className="space-y-4 max-w-2xl text-center lg:text-right">
-             <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t('home.sponsorship.title')}</h2>
-             <p className="text-lg text-muted-foreground font-medium leading-relaxed">
-              {t('home.sponsorship.subtitle')}
-             </p>
-          </div>
-          <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-2 font-bold" asChild>
+        <div className="max-w-3xl mx-auto text-center space-y-6 mb-16">
+           <h2 className="text-3xl md:text-5xl font-black tracking-tight">{t('home.sponsorship.title')}</h2>
+           <p className="text-lg md:text-xl text-muted-foreground font-medium leading-relaxed">
+            {t('home.sponsorship.subtitle')}
+           </p>
+           <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-2 font-bold shadow-sm hover:bg-primary/5" asChild>
             <Link href="/sponsorship">{t('home.sponsorship.cta')}</Link>
           </Button>
         </div>
 
-        <div className="pt-10 border-t">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-40 grayscale">
-            {isLoading ? (
-               Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-10 w-full rounded-md" />)
-            ) : sponsors?.map(s => (
-                <div key={s.id} className="relative h-8">
-                  <Image src={s.logoUrl} alt={s.name} fill className="object-contain" />
-                </div>
-            ))}
+        {(!isLoading && sponsors && sponsors.length > 0) && (
+          <div className="pt-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-40 grayscale transition-all hover:opacity-100 hover:grayscale-0">
+              {sponsors.map(s => (
+                  <div key={s.id} className="relative h-8">
+                    <Image src={s.logoUrl} alt={s.name} fill className="object-contain" />
+                  </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
@@ -480,8 +464,10 @@ function TeamSection() {
   const { t } = useLanguage();
   const { data: team, isLoading } = useTeamMembersQuery();
 
+  if (!isLoading && (!team || team.length === 0)) return null;
+
   return (
-    <section className="py-20 md:py-32 bg-secondary/5 border-y border-border/40">
+    <section className="py-20 md:py-32 border-b border-border/40 px-4">
       <div className="container max-w-screen-2xl text-center">
         <div className="mb-16 space-y-2">
           <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t('home.team.title')}</h2>
@@ -519,7 +505,7 @@ function FinalCTASection() {
   const isRTL = language === 'fa';
 
   return (
-    <section className="py-24 md:py-36 text-center relative overflow-hidden">
+    <section className="py-24 md:py-36 text-center relative overflow-hidden px-4">
       <div className="container max-w-3xl relative z-10 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
           {t('home.final.title')}

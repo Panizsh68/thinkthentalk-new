@@ -66,7 +66,13 @@
     "suggest": {
       "title": "Shape Future Events",
       "subtitle": "Have a topic in mind? We design our sessions based on member interests.",
-      "cta": "Submit Topic Idea"
+      "cta": "Submit Topic Idea",
+      "cards": {
+        "flow": "Design the flow",
+        "prompts": "Pitch prompts",
+        "venues": "Propose venues",
+        "chapters": "Launch chapters"
+      }
     },
     "collaborate": {
       "title": "Work With Us",
