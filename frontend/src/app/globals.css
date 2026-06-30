@@ -1,35 +1,34 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 40 30% 98%; /* Very light, warm beige/off-white */
+    --background: 40 30% 98%;
     --foreground: 224 71.4% 4.1%;
 
-    --card: 0 0% 100%; /* Pure white for cards to contrast with warm bg */
+    --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
 
-    --primary: 187 60% 35%; /* More vibrant teal */
+    --primary: 187 60% 35%;
     --primary-foreground: 210 20% 98%;
 
-    --secondary: 40 25% 94%; /* Slightly darker warm gray */
+    --secondary: 40 25% 94%;
     --secondary-foreground: 224 71.4% 4.1%;
 
-    --muted: 40 20% 90%; /* Muted warm gray */
+    --muted: 40 20% 90%;
     --muted-foreground: 215 25% 30%;
 
-    --accent: 187 55% 45%; /* Complementary accent for hover */
+    --accent: 187 55% 45%;
     --accent-foreground: 210 20% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 40 20% 88%; /* Warmer border color */
+    --border: 40 20% 88%;
     --input: 40 20% 88%;
     --ring: 187 60% 35%;
 
@@ -46,7 +45,7 @@
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
 
-    --primary: 187 40% 50%; /* #4da6ac */
+    --primary: 187 40% 50%;
     --primary-foreground: 224 71.4% 4.1%;
 
     --secondary: 215 27.9% 16.9%;
@@ -55,7 +54,7 @@
     --muted: 215 27.9% 16.9%;
     --muted-foreground: 215 21.4% 60.6%;
 
-    --accent: 187 45% 38%; /* #348085 */
+    --accent: 187 45% 38%;
     --accent-foreground: 210 20% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -66,7 +65,6 @@
     --ring: 187 40% 50%;
   }
 }
-
 
 @layer base {
   * {
@@ -81,7 +79,6 @@
     @apply font-headline;
   }
 
-  /* Add prose styles for markdown/html content */
   .prose {
     @apply text-foreground;
   }
@@ -107,7 +104,7 @@
   }
 
   .prose strong {
-    @apply text-foreground;
+    @apply text-foreground font-bold;
   }
 
   .prose code {
@@ -121,11 +118,18 @@
   }
 }
 
-/* Fix for switch thumb color */
 [data-state=checked] .switch-thumb {
   background-color: hsl(var(--background)) !important;
 }
 
 [data-state=checked] .checkbox-tick {
   color: hsl(var(--primary-foreground));
+}
+
+html[dir="rtl"] .font-inter {
+    font-family: 'Vazirmatn', sans-serif;
+}
+
+html[dir="ltr"] .font-vazir {
+    font-family: 'Inter', sans-serif;
 }

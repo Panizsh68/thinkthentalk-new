@@ -10,7 +10,7 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '1rem', // Default padding
+      padding: '1rem',
       screens: {
         'sm': '640px',
         'md': '768px',
@@ -21,14 +21,15 @@ export default {
     },
     extend: {
       fontFamily: {
-        headline: ['Inter', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
-        code: ['monospace'],
         vazir: ['Vazirmatn', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        headline: ['Inter', 'Vazirmatn', 'sans-serif'],
+        body: ['Inter', 'Vazirmatn', 'sans-serif'],
+        code: ['monospace'],
       },
       fontSize: {
-        'h1': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],
-        'h2': ['2rem', { lineHeight: '1.3', fontWeight: '700' }],
+        'h1': ['2.5rem', { lineHeight: '1.2', fontWeight: '900' }],
+        'h2': ['2rem', { lineHeight: '1.3', fontWeight: '800' }],
         'h3': ['1.75rem', { lineHeight: '1.4', fontWeight: '700' }],
         'h4': ['1.25rem', { lineHeight: '1.5', fontWeight: '700' }],
         'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],

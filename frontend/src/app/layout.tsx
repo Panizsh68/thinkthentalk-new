@@ -39,7 +39,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={cn(
       "flex min-h-screen flex-col",
-      !isAdminRoute && language === 'fa' && "font-vazir"
+      !isAdminRoute && language === 'fa' ? "font-vazir" : "font-inter"
     )}>
       {!isPanelRoute && <AppHeader />}
       <main id="main-content" className="flex-grow">
@@ -63,7 +63,7 @@ export default function RootLayout({
         <meta name="description" content="An event platform for thoughtful conversations." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet" />
         <link rel="icon" href="/static-images/logo.png" />
       </head>
       <body>
