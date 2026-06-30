@@ -1,4 +1,3 @@
-
 {
   "lng": "en-US",
   "nav": {
@@ -25,6 +24,7 @@
       "secondaryCTA": "Season One Recap"
     },
     "seasonOne": {
+      "kicker": "Memories",
       "title": "Season One Highlights",
       "subtitle": "A quick look at our journey so far—from small meetups to high-energy group discussions.",
       "stats": {
