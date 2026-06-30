@@ -1,0 +1,42 @@
+'use client';
+import Image from "next/image";
+import { useLanguage } from "@/lib/i18n/language-provider";
+import { cn } from "@/lib/utils";
+
+export function GallerySection() {
+  const { t } = useLanguage();
+  
+  const items = [
+    { url: '/static-images/group-photo-1.jpg', span: 'col-span-2 row-span-2' },
+    { url: '/static-images/group-photo-2.jpg', span: 'col-span-1 row-span-1' },
+    { url: '/static-images/group-photo-3.jpg', span: 'col-span-1 row-span-2' },
+    { url: '/static-images/group-photo-4.jpg', span: 'col-span-1 row-span-1' },
+    { url: '/static-images/group-photo-2.jpg', span: 'col-span-2 row-span-1' },
+  ];
+
+  return (
+    <section className="py-20 md:py-32 bg-secondary/10 px-4">
+      <div className="container max-w-screen-2xl">
+        <div className="mb-12 text-center space-y-2">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight">{t('home.moments.title')}</h2>
+          <p className="text-lg text-muted-foreground font-medium">{t('home.moments.subtitle')}</p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[150px] md:auto-rows-[250px]">
+          {items.map((item, i) => (
+            <div key={i} className={cn("relative rounded-3xl overflow-hidden shadow-sm group", item.span)}>
+              <Image 
+                src={item.url} 
+                alt="Community Life" 
+                fill 
+                className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

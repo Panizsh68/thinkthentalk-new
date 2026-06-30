@@ -17,7 +17,6 @@ export const isEventPast = (event: MinimalEvent): boolean => {
   return eventEnd < now;
 };
 
-
 export const getMinPrice = (tickets: EventTicketConfig[]): number | null => {
   if (!tickets || tickets.length === 0) {
     return null;
