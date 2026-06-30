@@ -31,8 +31,10 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!mounted) return;
+    // Default direction is LTR for English
     const dir = isAdminRoute ? 'ltr' : language === 'fa' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
+    // Default lang is 'en'
     document.documentElement.lang = isAdminRoute ? 'en' : (language || 'en');
   }, [language, isAdminRoute, mounted]);
 

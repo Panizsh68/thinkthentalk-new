@@ -21,6 +21,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Default language is set to English ('en')
   const [language, setLanguageState] = useState<Language>('en');
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (storedLanguage && ['en', 'fa'].includes(storedLanguage)) {
       setLanguage(storedLanguage);
     } else {
-      // Set default if nothing is stored
+      // Ensure the default is English if no preference is stored
       setLanguage('en');
     }
   }, []);
