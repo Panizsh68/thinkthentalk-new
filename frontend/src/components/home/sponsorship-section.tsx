@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n/language-provider";
 import { useSponsorsQuery } from "@/hooks/use-sponsor-queries";
+import { Building2 } from "lucide-react";
 
 export function SponsorshipSection() {
   const { t } = useLanguage();
@@ -22,7 +23,13 @@ export function SponsorshipSection() {
           </Button>
         </div>
 
-        {(!isLoading && sponsors && sponsors.length > 0) && (
+        {isLoading ? (
+          <div className="flex justify-center gap-8 opacity-20">
+             {Array.from({ length: 4 }).map((_, i) => (
+               <div key={i} className="h-8 w-32 bg-muted animate-pulse rounded" />
+             ))}
+          </div>
+        ) : sponsors && sponsors.length > 0 ? (
           <div className="pt-10">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-40 grayscale transition-all hover:opacity-100 hover:grayscale-0">
               {sponsors.map(s => (
@@ -31,6 +38,11 @@ export function SponsorshipSection() {
                   </div>
               ))}
             </div>
+          </div>
+        ) : (
+          <div className="text-center py-8 opacity-40">
+             <Building2 className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+             <p className="text-sm font-medium">{t('home.sponsors.noSponsors')}</p>
           </div>
         )}
       </div>
