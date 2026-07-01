@@ -32,8 +32,7 @@ interface NavItem {
 function SidebarHeaderWithLogo() {
   const { state } = useSidebar();
   const { language } = useLanguage();
-  const isRTL = language === 'fa';
-
+  
   return (
     <SidebarHeader className="h-16 flex items-center px-4">
       <Link href="/" className="flex items-center gap-3 w-full transition-all duration-300">
@@ -57,6 +56,7 @@ function SidebarHeaderWithLogo() {
 export function SidebarLayout({
   children,
   navItems,
+  account,
   onLogout,
 }: {
   children: React.ReactNode;
@@ -70,7 +70,7 @@ export function SidebarLayout({
 
   return (
     <SidebarProvider>
-      <div className={cn("flex min-h-screen bg-background w-full", isRTL ? "font-vazir" : "font-sans")}>
+      <div className={cn("flex min-h-screen bg-background w-full", isRTL ? "font-vazir" : "font-inter")}>
         <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-xl z-40">
           <SidebarHeaderWithLogo />
           
