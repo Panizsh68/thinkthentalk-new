@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -30,6 +29,14 @@ const getCollabSchema = (t: any) => z.object({
   }),
 });
 
+const isPlaceholder = (val?: string | null) => {
+  if (!val) return true;
+  const normalized = val.trim().toLowerCase();
+  return ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'].includes(normalized);
+};
+
+const isEmail = (val?: string | null) => val?.includes('@');
+
 export default function CollaboratePage() {
   const { t } = useLanguage();
   const { currentUser } = useAuth();
@@ -37,12 +44,16 @@ export default function CollaboratePage() {
   const [step, setStep] = useState(1); // 1: Terms, 2: Form, 3: Success
   const { mutate: submit, isPending } = useSubmitCollabMutation();
 
+  const initialName = currentUser 
+    ? [isPlaceholder(currentUser.firstNameFa) ? '' : currentUser.firstNameFa, isPlaceholder(currentUser.lastNameFa) ? '' : currentUser.lastNameFa].filter(Boolean).join(' ')
+    : '';
+
   const form = useForm({
     resolver: zodResolver(getCollabSchema(t)),
     defaultValues: {
-      name: currentUser ? `${currentUser.firstNameFa} ${currentUser.lastNameFa}` : '',
+      name: initialName,
       email: currentUser?.email || '',
-      mobile: currentUser?.mobile || '',
+      mobile: currentUser?.mobile && !isEmail(currentUser.mobile) ? currentUser.mobile : '',
       fieldOfExpertise: '',
       experience: '',
       whyJoin: '',

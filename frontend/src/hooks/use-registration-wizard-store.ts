@@ -51,6 +51,13 @@ const initialFormData: RegistrationFormData = {
   acceptedRules: false,
 };
 
+const isPlaceholder = (value?: string | null) => {
+  if (!value) return true;
+  const normalized = value.trim().toLowerCase();
+  return ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'].includes(normalized);
+};
+
+const isEmail = (val?: string | null) => val?.includes('@');
 
 interface RegistrationWizardState {
   eventId: string;
@@ -73,13 +80,6 @@ interface RegistrationWizardState {
 }
 
 const getLocalStorageKey = (eventId: string, ticketType: string) => `registration-wizard-${eventId}-${ticketType}`;
-
-const clearPlaceholderName = (value?: string | null): string => {
-  if (!value) return '';
-  const normalized = value.trim().toLowerCase();
-  const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
-  return placeholders.includes(normalized) ? '' : value;
-};
 
 export const useRegistrationWizardStore = create<RegistrationWizardState>((set, get) => ({
   eventId: '',
@@ -112,11 +112,9 @@ export const useRegistrationWizardStore = create<RegistrationWizardState>((set, 
         } catch (e) {
             console.error("Failed to parse saved state from localStorage", e);
             localStorage.removeItem(storageKey);
-            // Fallback to default init
             get().reset(user, event, ticketType, totalSteps);
         }
     } else {
-        // No saved state, perform a fresh initialization
         get().reset(user, event, ticketType, totalSteps);
     }
   },
@@ -124,11 +122,6 @@ export const useRegistrationWizardStore = create<RegistrationWizardState>((set, 
   reset: (user, event, ticketType, totalSteps) => {
      const storageKey = getLocalStorageKey(event.id, ticketType);
      localStorage.removeItem(storageKey);
-
-     const firstNameFa = clearPlaceholderName(user.firstNameFa);
-     const lastNameFa = clearPlaceholderName(user.lastNameFa);
-     const firstNameEn = clearPlaceholderName(user.firstNameEn);
-     const lastNameEn = clearPlaceholderName(user.lastNameEn);
 
      set({
         eventId: event.id,
@@ -138,10 +131,10 @@ export const useRegistrationWizardStore = create<RegistrationWizardState>((set, 
         stepsValidity: Array(totalSteps).fill(false),
         formData: {
             ...initialFormData,
-            firstNameFa: firstNameFa || '',
-            lastNameFa: lastNameFa || '',
-            firstNameEn: firstNameEn || '',
-            lastNameEn: lastNameEn || '',
+            firstNameFa: isPlaceholder(user.firstNameFa) ? '' : user.firstNameFa,
+            lastNameFa: isPlaceholder(user.lastNameFa) ? '' : user.lastNameFa,
+            firstNameEn: isPlaceholder(user.firstNameEn) ? '' : (user.firstNameEn || ''),
+            lastNameEn: isPlaceholder(user.lastNameEn) ? '' : (user.lastNameEn || ''),
             gender: user.gender || undefined,
             age: user.age || undefined,
             educationLevel: user.educationLevel || '',
@@ -149,7 +142,7 @@ export const useRegistrationWizardStore = create<RegistrationWizardState>((set, 
             isEmployed: user.isEmployed || false,
             jobTitle: user.jobTitle || '',
             languageLevel: user.languageLevel || '',
-            mobile: user.mobile,
+            mobile: isEmail(user.mobile) ? '' : user.mobile,
             email: user.email || '',
         },
         isInitialized: true,
