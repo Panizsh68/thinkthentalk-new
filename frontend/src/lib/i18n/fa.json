@@ -160,8 +160,82 @@
       "email": "ایمیل",
       "acceptRules": "من {terms} و {privacy} را خوانده و میپذیرم.",
       "termsLink": "شرایط خدمات",
-      "privacyLink": "حریم خصوصی"
+      "privacyLink": "حریم خصوصی",
+      "educationLevels": {
+        "high-school": "دیپلم",
+        "associate": "کاردانی",
+        "bachelor": "کارشناسی",
+        "master": "کارشناسی ارشد",
+        "phd": "دکتری",
+        "other": "دیگر"
+      },
+      "languageLevelsList": {
+        "beginner": "مبتدی",
+        "intermediate": "متوسط",
+        "advanced": "پیشرفته",
+        "native": "بومی/مسلط"
+      },
+      "referralSource": "چگونه با ما آشنا شدید؟",
+      "referralSources": {
+        "instagram": "اینستاگرام",
+        "telegram": "تلگرام",
+        "website": "وب‌سایت",
+        "friends": "دوستان/آشنایان",
+        "other": "غیره"
+      },
+      "referrerName": "نام معرف (اختیاری)",
+      "otherReferralSource": "لطفاً مشخص کنید"
+    },
+    "placeholders": {
+      "firstNameFa": "مثال: سارا",
+      "lastNameFa": "مثال: محمدی",
+      "firstNameEn": "مثال: Sara",
+      "lastNameEn": "مثال: Mohammadi",
+      "age": "مثال: ۲۸",
+      "educationLevel": "مقطع تحصیلی خود را انتخاب کنید",
+      "fieldOfStudy": "مثال: مهندسی کامپیوتر",
+      "jobTitle": "مثال: مهندس نرم‌افزار",
+      "languageLevel": "سطح زبان خود را انتخاب کنید",
+      "referralSource": "یک گزینه را انتخاب کنید",
+      "referrerName": "مثال: علی رضایی",
+      "otherReferralSource": "مثال: لینکدین",
+      "email": "مثال: user@example.com"
+    },
+    "descriptions": {
+      "mobileReadOnly": "شماره موبایل شما به حساب کاربری‌تان متصل است و قابل تغییر نیست.",
+      "emailOptional": "اختیاری. برای اطلاع‌رسانی‌های رویداد استفاده خواهد شد."
+    },
+    "validation": {
+      "required": "این فیلد الزامی است.",
+      "positiveNumber": "لطفا سن معتبر وارد کنید.",
+      "invalidEmail": "لطفا یک آدرس ایمیل معتبر وارد کنید.",
+      "rulesRequired": "برای ادامه باید شرایط و قوانین را بپذیرید."
+    },
+    "errors": {
+      "notAuthenticated": "برای ثبت‌نام در رویداد باید وارد حساب کاربری خود شوید.",
+      "missingInfo": "اطلاعات رویداد یا بلیت ناقص است. لطفاً از صفحه رویداد دوباره تلاش کنید.",
+      "incompleteSteps": "لطفاً قبل از ادامه، تمام مراحل قبلی را تکمیل کنید."
     }
+  },
+  "payment": {
+    "verifying": "در حال تایید پرداخت شما، لطفا منتظر بمانید...",
+    "invalidRequestTitle": "درخواست پرداخت نامعتبر",
+    "invalidRequestDescription": "پرداخت قابل تایید نیست. ممکن است لینک نامعتبر یا منقضی شده باشد.",
+    "successTitle": "پرداخت موفقیت‌آمیز بود!",
+    "successDescription": "ثبت‌نام شما تکمیل شد. به زودی یک ایمیل تاییدیه حاوی تمام جزئیات دریافت خواهید کرد.",
+    "browseMoreEvents": "مرور رویدادهای بیشتر",
+    "viewMyRegistrations": "مشاهده ثبت‌نام‌های من",
+    "failedTitle": "پرداخت ناموفق بود",
+    "failedDescription": "پرداخت شما پردازش نشد. لطفاً دوباره تلاش کنید یا برای بازبینی اطلاعات ثبت‌نام خود به عقب بازگردید.",
+    "alreadyProcessedTitle": "پرداخت قبلا پردازش شده است",
+    "alreadyProcessedDescription": "این پرداخت قبلاً با وضعیت زیر نهایی شده است:",
+    "finalizing": "در حال نهایی‌سازی...",
+    "statusTitle": "وضعیت پرداخت",
+    "statusDescription": "در حال نهایی‌سازی ثبت‌نام رویداد شما.",
+    "receiptTitle": "ثبت‌نام تایید شد",
+    "paymentId": "شناسه پرداخت",
+    "howToJoinTitle": "نحوه شرکت در رویداد",
+    "howToJoinDescription": "لینک شرکت در رویداد آنلاین یک روز قبل از رویداد از طریق پیامک و ایمیل برای شما ارسال خواهد شد."
   },
   "profile": {
     "title": "پروفایل من",

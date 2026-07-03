@@ -160,8 +160,82 @@
       "email": "Email",
       "acceptRules": "I accept the {terms} and {privacy}",
       "termsLink": "Terms",
-      "privacyLink": "Privacy"
+      "privacyLink": "Privacy",
+      "educationLevels": {
+        "high-school": "High School",
+        "associate": "Associate Degree",
+        "bachelor": "Bachelor's Degree",
+        "master": "Master's Degree",
+        "phd": "PhD",
+        "other": "Other"
+      },
+      "languageLevelsList": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "native": "Native/Fluent"
+      },
+      "referralSource": "How did you hear about us?",
+      "referralSources": {
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "website": "Website",
+        "friends": "Friends/Acquaintance",
+        "other": "Other"
+      },
+      "referrerName": "Referrer's Name (Optional)",
+      "otherReferralSource": "Please specify"
+    },
+    "placeholders": {
+      "firstNameFa": "e.g., سارا",
+      "lastNameFa": "e.g., محمدی",
+      "firstNameEn": "e.g., Sara",
+      "lastNameEn": "e.g., Mohammadi",
+      "age": "e.g., 28",
+      "educationLevel": "Select your education level",
+      "fieldOfStudy": "e.g., Computer Science",
+      "jobTitle": "e.g., Software Engineer",
+      "languageLevel": "Select your language level",
+      "referralSource": "Select a source",
+      "referrerName": "e.g., John Doe",
+      "otherReferralSource": "e.g., LinkedIn",
+      "email": "e.g., user@example.com"
+    },
+    "descriptions": {
+      "mobileReadOnly": "Your mobile number is tied to your account and cannot be changed.",
+      "emailOptional": "Optional. We'll use this for event updates."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "positiveNumber": "Please enter a valid age.",
+      "invalidEmail": "Please enter a valid email address.",
+      "rulesRequired": "You must accept the terms and policies to continue."
+    },
+    "errors": {
+      "notAuthenticated": "You must be logged in to register for an event.",
+      "missingInfo": "Event or ticket information is missing. Please try again from the event page.",
+      "incompleteSteps": "Please complete all previous steps before proceeding."
     }
+  },
+  "payment": {
+    "verifying": "Verifying your payment, please wait...",
+    "invalidRequestTitle": "Invalid Payment Request",
+    "invalidRequestDescription": "Could not verify payment. The link may be invalid or expired.",
+    "successTitle": "Payment Successful!",
+    "successDescription": "Your registration is complete. You will receive a confirmation email shortly with all the details.",
+    "browseMoreEvents": "Browse More Events",
+    "viewMyRegistrations": "View My Registrations",
+    "failedTitle": "Payment Failed",
+    "failedDescription": "Your payment could not be processed. Please try again or go back to review your registration details.",
+    "alreadyProcessedTitle": "Payment Already Processed",
+    "alreadyProcessedDescription": "This payment has already been finalized with a status of:",
+    "finalizing": "Finalizing...",
+    "statusTitle": "Payment Status",
+    "statusDescription": "Finalizing your event registration.",
+    "receiptTitle": "Registration Confirmed",
+    "paymentId": "Payment ID",
+    "howToJoinTitle": "How to Join",
+    "howToJoinDescription": "The link to join the online event will be sent to you via SMS and email one day before the event."
   },
   "profile": {
     "title": "My Profile",
