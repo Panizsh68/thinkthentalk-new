@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateEventIdeaDto {
@@ -18,6 +19,7 @@ export class CreateEventIdeaDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @ValidateIf((o) => o.email !== '' && o.email !== undefined && o.email !== null)
   @IsEmail()
   email?: string;
 

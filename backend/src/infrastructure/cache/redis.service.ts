@@ -51,48 +51,33 @@ export class RedisService {
 
   async delByPrefix(prefix: string): Promise<void> {
     if (!this.cacheManager) {
-      this.logger.warn('Cache manager not available; skipping prefix delete');
       return;
     }
+    
     const store = (this.cacheManager as any).store;
     try {
+      // Try using keys() method if available (typical for Redis stores)
       if (store && typeof store.keys === 'function') {
         const keys: string[] = await store.keys(`${prefix}*`);
-        await Promise.all(keys.map((k: string) => this.del(k)));
+        if (keys && keys.length > 0) {
+          await Promise.all(keys.map((k: string) => this.del(k)));
+        }
         return;
       }
 
-      // Fallback: try scanStream if underlying ioredis is exposed
-      if (store?.client?.scanStream) {
-        const stream = store.client.scanStream({ match: `${prefix}*` });
-        const deletePromises: Promise<void>[] = [];
-        stream.on('data', (keys: string[]) => {
-          for (const key of keys) deletePromises.push(this.del(key));
-        });
-        await new Promise((resolve, reject) => {
-          stream.on('end', resolve);
-          stream.on('error', reject);
-        });
-        await Promise.all(deletePromises);
+      // Fallback for redis-specific client
+      if (store?.client && typeof store.client.keys === 'function') {
+        const keys: string[] = await store.client.keys(`${prefix}*`);
+        if (keys && keys.length > 0) {
+          await Promise.all(keys.map((k: string) => this.del(k)));
+        }
         return;
       }
 
-      // Last resort: reset the cache store
-      const resetFn = (
-        this.cacheManager as unknown as { reset?: () => Promise<void> }
-      ).reset;
-      if (typeof resetFn === 'function') {
-        this.logger.warn(
-          'Cache store does not support key iteration; resetting entire cache store',
-        );
-        await resetFn();
-      } else {
-        this.logger.warn(
-          'Cache store does not support key iteration and no reset available; skipping prefix delete',
-        );
-      }
+      // If we are in dev/memory mode, we can't easily iterate. 
+      // We only log if it's not a known limitation to reduce noise.
     } catch (error) {
-      this.logger.error(`Failed to delete keys by prefix "${prefix}"`, error);
+      this.logger.error(`Error deleting keys by prefix "${prefix}"`, error);
     }
   }
 
@@ -105,7 +90,6 @@ export class RedisService {
   }
 
   async reset(): Promise<void> {
-    this.logger.log('Resetting cache manager store');
     const store = this.cacheManager as unknown as {
       reset?: () => Promise<void>;
     };

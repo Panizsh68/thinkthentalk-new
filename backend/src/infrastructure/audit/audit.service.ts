@@ -23,7 +23,7 @@ export class AuditService {
           action: params.action,
           resourceType: params.resourceType,
           resourceId: params.resourceId,
-          metadata: params.metadata ?? undefined,
+          metadata: params.metadata ? JSON.stringify(params.metadata) : null,
         },
       });
     } catch (error) {
