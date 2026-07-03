@@ -16,6 +16,51 @@ import {
   serializeLocalizedText,
 } from '../utils/localized-text.helper';
 
+/**
+ * Parses a string field that might be stored as a JSON array or a CSV string.
+ */
+const parseArrayField = (input?: string | null): string[] => {
+  if (!input) return [];
+  const trimmed = input.trim();
+  if (!trimmed) return [];
+
+  // Try parsing as JSON first (standard for modern MariaDB/Prisma arrays)
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed.map((item) => String(item).trim()).filter(Boolean);
+      }
+    } catch {
+      // Fall through to CSV split
+    }
+  }
+
+  // Fallback to CSV split for legacy data
+  return trimmed
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+};
+
+/**
+ * Serializes an array or CSV string into a valid JSON array string to satisfy MariaDB JSON_VALID constraints.
+ */
+const serializeArrayField = (input?: string | string[] | null, defaultValue = 'General'): string => {
+  let items: string[] = [];
+
+  if (Array.isArray(input)) {
+    items = input;
+  } else if (typeof input === 'string') {
+    items = input.split(',').map((s) => s.trim());
+  }
+
+  const cleaned = items.filter(Boolean);
+  const finalItems = cleaned.length > 0 ? cleaned : [defaultValue];
+  
+  return JSON.stringify(finalItems);
+};
+
 export const prismaEventToEventEntity = (
   event: PrismaEvent & {
     ticketConfigs: (PrismaEventTicketConfig & {
@@ -25,10 +70,8 @@ export const prismaEventToEventEntity = (
     resources: PrismaEventResource[];
   },
 ): EventEntity => {
-  const categories = event.categories ? event.categories.split(',').filter(Boolean) : [];
-  const publicDiscountIds = event.publicDiscountIds
-    ? event.publicDiscountIds.split(',').filter(Boolean)
-    : [];
+  const categories = parseArrayField(event.categories);
+  const publicDiscountIds = parseArrayField(event.publicDiscountIds);
 
   const tickets = event.ticketConfigs.map((ticket) => {
     const price =
@@ -133,16 +176,6 @@ export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
   deletedById: entity.deletedById || null,
 });
 
-const cleanCsvString = (input?: string | null): string => {
-  if (!input) return 'General';
-  const cleaned = input
-    .split(',')
-    .map((c) => c.trim())
-    .filter(Boolean)
-    .join(',');
-  return cleaned || 'General';
-};
-
 export const eventFormDataDtoToPrismaInput = (
   dto: EventFormDataDto,
 ): Prisma.EventCreateInput => ({
@@ -160,8 +193,8 @@ export const eventFormDataDtoToPrismaInput = (
   capacityTotal: dto.capacityTotal,
   capacityRemaining: dto.capacityTotal,
   showRemainingCapacity: dto.showRemainingCapacity,
-  categories: cleanCsvString(dto.categories),
-  publicDiscountIds: (dto.publicDiscountIds || []).filter(Boolean).join(','),
+  categories: serializeArrayField(dto.categories),
+  publicDiscountIds: serializeArrayField(dto.publicDiscountIds, ''),
   posterUrl: dto.posterUrl || undefined,
 });
 
@@ -197,11 +230,13 @@ export const eventUpdateFormDataDtoToPrismaInput = (
   if (dto.showRemainingCapacity !== undefined)
     updateInput.showRemainingCapacity = dto.showRemainingCapacity;
   if (dto.posterUrl !== undefined) updateInput.posterUrl = dto.posterUrl;
+  
   if (dto.categories !== undefined) {
-    updateInput.categories = cleanCsvString(dto.categories);
+    updateInput.categories = serializeArrayField(dto.categories);
   }
-  if (dto.publicDiscountIds !== undefined)
-    updateInput.publicDiscountIds = (dto.publicDiscountIds || []).filter(Boolean).join(',');
+  if (dto.publicDiscountIds !== undefined) {
+    updateInput.publicDiscountIds = serializeArrayField(dto.publicDiscountIds, '');
+  }
 
   return updateInput;
 };
