@@ -1,3 +1,4 @@
+
 {
   "lng": "fa-IR",
   "nav": {
@@ -14,6 +15,187 @@
     "sponsorship": "حمایت مالی",
     "wallet": "مرکز سکه",
     "subscription": "دریافت اشتراک"
+  },
+  "actions": {
+    "login": "ورود",
+    "logout": "خروج",
+    "register": "ثبت نام",
+    "retry": "تلاش مجدد",
+    "confirm": "تایید",
+    "download": "دانلود",
+    "view": "مشاهده",
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "activate": "فعالسازی",
+    "deactivate": "غیرفعالسازی",
+    "yes": "بله",
+    "no": "خیر",
+    "addToCalendar": "افزودن به تقویم",
+    "clearFilters": "حذف فیلترها",
+    "backToEvents": "بازگشت به رویدادها",
+    "back": "بازگشت",
+    "next": "بعدی",
+    "finishRegistration": "تکمیل ثبت نام",
+    "reset": "شروع مجدد",
+    "retryPayment": "تلاش مجدد برای پرداخت",
+    "backToSummary": "بازگشت به خلاصه",
+    "viewEvent": "مشاهده رویداد",
+    "viewReceipt": "مشاهده رسید",
+    "leaveFeedback": "ثبت بازخورد",
+    "submitFeedback": "ارسال بازخورد",
+    "backToDashboard": "بازگشت به داشبورد"
+  },
+  "language": {
+    "en": "English",
+    "fa": "فارسی"
+  },
+  "events": {
+    "title": "رویدادها",
+    "subtitle": "یکی از نشستهای زیر را انتخاب کنید و به جمع ما بپیوندید.",
+    "noEvents": "در حال حاضر رویدادی موجود نیست.",
+    "noEventsFound": "رویدادی با معیارهای شما یافت نشد."
+  },
+  "event": {
+    "online": "آنلاین",
+    "offline": "حضوری",
+    "limitedSeats": "ظرفیت محدود",
+    "spotsLeft": "{count} جای خالی",
+    "upcoming": "پیش رو",
+    "finished": "پایان یافته",
+    "viewDetails": "مشاهده جزئیات",
+    "fromPrice": "از {price} {currency}",
+    "tickets": "بلیت ها",
+    "selectTicket": "برای ثبت نام، بلیت خود را انتخاب کنید.",
+    "free": "رایگان",
+    "noRatings": "هنوز امتیازی ثبت نشده است",
+    "resourcesTitle": "منابع",
+    "resourcePublic": "عمومی",
+    "resourceRegisteredOnly": "فقط برای شرکت کنندگان",
+    "resourceAvailableAfterRegistration": "پس از ثبت نام در دسترس است",
+    "eventHasFinished": "این رویداد قبلا برگزار شده است.",
+    "alreadyRegistered": "قبلا ثبت نام کرده اید",
+    "cityUnknown": "شهر مشخص نشده است"
+  },
+  "tickets": {
+    "early_bird": "پیش فروش",
+    "standard": "استاندارد",
+    "supporter": "حمایتی",
+    "soldOut": "تمام شد",
+    "expired": "مهلت تمام شد",
+    "earlyBirdEnds": "پایان در {date}",
+    "remaining": "{count} عدد باقی مانده"
+  },
+  "filters": {
+    "showPast": "نمایش رویدادهای گذشته",
+    "eventType": "نوع رویداد",
+    "all": "همه",
+    "city": "شهر",
+    "allCities": "همه شهرها",
+    "category": "دسته بندی",
+    "allCategories": "همه دسته بندی ها"
+  },
+  "auth": {
+    "loginTitle": "ورود یا ثبت نام",
+    "loginSubtitle": "برای ادامه، اطلاعات خود را وارد کنید.",
+    "mobileLabel": "شماره موبایل",
+    "sendOtpButton": "ارسال کد",
+    "otpTitle": "کد تایید را وارد کنید",
+    "otpSubtitle": "کد به شماره زیر ارسال شد:",
+    "otpLabel": "کد تایید",
+    "verifyButton": "ورود",
+    "otpSentTitle": "کد ارسال شد",
+    "otpSentDescription": "پیامک های خود را برای کد تایید بررسی کنید",
+    "loginSuccessTitle": "ورود موفقیت آمیز بود!",
+    "errors": {
+      "invalidMobile": "لطفا یک شماره موبایل معتبر وارد کنید.",
+      "otpRequired": "وارد کردن کد تایید الزامی است."
+    }
+  },
+  "registration": {
+    "title": "ثبت نام در رویداد",
+    "confirmReset": "آیا از شروع مجدد مطمئن هستید؟",
+    "steps": {
+      "personal": "اطلاعات فردی",
+      "personalSubtitle": "لطفا اطلاعات خود را مطابق با مدارک شناسایی وارد کنید.",
+      "education": "تحصیلات و شغل",
+      "educationSubtitle": "لطفا سوابق تحصیلی و حرفه ای خود را ارائه دهید.",
+      "language": "زبان و نحوه آشنایی",
+      "languageSubtitle": "به ما کمک کنید تا سطح زبان شما را بدانیم.",
+      "contact": "اطلاعات تماس",
+      "contactSubtitle": "چطور میتوانیم با شما در تماس باشیم؟",
+      "rules": "قوانین و مقررات",
+      "rulesSubtitle": "لطفا برای ادامه، قوانین را تایید کنید.",
+      "summary": "خلاصه و بازبینی",
+      "summarySubtitle": "لطفا قبل از نهایی سازی، اطلاعات خود را بازبینی کنید."
+    },
+    "summary": {
+      "eventDetails": "جزئیات رویداد",
+      "eventTitle": "رویداد",
+      "eventDate": "تاریخ",
+      "ticketType": "نوع بلیت",
+      "price": "قیمت",
+      "edit": "ویرایش",
+      "yes": "بله",
+      "no": "خیر",
+      "paymentButton": "پرداخت با سکه",
+      "subtotal": "مجموع",
+      "total": "قابل پرداخت",
+      "noInfo": "اطلاعات وارد نشده"
+    },
+    "fields": {
+      "firstNameFa": "نام (فارسی)",
+      "lastNameFa": "نام خانوادگی (فارسی)",
+      "firstNameEn": "نام (انگلیسی)",
+      "lastNameEn": "نام خانوادگی (انگلیسی)",
+      "age": "سن",
+      "gender": "جنسیت",
+      "genderMale": "مرد",
+      "genderFemale": "زن",
+      "genderOther": "دیگر",
+      "educationLevel": "تحصیلات",
+      "fieldOfStudy": "رشته تحصیلی",
+      "isEmployed": "شاغل هستم",
+      "jobTitle": "عنوان شغلی",
+      "languageLevel": "سطح زبان انگلیسی",
+      "email": "ایمیل",
+      "acceptRules": "من {terms} و {privacy} را خوانده و میپذیرم.",
+      "termsLink": "شرایط خدمات",
+      "privacyLink": "حریم خصوصی"
+    }
+  },
+  "profile": {
+    "title": "پروفایل من",
+    "subtitle": "اطلاعات خود را به روز نگه دارید.",
+    "saveButton": "ذخیره تغییرات",
+    "updateSuccessTitle": "پروفایل به روزرسانی شد",
+    "updateSuccessDescription": "تغییرات شما با موفقیت ذخیره شد.",
+    "identity": {
+      "title": "تایید هویت",
+      "subtitle": "حسابهای متصل برای دسترسی امن",
+      "linked": "متصل شده",
+      "notLinked": "متصل نشده"
+    },
+    "mobileReadOnly": "شماره موبایل قابل تغییر نیست"
+  },
+  "dashboard": {
+    "title": "داشبورد",
+    "welcomeBack": "خوش آمدید!",
+    "personalIntro": "فضای شخصی شما برای فعالیتهای Think Then Talk.",
+    "myRegistrations": "رویدادهای من",
+    "upcomingSection": "پیش رو",
+    "pastSection": "رویدادهای گذشته",
+    "noUpcoming": "ثبت نام فعالی ندارید.",
+    "noPast": "رویدادی در تاریخچه یافت نشد.",
+    "browseEvents": "مشاهده رویدادها",
+    "nextStepTitle": "قدم بعدی",
+    "nextStepDesc": "آماده گفتگوهای بیشتر هستید؟",
+    "table": {
+      "event": "رویداد",
+      "date": "تاریخ",
+      "ticket": "بلیت",
+      "status": "وضعیت",
+      "actions": "عملیات"
+    }
   },
   "home": {
     "hero": {
@@ -139,6 +321,8 @@
     "successDesc": "دسترسی شما به امکانات ویژه فعال گردید.",
     "activeTitle": "اشتراک فعال: {plan}",
     "activeDesc": "اعتبار تا: {date}",
+    "planPlaceholder": "دسترسی ویژه به تمامی امکانات جامعه.",
+    "bestValue": "بهترین انتخاب",
     "perks": {
       "events": "حضور رایگان در رویدادها",
       "resources": "دسترسی کامل به فایلها",
@@ -146,9 +330,66 @@
     }
   },
   "admin": {
+    "nav": {
+      "dashboard": "داشبورد",
+      "events": "رویدادها",
+      "registrations": "ثبت نام ها",
+      "users": "کاربران",
+      "payments": "پرداخت ها",
+      "discounts": "تخفیف ها",
+      "messaging": "پیام رسانی",
+      "ideas": "ایده ها",
+      "partnerships": "همکاری ها",
+      "contact": "تماس ها",
+      "feedback": "بازخوردها",
+      "sponsors": "اسپانسرها",
+      "team": "تیم"
+    },
     "currency": {
       "TOMAN": "تومان",
       "COIN": "سکه"
+    },
+    "dashboard": {
+      "title": "پنل مدیریت",
+      "subtitle": "مرور فعالیتهای Think Then Talk.",
+      "stats": {
+        "upcomingEvents": "رویدادهای پیش رو",
+        "upcomingEventsDesc": "برنامه ریزی شده برای آینده",
+        "totalRegistrations": "کل ثبت نام ها",
+        "totalRegistrationsDesc": "از ابتدا تاکنون",
+        "paidRegistrations": "ثبت نام های نهایی",
+        "paidRegistrationsDesc": "پرداخت های موفق",
+        "totalRevenue": "درآمد کل",
+        "totalRevenueDesc": "مجموع سکه های دریافتی"
+      },
+      "quickActions": {
+        "title": "دسترسی سریع",
+        "createEvent": "ایجاد رویداد",
+        "viewRegistrations": "لیست ثبت نام ها",
+        "manageDiscounts": "مدیریت تخفیف ها",
+        "viewFeedback": "مشاهده بازخوردها"
+      }
     }
+  },
+  "errors": {
+    "genericTitle": "خطایی رخ داد",
+    "fetchEvents": "بارگذاری رویدادها ناموفق بود.",
+    "fetchEvent": "دریافت جزئیات رویداد انجام نشد.",
+    "eventNotFound": "رویداد یافت نشد.",
+    "fetchRegistrations": "خطا در دریافت لیست ثبت نام ها.",
+    "accessDenied": "دسترسی محدود شده",
+    "accessDeniedDescription": "شما اجازه دسترسی به این بخش را ندارید."
+  },
+  "share": {
+    "label": "اشتراک گذاری",
+    "copyLink": "کپی لینک",
+    "linkCopiedTitle": "کپی شد!",
+    "linkCopiedDescription": "لینک در حافظه کپی شد.",
+    "whatsapp": "واتس اپ",
+    "telegram": "تلگرام",
+    "x": "اکس (توییتر)",
+    "linkedin": "لینکدین",
+    "email": "ایمیل",
+    "system": "اشتراک گذاری سیستمی"
   }
 }

@@ -1,3 +1,4 @@
+
 {
   "lng": "en-US",
   "nav": {
@@ -14,6 +15,187 @@
     "sponsorship": "Sponsorship",
     "wallet": "Coin Center",
     "subscription": "Pass"
+  },
+  "actions": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "download": "Download",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "yes": "Yes",
+    "no": "No",
+    "addToCalendar": "Add to Calendar",
+    "clearFilters": "Clear Filters",
+    "backToEvents": "Back to Events",
+    "back": "Back",
+    "next": "Next",
+    "finishRegistration": "Complete Registration",
+    "reset": "Start Over",
+    "retryPayment": "Retry Payment",
+    "backToSummary": "Back to Summary",
+    "viewEvent": "View Event",
+    "viewReceipt": "View Receipt",
+    "leaveFeedback": "Leave Feedback",
+    "submitFeedback": "Submit Feedback",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "language": {
+    "en": "English",
+    "fa": "Persian"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Choose a session and join the conversation.",
+    "noEvents": "No events available at the moment.",
+    "noEventsFound": "No events found matching your criteria."
+  },
+  "event": {
+    "online": "Online",
+    "offline": "In-person",
+    "limitedSeats": "Limited seats",
+    "spotsLeft": "{count} spots left",
+    "upcoming": "Upcoming",
+    "finished": "Finished",
+    "viewDetails": "View Details",
+    "fromPrice": "From {price} {currency}",
+    "tickets": "Tickets",
+    "selectTicket": "Select your ticket to register.",
+    "free": "Free",
+    "noRatings": "No ratings yet",
+    "resourcesTitle": "Resources",
+    "resourcePublic": "Public",
+    "resourceRegisteredOnly": "For participants only",
+    "resourceAvailableAfterRegistration": "Available after registration",
+    "eventHasFinished": "This event has already taken place.",
+    "alreadyRegistered": "Already Registered",
+    "cityUnknown": "City not specified"
+  },
+  "tickets": {
+    "early_bird": "Early Bird",
+    "standard": "Standard",
+    "supporter": "Supporter",
+    "soldOut": "Sold Out",
+    "expired": "Offer Expired",
+    "earlyBirdEnds": "Ends {date}",
+    "remaining": "{count} remaining"
+  },
+  "filters": {
+    "showPast": "Show Past Events",
+    "eventType": "Event Type",
+    "all": "All",
+    "city": "City",
+    "allCities": "All Cities",
+    "category": "Category",
+    "allCategories": "All Categories"
+  },
+  "auth": {
+    "loginTitle": "Login or Sign Up",
+    "loginSubtitle": "Enter your credentials to continue.",
+    "mobileLabel": "Mobile Number",
+    "sendOtpButton": "Send Code",
+    "otpTitle": "Enter Verification Code",
+    "otpSubtitle": "A code has been sent to",
+    "otpLabel": "Verification Code",
+    "verifyButton": "Login",
+    "otpSentTitle": "Code Sent",
+    "otpSentDescription": "Check your messages for the verification code",
+    "loginSuccessTitle": "Login Successful!",
+    "errors": {
+      "invalidMobile": "Please enter a valid mobile number.",
+      "otpRequired": "Verification code is required."
+    }
+  },
+  "registration": {
+    "title": "Event Registration",
+    "confirmReset": "Are you sure you want to start over?",
+    "steps": {
+      "personal": "Personal Info",
+      "personalSubtitle": "Enter your details as they appear on your ID.",
+      "education": "Education & Job",
+      "educationSubtitle": "Tell us about your background.",
+      "language": "Language & Referral",
+      "languageSubtitle": "Help us know your level.",
+      "contact": "Contact Info",
+      "contactSubtitle": "How can we reach you?",
+      "rules": "Rules & Terms",
+      "rulesSubtitle": "Review and accept to proceed.",
+      "summary": "Summary",
+      "summarySubtitle": "Review before finalizing."
+    },
+    "summary": {
+      "eventDetails": "Event Details",
+      "eventTitle": "Event",
+      "eventDate": "Date",
+      "ticketType": "Ticket Type",
+      "price": "Price",
+      "edit": "Edit",
+      "yes": "Yes",
+      "no": "No",
+      "paymentButton": "Purchase with Coins",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "noInfo": "Information not provided"
+    },
+    "fields": {
+      "firstNameFa": "First Name (Native)",
+      "lastNameFa": "Last Name (Native)",
+      "firstNameEn": "First Name (English)",
+      "lastNameEn": "Last Name (English)",
+      "age": "Age",
+      "gender": "Gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "educationLevel": "Education",
+      "fieldOfStudy": "Field of Study",
+      "isEmployed": "Employed",
+      "jobTitle": "Job Title",
+      "languageLevel": "English Level",
+      "email": "Email",
+      "acceptRules": "I accept the {terms} and {privacy}",
+      "termsLink": "Terms",
+      "privacyLink": "Privacy"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Keep your information up to date.",
+    "saveButton": "Save Changes",
+    "updateSuccessTitle": "Profile Updated",
+    "updateSuccessDescription": "Your changes have been saved.",
+    "identity": {
+      "title": "Identity Verification",
+      "subtitle": "Linked accounts for secure access",
+      "linked": "Linked",
+      "notLinked": "Not Linked"
+    },
+    "mobileReadOnly": "Mobile number cannot be changed"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Welcome back!",
+    "personalIntro": "Your personal space for Think Then Talk activities.",
+    "myRegistrations": "My Events",
+    "upcomingSection": "Upcoming",
+    "pastSection": "Past Events",
+    "noUpcoming": "No upcoming registrations.",
+    "noPast": "No past events found.",
+    "browseEvents": "Browse Events",
+    "nextStepTitle": "Next Step",
+    "nextStepDesc": "Ready for more conversations?",
+    "table": {
+      "event": "Event",
+      "date": "Date",
+      "ticket": "Ticket",
+      "status": "Status",
+      "actions": "Actions"
+    }
   },
   "home": {
     "hero": {
@@ -139,6 +321,8 @@
     "successDesc": "Your community pass is now active.",
     "activeTitle": "Active Pass: {plan}",
     "activeDesc": "Valid until: {date}",
+    "planPlaceholder": "Premium access to all community features.",
+    "bestValue": "Best Value",
     "perks": {
       "events": "Free event entries",
       "resources": "Full resource access",
@@ -146,9 +330,66 @@
     }
   },
   "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "events": "Events",
+      "registrations": "Registrations",
+      "users": "Users",
+      "payments": "Payments",
+      "discounts": "Discounts",
+      "messaging": "Messaging",
+      "ideas": "Ideas",
+      "partnerships": "Partnerships",
+      "contact": "Contact",
+      "feedback": "Feedback",
+      "sponsors": "Sponsors",
+      "team": "Team"
+    },
     "currency": {
       "TOMAN": "Toman",
       "COIN": "Coins"
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "Overview of Think Then Talk activities.",
+      "stats": {
+        "upcomingEvents": "Upcoming Events",
+        "upcomingEventsDesc": "Events scheduled soon",
+        "totalRegistrations": "Total Registrations",
+        "totalRegistrationsDesc": "Lifetime count",
+        "paidRegistrations": "Paid Entries",
+        "paidRegistrationsDesc": "Successful payments",
+        "totalRevenue": "Revenue",
+        "totalRevenueDesc": "Total coins collected"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "createEvent": "Create Event",
+        "viewRegistrations": "View Registrations",
+        "manageDiscounts": "Manage Discounts",
+        "viewFeedback": "View Feedback"
+      }
     }
+  },
+  "errors": {
+    "genericTitle": "Error",
+    "fetchEvents": "Could not load events.",
+    "fetchEvent": "Could not load event details.",
+    "eventNotFound": "Event not found.",
+    "fetchRegistrations": "Could not load registrations.",
+    "accessDenied": "Access Denied",
+    "accessDeniedDescription": "You do not have permission to view this page."
+  },
+  "share": {
+    "label": "Share",
+    "copyLink": "Copy Link",
+    "linkCopiedTitle": "Copied!",
+    "linkCopiedDescription": "Link copied to clipboard.",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "x": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "system": "System Share"
   }
 }
