@@ -7,7 +7,6 @@ import { PrismaService } from '../infrastructure/database/prisma.service';
 import {
   WalletTransactionType,
   PaymentStatus,
-  WithdrawalStatus,
   Prisma,
 } from '@prisma/client';
 
@@ -15,6 +14,10 @@ import {
 export class WalletService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Get user's token balance (legacy Wallet table).
+   * Renamed concepts to "Coins" for the end-user.
+   */
   async getWallet(userId: string) {
     let wallet = await this.prisma.wallet.findUnique({
       where: { userId },
@@ -36,10 +39,14 @@ export class WalletService {
     return wallet;
   }
 
+  /**
+   * Add coins to user's balance.
+   * Coins are non-refundable tokens.
+   */
   async deposit(
     userId: string,
     amount: number,
-    description: string = 'Deposit to wallet',
+    description: string = 'Purchase of Talk Coins',
   ) {
     if (amount <= 0) throw new BadRequestException('Amount must be positive');
 
@@ -65,43 +72,9 @@ export class WalletService {
     });
   }
 
-  async withdrawRequest(userId: string, amount: number, shabaNumber: string) {
-    const wallet = await this.getWallet(userId);
-    const balance = Number(wallet.balance);
-
-    if (amount <= 0) throw new BadRequestException('Amount must be positive');
-    if (balance < amount) throw new BadRequestException('Insufficient balance');
-
-    return this.prisma.$transaction(async (tx) => {
-      await tx.wallet.update({
-        where: { id: wallet.id },
-        data: { balance: { decrement: amount } },
-      });
-
-      const request = await tx.withdrawalRequest.create({
-        data: {
-          userId,
-          amount: new Prisma.Decimal(amount),
-          shabaNumber,
-          status: 'PENDING' as WithdrawalStatus,
-        },
-      });
-
-      await tx.walletTransaction.create({
-        data: {
-          walletId: wallet.id,
-          amount: new Prisma.Decimal(amount),
-          type: WalletTransactionType.WITHDRAWAL,
-          description: `Withdrawal request to ${shabaNumber}`,
-          status: PaymentStatus.PENDING,
-          referenceId: request.id,
-        },
-      });
-
-      return request;
-    });
-  }
-
+  /**
+   * Deduct coins from user's balance for services.
+   */
   async payWithWallet(
     userId: string,
     amount: number,
@@ -112,7 +85,7 @@ export class WalletService {
     const balance = Number(wallet.balance);
 
     if (balance < amount)
-      throw new BadRequestException('Insufficient wallet balance');
+      throw new BadRequestException('Insufficient Talk Coins balance');
 
     return this.prisma.$transaction(async (tx) => {
       await tx.wallet.update({
@@ -133,53 +106,20 @@ export class WalletService {
     });
   }
 
-  async listWithdrawalRequests() {
-    return this.prisma.withdrawalRequest.findMany({
+  /**
+   * Withdrawal is disabled for tokens as they are non-refundable.
+   * We keep the history query but the action is removed.
+   */
+  async listAllTransactions() {
+    return this.prisma.walletTransaction.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        user: { select: { firstNameFa: true, lastNameFa: true, mobile: true } },
+        wallet: {
+          include: {
+            user: { select: { firstNameFa: true, lastNameFa: true, mobile: true } }
+          }
+        },
       },
-    });
-  }
-
-  async updateWithdrawalStatus(
-    id: string,
-    status: WithdrawalStatus,
-    adminNote?: string,
-  ) {
-    const request = await this.prisma.withdrawalRequest.findUnique({
-      where: { id },
-    });
-    if (!request) throw new NotFoundException('Request not found');
-
-    if (status === 'REJECTED' && request.status !== 'REJECTED') {
-      const wallet = await this.getWallet(request.userId);
-      await this.prisma.$transaction([
-        this.prisma.wallet.update({
-          where: { id: wallet.id },
-          data: { balance: { increment: request.amount } },
-        }),
-        this.prisma.withdrawalRequest.update({
-          where: { id },
-          data: { status, adminNote, processedAt: new Date() },
-        }),
-        this.prisma.walletTransaction.create({
-          data: {
-            walletId: wallet.id,
-            amount: request.amount,
-            type: WalletTransactionType.REFUND,
-            description: `Refund for rejected withdrawal: ${adminNote || ''}`,
-            status: PaymentStatus.SUCCESS,
-            referenceId: id,
-          },
-        }),
-      ]);
-      return { success: true };
-    }
-
-    return this.prisma.withdrawalRequest.update({
-      where: { id },
-      data: { status, adminNote, processedAt: new Date() },
     });
   }
 }
