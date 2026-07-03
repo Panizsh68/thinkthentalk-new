@@ -30,11 +30,13 @@
     "deactivate": "Deactivate",
     "yes": "Yes",
     "no": "No",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
     "addToCalendar": "Add to Calendar",
     "clearFilters": "Clear Filters",
     "backToEvents": "Back to Events",
-    "back": "Back",
-    "next": "Next",
     "finishRegistration": "Complete Registration",
     "reset": "Start Over",
     "retryPayment": "Retry Payment",
@@ -215,6 +217,12 @@
       "notAuthenticated": "You must be logged in to register for an event.",
       "missingInfo": "Event or ticket information is missing. Please try again from the event page.",
       "incompleteSteps": "Please complete all previous steps before proceeding."
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
     }
   },
   "payment": {
@@ -222,7 +230,7 @@
     "invalidRequestTitle": "Invalid Payment Request",
     "invalidRequestDescription": "Could not verify payment. The link may be invalid or expired.",
     "successTitle": "Payment Successful!",
-    "successDescription": "Your registration is complete. You will receive a confirmation email shortly with all the details.",
+    "successDescription": "Your registration is complete. Your Talk Coins have been deducted.",
     "browseMoreEvents": "Browse More Events",
     "viewMyRegistrations": "View My Registrations",
     "failedTitle": "Payment Failed",
@@ -443,6 +451,458 @@
         "manageDiscounts": "Manage Discounts",
         "viewFeedback": "View Feedback"
       }
+    },
+    "events": {
+      "title": "Events Management",
+      "subtitle": "Manage community gatherings",
+      "createNew": "Create New Event",
+      "archiveSuccess": "Event archived",
+      "unarchiveSuccess": "Event unarchived",
+      "deleteSuccess": "Event deleted",
+      "deleteSuccessPermanent": "Event permanently deleted",
+      "table": {
+        "title": "Event Title",
+        "date": "Date",
+        "type": "Type",
+        "status": "Status",
+        "capacity": "Capacity",
+        "state": "State"
+      },
+      "state": {
+        "active": "Active",
+        "archived": "Archived",
+        "deleted": "Deleted"
+      },
+      "actions": {
+        "archive": "Archive",
+        "unarchive": "Unarchive",
+        "delete": "Delete",
+        "deletePermanent": "Delete Permanently"
+      },
+      "confirm": {
+        "archiveTitle": "Archive Event?",
+        "archiveDescription": "This will hide the event from the public list.",
+        "unarchiveTitle": "Restore Event?",
+        "unarchiveDescription": "This will make the event visible to the public again.",
+        "deleteTitle": "Delete Event?",
+        "deleteDescription": "This will remove the event. By default, it's a soft delete.",
+        "permanentCheckbox": "Permanent delete (cannot be undone)"
+      },
+      "form": {
+        "basicInfo": "Basic Info",
+        "titleFa": "Title (FA)",
+        "titleEn": "Title (EN)",
+        "categories": "Categories",
+        "categoriesDesc": "Comma separated",
+        "poster": "Poster Image",
+        "posterUrl": "Image File",
+        "posterDesc": "JPG, PNG or WebP",
+        "selectPosterImage": "Choose File",
+        "content": "Description",
+        "summary": "Short Summary",
+        "description": "Full Description",
+        "locationAndDate": "When & Where",
+        "cityFa": "City (FA)",
+        "cityEn": "City (EN)",
+        "cityDesc": "e.g. Tehran",
+        "address": "Venue Address",
+        "startDateTime": "Starts At",
+        "endDateTime": "Ends At",
+        "endDateTimeOptional": "Optional",
+        "pickDate": "Select Date",
+        "capacity": "Attendance",
+        "capacityTotal": "Total Seats",
+        "showRemainingCapacity": "Show Availability",
+        "showRemainingCapacityDesc": "Show spots left to users",
+        "publicDiscountsTitle": "Public Discounts",
+        "publicDiscountsDesc": "Select automatic discounts",
+        "noPublicDiscounts": "No public discounts available",
+        "saveChanges": "Save Event",
+        "createEvent": "Create Event"
+      }
+    },
+    "registrations": {
+      "title": "Registrations",
+      "subtitle": "Manage event attendees",
+      "recipientList": "Recipients",
+      "recipientCount": "{selected} selected of {total}",
+      "recipientEmpty": "No matching registrations",
+      "table": {
+        "user": "Participant",
+        "event": "Event",
+        "ticket": "Ticket",
+        "status": "Status",
+        "date": "Date"
+      },
+      "filters": {
+        "eventPlaceholder": "All Events",
+        "statusPlaceholder": "All Statuses",
+        "datePlaceholder": "Date Range",
+        "afterDate": "After {date}",
+        "beforeDate": "Before {date}",
+        "allEvents": "All Events"
+      },
+      "actions": {
+        "openMenu": "Actions",
+        "viewUserDetails": "View Details",
+        "sendMessage": "Send Message"
+      },
+      "details": {
+        "title": "Registration Details",
+        "subtitle": "Details for {userName}",
+        "editUserTitle": "Edit Attendee Info",
+        "editUserSubtitle": "Update manual registration data",
+        "paymentTitle": "Payment Info",
+        "gatewayId": "Gateway/Ref ID",
+        "changeStatus": "Change Status",
+        "confirmStatusChangeTitle": "Change Status?",
+        "confirmStatusChangeDescription": "Change registration to {newStatus}?",
+        "auditLogTitle": "Action History",
+        "close": "Close"
+      },
+      "sendMessage": {
+        "title": "Send Message",
+        "subtitle": "To {userName}",
+        "placeholder": "Type your message here...",
+        "sendViaSms": "SMS",
+        "sendViaEmail": "Email",
+        "sendButton": "Send to {count} people",
+        "successTitle": "Sent",
+        "successDescription": "Messages queued for delivery"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Directory of all community members",
+      "profileCard": {
+        "title": "Profile Status",
+        "completion": "Completeness",
+        "missingFields": "Missing Information"
+      },
+      "badges": {
+        "complete": "Complete",
+        "incomplete": "Incomplete"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name, phone or email",
+        "profileStatus": "Completion Status",
+        "all": "All Users",
+        "complete": "Complete Profiles",
+        "incomplete": "Incomplete Profiles"
+      },
+      "table": {
+        "user": "User",
+        "profileStatus": "Profile",
+        "registrations": "Total Reg.",
+        "missing": "Missing Info",
+        "actions": "View",
+        "lastRegistration": "Last Activity"
+      },
+      "registrations": {
+        "title": "Event History",
+        "empty": "No registrations found for this user",
+        "open": "Open Reg."
+      },
+      "latestFormData": "Latest Submitted Data"
+    },
+    "payments": {
+      "title": "Financial Ledger",
+      "subtitle": "Tracking all Talk Coin transactions",
+      "status": {
+        "success": "Success",
+        "pending": "Pending",
+        "failed": "Failed",
+        "all": "All"
+      },
+      "filters": {
+        "statusPlaceholder": "All Statuses"
+      },
+      "table": {
+        "user": "Member",
+        "event": "Event",
+        "amount": "Amount",
+        "status": "Status",
+        "date": "Date"
+      },
+      "actions": {
+        "viewRegistration": "View Order"
+      }
+    },
+    "discounts": {
+      "title": "Discounts & Offers",
+      "subtitle": "Manage promo codes and automatic discounts",
+      "createNew": "New Discount",
+      "statusUpdateSuccess": "Status updated",
+      "statusUpdateSuccessDesc": "Discount is now {status}",
+      "deleteSuccess": "Discount deleted",
+      "applySuccessTitle": "Code Applied",
+      "applyErrorTitle": "Invalid Code",
+      "publicDiscount": "Community Discount",
+      "codeApplied": "Code {code} applied",
+      "table": {
+        "name": "Offer Name",
+        "type": "Type",
+        "value": "Value",
+        "events": "Applicable Events",
+        "validity": "Validity",
+        "usage": "Usage",
+        "status": "Status",
+        "actions": "Actions",
+        "allEvents": "All Events",
+        "specificEvents": "{count} events",
+        "start": "Start",
+        "end": "End",
+        "validRange": "Valid from {startDate} to {endDate}"
+      },
+      "types": {
+        "percent": "Percentage",
+        "fixed": "Fixed Amount"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "delete": {
+        "confirmTitle": "Delete Discount?",
+        "confirmDescription": "This will remove the offer '{discountName}'."
+      },
+      "form": {
+        "generalTitle": "General Info",
+        "name": "Discount Name",
+        "nameDesc": "Internal reference name",
+        "isPublic": "Public Discount",
+        "isPublicDesc": "Automatically applied to all users",
+        "code": "Promo Code",
+        "valueTitle": "Value",
+        "rulesTitle": "Rules & Eligibility",
+        "applicableEvents": "Link to Events",
+        "applicableEventsDesc": "Leave empty for all events",
+        "minAmount": "Minimum Cart Value",
+        "minAmountDesc": "Min coins required to apply",
+        "activationTitle": "Activation",
+        "isActive": "Active Status",
+        "validityTitle": "Validity Period",
+        "startDate": "Valid From",
+        "endDate": "Valid Until",
+        "limitsTitle": "Usage Limits",
+        "maxUses": "Total Max Uses",
+        "maxUsesDesc": "Total times code can be used",
+        "maxUsesPerUser": "Max Uses Per Member",
+        "maxUsesPerUserDesc": "How many times one person can use it",
+        "saveChanges": "Save Settings",
+        "createDiscount": "Create Discount"
+      },
+      "validation": {
+        "positiveValue": "Value must be positive",
+        "codeRequired": "Code is required for private discounts",
+        "endDateAfterStart": "End date must be after start date"
+      }
+    },
+    "messaging": {
+      "title": "Bulk Messaging",
+      "subtitle": "Communicate with event participants",
+      "filterRecipients": "Step 1: Select Audience",
+      "recipientList": "Step 2: Review List",
+      "composeTitle": "Step 3: Compose Message",
+      "templatePlaceholder": "Choose a template...",
+      "noTemplate": "Custom Message (No Template)",
+      "subject": "Email Subject",
+      "body": "Message Content",
+      "templateNote": "Use {name} or {eventName} placeholders",
+      "channels": "Delivery Channels",
+      "sendButton": "Send to {count} People",
+      "confirmSendTitle": "Send Messages?",
+      "confirmSendDescription": "Are you sure you want to send this to {count} people?",
+      "sendSuccessTitle": "Sent",
+      "sendSuccessDescription": "Messages sent to {count} people"
+    },
+    "ideas": {
+      "statusUpdated": "Idea status updated"
+    },
+    "partnerships": {
+      "title": "Partnerships & Collabs",
+      "updateSuccess": "Status updated successfully",
+      "tabs": {
+        "collabs": "Applications",
+        "sponsors": "Sponsorships"
+      },
+      "collabs": {
+        "title": "Team Applications",
+        "subtitle": "Volunteers wanting to join the crew"
+      },
+      "sponsors": {
+        "title": "Business Partners",
+        "subtitle": "Inquiries from brands and venues"
+      },
+      "table": {
+        "expertise": "Expertise",
+        "plan": "Plan"
+      },
+      "detail": {
+        "title": "Request Details",
+        "subtitle": "Review application data",
+        "content": "Motivation/Message",
+        "updateStatus": "Triage Application",
+        "notes": "Internal Admin Notes",
+        "notesPlaceholder": "e.g. Needs interview"
+      }
+    },
+    "contact": {
+      "title": "Inbound Messages",
+      "subtitle": "General inquiries from the contact form",
+      "refresh": "Refresh",
+      "view": "Open",
+      "notifications": {
+        "error": "Error loading messages",
+        "statusUpdated": "Status updated",
+        "archived": "Message archived"
+      },
+      "status": {
+        "NEW": "New",
+        "SEEN": "Seen",
+        "ARCHIVED": "Archived"
+      },
+      "filters": {
+        "status": "Filter by Status",
+        "statusAll": "All Messages",
+        "searchPlaceholder": "Search by sender or content",
+        "dateFrom": "From Date",
+        "dateTo": "To Date",
+        "reset": "Reset"
+      },
+      "pagination": {
+        "label": "Page {page} of {totalPages}",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "table": {
+        "empty": "No messages found",
+        "createdAt": "Received",
+        "name": "Sender",
+        "email": "Email",
+        "message": "Content",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "detail": {
+        "title": "Message Details",
+        "emailSent": "Auto-Reply",
+        "source": "Source",
+        "ip": "IP Address",
+        "userAgent": "Device Info",
+        "processedAt": "Processed At",
+        "markSeen": "Mark Seen",
+        "markArchived": "Archive",
+        "close": "Close"
+      }
+    },
+    "feedback": {
+      "title": "Feedback Builder",
+      "subtitle": "Designing the survey for {eventName}",
+      "saveSuccessTitle": "Form Saved",
+      "saveSuccessDescription": "The evaluation form is now live.",
+      "questionNumber": "Question {num}",
+      "deleteQuestion": "Remove",
+      "addQuestion": "Add New Question",
+      "saveForm": "Save Form",
+      "results": {
+        "title": "Feedback Analysis",
+        "subtitle": "See what participants think about our events.",
+        "selectEvent": "Step 1: Choose an Event",
+        "summaryTitle": "Performance Summary",
+        "totalResponses": "Total Submissions",
+        "individualResponses": "Detailed Responses",
+        "noResponses": "No feedback submitted yet for this event."
+      },
+      "form": {
+        "label": "Question Label",
+        "type": "Input Type",
+        "required": "Mandatory"
+      },
+      "types": {
+        "rating": "Star Rating (1-5)",
+        "text": "Open-ended Text",
+        "yesNo": "Yes/No Toggle"
+      },
+      "validation": {
+        "labelRequired": "Label is required"
+      }
+    },
+    "sponsors": {
+      "title": "Sponsor Management",
+      "subtitle": "Logos displayed on the homepage",
+      "addNew": "Add Sponsor",
+      "create": {
+        "title": "Add New Sponsor",
+        "subtitle": "Brand will be shown in the partners section",
+        "successTitle": "Sponsor Added"
+      },
+      "edit": {
+        "title": "Edit Sponsor",
+        "subtitle": "Update brand profile",
+        "successTitle": "Changes Saved"
+      },
+      "delete": {
+        "title": "Delete Sponsor",
+        "successTitle": "Sponsor removed",
+        "confirmTitle": "Delete Sponsor?",
+        "confirmText": "Are you sure you want to remove {name}?"
+      },
+      "form": {
+        "name": "Brand Name",
+        "tagline": "Tagline (Optional)",
+        "logoUrl": "Logo Image",
+        "websiteUrl": "Link"
+      },
+      "table": {
+        "logo": "Logo",
+        "name": "Brand",
+        "tagline": "Tagline",
+        "website": "Link"
+      },
+      "actions": {
+        "visit": "Visit"
+      },
+      "validation": {
+        "invalidUrl": "Please enter a valid URL"
+      }
+    },
+    "team": {
+      "title": "Team Directory",
+      "subtitle": "Members displayed on the team page",
+      "addNew": "Add Member",
+      "create": {
+        "title": "Add Team Member",
+        "subtitle": "New person in the spotlight",
+        "successTitle": "Member Added"
+      },
+      "edit": {
+        "title": "Edit Profile",
+        "subtitle": "Update details for {name}",
+        "successTitle": "Profile Updated"
+      },
+      "delete": {
+        "title": "Delete Member",
+        "successTitle": "Member removed",
+        "confirmTitle": "Remove Member?",
+        "confirmText": "Remove {name} from the public team list?"
+      },
+      "form": {
+        "name": "Full Name",
+        "role": "Role (e.g. Founder)",
+        "photoUrl": "Profile Photo"
+      },
+      "table": {
+        "photo": "Photo",
+        "name": "Name",
+        "role": "Role"
+      }
+    },
+    "actions": {
+      "edit": "Edit",
+      "manageTickets": "Tickets",
+      "manageResources": "Files",
+      "manageFeedback": "Survey"
     }
   },
   "errors": {
@@ -638,6 +1098,15 @@
       "messageLength": "Message must be between 10 and 5000 characters.",
       "rateLimit": "Too many requests. Please wait a while.",
       "generic": "Something went wrong. Please try again."
+    }
+  },
+  "partnership": {
+    "status": {
+      "PENDING": "Pending",
+      "REVIEWING": "Reviewing",
+      "CONTACTED": "Contacted",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Rejected"
     }
   }
 }
