@@ -25,9 +25,9 @@ export const prismaEventToEventEntity = (
     resources: PrismaEventResource[];
   },
 ): EventEntity => {
-  const categories = event.categories ? event.categories.split(',') : [];
+  const categories = event.categories ? event.categories.split(',').filter(Boolean) : [];
   const publicDiscountIds = event.publicDiscountIds
-    ? event.publicDiscountIds.split(',')
+    ? event.publicDiscountIds.split(',').filter(Boolean)
     : [];
 
   const tickets = event.ticketConfigs.map((ticket) => {
@@ -133,6 +133,16 @@ export const eventEntityToEventDto = (entity: EventEntity): EventDto => ({
   deletedById: entity.deletedById || null,
 });
 
+const cleanCsvString = (input?: string | null): string => {
+  if (!input) return 'General';
+  const cleaned = input
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean)
+    .join(',');
+  return cleaned || 'General';
+};
+
 export const eventFormDataDtoToPrismaInput = (
   dto: EventFormDataDto,
 ): Prisma.EventCreateInput => ({
@@ -150,14 +160,8 @@ export const eventFormDataDtoToPrismaInput = (
   capacityTotal: dto.capacityTotal,
   capacityRemaining: dto.capacityTotal,
   showRemainingCapacity: dto.showRemainingCapacity,
-  categories: dto.categories
-    ? dto.categories
-        .split(',')
-        .map((c) => c.trim())
-        .filter(Boolean)
-        .join(',')
-    : '',
-  publicDiscountIds: (dto.publicDiscountIds || []).join(','),
+  categories: cleanCsvString(dto.categories),
+  publicDiscountIds: (dto.publicDiscountIds || []).filter(Boolean).join(','),
   posterUrl: dto.posterUrl || undefined,
 });
 
@@ -193,9 +197,11 @@ export const eventUpdateFormDataDtoToPrismaInput = (
   if (dto.showRemainingCapacity !== undefined)
     updateInput.showRemainingCapacity = dto.showRemainingCapacity;
   if (dto.posterUrl !== undefined) updateInput.posterUrl = dto.posterUrl;
-  if (dto.categories !== undefined) updateInput.categories = dto.categories;
+  if (dto.categories !== undefined) {
+    updateInput.categories = cleanCsvString(dto.categories);
+  }
   if (dto.publicDiscountIds !== undefined)
-    updateInput.publicDiscountIds = dto.publicDiscountIds.join(',');
+    updateInput.publicDiscountIds = (dto.publicDiscountIds || []).filter(Boolean).join(',');
 
   return updateInput;
 };
