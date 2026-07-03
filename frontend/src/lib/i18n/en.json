@@ -465,5 +465,179 @@
     "linkedin": "LinkedIn",
     "email": "Email",
     "system": "System Share"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about our community and events.",
+    "categories": {
+      "general": "General",
+      "registration": "Registration & Payment",
+      "events": "Events"
+    },
+    "questions": {
+      "whatIs": {
+        "q": "What is Think Then Talk?",
+        "a": "Think Then Talk is a dynamic community for English learners and enthusiasts to practice speaking, build confidence, and connect with others through structured discussions and social events."
+      },
+      "howToJoin": {
+        "q": "How can I join the community?",
+        "a": "Joining is easy! Just browse our upcoming events, pick one that interests you, and register. You'll become a member of our growing community automatically."
+      },
+      "isRegistrationRequired": {
+        "q": "Is registration required for every event?",
+        "a": "Yes, to ensure the quality of discussions and manage capacity, registration is required for all our sessions."
+      },
+      "howToPay": {
+        "q": "How can I pay for events?",
+        "a": "We use a token system called Talk Coins. You can purchase coins in our Coin Center and use them to register for any event or purchase a community pass."
+      },
+      "onlineOrOffline": {
+        "q": "Are the events online or in-person?",
+        "a": "We offer both! We have online sessions for global accessibility and in-person meetups in various cities. Each event page clearly states the format."
+      },
+      "refundPolicy": {
+        "q": "What is the refund policy?",
+        "a": "Talk Coins are non-refundable. However, if an event is cancelled by us, we will return the coins used for that specific registration to your balance."
+      }
+    }
+  },
+  "sponsorship": {
+    "title": "Sponsorship Opportunities",
+    "subtitle": "Partner with Think Then Talk and connect with an engaged community of lifelong learners and professionals.",
+    "successTitle": "Application Received",
+    "successDescription": "Thank you for your interest in sponsoring Think Then Talk. Our team will review your application and contact you shortly.",
+    "plans": {
+      "BRONZE": {
+        "name": "Bronze Plan",
+        "subtitle": "Support our monthly meetups",
+        "price": "500 Coins",
+        "perk1": "Logo on event page",
+        "perk2": "Mention in opening",
+        "perk3": "1 free guest pass"
+      },
+      "SILVER": {
+        "name": "Silver Plan",
+        "subtitle": "Growing community partner",
+        "price": "1,500 Coins",
+        "perk1": "All Bronze perks",
+        "perk2": "Social media shoutout",
+        "perk3": "3 free guest passes"
+      },
+      "GOLD": {
+        "name": "Gold Plan",
+        "subtitle": "Premium community supporter",
+        "price": "4,000 Coins",
+        "perk1": "All Silver perks",
+        "perk2": "Dedicated booth space",
+        "perk3": "5 free guest passes"
+      },
+      "PLATINUM": {
+        "name": "Platinum Plan",
+        "subtitle": "Strategic community partner",
+        "price": "10,000 Coins",
+        "perk1": "All Gold perks",
+        "perk2": "Main stage presentation",
+        "perk3": "Unlimited staff passes"
+      }
+    },
+    "actions": {
+      "choosePlan": "Choose Plan"
+    },
+    "form": {
+      "title": "Become a Sponsor",
+      "subtitle": "Apply for the {plan}",
+      "companyLabel": "Company Name",
+      "nameLabel": "Representative Name",
+      "notes": "Tell us about your brand",
+      "notesPlaceholder": "What are your goals for this partnership?",
+      "submit": "Submit Application"
+    }
+  },
+  "collaborate": {
+    "title": "Join the Team",
+    "subtitle": "Are you passionate about community building? We are always looking for volunteers.",
+    "successTitle": "Application Submitted!",
+    "successDescription": "We’ve received your application to join the Think Then Talk team. We’ll review it and get in touch with you soon.",
+    "terms": {
+      "title": "Collaboration Terms",
+      "content": "<p>By joining the Think Then Talk volunteer team, you agree to:</p><ul><li>Support the community's inclusive environment.</li><li>Uphold the brand's professional standards.</li><li>Maintain confidentiality of sensitive community data.</li></ul>"
+    },
+    "actions": {
+      "acceptAndContinue": "Accept and Continue"
+    },
+    "form": {
+      "title": "Collaboration Form",
+      "subtitle": "Let us know how you can help.",
+      "expertise": "Field of Expertise",
+      "expertisePlaceholder": "e.g., Hosting, Photography, Content Creation",
+      "experience": "Relevant Experience",
+      "whyJoin": "Why do you want to join Think Then Talk?",
+      "availability": "Your Weekly Availability",
+      "acceptTerms": "I accept the collaboration terms",
+      "submit": "Send Application"
+    }
+  },
+  "ideas": {
+    "title": "Suggest a Topic",
+    "subtitle": "Have a great idea for a future Think Then Talk session? Let us know!",
+    "successTitle": "Idea Received!",
+    "successDescription": "Thank you for contributing to the community! Our team will review your suggestion.",
+    "types": {
+      "TOPIC": "Discussion Topic",
+      "FORMAT": "Event Format",
+      "VENUE": "Venue Suggestion",
+      "OTHER": "Other Idea"
+    },
+    "form": {
+      "title": "Submit Your Idea",
+      "description": "Tell us what you have in mind.",
+      "typeLabel": "Category",
+      "titleLabel": "Short Title",
+      "titlePlaceholder": "e.g., Modern Philosophy in Daily Life",
+      "descriptionLabel": "Details",
+      "descriptionPlaceholder": "Describe your idea in a few sentences...",
+      "submitButton": "Send Suggestion"
+    },
+    "validation": {
+      "titleLength": "Title must be at least 5 characters.",
+      "descriptionLength": "Description must be at least 20 characters."
+    }
+  },
+  "contact": {
+    "kicker": "Get in touch",
+    "title": "Contact Us",
+    "subtitle": "Have questions or need help? Our team is here for you.",
+    "form": {
+      "title": "Send a message",
+      "description": "We typically reply within 24 hours.",
+      "prefilledNotice": "We've pre-filled your info based on your profile.",
+      "nameLabel": "Your Name",
+      "namePlaceholder": "e.g., John Doe",
+      "emailLabel": "Email Address",
+      "messageLabel": "Your Message",
+      "messagePlaceholder": "How can we help you?",
+      "messageHelper": "Maximum 5000 characters.",
+      "honeypotLabel": "Do not fill this",
+      "submitLabel": "Send Message",
+      "successMessage": "Your message has been sent successfully. We'll get back to you soon."
+    },
+    "email": {
+      "title": "Email",
+      "subtitle": "Send us an email anytime."
+    },
+    "social": {
+      "title": "Social Media",
+      "subtitle": "Follow us for updates.",
+      "instagram": "Instagram",
+      "telegram": "Telegram"
+    },
+    "errors": {
+      "nameInvalid": "Name is too long.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Invalid email address.",
+      "messageLength": "Message must be between 10 and 5000 characters.",
+      "rateLimit": "Too many requests. Please wait a while.",
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }
