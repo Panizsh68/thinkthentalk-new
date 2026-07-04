@@ -55,27 +55,16 @@ export class RedisService {
     }
     
     const store = (this.cacheManager as any).store;
+    if (!store || typeof store.keys !== 'function') {
+      // Silently skip if store (like in-memory) doesn't support key iteration
+      return;
+    }
+
     try {
-      // Try using keys() method if available (typical for Redis stores)
-      if (store && typeof store.keys === 'function') {
-        const keys: string[] = await store.keys(`${prefix}*`);
-        if (keys && keys.length > 0) {
-          await Promise.all(keys.map((k: string) => this.del(k)));
-        }
-        return;
+      const keys: string[] = await store.keys(`${prefix}*`);
+      if (keys && keys.length > 0) {
+        await Promise.all(keys.map((k: string) => this.del(k)));
       }
-
-      // Fallback for redis-specific client
-      if (store?.client && typeof store.client.keys === 'function') {
-        const keys: string[] = await store.client.keys(`${prefix}*`);
-        if (keys && keys.length > 0) {
-          await Promise.all(keys.map((k: string) => this.del(k)));
-        }
-        return;
-      }
-
-      // If we are in dev/memory mode, we can't easily iterate. 
-      // We only log if it's not a known limitation to reduce noise.
     } catch (error) {
       this.logger.error(`Error deleting keys by prefix "${prefix}"`, error);
     }

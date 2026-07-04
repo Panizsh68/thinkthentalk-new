@@ -17,6 +17,7 @@ export class AuditService {
 
   async record(params: AuditParams): Promise<void> {
     try {
+      // metadata field expects a string in DB but we receive an object
       await (this.prisma as any).adminAuditLog.create({
         data: {
           adminId: params.adminId,

@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import type { HealthResponse } from './app.service';
 
@@ -17,13 +17,23 @@ class HealthCheckDto implements HealthResponse {
   timestamp!: string;
 }
 
-@ApiTags('health')
-@Controller({ path: 'health', version: '1' })
+@ApiTags('Health')
+@Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @ApiOkResponse({ description: 'Health check', type: HealthCheckDto })
+  @ApiOperation({
+    summary: 'Backend root',
+    description: 'Returns a basic status message to confirm the server is reachable.',
+  })
+  root(): string {
+    return 'Think Then Talk API is operational';
+  }
+
+  @Get('health')
+  @ApiOperation({ summary: 'Health check' })
+  @ApiOkResponse({ description: 'Health check response', type: HealthCheckDto })
   getHealth(): HealthResponse {
     return this.appService.getHealth();
   }

@@ -50,7 +50,11 @@ async function bootstrap() {
       crossOriginResourcePolicy: { policy: 'cross-origin' },
     }),
   );
-  app.setGlobalPrefix('api');
+
+  // Exclude root path from global prefix to avoid 404 on basic server pings
+  app.setGlobalPrefix('api', {
+    exclude: ['/'],
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -61,13 +65,6 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  // Versioning disabled for now - all routes accessible at /api without /v1 prefix
-  // TODO: Properly implement URI versioning when upgrading NestJS
-  // app.enableVersioning({
-  //   type: VersioningType.URI,
-  //   defaultVersion: '1',
-  // });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Think Then Talk API')
