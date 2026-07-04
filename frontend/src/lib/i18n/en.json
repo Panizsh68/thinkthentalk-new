@@ -1,4 +1,3 @@
-
 {
   "lng": "en-US",
   "nav": {
@@ -85,7 +84,9 @@
     "soldOut": "Sold Out",
     "expired": "Offer Expired",
     "earlyBirdEnds": "Ends {date}",
-    "remaining": "{count} remaining"
+    "remaining": "{count} remaining",
+    "notStarted": "Starts {date}",
+    "saleEnded": "Sale Ended"
   },
   "filters": {
     "showPast": "Show Past Events",
@@ -189,8 +190,8 @@
       "otherReferralSource": "Please specify"
     },
     "placeholders": {
-      "firstNameFa": "e.g., سارا",
-      "lastNameFa": "e.g., محمدی",
+      "firstNameFa": "e.g., Sara",
+      "lastNameFa": "e.g., Mohammadi",
       "firstNameEn": "e.g., Sara",
       "lastNameEn": "e.g., Mohammadi",
       "age": "e.g., 28",
@@ -527,6 +528,7 @@
       "recipientList": "Recipients",
       "recipientCount": "{selected} selected of {total}",
       "recipientEmpty": "No matching registrations",
+      "noRegistrationsFound": "No registrations found matching your criteria",
       "table": {
         "user": "Participant",
         "event": "Event",
@@ -608,6 +610,7 @@
     "payments": {
       "title": "Financial Ledger",
       "subtitle": "Tracking all Talk Coin transactions",
+      "noPaymentsFound": "No payments matching criteria",
       "status": {
         "success": "Success",
         "pending": "Pending",
@@ -639,6 +642,7 @@
       "applyErrorTitle": "Invalid Code",
       "publicDiscount": "Community Discount",
       "codeApplied": "Code {code} applied",
+      "noDiscountsFound": "No discounts available",
       "table": {
         "name": "Offer Name",
         "type": "Type",
@@ -903,6 +907,12 @@
       "manageTickets": "Tickets",
       "manageResources": "Files",
       "manageFeedback": "Survey"
+    },
+    "filters": {
+      "all": "All",
+      "status": {
+        "all": "All Statuses"
+      }
     }
   },
   "errors": {
@@ -1042,6 +1052,12 @@
     "subtitle": "Have a great idea for a future Think Then Talk session? Let us know!",
     "successTitle": "Idea Received!",
     "successDescription": "Thank you for contributing to the community! Our team will review your suggestion.",
+    "status": {
+      "PENDING": "Pending",
+      "REVIEWED": "Reviewed",
+      "PLANNED": "Planned",
+      "REJECTED": "Rejected"
+    },
     "types": {
       "TOPIC": "Discussion Topic",
       "FORMAT": "Event Format",
