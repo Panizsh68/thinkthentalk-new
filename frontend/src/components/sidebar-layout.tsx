@@ -69,7 +69,7 @@ export function SidebarLayout({
 
   return (
     <SidebarProvider>
-      <div className={cn("flex min-h-screen bg-background w-full", isRTL ? "font-vazir" : "font-inter")}>
+      <div className={cn("flex min-h-screen bg-background w-full transition-all duration-300", isRTL ? "font-vazir" : "font-inter")}>
         <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-xl z-40">
           <SidebarHeaderWithLogo />
           

@@ -27,7 +27,7 @@ export function GallerySection() {
             <div key={i} className={cn("relative rounded-[2rem] overflow-hidden shadow-md group border-4 border-background", item.span)}>
               <Image 
                 src={item.url} 
-                alt="Community Life" 
+                alt="Think Then Talk Community Moments" 
                 fill 
                 className="object-cover transition-transform duration-1000 group-hover:scale-110" 
                 loading="lazy"

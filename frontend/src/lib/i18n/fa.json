@@ -519,7 +519,7 @@
         "capacityTotal": "تعداد کل صندلی ها",
         "showRemainingCapacity": "نمایش ظرفیت باقی مانده",
         "showRemainingCapacityDesc": "نمایش تعداد جای خالی به کاربر",
-        "publicDiscountsTitle": "تخفیف های عمومی",
+        "publicDiscountsTitle": "Public Discounts",
         "publicDiscountsDesc": "تخفیف های خودکار را انتخاب کنید",
         "noPublicDiscounts": "تخفیف عمومی تعریف نشده است",
         "saveChanges": "ذخیره تغییرات",
@@ -644,7 +644,7 @@
       "deleteSuccess": "تخفیف حذف شد",
       "applySuccessTitle": "کد اعمال شد",
       "applyErrorTitle": "کد نامعتبر",
-      "publicDiscount": "تخفیف جامعه",
+      "publicDiscount": "Community Discount",
       "codeApplied": "کد {code} اعمال شد",
       "noDiscountsFound": "تخفیفی یافت نشد",
       "table": {
@@ -1028,8 +1028,8 @@
     }
   },
   "collaborate": {
-    "title": "پیوستن به تیم",
-    "subtitle": "آیا به ساختن جامعه علاقه مند هستید؟ ما همیشه به دنبال داوطلبان جدید هستیم.",
+    "title": "Join the Team",
+    "subtitle": "Are you passionate about community building? We are always looking for volunteers.",
     "successTitle": "درخواست ارسال شد!",
     "successDescription": "ما درخواست شما برای پیوستن به تیم Think Then Talk را دریافت کردیم. آن را بررسی کرده و به زودی با شما تماس خواهیم گرفت.",
     "terms": {
