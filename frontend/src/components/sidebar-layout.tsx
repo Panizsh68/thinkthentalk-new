@@ -123,7 +123,9 @@ export function SidebarLayout({
 
         <SidebarInset className={cn(
           "bg-background flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
-          "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow"
+          "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow",
+          isRTL ? "md:peer-data-[state=expanded]:mr-[var(--sidebar-width)] md:peer-data-[state=collapsed]:mr-[var(--sidebar-width-icon)]" 
+                : "md:peer-data-[state=expanded]:ml-[var(--sidebar-width)] md:peer-data-[state=collapsed]:ml-[var(--sidebar-width-icon)]"
         )}>
           <header className={cn(
             "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-6 sticky top-0 z-30 transition-all duration-300 shadow-sm",

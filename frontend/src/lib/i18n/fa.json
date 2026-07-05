@@ -220,7 +220,7 @@
     },
     "errors": {
       "notAuthenticated": "برای ثبت نام در رویداد باید وارد حساب کاربری خود شوید.",
-      "missingInfo": "اطلاعات رویداد یا بلیت ناقص است. لطفا از صفحه رویداد دوباره تلاش کنید.",
+      "missingInfo": "اطلاعات رویداد یا بلیت ناقص است. لطفاً از صفحه رویداد دوباره تلاش کنید.",
       "incompleteSteps": "لطفا قبل از ادامه، تمام مراحل قبلی را تکمیل کنید.",
       "verifyFailed": "تایید شماره ناموفق بود. لطفا کد را بررسی کنید.",
       "phoneRequired": "برای ادامه باید شماره موبایل خود را تایید کنید."
@@ -525,7 +525,7 @@
         "capacityTotal": "تعداد کل صندلی ها",
         "showRemainingCapacity": "نمایش ظرفیت باقی مانده",
         "showRemainingCapacityDesc": "نمایش تعداد جای خالی به کاربر",
-        "publicDiscountsTitle": "Public Discounts",
+        "publicDiscountsTitle": "تخفیفهای عمومی",
         "publicDiscountsDesc": "تخفیف های خودکار را انتخاب کنید",
         "noPublicDiscounts": "تخفیف عمومی تعریف نشده است",
         "saveChanges": "ذخیره تغییرات",
@@ -650,7 +650,7 @@
       "deleteSuccess": "تخفیف حذف شد",
       "applySuccessTitle": "کد اعمال شد",
       "applyErrorTitle": "کد نامعتبر",
-      "publicDiscount": "Community Discount",
+      "publicDiscount": "تخفیف جامعه",
       "codeApplied": "کد {code} اعمال شد",
       "noDiscountsFound": "تخفیفی یافت نشد",
       "table": {
@@ -753,12 +753,12 @@
         "plan": "طرح"
       },
       "detail": {
-        "title": "Request Details",
-        "subtitle": "Review application data",
-        "content": "Motivation/Message",
-        "updateStatus": "Triage Application",
-        "notes": "Internal Admin Notes",
-        "notesPlaceholder": "e.g. Needs interview"
+        "title": "جزئیات درخواست",
+        "subtitle": "بررسی اطلاعات متقاضی",
+        "content": "پیام یا انگیزه نامه",
+        "updateStatus": "وضعیت بررسی",
+        "notes": "یادداشت های مدیریت",
+        "notesPlaceholder": "مثلا: نیاز به مصاحبه"
       }
     },
     "contact": {
@@ -1040,13 +1040,13 @@
     "successDescription": "ما درخواست شما برای پیوستن به تیم Think Then Talk را دریافت کردیم. آن را بررسی کرده و به زودی با شما تماس خواهیم گرفت.",
     "terms": {
       "title": "شرایط همکاری",
-      "content": "<p>با پیوستن به تیم داوطلبان Think Then Talk، شما موافقت می کنید:</p><ul><li>Support the community's inclusive environment.</li><li>Uphold the brand's professional standards.</li><li>Maintain confidentiality of sensitive community data.</li></ul>"
+      "content": "<p>با پیوستن به تیم داوطلبان Think Then Talk، شما موافقت می کنید:</p><ul><li>حمایت از فضای فراگیر جامعه.</li><li>رعایت استانداردهای حرفه ای برند.</li><li>حفظ محرمانگی اطلاعات حساس جامعه.</li></ul>"
     },
     "actions": {
       "acceptAndContinue": "پذیرش و ادامه"
     },
     "form": {
-      "title": "Collaboration Form",
+      "title": "فرم همکاری",
       "subtitle": "به ما بگویید چگونه می توانید کمک کنید.",
       "expertise": "زمینه تخصص",
       "expertisePlaceholder": "مثلا: میزبانی، عکاسی، تولید محتوا",
