@@ -31,20 +31,19 @@ interface NavItem {
 
 function SidebarHeaderWithLogo() {
   const { state } = useSidebar();
-  const { language } = useLanguage();
   
   return (
     <SidebarHeader className="h-16 flex items-center px-4">
-      <Link href="/" className="flex items-center gap-3 w-full transition-all duration-300">
+      <Link href="/" className="flex items-center gap-3 w-full transition-all duration-300 group">
         <div className={cn(
-          "flex items-center justify-center shrink-0 transition-all duration-300",
+          "flex items-center justify-center shrink-0 transition-all duration-500 ease-in-out",
           state === "collapsed" ? "w-10 h-10" : "w-8 h-8"
         )}>
-          <Logo width={32} height={32} className="h-full w-full object-contain" />
+          <Logo width={32} height={32} className="h-full w-full object-contain group-hover:scale-110 transition-transform" />
         </div>
         <span className={cn(
-          "font-black text-lg tracking-tight truncate transition-all duration-300 opacity-100",
-          state === "collapsed" && "opacity-0 w-0"
+          "font-black text-lg tracking-tight truncate transition-all duration-300 ease-in-out",
+          state === "collapsed" ? "opacity-0 w-0" : "opacity-100 w-auto"
         )}>
           Think Then Talk
         </span>
@@ -90,7 +89,7 @@ export function SidebarLayout({
                       )}
                     >
                       <Link href={item.href} className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
-                        <item.icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-muted-foreground")} />
+                        <item.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
                         <span className="font-semibold">{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
@@ -122,13 +121,16 @@ export function SidebarLayout({
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset className="bg-background flex-1 flex flex-col min-w-0">
+        <SidebarInset className={cn(
+          "bg-background flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
+          "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow"
+        )}>
           <header className={cn(
-            "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-6 sticky top-0 z-30 transition-all duration-300",
+            "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-6 sticky top-0 z-30 transition-all duration-300 shadow-sm",
             isRTL ? "flex-row-reverse" : "flex-row"
           )}>
             <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
-              <SidebarTrigger />
+              <SidebarTrigger className="h-9 w-9" />
               <Separator orientation="vertical" className="h-6 hidden md:block bg-border/60" />
               <h2 className="text-sm font-bold tracking-tight text-foreground/80 hidden md:block">
                 {navItems.find(item => pathname.startsWith(item.href))?.label || ''}
@@ -143,12 +145,12 @@ export function SidebarLayout({
               </div>
               
               {account && (
-                <div className={cn("flex items-center gap-3 pl-2", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
+                <div className={cn("flex items-center gap-3 pl-2 transition-all", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
                   <div className={cn("flex flex-col text-right", !isRTL && "text-left")}>
                     <span className="text-xs font-black truncate max-w-[120px]">{account.name}</span>
                     <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">{account.email}</span>
                   </div>
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs uppercase">
+                  <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase shadow-inner">
                     {account.name?.charAt(0) || 'U'}
                   </div>
                 </div>
@@ -156,8 +158,8 @@ export function SidebarLayout({
             </div>
           </header>
           
-          <main className="flex-1 overflow-x-hidden p-4 md:p-10 transition-all duration-300">
-            <div className="max-w-6xl mx-auto animate-in fade-in duration-500">
+          <main className="flex-1 overflow-x-hidden p-4 md:p-8 lg:p-10 transition-all duration-300">
+            <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
               {children}
             </div>
           </main>

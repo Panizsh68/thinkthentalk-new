@@ -24,15 +24,16 @@ export function GallerySection() {
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[150px] md:auto-rows-[250px]">
           {items.map((item, i) => (
-            <div key={i} className={cn("relative rounded-3xl overflow-hidden shadow-sm group", item.span)}>
+            <div key={i} className={cn("relative rounded-[2rem] overflow-hidden shadow-md group border-4 border-background", item.span)}>
               <Image 
                 src={item.url} 
                 alt="Community Life" 
                 fill 
-                className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                className="object-cover transition-transform duration-1000 group-hover:scale-110" 
                 loading="lazy"
+                sizes="(max-width: 768px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           ))}
         </div>

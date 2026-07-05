@@ -32,7 +32,7 @@ export function SeasonOneSection() {
 
             <div className="grid grid-cols-2 gap-4">
               {stats.map((stat, i) => (
-                <div key={i} className="p-5 rounded-3xl bg-background border border-border/50 shadow-sm">
+                <div key={i} className="p-5 rounded-[2rem] bg-background border border-border/50 shadow-sm transition-transform hover:scale-[1.02]">
                   <stat.icon className="h-5 w-5 text-primary mb-2" />
                   <p className="text-2xl font-black text-foreground">{stat.value}</p>
                   <p className="text-xs text-muted-foreground font-bold uppercase tracking-tighter">{stat.label}</p>
@@ -41,16 +41,16 @@ export function SeasonOneSection() {
             </div>
           </div>
 
-          <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl group bg-black">
+          <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl group bg-black border-8 border-background">
              <video 
                 poster="/static-images/group-photo-2.jpg"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                 controls
-                src="/static-images/2026-06-29 21.54.43.mp4"
+                src="/static-images/2026-06-29%2021.54.43.mp4"
              />
-             <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:hidden transition-all">
-                <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-2xl">
-                  <Play className="h-6 w-6 fill-current ml-1" />
+             <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-all duration-500">
+                <div className="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-2xl backdrop-blur-sm">
+                  <Play className="h-8 w-8 fill-current ml-1" />
                 </div>
              </div>
           </div>
