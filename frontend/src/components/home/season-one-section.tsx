@@ -7,10 +7,10 @@ export function SeasonOneSection() {
   const { t } = useLanguage();
 
   const stats = [
-    { label: t('home.seasonOne.stats.events'), value: '۲۰+', icon: Calendar },
-    { label: t('home.seasonOne.stats.participants'), value: '۱۰۰+', icon: Users },
-    { label: t('home.seasonOne.stats.photos'), value: '۳۰۰۰+', icon: Camera },
-    { label: t('home.seasonOne.stats.hours'), value: '۴۰+', icon: Quote },
+    { label: t('home.seasonOne.stats.events'), value: t('home.seasonOne.stats.eventsValue'), icon: Calendar },
+    { label: t('home.seasonOne.stats.participants'), value: t('home.seasonOne.stats.participantsValue'), icon: Users },
+    { label: t('home.seasonOne.stats.photos'), value: t('home.seasonOne.stats.photosValue'), icon: Camera },
+    { label: t('home.seasonOne.stats.hours'), value: t('home.seasonOne.stats.hoursValue'), icon: Quote },
   ];
 
   return (

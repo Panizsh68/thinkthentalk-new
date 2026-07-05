@@ -294,9 +294,13 @@
       "subtitle": "A quick look at our journey so far—from small meetups to high-energy group discussions.",
       "stats": {
         "events": "Events Hosted",
+        "eventsValue": "20+",
         "participants": "Active Members",
+        "participantsValue": "100+",
         "hours": "Discussion Hours",
-        "photos": "Moments Captured"
+        "hoursValue": "40+",
+        "photos": "Moments Captured",
+        "photosValue": "3000+"
       },
       "cta": "Watch Memories"
     },
@@ -1037,7 +1041,7 @@
     },
     "form": {
       "title": "Collaboration Form",
-      "subtitle": "Let us know how you can help.",
+      "subtitle": "To help us get to know you better.",
       "expertise": "Field of Expertise",
       "expertisePlaceholder": "e.g., Hosting, Photography, Content Creation",
       "experience": "Relevant Experience",
