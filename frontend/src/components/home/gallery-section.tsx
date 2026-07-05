@@ -7,11 +7,11 @@ export function GallerySection() {
   const { t } = useLanguage();
   
   const items = [
-    { url: '/static-images/group-photo-1.jpg', span: 'col-span-2 row-span-2' },
-    { url: '/static-images/group-photo-2.jpg', span: 'col-span-1 row-span-1' },
-    { url: '/static-images/group-photo-3.jpg', span: 'col-span-1 row-span-2' },
-    { url: '/static-images/group-photo-4.jpg', span: 'col-span-1 row-span-1' },
-    { url: '/static-images/group-photo-2.jpg', span: 'col-span-2 row-span-1' },
+    { url: '/static-images/IMG_7028.JPG', span: 'col-span-2 row-span-2' },
+    { url: '/static-images/-2147483648_-218139.jpg', span: 'col-span-1 row-span-1' },
+    { url: '/static-images/IMG_6971.JPG', span: 'col-span-1 row-span-2' },
+    { url: '/static-images/IMG_8724.JPG', span: 'col-span-1 row-span-1' },
+    { url: '/static-images/IMG_6512.HEIC', span: 'col-span-2 row-span-1' },
   ];
 
   return (

@@ -1,3 +1,4 @@
+
 {
   "lng": "en-US",
   "nav": {
@@ -164,6 +165,10 @@
       "acceptRules": "I accept the {terms} and {privacy}",
       "termsLink": "Terms",
       "privacyLink": "Privacy",
+      "verifyButton": "Verify",
+      "verificationCode": "Verification Code",
+      "sendCode": "Send Code",
+      "verifySuccess": "Phone verified successfully",
       "educationLevels": {
         "high-school": "High School",
         "associate": "Associate Degree",
@@ -217,7 +222,9 @@
     "errors": {
       "notAuthenticated": "You must be logged in to register for an event.",
       "missingInfo": "Event or ticket information is missing. Please try again from the event page.",
-      "incompleteSteps": "Please complete all previous steps before proceeding."
+      "incompleteSteps": "Please complete all previous steps before proceeding.",
+      "verifyFailed": "Verification failed. Please check the code.",
+      "phoneRequired": "You must verify your phone number to continue."
     },
     "status": {
       "paid": "Paid",

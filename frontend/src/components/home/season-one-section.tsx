@@ -46,7 +46,7 @@ export function SeasonOneSection() {
                 poster="/static-images/group-photo-2.jpg"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                 controls
-                src="/static-images/2026-06-29%2021.54.43.mp4"
+                src="/static-images/TTT-S1.mp4"
              />
              <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-all duration-500">
                 <div className="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-2xl backdrop-blur-sm">

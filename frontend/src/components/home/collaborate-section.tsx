@@ -17,7 +17,7 @@ export function CollaborateSection() {
         <div className="bg-foreground text-background rounded-[2.5rem] p-8 md:p-12 overflow-hidden shadow-xl grid lg:grid-cols-[1fr_1.5fr] gap-12 items-center">
           <div className="relative aspect-square md:aspect-video lg:aspect-square">
              <Image 
-                src="/static-images/group-photo-3.jpg"
+                src="/static-images/IMG_7028.JPG"
                 alt="Community Collaboration"
                 fill
                 className="object-cover rounded-[1.5rem] opacity-70"
