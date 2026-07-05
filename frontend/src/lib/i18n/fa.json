@@ -1,4 +1,3 @@
-
 {
   "lng": "fa-IR",
   "nav": {
@@ -754,12 +753,12 @@
         "plan": "طرح"
       },
       "detail": {
-        "title": "جزئیات درخواست",
-        "subtitle": "بازبینی اطلاعات ارسالی",
-        "content": "پیام/انگیزه",
-        "updateStatus": "تعیین وضعیت",
-        "notes": "یادداشت ادمین",
-        "notesPlaceholder": "مثلا: نیاز به مصاحبه دارد"
+        "title": "Request Details",
+        "subtitle": "Review application data",
+        "content": "Motivation/Message",
+        "updateStatus": "Triage Application",
+        "notes": "Internal Admin Notes",
+        "notesPlaceholder": "e.g. Needs interview"
       }
     },
     "contact": {

@@ -1,4 +1,3 @@
-
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,9 +10,10 @@ import type { StepRef, StepComponentProps } from '../registration-wizard';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle2, AlertTriangle, Send } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiClient } from '@/lib/api/client';
+import { cn } from '@/lib/utils';
 
 const getContactSchema = (t: (key: string) => string) =>
   z.object({
@@ -70,13 +70,6 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
         mobile: values?.mobile ?? '', 
         email: values?.email ?? '' 
       } as Partial<typeof formData>);
-      
-      const mobileValid = isRealMobile(values?.mobile);
-      // If user types a new valid number that is different from their current one, we require re-verification
-      if (mobileValid && values?.mobile !== currentUser?.mobile) {
-         // Optionally reset verified status if they change a already verified number
-         // setIsVerified(false);
-      }
     });
     return () => subscription.unsubscribe();
   }, [form, setFormData, currentUser?.mobile]);
@@ -105,12 +98,9 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
     setIsConfirming(true);
     try {
       const mobile = form.getValues('mobile');
-      // We use the same verify-otp endpoint but we don't want to switch tokens
-      // We just need to know if it's valid.
       const response = await apiClient.post<any>('/auth/verify-otp', { mobile, otp: otpValue });
       
       if (response.data) {
-        // Update user profile on backend to save the verified number
         await updateUserProfile({ mobile });
         setIsVerified(true);
         setVerificationSent(false);
