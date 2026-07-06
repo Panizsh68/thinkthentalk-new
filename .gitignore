@@ -30,7 +30,7 @@ logs/
 /frontend/.parcel-cache
 /frontend/.env
 /frontend/.env.* 
-
+frontend/public/static-images/TTT-S1.mp4
 # ====== Backend (explicit paths) ======
 /backend/node_modules/
 /backend/dist/
