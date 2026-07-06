@@ -68,99 +68,97 @@ export function SidebarLayout({
 
   return (
     <SidebarProvider>
-      <div className={cn("flex min-h-screen w-full bg-background", isRTL ? "flex-row-reverse" : "flex-row")}>
-        <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-sm z-40">
-          <SidebarHeaderWithLogo />
+      <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-sm z-40">
+        <SidebarHeaderWithLogo />
+        
+        <SidebarContent className="px-3 py-4">
+          <SidebarMenu>
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || (item.href !== '/admin' && item.href !== '/dashboard' && pathname.startsWith(item.href));
+              return (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive}
+                    tooltip={item.label}
+                    className={cn(
+                      "transition-all duration-200",
+                      isRTL && "flex-row-reverse"
+                    )}
+                  >
+                    <Link href={item.href} className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
+                      <item.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
+                      <span className="font-semibold">{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </SidebarContent>
+
+        <SidebarFooter className="border-t border-border/50 p-4">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip={t('nav.home')}>
+                <Link href="/" className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
+                  <Home className="h-5 w-5" />
+                  <span className="font-semibold">{t('nav.home')}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={onLogout} tooltip={t('actions.logout')} className="text-muted-foreground hover:text-destructive">
+                  <div className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
+                  <LogOut className="h-5 w-5" />
+                  <span className="font-semibold">{t('actions.logout')}</span>
+                </div>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+
+      <SidebarInset className="bg-background flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out">
+        <header className={cn(
+          "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 sticky top-0 z-30 transition-all duration-300 shadow-sm",
+          isRTL ? "flex-row-reverse" : "flex-row"
+        )}>
+          <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
+            <SidebarTrigger className="h-9 w-9" />
+            <Separator orientation="vertical" className="h-6 hidden md:block bg-border/60" />
+            <h2 className="text-sm font-bold tracking-tight text-foreground/80 hidden md:block">
+              {navItems.find(item => pathname.startsWith(item.href))?.label || ''}
+            </h2>
+          </div>
           
-          <SidebarContent className="px-3 py-4">
-            <SidebarMenu>
-              {navItems.map((item) => {
-                const isActive = pathname === item.href || (item.href !== '/admin' && item.href !== '/dashboard' && pathname.startsWith(item.href));
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive}
-                      tooltip={item.label}
-                      className={cn(
-                        "transition-all duration-200",
-                        isRTL && "flex-row-reverse"
-                      )}
-                    >
-                      <Link href={item.href} className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
-                        <item.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
-                        <span className="font-semibold">{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarContent>
-
-          <SidebarFooter className="border-t border-border/50 p-4">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip={t('nav.home')}>
-                  <Link href="/" className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
-                    <Home className="h-5 w-5" />
-                    <span className="font-semibold">{t('nav.home')}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={onLogout} tooltip={t('actions.logout')} className="text-muted-foreground hover:text-destructive">
-                   <div className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
-                    <LogOut className="h-5 w-5" />
-                    <span className="font-semibold">{t('actions.logout')}</span>
-                  </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarFooter>
-        </Sidebar>
-
-        <SidebarInset className="bg-background flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out">
-          <header className={cn(
-            "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 sticky top-0 z-30 transition-all duration-300 shadow-sm",
-            isRTL ? "flex-row-reverse" : "flex-row"
-          )}>
-            <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
-              <SidebarTrigger className="h-9 w-9" />
-              <Separator orientation="vertical" className="h-6 hidden md:block bg-border/60" />
-              <h2 className="text-sm font-bold tracking-tight text-foreground/80 hidden md:block">
-                {navItems.find(item => pathname.startsWith(item.href))?.label || ''}
-              </h2>
+          <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
+            <div className="hidden sm:flex items-center gap-2">
+              <LanguageSwitcher />
+              <Separator orientation="vertical" className="h-4 bg-border/40" />
+              <ThemeToggle />
             </div>
             
-            <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
-              <div className="hidden sm:flex items-center gap-2">
-                <LanguageSwitcher />
-                <Separator orientation="vertical" className="h-4 bg-border/40" />
-                <ThemeToggle />
-              </div>
-              
-              {account && (
-                <div className={cn("flex items-center gap-3 pl-2 transition-all", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
-                  <div className={cn("flex flex-col", isRTL ? "text-right" : "text-left")}>
-                    <span className="text-xs font-black truncate max-w-[120px]">{account.name}</span>
-                    <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">{account.email}</span>
-                  </div>
-                  <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase shadow-inner">
-                    {account.name?.charAt(0) || 'U'}
-                  </div>
+            {account && (
+              <div className={cn("flex items-center gap-3 pl-2 transition-all", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
+                <div className={cn("flex flex-col", isRTL ? "text-right" : "text-left")}>
+                  <span className="text-xs font-black truncate max-w-[120px]">{account.name}</span>
+                  <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">{account.email}</span>
                 </div>
-              )}
-            </div>
-          </header>
-          
-          <main className="flex-1 overflow-x-hidden p-4 md:p-8 lg:p-10 transition-all duration-300">
-            <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
-              {children}
-            </div>
-          </main>
-        </SidebarInset>
-      </div>
+                <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase shadow-inner">
+                  {account.name?.charAt(0) || 'U'}
+                </div>
+              </div>
+            )}
+          </div>
+        </header>
+        
+        <main className="flex-1 overflow-x-hidden p-4 md:p-8 lg:p-10 transition-all duration-300">
+          <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {children}
+          </div>
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   );
 }
