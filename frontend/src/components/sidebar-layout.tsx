@@ -15,7 +15,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
 import { Home, LogOut } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
@@ -33,16 +32,16 @@ function SidebarHeaderWithLogo() {
   const { state } = useSidebar();
   
   return (
-    <SidebarHeader className="h-16 flex items-center px-4">
+    <SidebarHeader className="h-16 flex items-center px-4 border-b border-border/50">
       <Link href="/" className="flex items-center gap-3 w-full transition-all duration-300 group">
         <div className={cn(
-          "flex items-center justify-center shrink-0 transition-all duration-500 ease-in-out",
+          "flex items-center justify-center shrink-0 transition-all duration-300",
           state === "collapsed" ? "w-10 h-10" : "w-8 h-8"
         )}>
           <Logo width={32} height={32} className="h-full w-full object-contain group-hover:scale-110 transition-transform" />
         </div>
         <span className={cn(
-          "font-black text-lg tracking-tight truncate transition-all duration-300 ease-in-out",
+          "font-black text-lg tracking-tight truncate transition-all duration-300",
           state === "collapsed" ? "opacity-0 w-0" : "opacity-100 w-auto"
         )}>
           Think Then Talk
@@ -69,11 +68,11 @@ export function SidebarLayout({
 
   return (
     <SidebarProvider>
-      <div className={cn("flex min-h-screen bg-background w-full transition-all duration-300", isRTL ? "font-vazir" : "font-inter")}>
-        <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-xl z-40">
+      <div className={cn("flex min-h-screen w-full bg-background", isRTL ? "flex-row-reverse" : "flex-row")}>
+        <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-sm z-40">
           <SidebarHeaderWithLogo />
           
-          <SidebarContent className="px-3">
+          <SidebarContent className="px-3 py-4">
             <SidebarMenu>
               {navItems.map((item) => {
                 const isActive = pathname === item.href || (item.href !== '/admin' && item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -99,7 +98,7 @@ export function SidebarLayout({
             </SidebarMenu>
           </SidebarContent>
 
-          <SidebarFooter>
+          <SidebarFooter className="border-t border-border/50 p-4">
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={t('nav.home')}>
@@ -121,14 +120,9 @@ export function SidebarLayout({
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset className={cn(
-          "bg-background flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
-          "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow",
-          isRTL ? "md:peer-data-[state=expanded]:mr-[var(--sidebar-width)] md:peer-data-[state=collapsed]:mr-[var(--sidebar-width-icon)]" 
-                : "md:peer-data-[state=expanded]:ml-[var(--sidebar-width)] md:peer-data-[state=collapsed]:ml-[var(--sidebar-width-icon)]"
-        )}>
+        <SidebarInset className="bg-background flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out">
           <header className={cn(
-            "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-6 sticky top-0 z-30 transition-all duration-300 shadow-sm",
+            "flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 sticky top-0 z-30 transition-all duration-300 shadow-sm",
             isRTL ? "flex-row-reverse" : "flex-row"
           )}>
             <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
@@ -148,7 +142,7 @@ export function SidebarLayout({
               
               {account && (
                 <div className={cn("flex items-center gap-3 pl-2 transition-all", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
-                  <div className={cn("flex flex-col text-right", !isRTL && "text-left")}>
+                  <div className={cn("flex flex-col", isRTL ? "text-right" : "text-left")}>
                     <span className="text-xs font-black truncate max-w-[120px]">{account.name}</span>
                     <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">{account.email}</span>
                   </div>
