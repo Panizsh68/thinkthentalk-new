@@ -11,7 +11,7 @@ export function GallerySection() {
     { url: '/static-images/-2147483648_-218139.jpg', span: 'col-span-1 row-span-1' },
     { url: '/static-images/IMG_6971.JPG', span: 'col-span-1 row-span-2' },
     { url: '/static-images/IMG_8724.JPG', span: 'col-span-1 row-span-1' },
-    { url: '/static-images/IMG_6512.jpg', span: 'col-span-4 row-span-3' },
+    { url: '/static-images/-2147483648_-218260.jpg', span: 'col-span-4 row-span-2' },
   ];
 
   return (
