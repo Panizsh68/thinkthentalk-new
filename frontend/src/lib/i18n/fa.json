@@ -898,7 +898,7 @@
       "delete": {
         "title": "حذف عضو",
         "successTitle": "فرد حذف شد",
-        "confirmTitle": "حذف از تیم؟",
+        "confirmTitle": "حذف از تیم？",
         "confirmText": "آیا {name} از لیست تیم حذف شود؟"
       },
       "form": {
