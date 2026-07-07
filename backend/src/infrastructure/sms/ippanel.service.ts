@@ -60,10 +60,17 @@ export class IppanelService {
     }
 
     const recipient = this.formatRecipient(to);
+    const sourceNumber = this.sourceNumber;
+    if (!sourceNumber) {
+      this.logger.warn('IPPanel source number is not configured; skipping pattern SMS.');
+      return { success: false, statusMessage: 'Source number missing' };
+    }
+
     const payload = {
       pattern: resolvedPatternSlug,
       variables,
       recipient,
+      sourceNumber,
     };
 
     try {
