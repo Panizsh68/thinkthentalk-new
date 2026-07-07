@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   Gender,
-  PaymentStatus,
   Prisma,
-  RegistrationStatus,
-  TicketType,
 } from '@prisma/client';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import {
@@ -157,14 +154,9 @@ export class AdminUsersService {
     formData?: Prisma.JsonValue | null,
   ): CombinedProfile {
     const form = (formData as Record<string, any>) ?? {};
+    const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
+    
     const pickString = (...values: Array<any>): string | undefined => {
-      const placeholders = [
-        'نام',
-        'نام خانوادگی',
-        'name',
-        'first name',
-        'last name',
-      ];
       for (const value of values) {
         if (value === null || value === undefined) continue;
         const str = String(value).trim();
@@ -220,11 +212,7 @@ export class AdminUsersService {
 
     requiredStrings.forEach((field) => {
       const value = profile[field];
-      if (
-        value === null ||
-        value === undefined ||
-        String(value).trim() === ''
-      ) {
+      if (value === null || value === undefined || String(value).trim() === '') {
         missing.push(field as string);
       }
     });
@@ -239,10 +227,7 @@ export class AdminUsersService {
 
     if (profile.isEmployed === undefined || profile.isEmployed === null) {
       missing.push('isEmployed');
-    } else if (
-      profile.isEmployed &&
-      (!profile.jobTitle || String(profile.jobTitle).trim() === '')
-    ) {
+    } else if (profile.isEmployed && (!profile.jobTitle || String(profile.jobTitle).trim() === '')) {
       missing.push('jobTitle');
     }
 

@@ -1,10 +1,9 @@
 'use client';
 import { SidebarLayout } from '@/components/sidebar-layout';
-import { Briefcase, Calendar, Home, Receipt, Tag, Users, ShieldCheck, MessageCircle, User, Building, Users2, Mail, UserCheck, Handshake, Lightbulb } from 'lucide-react';
+import { Briefcase, Calendar, Home, Receipt, Tag, Users, ShieldCheck, MessageCircle, Building, Users2, Mail, UserCheck, Handshake, Lightbulb, Loader2 } from 'lucide-react';
 import { AdminAuthProvider, useAdminAuth } from '@/lib/auth/admin-auth-provider';
 import { useEffect, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
 import { hasPermission, type PagePermission } from '@/lib/auth/permissions';
 import { useLanguage } from '@/lib/i18n/language-provider';
 
@@ -12,7 +11,7 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   const { currentAdmin, isAdminAuthenticated, isLoading, logout } = useAdminAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const isLoginPage = pathname === '/admin/login';
 
@@ -61,22 +60,18 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   }
   
   if (currentAdmin) {
-    const currentNavItem = allAdminNavItems.find(item => pathname.startsWith(item.href));
-    if (currentNavItem && !hasPermission(currentAdmin.role, currentNavItem.permission as PagePermission)) {
+    const activeItem = allAdminNavItems.find(item => pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href)));
+    if (activeItem && !hasPermission(currentAdmin.role, activeItem.permission as PagePermission)) {
       return (
-          <SidebarLayout
-            navItems={navItems}
-            account={currentAdmin ? { name: currentAdmin.name, email: currentAdmin.email } : null}
-            onLogout={logout}
-          >
-               <div className="flex h-full w-full items-center justify-center">
-                  <p>{t('errors.accessDenied')}</p>
-               </div>
-          </SidebarLayout>
+        <SidebarLayout navItems={navItems} account={{ name: currentAdmin.name, email: currentAdmin.email }} onLogout={logout}>
+          <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+             <ShieldCheck className="h-16 w-16 text-muted-foreground/20" />
+             <p className="text-muted-foreground font-bold">{t('errors.accessDenied')}</p>
+          </div>
+        </SidebarLayout>
       );
     }
   }
-
 
   return (
     <SidebarLayout
@@ -89,17 +84,10 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { language } = useLanguage();
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div dir={language === 'fa' ? 'rtl' : 'ltr'}>
-      <AdminAuthProvider>
-          <ProtectedAdminLayout>{children}</ProtectedAdminLayout>
-      </AdminAuthProvider>
-    </div>
+    <AdminAuthProvider>
+        <ProtectedAdminLayout>{children}</ProtectedAdminLayout>
+    </AdminAuthProvider>
   );
 }

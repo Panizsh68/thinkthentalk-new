@@ -1,19 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
-
-interface IppanelResponse {
-  data?: any;
-  meta?: {
-    message?: string;
-    requestId?: string;
-  };
-}
 
 export interface IppanelSendResult {
   success: boolean;
@@ -22,6 +9,8 @@ export interface IppanelSendResult {
   bulkId?: string;
   messageIds?: string[];
   raw?: any;
+  requestUrl?: string;
+  usedPatternCode?: string;
 }
 
 @Injectable()
@@ -64,18 +53,19 @@ export class IppanelService {
       pattern: patternSlug,
       variables,
       recipient,
-      sourceNumber: this.sourceNumber,
     };
 
     try {
-      const response = await this.httpClient.post<IppanelResponse>('/sms/pattern', payload);
-      const data = response.data.data;
+      const response = await this.httpClient.post('/sms/pattern', payload);
+      const resData = response.data?.data;
       
       return {
         success: true,
-        bulkId: data?.uid,
-        messageIds: data?.recipients?.map((r: any) => r.uid) || [],
+        bulkId: resData?.uid,
+        messageIds: resData?.recipients?.map((r: any) => r.uid) || [],
         raw: response.data,
+        requestUrl: response.config.url,
+        usedPatternCode: patternSlug,
       };
     } catch (error: any) {
       this.handleError('Pattern SMS', error);
@@ -83,6 +73,7 @@ export class IppanelService {
         success: false,
         statusCode: error.response?.status,
         statusMessage: error.response?.data?.detail || error.message,
+        requestUrl: error.config?.url,
       };
     }
   }
@@ -98,20 +89,21 @@ export class IppanelService {
 
     const recipients = (Array.isArray(to) ? to : [to]).map(r => this.formatRecipient(r));
     const payload = {
-      message,
+      message: message.trim(),
       recipients,
       sourceNumber: this.sourceNumber,
     };
 
     try {
-      const response = await this.httpClient.post<IppanelResponse>('/sms/send', payload);
-      const data = response.data.data;
+      const response = await this.httpClient.post('/sms/send', payload);
+      const resData = response.data?.data;
 
       return {
         success: true,
-        bulkId: data?.uid,
-        messageIds: data?.recipients?.map((r: any) => r.uid) || [],
+        bulkId: resData?.uid,
+        messageIds: resData?.recipients?.map((r: any) => r.uid) || [],
         raw: response.data,
+        requestUrl: response.config.url,
       };
     } catch (error: any) {
       this.handleError('Text SMS', error);
@@ -119,6 +111,7 @@ export class IppanelService {
         success: false,
         statusCode: error.response?.status,
         statusMessage: error.response?.data?.detail || error.message,
+        requestUrl: error.config?.url,
       };
     }
   }
@@ -136,9 +129,5 @@ export class IppanelService {
     const detail = error.response?.data?.detail || error.message;
     const code = error.response?.data?.code;
     this.logger.error(`IPPanel ${action} failed: ${detail} (Code: ${code})`);
-    
-    if (error.response?.status === 401) {
-      this.logger.error('IPPanel Unauthorized: Check your API Key.');
-    }
   }
 }
