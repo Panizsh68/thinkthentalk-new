@@ -7,6 +7,7 @@ import {
   IUserRepository,
   UpdateUserProfileDto,
 } from './user.repository';
+import { Gender } from '@prisma/client';
 
 const placeholders = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
 const cleanName = (value?: string | null): string | undefined => {
@@ -53,7 +54,7 @@ export class PrismaUserRepository extends IUserRepository {
         lastNameFa: cleanName(dto.lastNameFa),
         firstNameEn: cleanName(dto.firstNameEn),
         lastNameEn: cleanName(dto.lastNameEn),
-        gender: dto.gender ?? undefined,
+        gender: dto.gender as Gender || undefined,
         age: dto.age ?? undefined,
         educationLevel: cleanString(dto.educationLevel),
         fieldOfStudy: cleanString(dto.fieldOfStudy),
@@ -68,7 +69,7 @@ export class PrismaUserRepository extends IUserRepository {
         lastNameFa: cleanName(dto.lastNameFa) ?? 'نام خانوادگی',
         firstNameEn: cleanName(dto.firstNameEn),
         lastNameEn: cleanName(dto.lastNameEn),
-        gender: dto.gender ?? undefined,
+        gender: dto.gender as Gender || undefined,
         age: dto.age,
         educationLevel: cleanString(dto.educationLevel),
         fieldOfStudy: cleanString(dto.fieldOfStudy),
@@ -93,7 +94,7 @@ export class PrismaUserRepository extends IUserRepository {
         lastNameFa: cleanName(dto.lastNameFa),
         firstNameEn: cleanName(dto.firstNameEn),
         lastNameEn: cleanName(dto.lastNameEn),
-        gender: dto.gender ?? undefined,
+        gender: dto.gender as Gender || undefined,
         age: dto.age ?? undefined,
         educationLevel: cleanString(dto.educationLevel),
         fieldOfStudy: cleanString(dto.fieldOfStudy),

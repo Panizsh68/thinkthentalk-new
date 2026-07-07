@@ -88,7 +88,7 @@ export function SidebarLayout({
                   >
                     <Link href={item.href} className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
                       <item.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
-                      <span className="font-semibold">{item.label}</span>
+                      <span className="font-bold">{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -103,7 +103,7 @@ export function SidebarLayout({
               <SidebarMenuButton asChild tooltip={t('nav.home')}>
                 <Link href="/" className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
                   <Home className="h-5 w-5" />
-                  <span className="font-semibold">{t('nav.home')}</span>
+                  <span className="font-bold">{t('nav.home')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -111,7 +111,7 @@ export function SidebarLayout({
               <SidebarMenuButton onClick={onLogout} tooltip={t('actions.logout')} className="text-muted-foreground hover:text-destructive">
                   <div className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
                   <LogOut className="h-5 w-5" />
-                  <span className="font-semibold">{t('actions.logout')}</span>
+                  <span className="font-bold">{t('actions.logout')}</span>
                 </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -127,7 +127,7 @@ export function SidebarLayout({
           <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "flex-row")}>
             <SidebarTrigger className="h-9 w-9" />
             <Separator orientation="vertical" className="h-6 hidden md:block bg-border/60" />
-            <h2 className="text-sm font-bold tracking-tight text-foreground/80 hidden md:block">
+            <h2 className="text-sm font-black tracking-tight text-foreground/80 hidden md:block uppercase tracking-widest">
               {navItems.find(item => pathname.startsWith(item.href))?.label || ''}
             </h2>
           </div>
@@ -143,9 +143,9 @@ export function SidebarLayout({
               <div className={cn("flex items-center gap-3 pl-2 transition-all", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
                 <div className={cn("flex flex-col", isRTL ? "text-right" : "text-left")}>
                   <span className="text-xs font-black truncate max-w-[120px]">{account.name}</span>
-                  <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">{account.email}</span>
+                  <span className="text-[10px] text-muted-foreground font-bold truncate max-w-[120px]">{account.email}</span>
                 </div>
-                <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase shadow-inner">
+                <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black text-xs uppercase shadow-inner">
                   {account.name?.charAt(0) || 'U'}
                 </div>
               </div>
@@ -153,7 +153,7 @@ export function SidebarLayout({
           </div>
         </header>
         
-        <main className="flex-1 overflow-x-hidden p-4 md:p-8 lg:p-10 transition-all duration-300">
+        <main className="flex-1 overflow-x-hidden p-4 md:p-8 lg:p-12 transition-all duration-300">
           <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
             {children}
           </div>

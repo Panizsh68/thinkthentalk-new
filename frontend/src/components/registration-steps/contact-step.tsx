@@ -72,7 +72,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
       } as Partial<typeof formData>);
     });
     return () => subscription.unsubscribe();
-  }, [form, setFormData, currentUser?.mobile]);
+  }, [form, setFormData]);
 
   const handleSendCode = async () => {
     const mobile = form.getValues('mobile');
