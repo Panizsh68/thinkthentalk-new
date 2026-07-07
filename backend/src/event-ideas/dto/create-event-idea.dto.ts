@@ -14,7 +14,7 @@ export class CreateEventIdeaDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @MaxLength(100)
+  @MaxLength(191)
   name?: string;
 
   @ApiPropertyOptional()
@@ -26,13 +26,13 @@ export class CreateEventIdeaDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @MaxLength(200)
+  @MaxLength(500)
   title!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @MaxLength(2000)
+  @MaxLength(10000)
   description!: string;
 
   @ApiProperty({ enum: EventIdeaType })

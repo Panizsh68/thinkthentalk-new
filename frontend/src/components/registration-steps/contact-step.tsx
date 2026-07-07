@@ -32,7 +32,6 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
   const [otpValue, setOtpValue] = useState('');
   const [isConfirming, setIsConfirming] = useState(false);
 
-  // Check if current mobile is a valid Iranian number
   const isRealMobile = (val?: string) => val ? /^09\d{9}$/.test(val) : false;
   const initialMobile = formData.mobile || (isRealMobile(currentUser?.mobile) ? currentUser?.mobile : '');
   const [isVerified, setIsVerified] = useState(isRealMobile(initialMobile));
@@ -138,7 +137,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
                           dir="ltr" 
                           placeholder="09123456789"
                           disabled={isVerified || verificationSent}
-                          className={cn(isVerified && "pr-10 border-green-500")}
+                          className={cn(isVerified && "pr-10 border-green-500", "rounded-xl")}
                         />
                         {isVerified && (
                           <CheckCircle2 className="absolute right-3 top-2.5 h-5 w-5 text-green-500" />
@@ -149,6 +148,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
                       <Button 
                         type="button" 
                         variant="secondary" 
+                        className="rounded-xl"
                         onClick={handleSendCode} 
                         disabled={isVerifying || !isRealMobile(field.value)}
                       >
@@ -160,6 +160,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
                         type="button" 
                         variant="ghost" 
                         size="sm"
+                        className="rounded-xl"
                         onClick={() => {
                           setIsVerified(false);
                           setVerificationSent(false);
@@ -181,9 +182,11 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
                             placeholder="123456" 
                             dir="ltr" 
                             maxLength={6}
+                            className="rounded-xl"
                           />
                           <Button 
                             type="button" 
+                            className="rounded-xl"
                             onClick={handleConfirmCode} 
                             disabled={isConfirming || otpValue.length < 6}
                           >
@@ -193,7 +196,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
                       </div>
                     </div>
                   )}
-                  <FormDescription>
+                  <FormDescription className="text-xs">
                     {isVerified ? t('registration.descriptions.mobileReadOnly') : t('auth.loginSubtitle')}
                   </FormDescription>
                   <FormMessage />
@@ -208,7 +211,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
                 <FormItem>
                   <FormLabel>{t('registration.fields.email')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('registration.placeholders.email')} {...field} dir="ltr" />
+                    <Input placeholder={t('registration.placeholders.email')} {...field} dir="ltr" className="rounded-xl" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,7 +224,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
       {!isVerified && !verificationSent && (
         <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 flex gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="text-sm text-amber-800 dark:text-amber-400">
+          <div className="text-sm text-amber-800 dark:text-amber-400 font-medium">
             {t('registration.errors.phoneRequired')}
           </div>
         </div>

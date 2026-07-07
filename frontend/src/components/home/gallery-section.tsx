@@ -11,7 +11,7 @@ export function GallerySection() {
     { url: '/static-images/-2147483648_-218139.jpg', span: 'col-span-1 row-span-1' },
     { url: '/static-images/IMG_6971.JPG', span: 'col-span-1 row-span-2' },
     { url: '/static-images/IMG_8724.JPG', span: 'col-span-1 row-span-1' },
-    { url: '/static-images/-2147483648_-218260.jpg', span: 'col-span-2 md:col-span-4 row-span-1 md:row-span-2' },
+    { url: '/static-images/-2147483648_-218260.jpg', span: 'col-span-2 md:col-span-2 row-span-1 md:row-span-1' },
   ];
 
   return (
@@ -22,7 +22,7 @@ export function GallerySection() {
           <p className="text-lg text-muted-foreground font-medium">{t('home.moments.subtitle')}</p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[150px] md:auto-rows-[250px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[150px] md:auto-rows-[200px] lg:auto-rows-[250px]">
           {items.map((item, i) => (
             <div key={i} className={cn("relative rounded-[2rem] overflow-hidden shadow-md group border-4 border-background", item.span)}>
               <Image 

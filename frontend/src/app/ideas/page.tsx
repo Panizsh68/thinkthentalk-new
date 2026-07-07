@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -19,8 +18,8 @@ import { Loader2, Lightbulb } from 'lucide-react';
 const getIdeaSchema = (t: any) => z.object({
   name: z.string().optional(),
   email: z.string().email(t('contact.errors.emailInvalid')).optional().or(z.literal('')),
-  title: z.string().min(5, t('ideas.validation.titleLength')),
-  description: z.string().min(20, t('ideas.validation.descriptionLength')),
+  title: z.string().min(1, t('registration.validation.required')),
+  description: z.string().min(1, t('registration.validation.required')),
   type: z.enum(['TOPIC', 'FORMAT', 'VENUE', 'OTHER']),
 });
 
@@ -63,14 +62,14 @@ export default function SubmitIdeaPage() {
   };
 
   return (
-    <div className="container max-w-3xl py-12">
+    <div className="container max-w-3xl py-12 px-4">
       <div className="text-center mb-8 space-y-2">
         <Lightbulb className="h-12 w-12 text-primary mx-auto" />
-        <h1 className="text-3xl font-bold">{t('ideas.title')}</h1>
+        <h1 className="text-3xl font-bold">Think Then Talk Ideas</h1>
         <p className="text-muted-foreground">{t('ideas.subtitle')}</p>
       </div>
 
-      <Card>
+      <Card className="rounded-[2rem] border-none shadow-lg">
         <CardHeader>
           <CardTitle>{t('ideas.form.title')}</CardTitle>
           <CardDescription>{t('ideas.form.description')}</CardDescription>
@@ -86,7 +85,7 @@ export default function SubmitIdeaPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('contact.form.nameLabel')}</FormLabel>
-                        <FormControl><Input {...field} /></FormControl>
+                        <FormControl><Input {...field} className="rounded-xl" /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -97,7 +96,7 @@ export default function SubmitIdeaPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('contact.form.emailLabel')}</FormLabel>
-                        <FormControl><Input dir="ltr" {...field} /></FormControl>
+                        <FormControl><Input dir="ltr" {...field} className="rounded-xl" /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -113,7 +112,7 @@ export default function SubmitIdeaPage() {
                     <FormLabel>{t('ideas.form.typeLabel')}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="rounded-xl">
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
@@ -135,7 +134,7 @@ export default function SubmitIdeaPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('ideas.form.titleLabel')}</FormLabel>
-                    <FormControl><Input {...field} placeholder={t('ideas.form.titlePlaceholder')} /></FormControl>
+                    <FormControl><Input {...field} className="rounded-xl" placeholder={t('ideas.form.titlePlaceholder')} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -148,14 +147,14 @@ export default function SubmitIdeaPage() {
                   <FormItem>
                     <FormLabel>{t('ideas.form.descriptionLabel')}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} rows={6} placeholder={t('ideas.form.descriptionPlaceholder')} />
+                      <Textarea {...field} rows={6} className="rounded-xl" placeholder={t('ideas.form.descriptionPlaceholder')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
+              <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-md" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('ideas.form.submitButton')}
               </Button>

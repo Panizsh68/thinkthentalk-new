@@ -68,10 +68,10 @@ export function SidebarLayout({
 
   return (
     <SidebarProvider>
-      <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-sm z-40">
+      <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-sm z-40 bg-sidebar">
         <SidebarHeaderWithLogo />
         
-        <SidebarContent className="px-3 py-4">
+        <SidebarContent className="px-3 py-4 bg-sidebar">
           <SidebarMenu>
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/admin' && item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -97,7 +97,7 @@ export function SidebarLayout({
           </SidebarMenu>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-border/50 p-4">
+        <SidebarFooter className="border-t border-border/50 p-4 bg-sidebar">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={t('nav.home')}>
@@ -153,7 +153,7 @@ export function SidebarLayout({
           </div>
         </header>
         
-        <main className="flex-1 overflow-x-hidden p-4 md:p-8 lg:p-12 transition-all duration-300">
+        <main className="flex-1 p-4 md:p-8 lg:p-10 transition-all duration-300 bg-background">
           <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
             {children}
           </div>
