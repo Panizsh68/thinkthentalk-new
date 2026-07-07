@@ -14,17 +14,13 @@ import {
 export class WalletService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Get user's token balance (legacy Wallet table).
-   * Renamed concepts to "Coins" for the end-user.
-   */
   async getWallet(userId: string) {
     let wallet = await this.prisma.wallet.findUnique({
       where: { userId },
       include: {
         transactions: {
           orderBy: { createdAt: 'desc' },
-          take: 20,
+          take: 50,
         },
       },
     });
@@ -39,10 +35,6 @@ export class WalletService {
     return wallet;
   }
 
-  /**
-   * Add coins to user's balance.
-   * Coins are non-refundable tokens.
-   */
   async deposit(
     userId: string,
     amount: number,
@@ -72,9 +64,6 @@ export class WalletService {
     });
   }
 
-  /**
-   * Deduct coins from user's balance for services.
-   */
   async payWithWallet(
     userId: string,
     amount: number,
@@ -106,10 +95,6 @@ export class WalletService {
     });
   }
 
-  /**
-   * Withdrawal is disabled for tokens as they are non-refundable.
-   * We keep the history query but the action is removed.
-   */
   async listAllTransactions() {
     return this.prisma.walletTransaction.findMany({
       orderBy: { createdAt: 'desc' },

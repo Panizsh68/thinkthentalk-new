@@ -1,8 +1,6 @@
 'use client';
 import { useAuth } from '@/lib/auth/auth-provider';
 import { useUserRegistrationsQuery } from '@/hooks/use-registration-queries';
-import { useMyWallet } from '@/lib/api/wallet';
-import { useMySubscription } from '@/lib/api/subscriptions';
 import { Loader2, AlertTriangle, Sparkles, Calendar, History, ArrowRight, UserCog, Coins, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/i18n/language-provider';
@@ -81,7 +79,6 @@ export default function UserDashboardPage() {
         <Sparkles className="absolute -right-4 -bottom-4 h-32 w-32 text-primary/5 pointer-events-none" />
       </section>
 
-      {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatsSummaryItem 
           icon={Calendar} 

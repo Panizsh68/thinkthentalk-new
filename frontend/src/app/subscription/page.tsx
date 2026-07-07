@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Check, Sparkles, ShieldCheck, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { getFormattedPrice } from '@/lib/event-helpers';
 import { format } from 'date-fns-jalali';
 
 export default function SubscriptionPage() {
