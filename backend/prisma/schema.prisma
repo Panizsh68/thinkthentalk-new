@@ -277,6 +277,7 @@ model CollaborationRequest {
   experience       String?           @db.Text
   whyJoin          String            @db.Text
   availability     String?
+  acceptedTerms    Boolean           @default(false)
   status           PartnershipStatus @default(PENDING)
   notes            String?           @db.Text
   processedAt      DateTime?

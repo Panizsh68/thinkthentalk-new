@@ -64,19 +64,22 @@ export class AuthService {
       'LOGIN',
       ipAddress,
     );
+    
     if (
       (this.configService.get<string>('NODE_ENV') ?? 'development') !==
       'production'
     ) {
       this.logger.log(`Dev OTP for ${mobile}: ${result.code}`);
     }
-    const patternResult = await this.ippanelService.sendPatternSms(mobile, {
+
+    // Using the 'verify-otp' pattern slug from your IPPanel account
+    // Variable in pattern is %code%
+    const smsResult = await this.ippanelService.sendPatternSms(mobile, 'verify-otp', {
       code: result.code,
     });
-    if (!patternResult.success) {
-      this.logger.warn(
-        `IPPanel pattern send failed (status=${patternResult.statusCode ?? 'n/a'}).`,
-      );
+
+    if (!smsResult.success) {
+      this.logger.warn(`Failed to send OTP SMS to ${mobile}: ${smsResult.statusMessage}`);
     }
   }
 

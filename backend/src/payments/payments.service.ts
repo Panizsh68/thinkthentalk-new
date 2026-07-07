@@ -11,6 +11,7 @@ import { PrismaService } from '../infrastructure/database/prisma.service';
 import { CreatePaymentBodyDto } from './dto/create-payment-body.dto';
 import { PaymentDto } from './dto/payment.dto';
 import { ZarinpalGateway } from './providers/zarinpal.gateway';
+import { IppanelService } from '../infrastructure/sms/ippanel.service';
 import type { RequestPaymentResult } from './providers/payment-gateway.interface';
 import { VerifyPaymentStatusDto } from './dto/verify-payment-status.dto';
 import { parseLocalizedText } from '../events/utils/localized-text.helper';
@@ -22,6 +23,7 @@ export class PaymentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly zarinpalGateway: ZarinpalGateway,
+    private readonly ippanelService: IppanelService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -64,7 +66,6 @@ export class PaymentsService {
       (value) => value !== undefined,
     );
 
-    // Persist the profile details immediately so the user does not lose data even if payment fails.
     if (shouldUpdateUserProfile) {
       await this.prisma.user.update({
         where: { id: userId },
@@ -140,7 +141,7 @@ export class PaymentsService {
       throw new BadRequestException('Invalid amount');
     }
 
-    const gatewayMinAmount = dto.currency === Currency.TOMAN ? 1000 : 10000; // Zarinpal min
+    const gatewayMinAmount = dto.currency === Currency.TOMAN ? 1000 : 10000;
     if (amount > 0 && amount < gatewayMinAmount) {
       throw new BadRequestException(
         'Amount is below the minimum allowed for payment gateway.',
@@ -158,7 +159,6 @@ export class PaymentsService {
     }
 
     const result = await this.prisma.$transaction(async (tx) => {
-      // Reuse existing registration to avoid duplicate rows per user/event
       const registration =
         existingRegistration &&
         existingRegistration.status !== RegistrationStatus.CANCELLED
@@ -222,7 +222,6 @@ export class PaymentsService {
               },
             });
 
-      // Ensure registration points to the (possibly new) payment
       await tx.registration.update({
         where: { id: registration.id },
         data: { payment: { connect: { id: payment.id } } },
@@ -232,6 +231,8 @@ export class PaymentsService {
     });
 
     if (isFree) {
+      // Send success SMS for free registration
+      this.sendRegistrationSms(user?.mobile, event);
       return this.toPaymentDto(result.payment, { redirectUrl: undefined });
     }
 
@@ -307,75 +308,13 @@ export class PaymentsService {
     });
   }
 
-  async verifyPaymentStatus(
-    paymentId: string,
-    userId: string,
-    dto: VerifyPaymentStatusDto,
-  ): Promise<PaymentDto | null> {
-    const payment = await this.findPaymentForUser(paymentId, userId);
-
-    if (!payment) {
-      return null;
-    }
-
-    const amount =
-      typeof payment.amount === 'number'
-        ? payment.amount
-        : payment.amount.toNumber();
-
-    if (dto.status === 'FAILED') {
-      const updated = await this.prisma.$transaction(async (tx) => {
-        const p = await tx.payment.update({
-          where: { id: payment.id },
-          data: { status: PaymentStatus.FAILED },
-        });
-        await tx.registration.update({
-          where: { id: payment.registrationId },
-          data: { status: RegistrationStatus.FAILED },
-        });
-        return p;
-      });
-      return this.toPaymentDto(updated);
-    }
-
-    // status === SUCCESS
-    const verification = await this.zarinpalGateway.verifyPayment({
-      authority: payment.gatewayTransactionId ?? payment.id,
-      amount,
-    });
-
-    const isSuccess = verification.success === true;
-
-    const updated = await this.prisma.$transaction(async (tx) => {
-      const p = await tx.payment.update({
-        where: { id: payment.id },
-        data: {
-          status: isSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED,
-          gatewayTransactionId:
-            verification.referenceId ?? payment.gatewayTransactionId,
-        },
-      });
-      await tx.registration.update({
-        where: { id: payment.registrationId },
-        data: {
-          status: isSuccess
-            ? RegistrationStatus.PAID
-            : RegistrationStatus.FAILED,
-        },
-      });
-      return p;
-    });
-
-    return this.toPaymentDto(updated);
-  }
-
   async verifyPaymentStatusPublic(
     paymentId: string,
     dto: { status: 'SUCCESS' | 'FAILED'; authority?: string | null },
   ): Promise<PaymentDto | null> {
     const payment = await this.prisma.payment.findFirst({
       where: { id: paymentId },
-      include: { registration: true },
+      include: { registration: { include: { user: true } }, event: true },
     });
     if (!payment) return null;
 
@@ -426,6 +365,88 @@ export class PaymentsService {
       return p;
     });
 
+    if (isSuccess && payment.registration?.user?.mobile) {
+      this.sendRegistrationSms(payment.registration.user.mobile, payment.event);
+    }
+
+    return this.toPaymentDto(updated);
+  }
+
+  private async sendRegistrationSms(mobile?: string | null, event?: any) {
+    if (!mobile || !event) return;
+    
+    const eventTitle = parseLocalizedText(event.title).fa || parseLocalizedText(event.title).en;
+    const eventLink = `thinkthentalk.ir/events/${event.slug || event.id}`;
+    
+    this.ippanelService.sendPatternSms(mobile, 'register-event', {
+      event: eventTitle,
+      eventLink,
+    }).catch(err => this.logger.error('Failed to send registration SMS', err));
+  }
+
+  async verifyPaymentStatus(
+    paymentId: string,
+    userId: string,
+    dto: VerifyPaymentStatusDto,
+  ): Promise<PaymentDto | null> {
+    const payment = await this.prisma.payment.findFirst({
+      where: { id: paymentId, registration: { userId } },
+      include: { registration: { include: { user: true } }, event: true },
+    });
+
+    if (!payment) return null;
+
+    const amount =
+      typeof payment.amount === 'number'
+        ? payment.amount
+        : payment.amount.toNumber();
+
+    if (dto.status === 'FAILED') {
+      const updated = await this.prisma.$transaction(async (tx) => {
+        const p = await tx.payment.update({
+          where: { id: payment.id },
+          data: { status: PaymentStatus.FAILED },
+        });
+        await tx.registration.update({
+          where: { id: payment.registrationId },
+          data: { status: RegistrationStatus.FAILED },
+        });
+        return p;
+      });
+      return this.toPaymentDto(updated);
+    }
+
+    const verification = await this.zarinpalGateway.verifyPayment({
+      authority: payment.gatewayTransactionId ?? payment.id,
+      amount,
+    });
+
+    const isSuccess = verification.success === true;
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const p = await tx.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: isSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED,
+          gatewayTransactionId:
+            verification.referenceId ?? payment.gatewayTransactionId,
+        },
+      });
+      await tx.registration.update({
+        where: { id: payment.registrationId },
+        data: {
+          status: isSuccess
+            ? RegistrationStatus.PAID
+            : RegistrationStatus.FAILED,
+        },
+      });
+      return p;
+    });
+
+    if (isSuccess && payment.registration?.user?.mobile) {
+      this.sendRegistrationSms(payment.registration.user.mobile, payment.event);
+    }
+
     return this.toPaymentDto(updated);
   }
 
@@ -438,9 +459,7 @@ export class PaymentsService {
         status: options.status,
         authority: options.authority,
       });
-      if (verified) {
-        return verified;
-      }
+      if (verified) return verified;
     }
 
     const payment = await this.prisma.payment.findUnique({
@@ -449,13 +468,6 @@ export class PaymentsService {
     if (!payment) return null;
 
     return this.toPaymentDto(payment);
-  }
-
-  private findPaymentForUser(paymentId: string, userId: string) {
-    return this.prisma.payment.findFirst({
-      where: { id: paymentId, registration: { userId } },
-      include: { registration: true },
-    });
   }
 
   private userProfileUpdateFromFormData(
