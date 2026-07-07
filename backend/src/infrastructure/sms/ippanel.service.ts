@@ -19,11 +19,13 @@ export class IppanelService {
   private readonly httpClient: AxiosInstance;
   private readonly apiKey: string;
   private readonly sourceNumber: string;
+  private readonly defaultPatternCode: string;
 
   constructor(private readonly configService: ConfigService) {
     const baseUrl = this.configService.get<string>('IPPANEL_BASE_URL') || 'https://edge.ippanel.com/v1';
     this.apiKey = this.configService.get<string>('IPPANEL_API_KEY') || '';
     this.sourceNumber = this.configService.get<string>('IPPANEL_FROM_NUMBER') || '';
+    this.defaultPatternCode = this.configService.get<string>('IPPANEL_OTP_PATTERN_CODE') || '2tc60';
 
     this.httpClient = axios.create({
       baseURL: baseUrl.replace(/\/+$/, ''),
@@ -48,9 +50,18 @@ export class IppanelService {
       return { success: false, statusMessage: 'API Key missing' };
     }
 
+    const resolvedPatternSlug = patternSlug && patternSlug !== 'DEFAULT'
+      ? patternSlug
+      : this.defaultPatternCode;
+
+    if (!resolvedPatternSlug) {
+      this.logger.warn('IPPanel pattern code is not configured; skipping SMS.');
+      return { success: false, statusMessage: 'Pattern code missing' };
+    }
+
     const recipient = this.formatRecipient(to);
     const payload = {
-      pattern: patternSlug,
+      pattern: resolvedPatternSlug,
       variables,
       recipient,
     };
@@ -58,14 +69,14 @@ export class IppanelService {
     try {
       const response = await this.httpClient.post('/sms/pattern', payload);
       const resData = response.data?.data;
-      
+
       return {
         success: true,
         bulkId: resData?.uid,
         messageIds: resData?.recipients?.map((r: any) => r.uid) || [],
         raw: response.data,
         requestUrl: response.config.url,
-        usedPatternCode: patternSlug,
+        usedPatternCode: resolvedPatternSlug,
       };
     } catch (error: any) {
       this.handleError('Pattern SMS', error);

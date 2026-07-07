@@ -29,7 +29,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   private get adminEmailLimit() {
     return Number(
@@ -46,7 +46,7 @@ export class AuthService {
   private get adminWindowSeconds() {
     return Number(
       this.configService.get<number>('ADMIN_LOGIN_RATE_LIMIT_WINDOW_SECONDS') ??
-        600,
+      600,
     );
   }
 
@@ -64,7 +64,7 @@ export class AuthService {
       'LOGIN',
       ipAddress,
     );
-    
+
     if (
       (this.configService.get<string>('NODE_ENV') ?? 'development') !==
       'production'
@@ -72,7 +72,11 @@ export class AuthService {
       this.logger.log(`Dev OTP for ${mobile}: ${result.code}`);
     }
 
-    const smsResult = await this.ippanelService.sendPatternSms(mobile, 'verify-otp', {
+    const otpPatternCode =
+      this.configService.get<string>('IPPANEL_OTP_PATTERN_CODE') ??
+      '2tc60';
+
+    const smsResult = await this.ippanelService.sendPatternSms(mobile, otpPatternCode, {
       code: result.code,
     });
 
