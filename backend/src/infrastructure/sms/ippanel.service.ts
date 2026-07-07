@@ -20,18 +20,27 @@ export class IppanelService {
   private readonly apiKey: string;
   private readonly sourceNumber: string;
   private readonly defaultPatternCode: string;
+  private readonly baseUrl: string;
+  private readonly authScheme: 'Bearer' | 'AccessKey';
 
   constructor(private readonly configService: ConfigService) {
     const baseUrl = this.configService.get<string>('IPPANEL_BASE_URL') || 'https://edge.ippanel.com/v1';
+    this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.apiKey = this.configService.get<string>('IPPANEL_API_KEY') || '';
     this.sourceNumber = this.configService.get<string>('IPPANEL_FROM_NUMBER') || '';
     this.defaultPatternCode = this.configService.get<string>('IPPANEL_OTP_PATTERN_CODE') || '2tc60';
 
+    const configuredAuthScheme = this.configService.get<string>('IPPANEL_AUTH_SCHEME');
+    const host = new URL(this.baseUrl).hostname;
+    this.authScheme = configuredAuthScheme === 'Bearer' || host.includes('panelchi')
+      ? 'Bearer'
+      : 'AccessKey';
+
     this.httpClient = axios.create({
-      baseURL: baseUrl.replace(/\/+$/, ''),
+      baseURL: this.baseUrl,
       timeout: 15000,
       headers: {
-        'Authorization': `AccessKey ${this.apiKey}`,
+        Authorization: `${this.authScheme} ${this.apiKey}`,
         'Content-Type': 'application/json',
       },
     });
@@ -74,7 +83,7 @@ export class IppanelService {
     };
 
     try {
-      const response = await this.httpClient.post('/sms/pattern', payload);
+      const response = await this.postWithFallbacks(['/sms/pattern', '/v1/sms/pattern'], payload);
       const resData = response.data?.data;
 
       return {
@@ -113,7 +122,7 @@ export class IppanelService {
     };
 
     try {
-      const response = await this.httpClient.post('/sms/send', payload);
+      const response = await this.postWithFallbacks(['/sms/send', '/v1/sms/send'], payload);
       const resData = response.data?.data;
 
       return {
@@ -132,6 +141,24 @@ export class IppanelService {
         requestUrl: error.config?.url,
       };
     }
+  }
+
+  private async postWithFallbacks(paths: string[], payload: Record<string, unknown>) {
+    const errors: any[] = [];
+
+    for (const path of paths) {
+      try {
+        return await this.httpClient.post(path, payload);
+      } catch (error: any) {
+        errors.push(error);
+        const status = error.response?.status;
+        if (status !== 404) {
+          throw error;
+        }
+      }
+    }
+
+    throw errors[errors.length - 1];
   }
 
   private formatRecipient(raw: string): string {

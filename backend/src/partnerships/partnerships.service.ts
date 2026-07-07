@@ -4,12 +4,14 @@ import { PartnershipStatus, SponsorshipPlan } from '@prisma/client';
 
 @Injectable()
 export class PartnershipsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async submitCollaboration(dto: any, userId?: string) {
+    const { acceptedTerms: _acceptedTerms, ...safeDto } = dto;
+
     return this.prisma.collaborationRequest.create({
       data: {
-        ...dto,
+        ...safeDto,
         userId: userId ?? null,
       },
     });

@@ -381,8 +381,9 @@ export class PaymentsService {
 
     const eventTitle = parseLocalizedText(event.title).fa || parseLocalizedText(event.title).en;
     const eventLink = `thinkthentalk.ir/events/${event.slug || event.id}`;
+    const patternCode = this.configService.get<string>('IPPANEL_REGISTER_EVENT_PATTERN_CODE') || 'kc0p2';
 
-    this.ippanelService.sendPatternSms(mobile, 'register-event', {
+    this.ippanelService.sendPatternSms(mobile, patternCode, {
       event: eventTitle,
       eventLink,
     }).catch(err => this.logger.error('Failed to send registration SMS', err));
