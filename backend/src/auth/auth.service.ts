@@ -72,8 +72,6 @@ export class AuthService {
       this.logger.log(`Dev OTP for ${mobile}: ${result.code}`);
     }
 
-    // Using the 'verify-otp' pattern slug from your IPPanel account
-    // Variable in pattern is %code%
     const smsResult = await this.ippanelService.sendPatternSms(mobile, 'verify-otp', {
       code: result.code,
     });

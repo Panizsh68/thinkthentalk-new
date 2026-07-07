@@ -65,7 +65,7 @@ export const ContactStep = forwardRef<StepRef, StepComponentProps>(({}, ref) => 
   }));
 
   useEffect(() => {
-    const subscription = form.watch((values: Partial<ContactFormValues>) => {
+    const subscription = form.watch((values) => {
       setFormData({ 
         mobile: values?.mobile ?? '', 
         email: values?.email ?? '' 

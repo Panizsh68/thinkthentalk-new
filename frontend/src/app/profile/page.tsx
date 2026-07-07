@@ -2,8 +2,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useEffect, useMemo } from 'react';
-import { Loader2, ShieldCheck, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Loader2, ShieldCheck, Mail, Phone, CheckCircle2, AlertTriangle, Send } from 'lucide-react';
 
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useAuth } from '@/lib/auth/auth-provider';
@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { apiClient } from '@/lib/api/client';
 
 const placeholderNames = ['نام', 'نام خانوادگی', 'name', 'first name', 'last name'];
 const isEmail = (val?: string | null) => val?.includes('@');
@@ -50,8 +51,13 @@ type ProfileFormValues = z.infer<ReturnType<typeof getProfileSchema>>;
 export default function UserProfilePage() {
   const { t, language } = useLanguage();
   const isRTL = language === 'fa';
-  const { currentUser, updateUserProfile, isLoading: isAuthLoading } = useAuth();
+  const { currentUser, updateUserProfile, isLoading: isAuthLoading, requestOtp } = useAuth();
   const { toast } = useToast();
+
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [otpValue, setOtpValue] = useState('');
+  const [isConfirming, setIsConfirming] = useState(false);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(getProfileSchema(t)),
@@ -95,9 +101,10 @@ export default function UserProfilePage() {
   const identityStatus = useMemo(() => {
     const email = currentUser?.email;
     const mobile = currentUser?.mobile;
+    const isRealMobile = (val?: string) => val ? /^09\d{9}$/.test(val) : false;
     return {
       emailLinked: !!email && email.includes('@'),
-      phoneLinked: !!mobile && !mobile.includes('@') && /^09\d{9}$/.test(mobile),
+      phoneLinked: isRealMobile(mobile),
     };
   }, [currentUser]);
 
@@ -111,6 +118,45 @@ export default function UserProfilePage() {
       toast({ variant: 'destructive', title: t('errors.genericTitle'), description: error.message });
     }
   }
+
+  const handleSendCode = async () => {
+    const mobile = form.getValues('mobile');
+    if (!/^09\d{9}$/.test(mobile)) {
+      form.setError('mobile', { message: t('auth.errors.invalidMobile') });
+      return;
+    }
+
+    setIsVerifying(true);
+    try {
+      await requestOtp(mobile);
+      setVerificationSent(true);
+      toast({ title: t('auth.otpSentTitle') });
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('errors.genericTitle'), description: error.message });
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleConfirmCode = async () => {
+    if (otpValue.length < 6) return;
+    setIsConfirming(true);
+    try {
+      const mobile = form.getValues('mobile');
+      const response = await apiClient.post<any>('/auth/verify-otp', { mobile, otp: otpValue });
+      
+      if (response.data) {
+        await updateUserProfile({ mobile });
+        setVerificationSent(false);
+        setOtpValue('');
+        toast({ title: t('registration.fields.verifySuccess') });
+      }
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('errors.genericTitle'), description: t('registration.errors.verifyFailed') });
+    } finally {
+      setIsConfirming(false);
+    }
+  };
 
   if (isAuthLoading || !currentUser) {
     return <div className="flex justify-center py-20"><Loader2 className="animate-spin h-8 w-8 text-primary" /></div>;
@@ -174,8 +220,59 @@ export default function UserProfilePage() {
                 <FormField control={form.control} name="mobile" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('auth.mobileLabel')}</FormLabel>
-                    <FormControl><Input {...field} readOnly disabled dir="ltr" className="bg-muted/50 rounded-xl" /></FormControl>
-                    <FormDescription className="text-xs">{t('profile.mobileReadOnly')}</FormDescription>
+                    <div className="flex gap-2">
+                      <FormControl>
+                        <div className="relative flex-1">
+                          <Input 
+                            {...field} 
+                            dir="ltr" 
+                            placeholder="09123456789" 
+                            disabled={identityStatus.phoneLinked || verificationSent} 
+                            className={cn("rounded-xl", identityStatus.phoneLinked && "pr-10 border-green-500 bg-muted/50")} 
+                          />
+                          {identityStatus.phoneLinked && (
+                            <CheckCircle2 className="absolute right-3 top-2.5 h-5 w-5 text-green-500" />
+                          )}
+                        </div>
+                      </FormControl>
+                      {!identityStatus.phoneLinked && !verificationSent && (
+                        <Button 
+                          type="button" 
+                          variant="secondary" 
+                          onClick={handleSendCode} 
+                          disabled={isVerifying || !/^09\d{9}$/.test(field.value)}
+                        >
+                          {isVerifying ? <Loader2 className="h-4 w-4 animate-spin" /> : t('registration.fields.sendCode')}
+                        </Button>
+                      )}
+                    </div>
+                    {verificationSent && (
+                      <div className="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/20 space-y-4 animate-in fade-in slide-in-from-top-2">
+                        <div className="space-y-2">
+                          <FormLabel>{t('registration.fields.verificationCode')}</FormLabel>
+                          <div className="flex gap-2">
+                            <Input 
+                              value={otpValue} 
+                              onChange={(e) => setOtpValue(e.target.value)} 
+                              placeholder="123456" 
+                              dir="ltr" 
+                              maxLength={6}
+                            />
+                            <Button 
+                              type="button" 
+                              onClick={handleConfirmCode} 
+                              disabled={isConfirming || otpValue.length < 6}
+                            >
+                              {isConfirming ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirm')}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <FormDescription className="text-xs">
+                      {identityStatus.phoneLinked ? t('profile.mobileReadOnly') : t('auth.loginSubtitle')}
+                    </FormDescription>
+                    <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="email" render={({ field }) => (
