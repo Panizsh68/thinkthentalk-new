@@ -47,24 +47,49 @@ export class PrismaUserRepository extends IUserRepository {
   async createOrUpdateFromOtpProfile(
     dto: CreateOrUpdateUserProfileDto,
   ): Promise<UserEntity> {
-    const user = await this.prisma.user.upsert({
-      where: { mobile: dto.mobile },
-      update: {
-        firstNameFa: cleanName(dto.firstNameFa),
-        lastNameFa: cleanName(dto.lastNameFa),
-        firstNameEn: cleanName(dto.firstNameEn),
-        lastNameEn: cleanName(dto.lastNameEn),
-        gender: dto.gender as Gender || undefined,
-        age: dto.age ?? undefined,
-        educationLevel: cleanString(dto.educationLevel),
-        fieldOfStudy: cleanString(dto.fieldOfStudy),
-        isEmployed: dto.isEmployed ?? undefined,
-        jobTitle: cleanString(dto.jobTitle),
-        email: cleanString(dto.email),
-        languageLevel: cleanString(dto.languageLevel),
-      },
-      create: {
-        mobile: dto.mobile,
+    const normalizedMobile = cleanString(dto.mobile);
+    const normalizedEmail = cleanString(dto.email)?.toLowerCase();
+
+    const existingByMobile = normalizedMobile
+      ? await this.prisma.user.findUnique({ where: { mobile: normalizedMobile } })
+      : null;
+    const existingByEmail = normalizedEmail
+      ? await this.prisma.user.findFirst({ where: { email: normalizedEmail } })
+      : null;
+
+    const existingUser = existingByMobile ?? existingByEmail;
+
+    if (existingUser) {
+      await this.syncIdentityFields(existingUser.id, {
+        email: normalizedEmail,
+        mobile: normalizedMobile,
+      });
+
+      const user = await this.prisma.user.update({
+        where: { id: existingUser.id },
+        data: {
+          firstNameFa: cleanName(dto.firstNameFa),
+          lastNameFa: cleanName(dto.lastNameFa),
+          firstNameEn: cleanName(dto.firstNameEn),
+          lastNameEn: cleanName(dto.lastNameEn),
+          gender: dto.gender as Gender || undefined,
+          age: dto.age ?? undefined,
+          educationLevel: cleanString(dto.educationLevel),
+          fieldOfStudy: cleanString(dto.fieldOfStudy),
+          isEmployed: dto.isEmployed ?? undefined,
+          jobTitle: cleanString(dto.jobTitle),
+          email: normalizedEmail,
+          mobile: normalizedMobile,
+          languageLevel: cleanString(dto.languageLevel),
+        },
+      });
+
+      return toUserEntity(user);
+    }
+
+    const user = await this.prisma.user.create({
+      data: {
+        mobile: normalizedMobile ?? `otp-user-${Date.now()}`,
         firstNameFa: cleanName(dto.firstNameFa) ?? 'نام',
         lastNameFa: cleanName(dto.lastNameFa) ?? 'نام خانوادگی',
         firstNameEn: cleanName(dto.firstNameEn),
@@ -75,7 +100,7 @@ export class PrismaUserRepository extends IUserRepository {
         fieldOfStudy: cleanString(dto.fieldOfStudy),
         isEmployed: dto.isEmployed,
         jobTitle: cleanString(dto.jobTitle),
-        email: cleanString(dto.email),
+        email: normalizedEmail,
         languageLevel: cleanString(dto.languageLevel),
       },
     });
@@ -87,6 +112,14 @@ export class PrismaUserRepository extends IUserRepository {
     id: string,
     dto: UpdateUserProfileDto,
   ): Promise<UserEntity> {
+    const normalizedEmail = cleanString(dto.email)?.toLowerCase();
+    const normalizedMobile = cleanString(dto.mobile);
+
+    await this.syncIdentityFields(id, {
+      email: normalizedEmail,
+      mobile: normalizedMobile,
+    });
+
     const user = await this.prisma.user.update({
       where: { id },
       data: {
@@ -100,12 +133,55 @@ export class PrismaUserRepository extends IUserRepository {
         fieldOfStudy: cleanString(dto.fieldOfStudy),
         isEmployed: dto.isEmployed ?? undefined,
         jobTitle: cleanString(dto.jobTitle),
-        email: cleanString(dto.email),
+        email: normalizedEmail,
+        mobile: normalizedMobile,
         languageLevel: cleanString(dto.languageLevel),
       },
     });
 
     return toUserEntity(user);
+  }
+
+  private async syncIdentityFields(
+    userId: string,
+    values: { email?: string | null; mobile?: string | null },
+  ): Promise<void> {
+    const normalizedEmail = cleanString(values.email)?.toLowerCase();
+    const normalizedMobile = cleanString(values.mobile);
+
+    if (normalizedEmail) {
+      const duplicateEmailOwner = await this.prisma.user.findFirst({
+        where: {
+          email: normalizedEmail,
+          id: { not: userId },
+        },
+      });
+
+      if (duplicateEmailOwner) {
+        await this.prisma.user.update({
+          where: { id: duplicateEmailOwner.id },
+          data: { email: null },
+        });
+      }
+    }
+
+    if (normalizedMobile) {
+      const duplicateMobileOwner = await this.prisma.user.findFirst({
+        where: {
+          mobile: normalizedMobile,
+          id: { not: userId },
+        },
+      });
+
+      if (duplicateMobileOwner) {
+        await this.prisma.user.update({
+          where: { id: duplicateMobileOwner.id },
+          data: {
+            mobile: `migrated-${duplicateMobileOwner.id}-${Date.now()}`,
+          },
+        });
+      }
+    }
   }
 
   async createUserWithEmailPassword(

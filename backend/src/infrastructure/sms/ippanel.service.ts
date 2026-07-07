@@ -122,11 +122,28 @@ export class IppanelService {
     this.logger.warn(
       `IPPanel pattern SMS failed for all candidates [${patternCandidates.join(', ')}]: ${detail}`,
     );
+
+    const fallbackMessage = this.buildFallbackMessage(variables);
+    const fallbackResult = await this.sendTextSms(to, fallbackMessage);
+
+    if (fallbackResult.success) {
+      this.logger.log('IPPanel pattern SMS was unavailable; used plain text SMS fallback.');
+      return {
+        success: true,
+        bulkId: fallbackResult.bulkId,
+        messageIds: fallbackResult.messageIds,
+        raw: fallbackResult.raw,
+        requestUrl: fallbackResult.requestUrl,
+        usedPatternCode: resolvedPatternSlug,
+        statusMessage: 'Pattern SMS unavailable; used plain text SMS fallback.',
+      };
+    }
+
     return {
       success: false,
-      statusCode: lastError?.response?.status,
-      statusMessage: detail,
-      requestUrl: lastError?.config?.url,
+      statusCode: fallbackResult.statusCode,
+      statusMessage: fallbackResult.statusMessage || detail,
+      requestUrl: fallbackResult.requestUrl,
     };
   }
 
@@ -135,6 +152,11 @@ export class IppanelService {
       .filter((value): value is string => Boolean(value && value !== 'DEFAULT'));
 
     return [...new Set(candidates)];
+  }
+
+  private buildFallbackMessage(variables: Record<string, string | number>): string {
+    const code = variables.code ?? variables.otp ?? variables.Code;
+    return code !== undefined ? `Your verification code is ${code}` : 'Your verification code is ready.';
   }
 
   private isPatternUnavailableError(error: any): boolean {

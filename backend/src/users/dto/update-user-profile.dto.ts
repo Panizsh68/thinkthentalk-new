@@ -91,6 +91,16 @@ export class UpdateUserProfileDto {
   email?: string;
 
   @ApiPropertyOptional({
+    description:
+      'Mobile number. Accepted for frontend compatibility and ignored by this endpoint.',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  mobile?: string;
+
+  @ApiPropertyOptional({
     description: 'Language proficiency level.',
     type: String,
   })

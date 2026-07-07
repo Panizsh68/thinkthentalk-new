@@ -18,9 +18,11 @@ export class PartnershipsService {
   }
 
   async submitSponsorship(dto: any, userId?: string) {
+    const { acceptedTerms: _acceptedTerms, ...safeDto } = dto;
+
     return this.prisma.sponsorshipRequest.create({
       data: {
-        ...dto,
+        ...safeDto,
         userId: userId ?? null,
       },
     });

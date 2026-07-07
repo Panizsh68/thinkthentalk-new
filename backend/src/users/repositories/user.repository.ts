@@ -28,6 +28,7 @@ export interface UpdateUserProfileDto {
   isEmployed?: boolean | null;
   jobTitle?: string | null;
   email?: string | null;
+  mobile?: string | null;
   languageLevel?: string | null;
 }
 
