@@ -153,8 +153,8 @@ export function SidebarLayout({
           </div>
         </header>
         
-        <main className="flex-1 p-4 md:p-8 lg:p-10 transition-all duration-300 bg-background">
-          <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <main className="flex-1 p-0 transition-all duration-300 bg-background">
+          <div className="w-full h-full p-4 md:p-8 lg:p-10 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
             {children}
           </div>
         </main>

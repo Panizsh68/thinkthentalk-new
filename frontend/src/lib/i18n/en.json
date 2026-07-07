@@ -724,7 +724,7 @@
       "body": "Message Content",
       "templateNote": "Use {name} or {eventName} placeholders",
       "channels": "Delivery Channels",
-      "sendButton": "Send to {count} People",
+      "sendButton": "Send to {count} people",
       "confirmSendTitle": "Send Messages?",
       "confirmSendDescription": "Are you sure you want to send this to {count} people?",
       "sendSuccessTitle": "Sent",

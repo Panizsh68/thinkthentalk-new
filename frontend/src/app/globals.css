@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 40 30% 98%;
+    --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
 
     --card: 0 0% 100%;
@@ -28,8 +28,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 187 60% 35%;
 
     --radius: 0.5rem;
@@ -101,19 +101,11 @@
     @apply text-foreground;
   }
 
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4,
-  .prose h5,
-  .prose h6 {
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
     @apply text-foreground;
   }
 
-  .prose p,
-  .prose ul,
-  .prose ol,
-  .prose blockquote {
+  .prose p, .prose ul, .prose ol, .prose blockquote {
     @apply text-foreground/90;
   }
 
@@ -123,10 +115,6 @@
 
   .prose strong {
     @apply text-foreground font-bold;
-  }
-
-  .prose code {
-    @apply text-foreground bg-muted rounded-sm px-1 py-0.5;
   }
 }
 
