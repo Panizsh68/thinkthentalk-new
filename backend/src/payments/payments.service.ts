@@ -25,7 +25,7 @@ export class PaymentsService {
     private readonly zarinpalGateway: ZarinpalGateway,
     private readonly ippanelService: IppanelService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async listAdminPayments(filters: {
     eventId?: string;
@@ -161,66 +161,66 @@ export class PaymentsService {
     const result = await this.prisma.$transaction(async (tx) => {
       const registration =
         existingRegistration &&
-        existingRegistration.status !== RegistrationStatus.CANCELLED
+          existingRegistration.status !== RegistrationStatus.CANCELLED
           ? await tx.registration.update({
-              where: { id: existingRegistration.id },
+            where: { id: existingRegistration.id },
+            data: {
+              ticketType: dto.ticketType,
+              status: isFree
+                ? RegistrationStatus.PAID
+                : RegistrationStatus.PENDING,
+              formData: JSON.stringify(dto.formData),
+            },
+          })
+          : await (async () => {
+            const reg = await tx.registration.create({
               data: {
+                userId,
+                eventId: dto.eventId,
                 ticketType: dto.ticketType,
                 status: isFree
                   ? RegistrationStatus.PAID
                   : RegistrationStatus.PENDING,
                 formData: JSON.stringify(dto.formData),
-              },
-            })
-          : await (async () => {
-              const reg = await tx.registration.create({
-                data: {
-                  userId,
-                  eventId: dto.eventId,
-                  ticketType: dto.ticketType,
-                  status: isFree
-                    ? RegistrationStatus.PAID
-                    : RegistrationStatus.PENDING,
-                  formData: JSON.stringify(dto.formData),
-                } as Prisma.RegistrationUncheckedCreateInput,
-              });
+              } as Prisma.RegistrationUncheckedCreateInput,
+            });
 
-              await tx.event.update({
-                where: { id: dto.eventId },
-                data: { capacityRemaining: { decrement: 1 } },
-              });
+            await tx.event.update({
+              where: { id: dto.eventId },
+              data: { capacityRemaining: { decrement: 1 } },
+            });
 
-              await tx.eventTicketConfig.update({
-                where: { id: ticketConfig.id },
-                data: { quantitySold: { increment: 1 } },
-              });
+            await tx.eventTicketConfig.update({
+              where: { id: ticketConfig.id },
+              data: { quantitySold: { increment: 1 } },
+            });
 
-              return reg;
-            })();
+            return reg;
+          })();
 
       const payment =
         existingRegistration?.payment &&
-        existingRegistration.status !== RegistrationStatus.CANCELLED
+          existingRegistration.status !== RegistrationStatus.CANCELLED
           ? await tx.payment.update({
-              where: { id: existingRegistration.payment.id },
-              data: {
-                amount,
-                currency: dto.currency,
-                ticketType: dto.ticketType,
-                status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
-                gatewayTransactionId: null,
-              },
-            })
+            where: { id: existingRegistration.payment.id },
+            data: {
+              amount,
+              currency: dto.currency,
+              ticketType: dto.ticketType,
+              status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
+              gatewayTransactionId: null,
+            },
+          })
           : await tx.payment.create({
-              data: {
-                registrationId: registration.id,
-                eventId: dto.eventId,
-                ticketType: dto.ticketType,
-                amount,
-                currency: dto.currency,
-                status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
-              },
-            });
+            data: {
+              registrationId: registration.id,
+              eventId: dto.eventId,
+              ticketType: dto.ticketType,
+              amount,
+              currency: dto.currency,
+              status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
+            },
+          });
 
       await tx.registration.update({
         where: { id: registration.id },
@@ -314,9 +314,13 @@ export class PaymentsService {
   ): Promise<PaymentDto | null> {
     const payment = await this.prisma.payment.findFirst({
       where: { id: paymentId },
-      include: { registration: { include: { user: true } }, event: true },
+      include: { registration: { include: { user: true } } },
     });
     if (!payment) return null;
+
+    const paymentEvent = await this.prisma.event.findUnique({
+      where: { id: payment.eventId },
+    });
 
     const amount =
       typeof payment.amount === 'number'
@@ -365,8 +369,8 @@ export class PaymentsService {
       return p;
     });
 
-    if (isSuccess && payment.registration?.user?.mobile) {
-      this.sendRegistrationSms(payment.registration.user.mobile, payment.event);
+    if (isSuccess && payment.registration?.user?.mobile && paymentEvent) {
+      this.sendRegistrationSms(payment.registration.user.mobile, paymentEvent);
     }
 
     return this.toPaymentDto(updated);
@@ -374,10 +378,10 @@ export class PaymentsService {
 
   private async sendRegistrationSms(mobile?: string | null, event?: any) {
     if (!mobile || !event) return;
-    
+
     const eventTitle = parseLocalizedText(event.title).fa || parseLocalizedText(event.title).en;
     const eventLink = `thinkthentalk.ir/events/${event.slug || event.id}`;
-    
+
     this.ippanelService.sendPatternSms(mobile, 'register-event', {
       event: eventTitle,
       eventLink,
@@ -391,10 +395,14 @@ export class PaymentsService {
   ): Promise<PaymentDto | null> {
     const payment = await this.prisma.payment.findFirst({
       where: { id: paymentId, registration: { userId } },
-      include: { registration: { include: { user: true } }, event: true },
+      include: { registration: { include: { user: true } } },
     });
 
     if (!payment) return null;
+
+    const paymentEvent = await this.prisma.event.findUnique({
+      where: { id: payment.eventId },
+    });
 
     const amount =
       typeof payment.amount === 'number'
@@ -443,8 +451,8 @@ export class PaymentsService {
       return p;
     });
 
-    if (isSuccess && payment.registration?.user?.mobile) {
-      this.sendRegistrationSms(payment.registration.user.mobile, payment.event);
+    if (isSuccess && payment.registration?.user?.mobile && paymentEvent) {
+      this.sendRegistrationSms(payment.registration.user.mobile, paymentEvent);
     }
 
     return this.toPaymentDto(updated);

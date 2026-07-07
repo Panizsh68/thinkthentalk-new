@@ -11,7 +11,7 @@ export class MessagingController {
   constructor(
     private readonly messagingService: MessagingService,
     private readonly ippanelService: IppanelService,
-  ) {}
+  ) { }
 
   @Get('status')
   @ApiOperation({
@@ -56,11 +56,10 @@ export class MessagingController {
   }> {
     const otp = query.otp ?? this.generateOtp();
     const patternCode = query.patternCode;
-    const patternOptions = patternCode ? { code: patternCode } : undefined;
     const result = await this.ippanelService.sendPatternSms(
       query.mobile,
+      patternCode ?? 'DEFAULT',
       { code: otp },
-      patternOptions,
     );
 
     return {
@@ -70,7 +69,7 @@ export class MessagingController {
       statusMessage: result.statusMessage,
       bulkId: result.bulkId,
       messageIds: result.messageIds ?? [],
-      patternCode: result.usedPatternCode ?? patternOptions?.code ?? 'DEFAULT',
+      patternCode: result.usedPatternCode ?? patternCode ?? 'DEFAULT',
       endpoint: result.requestUrl,
     };
   }
