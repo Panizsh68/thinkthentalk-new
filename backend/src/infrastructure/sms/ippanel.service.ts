@@ -76,33 +76,71 @@ export class IppanelService {
     }
 
     const payload = {
-      pattern: resolvedPatternSlug,
       variables,
       recipient,
       sourceNumber,
     };
 
-    try {
-      const response = await this.postWithFallbacks(['/sms/pattern', '/v1/sms/pattern'], payload);
-      const resData = response.data?.data;
+    const patternCandidates = this.getPatternCandidates(resolvedPatternSlug);
+    let lastError: any;
 
-      return {
-        success: true,
-        bulkId: resData?.uid,
-        messageIds: resData?.recipients?.map((r: any) => r.uid) || [],
-        raw: response.data,
-        requestUrl: response.config.url,
-        usedPatternCode: resolvedPatternSlug,
-      };
-    } catch (error: any) {
-      this.handleError('Pattern SMS', error);
-      return {
-        success: false,
-        statusCode: error.response?.status,
-        statusMessage: error.response?.data?.detail || error.message,
-        requestUrl: error.config?.url,
-      };
+    for (const patternCode of patternCandidates) {
+      try {
+        const response = await this.postWithFallbacks(['/sms/pattern', '/v1/sms/pattern'], {
+          ...payload,
+          pattern: patternCode,
+        });
+        const resData = response.data?.data;
+
+        return {
+          success: true,
+          bulkId: resData?.uid,
+          messageIds: resData?.recipients?.map((r: any) => r.uid) || [],
+          raw: response.data,
+          requestUrl: response.config.url,
+          usedPatternCode: patternCode,
+        };
+      } catch (error: any) {
+        lastError = error;
+        if (!this.isPatternUnavailableError(error)) {
+          this.handleError('Pattern SMS', error);
+          return {
+            success: false,
+            statusCode: error.response?.status,
+            statusMessage: error.response?.data?.detail || error.message,
+            requestUrl: error.config?.url,
+          };
+        }
+
+        this.logger.log(
+          `IPPanel pattern '${patternCode}' was rejected; trying the next known pattern code.`,
+        );
+      }
     }
+
+    const detail = lastError?.response?.data?.detail || lastError?.message;
+    this.logger.warn(
+      `IPPanel pattern SMS failed for all candidates [${patternCandidates.join(', ')}]: ${detail}`,
+    );
+    return {
+      success: false,
+      statusCode: lastError?.response?.status,
+      statusMessage: detail,
+      requestUrl: lastError?.config?.url,
+    };
+  }
+
+  private getPatternCandidates(patternSlug: string): string[] {
+    const candidates = [patternSlug, 'hijid9771y36ega', '2tc60', 'kc0p2']
+      .filter((value): value is string => Boolean(value && value !== 'DEFAULT'));
+
+    return [...new Set(candidates)];
+  }
+
+  private isPatternUnavailableError(error: any): boolean {
+    const status = error?.response?.status;
+    const detail = error?.response?.data?.detail || error?.message || '';
+    return status === 404 || status === 422 || /pattern|پترن/i.test(String(detail));
   }
 
   /**
