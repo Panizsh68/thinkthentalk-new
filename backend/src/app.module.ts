@@ -3,7 +3,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
-import * as path from 'path';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -24,6 +23,10 @@ import { EventIdeasModule } from './event-ideas/event-ideas.module';
 import { PartnershipsModule } from './partnerships/partnerships.module';
 import { WalletModule } from './wallet/wallet.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import {
+  getUploadDirCandidates,
+  resolvePrimaryUploadDir,
+} from './infrastructure/storage/upload-paths';
 
 @Module({
   imports: [
@@ -33,9 +36,10 @@ import { SubscriptionModule } from './subscription/subscription.module';
         const configuredUploadDir = configService.get<string>('UPLOADS_DIR');
         const publicUploadPath =
           configService.get<string>('PUBLIC_UPLOAD_PATH') ?? '/images';
-        const rootPath = configuredUploadDir
-          ? path.resolve(configuredUploadDir)
-          : path.join(process.cwd(), 'uploads');
+        const rootPaths = [
+          resolvePrimaryUploadDir(configuredUploadDir),
+          ...getUploadDirCandidates(configuredUploadDir),
+        ];
 
         const serveRoots = Array.from(
           new Set([
@@ -47,11 +51,13 @@ import { SubscriptionModule } from './subscription/subscription.module';
           ]),
         );
 
-        return serveRoots.map((serveRoot) => ({
-          rootPath,
-          serveRoot,
-          serveStaticOptions: { index: false },
-        }));
+        return rootPaths.flatMap((rootPath) =>
+          serveRoots.map((serveRoot) => ({
+            rootPath,
+            serveRoot,
+            serveStaticOptions: { index: false },
+          })),
+        );
       },
     }),
     ThrottlerModule.forRootAsync({

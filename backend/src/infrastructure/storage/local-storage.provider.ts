@@ -10,6 +10,7 @@ import {
   StorageUploadOptions,
   FileCategory,
 } from './storage.types';
+import { resolvePrimaryUploadDir } from './upload-paths';
 
 @Injectable()
 export class LocalStorageProvider implements StorageProvider {
@@ -23,10 +24,7 @@ export class LocalStorageProvider implements StorageProvider {
     const configuredPublicPath =
       this.configService.get<string>('PUBLIC_UPLOAD_PATH');
 
-    const envUploadDir = process.env.UPLOADS_DIR;
-    this.uploadDir = path.resolve(
-      envUploadDir || configuredUploadDir || './uploads',
-    );
+    this.uploadDir = resolvePrimaryUploadDir(configuredUploadDir);
 
     const normalizedPublicPath = configuredPublicPath ?? '/uploads';
     this.publicDir = normalizedPublicPath.startsWith('/')

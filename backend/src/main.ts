@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -19,6 +19,8 @@ async function bootstrap() {
     'http://localhost:3001',
     'http://localhost:9002',
     'http://10.88.0.3:9002',
+    'http://thinkthentalk.ir',
+    'http://www.thinkthentalk.ir',
     'https://thinkthentalk.ir',
     'https://www.thinkthentalk.ir',
     /https?:\/\/.*\.cloudworkstations\.dev$/,

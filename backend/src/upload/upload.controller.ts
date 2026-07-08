@@ -175,6 +175,60 @@ export class UploadController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('document')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: 50 * 1024 * 1024 },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'General document file (PDF, DOC, DOCX, XLS, XLSX)',
+        },
+      },
+    },
+  })
+  @ApiOperation({
+    summary: 'Upload document file',
+    description: 'Upload a general-purpose document for admin-managed content.',
+  })
+  @ApiCreatedResponse({
+    description: 'Document uploaded successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        url: { type: 'string' },
+        filename: { type: 'string' },
+      },
+    },
+  })
+  async uploadDocument(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Partial<StoredFile>> {
+    if (!file) {
+      throw new BadRequestException('No file provided');
+    }
+
+    const stored = await this.storageService.uploadFile(file, {
+      category: FileCategory.DOCUMENT,
+    });
+
+    return {
+      id: stored.id,
+      url: stored.url,
+      filename: stored.filename,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('team-member')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -289,6 +343,60 @@ export class UploadController {
 
     const stored = await this.storageService.uploadFile(file, {
       category: FileCategory.SPONSOR_LOGO,
+    });
+
+    return {
+      id: stored.id,
+      url: stored.url,
+      filename: stored.filename,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('attachment')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: 50 * 1024 * 1024 },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'General attachment file (PDF, image, ZIP, RAR)',
+        },
+      },
+    },
+  })
+  @ApiOperation({
+    summary: 'Upload attachment',
+    description: 'Upload a general-purpose attachment for content and admin workflows.',
+  })
+  @ApiCreatedResponse({
+    description: 'Attachment uploaded successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        url: { type: 'string' },
+        filename: { type: 'string' },
+      },
+    },
+  })
+  async uploadAttachment(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Partial<StoredFile>> {
+    if (!file) {
+      throw new BadRequestException('No file provided');
+    }
+
+    const stored = await this.storageService.uploadFile(file, {
+      category: FileCategory.ATTACHMENT,
     });
 
     return {
