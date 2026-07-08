@@ -9,23 +9,24 @@ const config: NextConfig = {
     ignoreDuringBuilds: true,
   },
   async rewrites() {
-    const uploadProxyDestination =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : 'https://thinkthentalk.ir';
+    if (process.env.NODE_ENV !== 'development') {
+      return [];
+    }
+
+    const backendOrigin = 'http://localhost:3000';
 
     return [
       {
         source: '/api/:path*',
-        destination: `${uploadProxyDestination}/api/:path*`,
+        destination: `${backendOrigin}/api/:path*`,
       },
       {
         source: '/images/:path*',
-        destination: `${uploadProxyDestination}/uploads/:path*`,
+        destination: `${backendOrigin}/uploads/:path*`,
       },
       {
         source: '/uploads/:path*',
-        destination: `${uploadProxyDestination}/uploads/:path*`,
+        destination: `${backendOrigin}/uploads/:path*`,
       },
     ];
   },

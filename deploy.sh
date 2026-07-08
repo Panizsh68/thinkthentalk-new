@@ -22,7 +22,7 @@ echo "🏗️ Building frontend..."
 pnpm run build
 
 echo "🔁 Restarting PM2 processes..."
-pm2 restart thinkthentalk-backend
-pm2 restart thinkthentalk-frontend
+pm2 restart thinkthentalk-backend --update-env
+pm2 restart thinkthentalk-frontend --update-env
 
 echo "✅ Deployment finished successfully!"
