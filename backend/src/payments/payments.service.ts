@@ -345,7 +345,7 @@ export class PaymentsService {
 
     const eventTitle =
       parseLocalizedText(event.title).fa || parseLocalizedText(event.title).en;
-    const eventLink = `thinkthentalk.ir/events/${event.slug || event.id}`;
+    const eventLink = `https://thinkthentalk.ir/events/${event.slug || event.id}`;
     const patternCode =
       this.configService.get<string>('IPPANEL_REGISTER_EVENT_PATTERN_CODE') ||
       'kc0p2';

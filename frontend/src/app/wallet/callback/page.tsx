@@ -57,27 +57,27 @@ function WalletCallbackContent() {
 
   if (transaction.status === 'SUCCESS') {
     return (
-      <div className="space-y-6 text-center">
+      <div className="w-full space-y-6 text-center">
         <div className="flex flex-col items-center gap-4 text-green-600">
           <CheckCircle className="h-12 w-12" />
           <h2 className="text-2xl font-semibold">{t('wallet.depositSuccess')}</h2>
           <p className="text-muted-foreground">{t('wallet.depositSuccessDescription')}</p>
         </div>
-        <Card className="text-left">
+        <Card className="w-full text-left">
           <CardContent className="space-y-4 pt-6">
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
               <span className="text-muted-foreground">{t('payment.paymentId')}</span>
-              <span className="font-mono text-sm">{transaction.id}</span>
+              <span className="font-mono text-sm break-all sm:text-right">{transaction.id}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
               <span className="text-muted-foreground">{t('admin.export.amount')}</span>
-              <span className="font-semibold">
+              <span className="font-semibold sm:text-right">
                 {formatCoins(transaction.amount)}
               </span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
               <span className="text-muted-foreground">{t('wallet.gatewayCharge')}</span>
-              <span className="font-semibold">
+              <span className="font-semibold sm:text-right">
                 {formatToman(transaction.tomanValue ?? transaction.amount * 10000)}
               </span>
             </div>
@@ -106,7 +106,7 @@ export default function WalletCallbackPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="container flex min-h-[calc(100vh-15rem)] items-center justify-center py-12">
+    <div className="container flex min-h-[calc(100vh-15rem)] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle>{t('wallet.callbackTitle')}</CardTitle>

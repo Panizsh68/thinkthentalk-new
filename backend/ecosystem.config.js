@@ -44,7 +44,8 @@ module.exports = {
         IPPANEL_PATTERN_BASE_URL: "https://edge.ippanel.com/v1",
         IPPANEL_API_KEY: "YTA4YjNjYmQtZmU2OS00YWUwLWJlYzEtZGIyMzRkNWEyNDViOTFjYjk0NjE4YTI0YjkxZjg0N2M5ZDliYjMzNzZiZDI=",
         IPPANEL_FROM_NUMBER: "+983000505",
-        IPPANEL_OTP_PATTERN_CODE: "hijid9771y36ega",
+        IPPANEL_OTP_PATTERN_CODE: "2tc60",
+        IPPANEL_REGISTER_EVENT_PATTERN_CODE: "kc0p2",
 
         SMTP_HOST: "",
         SMTP_PORT: "587",

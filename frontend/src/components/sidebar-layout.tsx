@@ -32,7 +32,7 @@ function SidebarHeaderWithLogo() {
   const { state } = useSidebar();
   
   return (
-    <SidebarHeader className="h-16 flex items-center px-4 border-b border-border/50">
+    <SidebarHeader className="h-16 flex items-center px-4 border-b border-border/60">
       <Link href="/" className="flex items-center gap-3 w-full transition-all duration-300 group">
         <div className={cn(
           "flex items-center justify-center shrink-0 transition-all duration-300",
@@ -41,7 +41,7 @@ function SidebarHeaderWithLogo() {
           <Logo width={32} height={32} className="h-full w-full object-contain group-hover:scale-110 transition-transform" />
         </div>
         <span className={cn(
-          "font-black text-lg tracking-tight truncate transition-all duration-300",
+          "font-black text-lg tracking-tight truncate text-sidebar-foreground transition-all duration-300",
           state === "collapsed" ? "opacity-0 w-0" : "opacity-100 w-auto"
         )}>
           Think Then Talk
@@ -68,10 +68,14 @@ export function SidebarLayout({
 
   return (
     <SidebarProvider>
-      <Sidebar side={isRTL ? "right" : "left"} collapsible="icon" className="border-border/40 shadow-sm z-40 bg-sidebar">
+      <Sidebar
+        side={isRTL ? "right" : "left"}
+        collapsible="icon"
+        className="z-40 border-border/60 bg-sidebar text-sidebar-foreground shadow-[0_18px_50px_rgba(15,23,42,0.08)]"
+      >
         <SidebarHeaderWithLogo />
         
-        <SidebarContent className="px-3 py-4 bg-sidebar">
+        <SidebarContent className="bg-sidebar px-3 py-4">
           <SidebarMenu>
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/admin' && item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -87,8 +91,8 @@ export function SidebarLayout({
                     )}
                   >
                     <Link href={item.href} className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
-                      <item.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
-                      <span className="font-bold">{item.label}</span>
+                      <item.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-sidebar-foreground/80")} />
+                      <span className="font-bold text-sidebar-foreground">{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -97,13 +101,13 @@ export function SidebarLayout({
           </SidebarMenu>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-border/50 p-4 bg-sidebar">
+        <SidebarFooter className="border-t border-border/60 bg-sidebar p-4">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={t('nav.home')}>
                 <Link href="/" className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
                   <Home className="h-5 w-5" />
-                  <span className="font-bold">{t('nav.home')}</span>
+                  <span className="font-bold text-sidebar-foreground">{t('nav.home')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -111,7 +115,7 @@ export function SidebarLayout({
               <SidebarMenuButton onClick={onLogout} tooltip={t('actions.logout')} className="text-muted-foreground hover:text-destructive">
                   <div className={cn("flex items-center w-full gap-3", isRTL && "flex-row-reverse")}>
                   <LogOut className="h-5 w-5" />
-                  <span className="font-bold">{t('actions.logout')}</span>
+                  <span className="font-bold text-sidebar-foreground">{t('actions.logout')}</span>
                 </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -142,8 +146,8 @@ export function SidebarLayout({
             {account && (
               <div className={cn("flex items-center gap-3 pl-2 transition-all", isRTL ? "flex-row-reverse pr-2 pl-0 border-r" : "border-l")}>
                 <div className={cn("flex flex-col", isRTL ? "text-right" : "text-left")}>
-                  <span className="text-xs font-black truncate max-w-[120px]">{account.name}</span>
-                  <span className="text-[10px] text-muted-foreground font-bold truncate max-w-[120px]">{account.email}</span>
+                  <span className="text-xs font-black truncate max-w-[120px] text-sidebar-foreground">{account.name}</span>
+                  <span className="text-[10px] font-bold truncate max-w-[120px] text-sidebar-foreground/70">{account.email}</span>
                 </div>
                 <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black text-xs uppercase shadow-inner">
                   {account.name?.charAt(0) || 'U'}

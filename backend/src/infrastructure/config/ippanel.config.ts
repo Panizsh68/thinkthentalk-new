@@ -6,6 +6,7 @@ export interface IppanelConfig {
   apiKey: string;
   fromNumber: string;
   otpPatternCode: string;
+  registerEventPatternCode: string;
 }
 
 export const ippanelConfig = registerAs<IppanelConfig>('ippanel', () => {
@@ -15,6 +16,7 @@ export const ippanelConfig = registerAs<IppanelConfig>('ippanel', () => {
     patternBaseUrl: process.env.IPPANEL_PATTERN_BASE_URL ?? baseUrl,
     apiKey: process.env.IPPANEL_API_KEY ?? '',
     fromNumber: process.env.IPPANEL_FROM_NUMBER ?? '',
-    otpPatternCode: process.env.IPPANEL_OTP_PATTERN_CODE ?? 'hijid9771y36ega',
+    otpPatternCode: process.env.IPPANEL_OTP_PATTERN_CODE ?? '2tc60',
+    registerEventPatternCode: process.env.IPPANEL_REGISTER_EVENT_PATTERN_CODE ?? 'kc0p2',
   };
 });

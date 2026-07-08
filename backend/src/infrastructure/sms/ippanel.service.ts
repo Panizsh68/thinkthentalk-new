@@ -22,6 +22,14 @@ export class IppanelService {
   private readonly defaultPatternCode: string;
   private readonly baseUrl: string;
   private readonly authScheme: 'Bearer' | 'AccessKey';
+  private readonly patternCodeAliases = new Map<string, string>([
+    ['register-event', 'kc0p2'],
+    ['verify-otp', '2tc60'],
+    ['otp-pattern-code', '2tc60'],
+    ['hijid9771y36ega', '2tc60'],
+    ['2tc60', '2tc60'],
+    ['kc0p2', 'kc0p2'],
+  ]);
 
   constructor(private readonly configService: ConfigService) {
     const baseUrl = this.configService.get<string>('IPPANEL_BASE_URL') || 'https://edge.ippanel.com/v1';
@@ -148,10 +156,20 @@ export class IppanelService {
   }
 
   private getPatternCandidates(patternSlug: string): string[] {
-    const candidates = [patternSlug, 'hijid9771y36ega', '2tc60', 'kc0p2']
+    const canonicalPatternCode = this.normalizePatternCode(patternSlug);
+    const candidates = [canonicalPatternCode]
       .filter((value): value is string => Boolean(value && value !== 'DEFAULT'));
 
     return [...new Set(candidates)];
+  }
+
+  private normalizePatternCode(patternCode: string): string {
+    const trimmed = patternCode?.trim();
+    if (!trimmed || trimmed === 'DEFAULT') {
+      return trimmed;
+    }
+
+    return this.patternCodeAliases.get(trimmed) ?? trimmed;
   }
 
   private buildFallbackMessage(variables: Record<string, string | number>): string {

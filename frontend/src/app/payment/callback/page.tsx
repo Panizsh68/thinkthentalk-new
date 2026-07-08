@@ -86,29 +86,29 @@ function PaymentCallbackContent() {
      const formattedDate = getFormattedDateTime(new Date(event.startDateTime), language);
      const eventTitle = getLocalizedTextValue(event.title, language);
      return (
-        <div className="text-center" data-testid="payment-success">
+        <div className="w-full max-w-4xl text-center" data-testid="payment-success">
             <div className="flex flex-col items-center justify-center gap-4 text-center text-green-600 mb-8">
                 <CheckCircle className="h-12 w-12" />
                 <h2 className="text-2xl font-semibold">{t('payment.successTitle')}</h2>
                 <p className="text-muted-foreground max-w-md mx-auto">{t('payment.successDescription')}</p>
             </div>
 
-            <Card className="text-left">
+            <Card className="w-full text-left">
                 <CardHeader>
                     <CardTitle>{t('payment.receiptTitle')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="flex justify-between">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                         <span className="text-muted-foreground">{t('payment.paymentId')}</span>
-                        <span className="font-mono text-sm">{payment.id}</span>
+                        <span className="font-mono text-sm break-all sm:text-right">{payment.id}</span>
                     </div>
-                     <div className="flex justify-between">
+                     <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                         <span className="text-muted-foreground">{t('registration.summary.eventTitle')}</span>
-                        <span className="font-semibold">{eventTitle}</span>
+                        <span className="font-semibold sm:text-right">{eventTitle}</span>
                     </div>
-                     <div className="flex justify-between">
+                     <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                         <span className="text-muted-foreground">{t('registration.summary.eventDate')}</span>
-                        <span className="font-semibold">{formattedDate}</span>
+                        <span className="font-semibold sm:text-right">{formattedDate}</span>
                     </div>
                     {event.type === 'ONLINE' && (
                         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-800 dark:text-blue-300">
@@ -173,7 +173,7 @@ function PaymentCallbackContent() {
                 </CardContent>
             </Card>
 
-            <div className="flex gap-4 mt-8 justify-center">
+            <div className="mt-8 flex flex-col gap-4 justify-center sm:flex-row">
                 <Button variant="outline" asChild><Link href="/events">{t('payment.browseMoreEvents')}</Link></Button>
                 <Button asChild><Link href={`/dashboard`}>{t('payment.viewMyRegistrations')}</Link></Button>
             </div>
@@ -184,11 +184,11 @@ function PaymentCallbackContent() {
    if (payment?.status === 'FAILED') {
      const wizardUrl = getRegistrationWizardUrl(payment.eventId, payment.ticketType, 5);
      return (
-      <div className="flex flex-col items-center justify-center gap-4 text-center text-destructive" data-testid="payment-failed">
+        <div className="w-full max-w-2xl flex flex-col items-center justify-center gap-4 text-center text-destructive" data-testid="payment-failed">
         <XCircle className="h-12 w-12" />
         <h2 className="text-2xl font-semibold">{t('payment.failedTitle')}</h2>
         <p className="text-muted-foreground max-w-sm">{t('payment.failedDescription')}</p>
-        <div className="flex gap-4 mt-4">
+        <div className="mt-4 flex flex-col gap-4 sm:flex-row">
             <Button variant="outline" asChild>
                 <Link href={wizardUrl}>
                     {t('actions.backToSummary')}
@@ -207,11 +207,11 @@ function PaymentCallbackContent() {
   // This state is for when the payment has already been processed but the page is reloaded.
   if (payment) {
     return (
-        <div className="flex flex-col items-center justify-center gap-4 text-center">
+        <div className="w-full max-w-2xl flex flex-col items-center justify-center gap-4 text-center">
             <AlertTriangle className="h-12 w-12 text-yellow-500" />
             <h2 className="text-2xl font-semibold">{t('payment.alreadyProcessedTitle')}</h2>
             <p>{t('payment.alreadyProcessedDescription')} <span className="font-bold">{payment.status}</span></p>
-             <div className="flex gap-4">
+             <div className="flex flex-col gap-4 sm:flex-row">
                 <Button variant="outline" asChild><Link href="/events">{t('payment.browseMoreEvents')}</Link></Button>
                 <Button asChild><Link href={`/dashboard`}>{t('payment.viewMyRegistrations')}</Link></Button>
             </div>
@@ -230,8 +230,8 @@ function PaymentCallbackContent() {
 export default function PaymentCallbackPage() {
   const { t } = useLanguage();
   return (
-    <div className="container flex min-h-[calc(100vh-15rem)] items-center justify-center py-12">
-        <Card className="w-full max-w-lg">
+    <div className="container flex min-h-[calc(100vh-15rem)] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-5xl">
             <CardHeader>
                 <CardTitle>{t('payment.statusTitle')}</CardTitle>
                 <CardDescription>{t('payment.statusDescription')}</CardDescription>
