@@ -12,4 +12,7 @@ export class TeamMemberDto {
 
   @ApiProperty({ type: String, format: 'uri' })
   photoUrl!: string;
+
+  @ApiProperty({ type: Number })
+  order!: number;
 }

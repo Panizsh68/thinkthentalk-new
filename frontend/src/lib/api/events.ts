@@ -17,6 +17,23 @@ export interface GetEventsParams {
 const transformEvent = (event: any): Event => {
   const eventStart = new Date(event.startDateTime);
   const eventEnd = event.endDateTime ? new Date(event.endDateTime) : undefined;
+  const normalizePosterUrl = (posterUrl?: string | null) => {
+    if (!posterUrl) return posterUrl ?? undefined;
+
+    try {
+      const parsed = new URL(posterUrl, 'http://localhost');
+      const pathname = parsed.pathname;
+
+      if (pathname.startsWith('/api/upload/files/')) {
+        const relativePath = pathname.replace(/^\/api\/upload\/files\//, '');
+        return `${parsed.origin}/uploads/${relativePath}`;
+      }
+
+      return posterUrl;
+    } catch {
+      return posterUrl;
+    }
+  };
 
   return {
     id: event.id,
@@ -29,7 +46,7 @@ const transformEvent = (event: any): Event => {
     city: event.city,
     address: event.address,
     type: event.type,
-    posterUrl: event.posterUrl,
+    posterUrl: normalizePosterUrl(event.posterUrl),
     categories: event.categories || [],
     capacityTotal: event.capacityTotal,
     capacityRemaining: event.capacityRemaining,

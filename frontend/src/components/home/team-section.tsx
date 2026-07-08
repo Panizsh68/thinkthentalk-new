@@ -28,7 +28,7 @@ export function TeamSection() {
           </div>
         ) : team && team.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map(member => (
+            {[...team].sort((a, b) => a.order - b.order).map(member => (
               <div key={member.id} className="space-y-4 group">
                 <div className="relative h-48 w-48 mx-auto rounded-3xl overflow-hidden shadow-md transform transition-all group-hover:scale-105">
                    <Avatar className="h-full w-full rounded-none">

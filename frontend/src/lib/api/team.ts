@@ -47,3 +47,13 @@ export async function deleteTeamMember(id: string): Promise<{ id: string }> {
     throw new Error(error.message || "Failed to delete team member.");
   }
 }
+
+export async function reorderTeamMember(memberId: string, direction: 'up' | 'down'): Promise<TeamMember[]> {
+  try {
+    const { data } = await apiClient.patch<TeamMember[]>('/admin/team/reorder', { memberId, direction });
+    return data.map(transformTeamMember);
+  } catch (error: any) {
+    console.error(`Failed to reorder team member ${memberId}:`, error);
+    throw new Error(error.message || 'Failed to reorder team member.');
+  }
+}

@@ -31,6 +31,7 @@ import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { TeamMembersService } from './team-members.service';
 import { TeamMemberDto } from './dto/team-member.dto';
 import {
+  ReorderTeamMembersDto,
   TeamMemberFormDataDto,
   UpdateTeamMemberFormDataDto,
 } from './dto/team-member-form-data.dto';
@@ -60,6 +61,28 @@ export class AdminTeamController {
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
   async list(): Promise<TeamMemberDto[]> {
     return this.teamMembersService.listAdmin();
+  }
+
+  @Patch('reorder')
+  @ApiOperation({
+    summary: 'Reorder Team Members (Admin)',
+    description: 'Moves a team member up or down in the list order.',
+  })
+  @ApiBody({ type: ReorderTeamMembersDto, required: true })
+  @ApiOkResponse({
+    description: 'Team members reordered.',
+    type: TeamMemberDto,
+    isArray: true,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Not authenticated.',
+    type: ErrorResponseDto,
+  })
+  @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
+  async reorder(
+    @Body() dto: ReorderTeamMembersDto,
+  ): Promise<TeamMemberDto[]> {
+    return this.teamMembersService.reorder(dto);
   }
 
   @Post()

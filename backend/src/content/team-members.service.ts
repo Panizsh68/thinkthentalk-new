@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../infrastructure/database/prisma.service';
 import { TeamMemberDto } from './dto/team-member.dto';
 import {
+  ReorderTeamMembersDto,
   TeamMemberFormDataDto,
   UpdateTeamMemberFormDataDto,
 } from './dto/team-member-form-data.dto';
@@ -44,12 +45,14 @@ export class TeamMembersService {
   }
 
   async create(dto: TeamMemberFormDataDto): Promise<TeamMemberDto> {
+    const nextOrder = dto.order ?? (await this.getNextOrder());
     const created = await this.prisma.teamMember.create({
       data: {
         firstNameFa: dto.name, // Assuming name maps to firstNameFa for now, or split it
         lastNameFa: '',
         roleFa: dto.role,
         avatarUrl: dto.photoUrl,
+        order: nextOrder,
       },
     });
     await this.redis.del('team:list');
@@ -69,10 +72,46 @@ export class TeamMembersService {
         ...(dto.name !== undefined ? { firstNameFa: dto.name } : {}),
         ...(dto.role !== undefined ? { roleFa: dto.role } : {}),
         ...(dto.photoUrl !== undefined ? { avatarUrl: dto.photoUrl } : {}),
+        ...(dto.order !== undefined ? { order: dto.order } : {}),
       },
     });
     await this.redis.del('team:list');
     return this.toDto(updated);
+  }
+
+  async reorder({ memberId, direction }: ReorderTeamMembersDto): Promise<TeamMemberDto[]> {
+    const members = await this.prisma.teamMember.findMany({
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+    });
+    const currentIndex = members.findIndex((member) => member.id === memberId);
+    if (currentIndex === -1) {
+      return [];
+    }
+
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= members.length) {
+      return members.map(this.toDto);
+    }
+
+    const current = members[currentIndex];
+    const target = members[targetIndex];
+
+    await this.prisma.$transaction([
+      this.prisma.teamMember.update({
+        where: { id: current.id },
+        data: { order: target.order },
+      }),
+      this.prisma.teamMember.update({
+        where: { id: target.id },
+        data: { order: current.order },
+      }),
+    ]);
+
+    await this.redis.del('team:list');
+    const refreshed = await this.prisma.teamMember.findMany({
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+    });
+    return refreshed.map(this.toDto);
   }
 
   async delete(id: string): Promise<boolean> {
@@ -88,5 +127,14 @@ export class TeamMembersService {
     name: `${member.firstNameFa} ${member.lastNameFa}`.trim(),
     role: member.roleFa,
     photoUrl: member.avatarUrl ?? '',
+    order: member.order,
   });
+
+  private async getNextOrder(): Promise<number> {
+    const last = await this.prisma.teamMember.findFirst({
+      orderBy: [{ order: 'desc' }, { createdAt: 'desc' }],
+      select: { order: true },
+    });
+    return (last?.order ?? -1) + 1;
+  }
 }

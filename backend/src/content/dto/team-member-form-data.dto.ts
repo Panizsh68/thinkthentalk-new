@@ -1,6 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsIn,
+  IsInt,
   IsOptional,
+  Min,
   IsString,
   Matches,
 } from 'class-validator';
@@ -21,6 +24,12 @@ export class TeamMemberFormDataDto {
     message: 'photoUrl must be an absolute URL or an uploaded file path',
   })
   photoUrl!: string;
+
+  @ApiPropertyOptional({ type: Number, description: 'Sort order in the team list.' })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  order?: number;
 }
 
 export class UpdateTeamMemberFormDataDto {
@@ -40,4 +49,20 @@ export class UpdateTeamMemberFormDataDto {
     message: 'photoUrl must be an absolute URL or an uploaded file path',
   })
   photoUrl?: string;
+
+  @ApiPropertyOptional({ type: Number, description: 'Sort order in the team list.' })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  order?: number;
+}
+
+export class ReorderTeamMembersDto {
+  @ApiProperty({ type: String })
+  @IsString()
+  memberId!: string;
+
+  @ApiProperty({ enum: ['up', 'down'] })
+  @IsIn(['up', 'down'])
+  direction!: 'up' | 'down';
 }

@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
-import { useTeamMembersQuery, useCreateTeamMemberMutation, useUpdateTeamMemberMutation, useDeleteTeamMemberMutation } from '@/hooks/use-team-queries';
+import { useTeamMembersQuery, useCreateTeamMemberMutation, useUpdateTeamMemberMutation, useDeleteTeamMemberMutation, useReorderTeamMemberMutation } from '@/hooks/use-team-queries';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import type { TeamMember, TeamMemberFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Loader2, PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Loader2, PlusCircle, Edit, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import { TeamMemberFormDialog } from '@/components/admin/team-member-form-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -47,6 +47,9 @@ function AdminTeamPage() {
       toast({ title: t('admin.team.delete.successTitle') });
       setIsDeleteAlertOpen(false);
     },
+    onError: (e) => toast({ variant: 'destructive', title: t('errors.genericTitle'), description: e.message }),
+  });
+  const { mutate: reorderMember, isPending: isReordering } = useReorderTeamMemberMutation({
     onError: (e) => toast({ variant: 'destructive', title: t('errors.genericTitle'), description: e.message }),
   });
 
@@ -119,7 +122,7 @@ function AdminTeamPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {teamMembers.map((member) => (
+                {[...teamMembers].sort((a, b) => a.order - b.order).map((member, index) => (
                   <TableRow key={member.id}>
                     <TableCell>
                       <Avatar>
@@ -130,6 +133,12 @@ function AdminTeamPage() {
                     <TableCell className="font-medium">{member.name}</TableCell>
                     <TableCell>{member.role}</TableCell>
                     <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" onClick={() => reorderMember({ memberId: member.id, direction: 'up' })} disabled={isReordering || index === 0}>
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => reorderMember({ memberId: member.id, direction: 'down' })} disabled={isReordering || index === teamMembers.length - 1}>
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(member)}><Edit className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="icon" className="text-destructive" onClick={() => openDeleteDialog(member)}><Trash2 className="h-4 w-4" /></Button>
                     </TableCell>

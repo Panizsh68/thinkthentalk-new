@@ -47,7 +47,7 @@ export default function TeamPage() {
       <>
         <div className="md:hidden overflow-x-auto pb-4">
           <div className="flex gap-4">
-            {team.map(member => (
+            {[...team].sort((a, b) => a.order - b.order).map(member => (
               <div key={member.id} className="w-[50%] sm:w-[40%] shrink-0">
                 <TeamMemberCard member={member} />
               </div>
@@ -55,7 +55,7 @@ export default function TeamPage() {
           </div>
         </div>
         <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {team.map(member => (
+          {[...team].sort((a, b) => a.order - b.order).map(member => (
             <TeamMemberCard key={member.id} member={member} />
           ))}
         </div>

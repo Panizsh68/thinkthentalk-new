@@ -78,9 +78,7 @@ export class EventsRepository {
       orderBy: { startDateTime: 'asc' },
       take: limit,
     });
-    const upcomingEvents = await this.addSaleWindows(
-      upcomingEventsRaw.filter((event) => event.ticketConfigs.length > 0),
-    );
+    const upcomingEvents = await this.addSaleWindows(upcomingEventsRaw);
 
     if (upcomingEvents.length >= limit) {
       return upcomingEvents.map(prismaEventToEventEntity);
@@ -102,9 +100,7 @@ export class EventsRepository {
       orderBy: [{ endDateTime: 'desc' }, { startDateTime: 'desc' }],
       take: remaining,
     });
-    const pastEvents = await this.addSaleWindows(
-      pastEventsRaw.filter((event) => event.ticketConfigs.length > 0),
-    );
+    const pastEvents = await this.addSaleWindows(pastEventsRaw);
 
     return [...upcomingEvents, ...pastEvents].map(prismaEventToEventEntity);
   }
