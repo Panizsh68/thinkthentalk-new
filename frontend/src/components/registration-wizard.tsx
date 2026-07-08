@@ -210,7 +210,7 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
         toast({
           variant: 'destructive',
           title: t('errors.genericTitle'),
-          description: "Could not initiate payment. Please try again."
+          description: error.message || t('wallet.insufficientBalance')
         })
         console.error("Payment creation failed", error);
       }

@@ -1,13 +1,14 @@
 
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { submitEventIdea, getAdminEventIdeas, updateIdeaStatus, deleteEventIdea } from '@/lib/api/event-ideas';
+import { submitEventIdea, getAdminEventIdeas, updateIdeaStatus, deleteEventIdea, getMyEventIdeas } from '@/lib/api/event-ideas';
 import type { CreateEventIdeaDto, EventIdeaStatus, EventIdeaType } from '@/lib/types';
 
 export const ideaKeys = {
   all: ['event-ideas'] as const,
   lists: () => [...ideaKeys.all, 'list'] as const,
   list: (params: any) => [...ideaKeys.lists(), params] as const,
+  mine: () => [...ideaKeys.all, 'mine'] as const,
 };
 
 export function useSubmitIdeaMutation() {
@@ -20,6 +21,14 @@ export function useAdminIdeasQuery(params: { status?: EventIdeaStatus; type?: Ev
   return useQuery({
     queryKey: ideaKeys.list(params),
     queryFn: () => getAdminEventIdeas(params),
+  });
+}
+
+export function useMyIdeasQuery(enabled = true) {
+  return useQuery({
+    queryKey: ideaKeys.mine(),
+    queryFn: getMyEventIdeas,
+    enabled,
   });
 }
 

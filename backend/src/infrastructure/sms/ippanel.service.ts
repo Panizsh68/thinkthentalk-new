@@ -156,7 +156,18 @@ export class IppanelService {
 
   private buildFallbackMessage(variables: Record<string, string | number>): string {
     const code = variables.code ?? variables.otp ?? variables.Code;
-    return code !== undefined ? `Your verification code is ${code}` : 'Your verification code is ready.';
+    if (code !== undefined) {
+      return `Your verification code is ${code}`;
+    }
+
+    const event = variables.event;
+    const eventLink = variables.eventLink;
+    if (event !== undefined) {
+      const suffix = eventLink ? ` More details: ${eventLink}` : '';
+      return `Your registration for ${event} is confirmed.${suffix}`;
+    }
+
+    return 'Your message is ready.';
   }
 
   private isPatternUnavailableError(error: any): boolean {

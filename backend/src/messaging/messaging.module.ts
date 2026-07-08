@@ -5,9 +5,10 @@ import { AdminMessagingController } from './admin-messaging.controller';
 import { PrismaModule } from '../infrastructure/database/prisma.module';
 import { SmsModule } from '../infrastructure/sms/sms.module';
 import { AuditModule } from '../infrastructure/audit/audit.module';
+import { MailerModule } from '../infrastructure/mailer/mailer.module';
 
 @Module({
-  imports: [PrismaModule, SmsModule, AuditModule],
+  imports: [PrismaModule, SmsModule, AuditModule, MailerModule],
   providers: [MessagingService],
   controllers: [MessagingController, AdminMessagingController],
 })

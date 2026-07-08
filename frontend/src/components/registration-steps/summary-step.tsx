@@ -1,6 +1,7 @@
 
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useRegistrationWizardStore } from '@/hooks/use-registration-wizard-store';
 import { useEventQuery } from '@/hooks/use-event-queries';
@@ -12,15 +13,18 @@ import { Loader2, TicketPercent, X } from 'lucide-react';
 import { Input } from '../ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useValidateDiscountMutation, useDiscountsQuery } from '@/hooks/use-discount-queries';
+import { useMyWalletQuery } from '@/hooks/use-wallet-queries';
 import type { Discount } from '@/lib/types';
 import { useAuth } from '@/lib/auth/auth-provider';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 
+const TOMAN_PER_COIN = 10000;
 
 export function SummaryStep() {
     const { t, language } = useLanguage();
     const { formData, eventId, ticketType, setStep, setFinalAmount } = useRegistrationWizardStore();
     const { currentUser } = useAuth();
+    const { data: wallet } = useMyWalletQuery();
     const { data: event, isLoading: isLoadingEvent } = useEventQuery(eventId);
     const { toast } = useToast();
 
@@ -69,6 +73,10 @@ export function SummaryStep() {
         return { finalPrice, totalDiscount, originalPrice };
 
     }, [selectedTicket, publicDiscount, appliedCodeDiscount]);
+
+    const requiredCoins = Math.max(0, Math.ceil(finalPrice / TOMAN_PER_COIN));
+    const currentCoins = Number(wallet?.balance || 0);
+    const hasEnoughCoins = currentCoins >= requiredCoins;
 
     // Update finalAmount in parent component when price changes
     useEffect(() => {
@@ -232,6 +240,31 @@ export function SummaryStep() {
                                 <div className="flex justify-between font-bold text-lg">
                                     <dt>{t('registration.summary.total')}</dt>
                                     <dd>{getFormattedPrice(finalPrice, selectedTicket.currency, t)}</dd>
+                                </div>
+                                <div className="flex justify-between font-bold text-primary">
+                                    <dt>{t('registration.summary.requiredCoins')}</dt>
+                                    <dd>{requiredCoins.toLocaleString()} {t('admin.currency.COIN')}</dd>
+                                </div>
+                                <Separator />
+                                <div className="rounded-xl border bg-muted/30 p-4 space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-muted-foreground">{t('registration.summary.currentCoins')}</span>
+                                        <span className="font-semibold">{currentCoins.toLocaleString()} {t('admin.currency.COIN')}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-muted-foreground">{t('registration.summary.coinRate')}</span>
+                                        <span className="font-semibold">{new Intl.NumberFormat(t('lng')).format(TOMAN_PER_COIN)} {t('admin.currency.TOMAN')}</span>
+                                    </div>
+                                    <p className={hasEnoughCoins ? 'text-emerald-600' : 'text-amber-600'}>
+                                        {hasEnoughCoins
+                                            ? t('registration.summary.balanceEnough')
+                                            : t('registration.summary.balanceNotEnough', { coins: requiredCoins - currentCoins })}
+                                    </p>
+                                    {!hasEnoughCoins && (
+                                        <Button asChild variant="outline" className="w-full">
+                                            <Link href="/wallet">{t('wallet.deposit')}</Link>
+                                        </Button>
+                                    )}
                                 </div>
                             </dl>
                         </CardContent>

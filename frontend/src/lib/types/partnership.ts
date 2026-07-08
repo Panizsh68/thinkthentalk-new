@@ -14,6 +14,8 @@ export interface CollaborationRequest {
   whyJoin: string;
   availability?: string | null;
   status: PartnershipStatus;
+  notes?: string | null;
+  processedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -28,6 +30,8 @@ export interface SponsorshipRequest {
   plan: SponsorshipPlan;
   description?: string | null;
   status: PartnershipStatus;
+  notes?: string | null;
+  processedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }

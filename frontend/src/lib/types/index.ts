@@ -13,3 +13,4 @@ export * from './messaging';
 export * from './contact';
 export * from './event-idea';
 export * from './partnership';
+export * from './wallet';

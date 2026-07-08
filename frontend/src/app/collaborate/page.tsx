@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -71,6 +72,24 @@ export default function CollaboratePage() {
     });
   };
 
+  if (!currentUser) {
+    return (
+      <div className="container max-w-2xl py-20 px-4">
+        <Card className="rounded-[2rem] border-none shadow-xl">
+          <CardHeader className="text-center">
+            <CardTitle>{t('collaborate.panel.loginTitle')}</CardTitle>
+            <CardDescription>{t('collaborate.panel.loginDescription')}</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button asChild className="h-12 w-full rounded-xl font-bold">
+              <Link href="/login">{t('auth.loginButton')}</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
   if (step === 1) {
     return (
       <div className="container max-w-3xl py-16 px-4">
@@ -102,9 +121,14 @@ export default function CollaboratePage() {
         <p className="text-lg text-muted-foreground leading-relaxed mb-8">
           {t('collaborate.successDescription')}
         </p>
-        <Button asChild size="lg" className="rounded-full font-bold">
-          <a href="/">{t('actions.backToDashboard')}</a>
-        </Button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button asChild size="lg" className="rounded-full font-bold">
+            <Link href="/my-requests">{t('partnership.panel.navLabel')}</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="rounded-full font-bold">
+            <Link href="/dashboard">{t('actions.backToDashboard')}</Link>
+          </Button>
+        </div>
       </div>
     );
   }

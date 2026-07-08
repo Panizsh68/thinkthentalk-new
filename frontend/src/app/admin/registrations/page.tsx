@@ -407,7 +407,7 @@ function ActionsMenu({ registration }: { registration: UserRegistrationDetails }
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
-        <SendMessageDialog user={registration.user as any} open={isMessageOpen} onOpenChange={setIsMessageOpen} />
+        <SendMessageDialog registrationId={registration.id} user={registration.user as any} open={isMessageOpen} onOpenChange={setIsMessageOpen} />
         </>
     )
 }

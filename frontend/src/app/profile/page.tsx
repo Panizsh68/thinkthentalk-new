@@ -40,7 +40,7 @@ const getProfileSchema = (t: (key: string) => string) => z.object({
   fieldOfStudy: z.string().optional(),
   isEmployed: z.boolean().default(false),
   jobTitle: z.string().optional(),
-  languageLevel: z.string().optional(),
+  languageLevel: z.string().min(1, t('registration.validation.required')),
 }).refine(data => !data.isEmployed || (!!data.jobTitle && data.jobTitle.length > 0), {
   message: t('registration.validation.required'),
   path: ['jobTitle'],
@@ -163,6 +163,7 @@ export default function UserProfilePage() {
   }
 
   const isEmployed = form.watch('isEmployed');
+  const languageLevels = ['beginner', 'intermediate', 'advanced', 'native'];
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-20">
@@ -299,6 +300,22 @@ export default function UserProfilePage() {
                         {['high-school', 'associate', 'bachelor', 'master', 'phd', 'other'].map(l => <SelectItem key={l} value={l}>{t(`registration.fields.educationLevels.${l}`)}</SelectItem>)}
                       </SelectContent>
                     </Select>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="languageLevel" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('registration.fields.languageLevel')}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl><SelectTrigger className="rounded-xl"><SelectValue placeholder={t('registration.placeholders.languageLevel')} /></SelectTrigger></FormControl>
+                      <SelectContent dir={isRTL ? 'rtl' : 'ltr'}>
+                        {languageLevels.map(level => (
+                          <SelectItem key={level} value={level}>
+                            {t(`registration.fields.languageLevelsList.${level}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="fieldOfStudy" render={({ field }) => (<FormItem><FormLabel>{t('registration.fields.fieldOfStudy')}</FormLabel><FormControl><Input {...field} className="rounded-xl" /></FormControl></FormItem>)} />

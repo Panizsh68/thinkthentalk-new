@@ -47,6 +47,13 @@ export class PartnershipsService {
     return { items, total, page, limit };
   }
 
+  async listUserCollaborations(userId: string) {
+    return this.prisma.collaborationRequest.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async listSponsorships(filters: any) {
     const { status, plan, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
@@ -67,6 +74,13 @@ export class PartnershipsService {
     ]);
 
     return { items, total, page, limit };
+  }
+
+  async listUserSponsorships(userId: string) {
+    return this.prisma.sponsorshipRequest.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async updateCollaborationStatus(

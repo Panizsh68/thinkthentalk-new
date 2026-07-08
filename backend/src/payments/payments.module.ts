@@ -6,10 +6,11 @@ import { PaymentsService } from './payments.service';
 import { ZarinpalGateway } from './providers/zarinpal.gateway';
 import { AdminPaymentsController } from './admin-payments.controller';
 import { IppanelService } from '../infrastructure/sms/ippanel.service';
+import { WalletModule } from '../wallet/wallet.module';
 
 @Module({
-  imports: [PrismaModule, ConfigModule],
+  imports: [PrismaModule, ConfigModule, WalletModule],
   providers: [PaymentsService, ZarinpalGateway, IppanelService],
   controllers: [PaymentsController, AdminPaymentsController],
 })
-export class PaymentsModule { }
+export class PaymentsModule {}

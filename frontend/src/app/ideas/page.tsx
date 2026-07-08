@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useState } from 'react';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useAuth } from '@/lib/auth/auth-provider';
 import { useSubmitIdeaMutation } from '@/hooks/use-event-idea-queries';
@@ -30,6 +32,7 @@ export default function SubmitIdeaPage() {
   const { currentUser } = useAuth();
   const { toast } = useToast();
   const { mutate: submitIdea, isPending } = useSubmitIdeaMutation();
+  const [submittedIdea, setSubmittedIdea] = useState<IdeaFormValues | null>(null);
 
   const form = useForm<IdeaFormValues>({
     resolver: zodResolver(getIdeaSchema(t)),
@@ -45,6 +48,7 @@ export default function SubmitIdeaPage() {
   const onSubmit = (values: IdeaFormValues) => {
     submitIdea(values, {
       onSuccess: () => {
+        setSubmittedIdea(values);
         toast({
           title: t('ideas.successTitle'),
           description: t('ideas.successDescription'),
@@ -60,6 +64,33 @@ export default function SubmitIdeaPage() {
       },
     });
   };
+
+  if (submittedIdea) {
+    return (
+      <div className="container max-w-2xl py-20 text-center px-4">
+        <Lightbulb className="mx-auto mb-6 h-20 w-20 text-primary" />
+        <h1 className="mb-4 text-3xl font-bold">{t('ideas.successTitle')}</h1>
+        <p className="mb-8 text-lg leading-relaxed text-muted-foreground">
+          {t('ideas.successDescription')}
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          {currentUser ? (
+            <Button asChild size="lg" className="rounded-full font-bold">
+              <Link href="/my-ideas">{t('ideas.panel.navLabel')}</Link>
+            </Button>
+          ) : null}
+          <Button
+            size="lg"
+            variant="outline"
+            className="rounded-full font-bold"
+            onClick={() => setSubmittedIdea(null)}
+          >
+            {t('ideas.panel.submitNew')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container max-w-3xl py-12 px-4">

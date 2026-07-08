@@ -61,6 +61,13 @@ export class EventIdeasService {
     return { items, total, page, limit };
   }
 
+  async findByUser(userId: string) {
+    return this.prisma.eventIdea.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async updateStatus(id: string, status: EventIdeaStatus) {
     const idea = await this.prisma.eventIdea.findUnique({ where: { id } });
     if (!idea) throw new NotFoundException('Idea not found');

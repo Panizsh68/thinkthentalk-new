@@ -19,7 +19,10 @@ import { Loader2 } from 'lucide-react';
 const getTeamMemberSchema = (t: (key: string) => string) => z.object({
   name: z.string().min(1, t('registration.validation.required')),
   role: z.string().min(1, t('registration.validation.required')),
-  photoUrl: z.string().url(t('admin.sponsors.validation.invalidUrl')),
+  photoUrl: z.string().min(1, t('registration.validation.required')).refine(
+    (value) => /^(https?:\/\/\S+|\/\S+)$/.test(value),
+    t('admin.sponsors.validation.invalidUrl'),
+  ),
 });
 
 interface TeamMemberFormDialogProps {

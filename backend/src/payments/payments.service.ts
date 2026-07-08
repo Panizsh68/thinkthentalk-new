@@ -12,10 +12,10 @@ import { CreatePaymentBodyDto } from './dto/create-payment-body.dto';
 import { PaymentDto } from './dto/payment.dto';
 import { ZarinpalGateway } from './providers/zarinpal.gateway';
 import { IppanelService } from '../infrastructure/sms/ippanel.service';
-import type { RequestPaymentResult } from './providers/payment-gateway.interface';
 import { VerifyPaymentStatusDto } from './dto/verify-payment-status.dto';
 import { parseLocalizedText } from '../events/utils/localized-text.helper';
 import { getTicketSaleWindows } from '../events/utils/ticket-sale-window.helper';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class PaymentsService {
@@ -25,7 +25,8 @@ export class PaymentsService {
     private readonly zarinpalGateway: ZarinpalGateway,
     private readonly ippanelService: IppanelService,
     private readonly configService: ConfigService,
-  ) { }
+    private readonly walletService: WalletService,
+  ) {}
 
   async listAdminPayments(filters: {
     eventId?: string;
@@ -37,8 +38,24 @@ export class PaymentsService {
         ...(filters.status ? { status: filters.status } : {}),
       },
       orderBy: { createdAt: 'desc' },
+      include: {
+        registration: {
+          include: {
+            user: true,
+            event: true,
+          },
+        },
+      },
     });
-    return payments.map((p) => this.toPaymentDto(p));
+    return payments.map((payment) =>
+      this.toPaymentDto(payment, {
+        eventTitle:
+          parseLocalizedText(payment.registration?.event?.title ?? '').fa ||
+          parseLocalizedText(payment.registration?.event?.title ?? '').en,
+        userName: this.getDisplayName(payment.registration?.user),
+        userMobile: payment.registration?.user?.mobile,
+      }),
+    );
   }
 
   async getPaymentForUser(
@@ -119,7 +136,7 @@ export class PaymentsService {
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { email: true, mobile: true },
+      select: { mobile: true },
     });
 
     const existingRegistration = await this.prisma.registration.findFirst({
@@ -141,14 +158,8 @@ export class PaymentsService {
       throw new BadRequestException('Invalid amount');
     }
 
-    const gatewayMinAmount = dto.currency === Currency.TOMAN ? 1000 : 10000;
-    if (amount > 0 && amount < gatewayMinAmount) {
-      throw new BadRequestException(
-        'Amount is below the minimum allowed for payment gateway.',
-      );
-    }
-
     const isFree = amount === 0;
+    const requiredCoins = this.walletService.tomanToCoins(amount);
     if (
       existingRegistration &&
       existingRegistration.status === RegistrationStatus.PAID
@@ -158,154 +169,96 @@ export class PaymentsService {
       );
     }
 
+    if (!isFree) {
+      const walletBalance = await this.walletService.getWalletBalance(userId);
+      if (walletBalance < requiredCoins) {
+        throw new BadRequestException(
+          `Insufficient Talk Coins balance. This registration requires ${requiredCoins} coins.`,
+        );
+      }
+    }
+
     const result = await this.prisma.$transaction(async (tx) => {
       const registration =
         existingRegistration &&
-          existingRegistration.status !== RegistrationStatus.CANCELLED
+        existingRegistration.status !== RegistrationStatus.CANCELLED
           ? await tx.registration.update({
-            where: { id: existingRegistration.id },
-            data: {
-              ticketType: dto.ticketType,
-              status: isFree
-                ? RegistrationStatus.PAID
-                : RegistrationStatus.PENDING,
-              formData: JSON.stringify(dto.formData),
-            },
-          })
-          : await (async () => {
-            const reg = await tx.registration.create({
+              where: { id: existingRegistration.id },
               data: {
-                userId,
-                eventId: dto.eventId,
                 ticketType: dto.ticketType,
-                status: isFree
-                  ? RegistrationStatus.PAID
-                  : RegistrationStatus.PENDING,
+                status: RegistrationStatus.PAID,
                 formData: JSON.stringify(dto.formData),
-              } as Prisma.RegistrationUncheckedCreateInput,
-            });
+              },
+            })
+          : await (async () => {
+              const reg = await tx.registration.create({
+                data: {
+                  userId,
+                  eventId: dto.eventId,
+                  ticketType: dto.ticketType,
+                  status: RegistrationStatus.PAID,
+                  formData: JSON.stringify(dto.formData),
+                } as Prisma.RegistrationUncheckedCreateInput,
+              });
 
-            await tx.event.update({
-              where: { id: dto.eventId },
-              data: { capacityRemaining: { decrement: 1 } },
-            });
+              await tx.event.update({
+                where: { id: dto.eventId },
+                data: { capacityRemaining: { decrement: 1 } },
+              });
 
-            await tx.eventTicketConfig.update({
-              where: { id: ticketConfig.id },
-              data: { quantitySold: { increment: 1 } },
-            });
+              await tx.eventTicketConfig.update({
+                where: { id: ticketConfig.id },
+                data: { quantitySold: { increment: 1 } },
+              });
 
-            return reg;
-          })();
+              return reg;
+            })();
 
       const payment =
         existingRegistration?.payment &&
-          existingRegistration.status !== RegistrationStatus.CANCELLED
+        existingRegistration.status !== RegistrationStatus.CANCELLED
           ? await tx.payment.update({
-            where: { id: existingRegistration.payment.id },
-            data: {
-              amount,
-              currency: dto.currency,
-              ticketType: dto.ticketType,
-              status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
-              gatewayTransactionId: null,
-            },
-          })
+              where: { id: existingRegistration.payment.id },
+              data: {
+                amount,
+                currency: dto.currency,
+                ticketType: dto.ticketType,
+                status: PaymentStatus.SUCCESS,
+                gatewayTransactionId: null,
+              },
+            })
           : await tx.payment.create({
-            data: {
-              registrationId: registration.id,
-              eventId: dto.eventId,
-              ticketType: dto.ticketType,
-              amount,
-              currency: dto.currency,
-              status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
-            },
-          });
+              data: {
+                registrationId: registration.id,
+                eventId: dto.eventId,
+                ticketType: dto.ticketType,
+                amount,
+                currency: dto.currency,
+                status: PaymentStatus.SUCCESS,
+              },
+            });
 
       await tx.registration.update({
         where: { id: registration.id },
         data: { payment: { connect: { id: payment.id } } },
       });
 
+      if (!isFree) {
+        const eventTitle = parseLocalizedText(event.title);
+        await this.walletService.payWithWalletInTransaction(
+          tx,
+          userId,
+          requiredCoins,
+          `Registration for ${eventTitle.en ?? eventTitle.fa ?? dto.eventId}`,
+          payment.id,
+        );
+      }
+
       return { registration, payment };
     });
 
-    if (isFree) {
-      // Send success SMS for free registration
-      this.sendRegistrationSms(user?.mobile, event);
-      return this.toPaymentDto(result.payment, { redirectUrl: undefined });
-    }
-
-    const eventTitle = parseLocalizedText(event.title);
-    const callbackBase = this.configService.get<string>(
-      'ZARINPAL_CALLBACK_URL',
-    );
-    if (!callbackBase) {
-      throw new BadRequestException('Payment gateway is not configured');
-    }
-
-    let callbackUrl: string;
-    try {
-      const url = new URL(callbackBase);
-      url.searchParams.set('paymentId', result.payment.id);
-      callbackUrl = url.toString();
-    } catch {
-      throw new BadRequestException('Payment gateway callback URL is invalid');
-    }
-
-    let requestResult: RequestPaymentResult | null = null;
-    try {
-      requestResult = await this.zarinpalGateway.requestPayment({
-        amount,
-        currency: dto.currency,
-        description: `Payment for event ${eventTitle.en ?? eventTitle.fa ?? ''}`,
-        callbackUrl,
-        metadata: {
-          email: user?.email,
-          mobile: user?.mobile,
-          order_id: result.payment.id,
-        },
-      });
-    } catch (error) {
-      this.logger.error(
-        `Zarinpal requestPayment failed for payment=${result.payment.id}`,
-        error,
-      );
-
-      await this.prisma.$transaction(async (tx) => {
-        await tx.payment.update({
-          where: { id: result.payment.id },
-          data: { status: PaymentStatus.FAILED },
-        });
-        await tx.registration.update({
-          where: { id: result.registration.id },
-          data: { status: RegistrationStatus.FAILED },
-        });
-        await tx.event.update({
-          where: { id: dto.eventId },
-          data: { capacityRemaining: { increment: 1 } },
-        });
-        await tx.eventTicketConfig.update({
-          where: { id: ticketConfig.id },
-          data: { quantitySold: { decrement: 1 } },
-        });
-      });
-      throw new BadRequestException(
-        'Could not initiate payment. Please try again.',
-      );
-    }
-
-    const updatedPayment = await this.prisma.payment.update({
-      where: { id: result.payment.id },
-      data: {
-        gatewayTransactionId:
-          requestResult.authority ?? result.payment.gatewayTransactionId,
-      },
-    });
-
-    return this.toPaymentDto(updatedPayment, {
-      redirectUrl: requestResult.url,
-    });
+    this.sendRegistrationSms(user?.mobile, event);
+    return this.toPaymentDto(result.payment);
   }
 
   async verifyPaymentStatusPublic(
@@ -379,14 +332,21 @@ export class PaymentsService {
   private async sendRegistrationSms(mobile?: string | null, event?: any) {
     if (!mobile || !event) return;
 
-    const eventTitle = parseLocalizedText(event.title).fa || parseLocalizedText(event.title).en;
+    const eventTitle =
+      parseLocalizedText(event.title).fa || parseLocalizedText(event.title).en;
     const eventLink = `thinkthentalk.ir/events/${event.slug || event.id}`;
-    const patternCode = this.configService.get<string>('IPPANEL_REGISTER_EVENT_PATTERN_CODE') || 'kc0p2';
+    const patternCode =
+      this.configService.get<string>('IPPANEL_REGISTER_EVENT_PATTERN_CODE') ||
+      'kc0p2';
 
-    this.ippanelService.sendPatternSms(mobile, patternCode, {
-      event: eventTitle,
-      eventLink,
-    }).catch(err => this.logger.error('Failed to send registration SMS', err));
+    this.ippanelService
+      .sendPatternSms(mobile, patternCode, {
+        event: eventTitle,
+        eventLink,
+      })
+      .catch((err) =>
+        this.logger.error('Failed to send registration SMS', err),
+      );
   }
 
   async verifyPaymentStatus(
@@ -479,6 +439,40 @@ export class PaymentsService {
     return this.toPaymentDto(payment);
   }
 
+  private getDisplayName(
+    user?: {
+      firstNameFa?: string | null;
+      lastNameFa?: string | null;
+      firstNameEn?: string | null;
+      lastNameEn?: string | null;
+      mobile?: string | null;
+    } | null,
+  ): string | undefined {
+    if (!user) return undefined;
+
+    const placeholders = new Set([
+      'نام',
+      'نام خانوادگی',
+      'نام نام خانوادگی',
+      'name',
+      'first name',
+      'last name',
+    ]);
+    const candidates = [
+      [user.firstNameFa, user.lastNameFa],
+      [user.firstNameEn, user.lastNameEn],
+    ];
+
+    for (const [first, last] of candidates) {
+      const fullName = [first, last].filter(Boolean).join(' ').trim();
+      if (fullName && !placeholders.has(fullName.toLowerCase())) {
+        return fullName;
+      }
+    }
+
+    return user.mobile ?? undefined;
+  }
+
   private userProfileUpdateFromFormData(
     formData: CreatePaymentBodyDto['formData'],
   ): Prisma.UserUpdateInput {
@@ -541,7 +535,12 @@ export class PaymentsService {
       createdAt: Date;
       updatedAt: Date;
     },
-    options?: { redirectUrl?: string },
+    options?: {
+      redirectUrl?: string;
+      eventTitle?: string;
+      userName?: string;
+      userMobile?: string | null;
+    },
   ): PaymentDto {
     const redirectUrl =
       options?.redirectUrl ??
@@ -559,6 +558,9 @@ export class PaymentsService {
       status: payment.status,
       gatewayTransactionId: payment.gatewayTransactionId ?? undefined,
       redirectUrl,
+      eventTitle: options?.eventTitle,
+      userName: options?.userName,
+      userMobile: options?.userMobile ?? undefined,
       createdAt: payment.createdAt.toISOString(),
       updatedAt: payment.updatedAt.toISOString(),
     };

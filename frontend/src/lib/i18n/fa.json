@@ -137,6 +137,12 @@
       "eventDate": "تاریخ",
       "ticketType": "نوع بلیت",
       "price": "قیمت",
+      "finalPriceTitle": "مبلغ نهایی",
+      "requiredCoins": "سکه مورد نیاز",
+      "currentCoins": "موجودی کیف پول شما",
+      "coinRate": "ارزش هر سکه",
+      "balanceEnough": "موجودی سکه شما برای این ثبت نام کافی است.",
+      "balanceNotEnough": "برای ادامه به {coins} سکه بیشتر نیاز دارید.",
       "edit": "ویرایش",
       "yes": "بله",
       "no": "خیر",
@@ -271,6 +277,7 @@
     "welcomeBack": "خوش آمدید!",
     "personalIntro": "فضای شخصی شما برای فعالیتهای Think Then Talk.",
     "myRegistrations": "رویدادهای من",
+    "overviewDescription": "ثبت نام ها، موجودی سکه، وضعیت اشتراک و کارهای بعدی شما در یک نمای خلاصه و شفاف نمایش داده می شود.",
     "upcomingSection": "پیش رو",
     "pastSection": "رویدادهای گذشته",
     "noUpcoming": "ثبت نام فعالی ندارید.",
@@ -278,6 +285,46 @@
     "browseEvents": "مشاهده رویدادها",
     "nextStepTitle": "قدم بعدی",
     "nextStepDesc": "آماده گفتگوهای بیشتر هستید؟",
+    "eventsTitle": "رویدادهای من",
+    "eventsDescription": "این بخش مرکز رویدادهای شماست. ثبت نام های پیش رو، رویدادهای گذشته و همه چیزهایی که در آنها شرکت کرده اید را اینجا می بینید.",
+    "eventsHelper": "همه ثبت نام های شما در این صفحه جمع شده تا دقیقا بدانید چه چیزی در پیش دارید و چه چیزهایی را قبلا انجام داده اید.",
+    "summary": {
+      "upcoming": "رویدادهای پیش رو",
+      "totalEvents": "کل ثبت نام ها",
+      "walletBalance": "موجودی سکه گفتگو",
+      "subscription": "وضعیت اشتراک"
+    },
+    "activeSubscription": "فعال",
+    "inactiveSubscription": "غیرفعال",
+    "quickActionsTitle": "بخش های اصلی پنل شما",
+    "quickActionsDescription": "از همین پنل کاربری هر بخش اصلی حساب خود را بدون سردرگمی مدیریت کنید.",
+    "quickActions": {
+      "events": "همه رویدادهای ثبت نام شده و وضعیت آنها را ببینید.",
+      "wallet": "مرکز سکه را شارژ کنید و تراکنش های کیف پول را بررسی کنید.",
+      "subscription": "وضعیت اشتراک را ببینید و در صورت نیاز اشتراک جدید بگیرید.",
+      "profile": "اطلاعات حساب خود را کامل و به روز کنید."
+    },
+    "activityTitle": "آخرین فعالیت ها",
+    "activityDescription": "خلاصه ای سریع از آخرین کارهایی که در Think Then Talk انجام داده اید.",
+    "activity": {
+      "registration": "ثبت نام رویداد",
+      "walletDeposit": "شارژ کیف پول",
+      "walletSpend": "استفاده از کیف پول",
+      "empty": "هنوز فعالیتی ثبت نشده است."
+    },
+    "attentionTitle": "نیازمند اقدام شما",
+    "attentionDescription": "این موارد معمولا باعث ناقص ماندن یا سخت شدن روند ثبت نام می شوند.",
+    "attention": {
+      "completeProfile": "پروفایل خود را قبل از ثبت نام بعدی کامل کنید.",
+      "chargeWallet": "مرکز سکه را شارژ کنید تا پرداخت بدون وقفه انجام شود.",
+      "buyPass": "برای استفاده از مزایای اشتراک، پاس خود را فعال کنید.",
+      "bookEvent": "هنوز رویداد پیش رویی ندارید. همین حالا یکی را رزرو کنید.",
+      "ready": "حساب شما آماده است و می توانید برای رویداد بعدی اقدام کنید."
+    },
+    "profileCardTitle": "خلاصه حساب",
+    "profileCardDescription": "وضعیت هویت و اطلاعات تماس شما، مستقیم داخل پنل کاربر.",
+    "profileStatusComplete": "کامل",
+    "profileStatusIncomplete": "ناقص",
     "table": {
       "event": "رویداد",
       "date": "تاریخ",
@@ -389,16 +436,53 @@
   },
   "wallet": {
     "title": "مرکز سکه",
+    "heroEyebrow": "سکه های گفتگو",
+    "heroDescription": "کیف پول خود را یک بار شارژ کنید و بعد برای ثبت نام رویدادها و اشتراک ها با مسیر پرداخت شفاف تر و سریع تر از سکه استفاده کنید.",
     "balance": "سکه های گفتگو",
+    "coinValueLabel": "ارزش ۱ سکه",
+    "pendingTopups": "شارژهای در انتظار",
     "deposit": "دریافت سکه",
     "withdraw": "تاریخچه",
     "depositTitle": "تهیه سکه های گفتگو",
     "depositDesc": "سکه ها برای ثبت نام و خرید اشتراک استفاده میشوند و غیرقابل استرداد هستند.",
+    "depositHelper": "تعداد سکه مورد نظر را انتخاب کنید. قبل از انتقال به زرین پال، مبلغ دقیق به شما نمایش داده می شود.",
+    "coinInputLabel": "چند سکه می خواهید؟",
+    "receivedCoins": "سکه دریافتی",
+    "gatewayCharge": "مبلغ پرداخت در زرین پال",
+    "confirmTitle": "تایید شارژ کیف پول",
+    "confirmDescription": "برای تکمیل خرید به زرین پال منتقل می شوید.",
+    "confirmAndContinue": "ادامه و انتقال به زرین پال",
     "payAndCharge": "خرید سکه",
+    "steps": {
+      "buyTitle": "۱. خرید سکه",
+      "buyDescription": "تعداد سکه را انتخاب کنید و معادل دقیق تومانی آن را از طریق زرین پال بپردازید.",
+      "useTitle": "۲. استفاده از سکه",
+      "useDescription": "ثبت نام رویدادها و اشتراک ها مستقیما از کیف پول شما سکه کم می کنند.",
+      "noteTitle": "۳. شفافیت کامل",
+      "noteDescription": "قبل از هر پرداخت، هم مبلغ تومانی و هم تعداد دقیق سکه مورد نیاز را می بینید."
+    },
+    "overviewTitle": "نمای کلی کیف پول",
+    "overviewDescription": "خلاصه ای سریع از فعالیت سکه های شما.",
+    "totalPurchased": "مجموع سکه خریداری شده",
+    "totalSpent": "مجموع سکه مصرف شده",
+    "guidance": "از سکه های گفتگو برای ثبت نام رویدادها و خرید اشتراک استفاده کنید. ممکن است قیمت رویدادها به تومان نمایش داده شود، اما در مرحله نهایی همیشه تعداد دقیق سکه مورد نیاز را می بینید.",
     "history": "تاریخچه تراکنشها",
+    "historyDescription": "همه شارژها و برداشت ها همراه با مقدار سکه و مبلغ درگاه در اینجا ثبت می شوند.",
     "noTransactions": "هنوز تراکنشی ثبت نشده است.",
-    "minDepositError": "حداقل خرید ۱۰۰ سکه است.",
+    "minDepositError": "حداقل خرید ۱ سکه است.",
     "depositSuccess": "سکه ها با موفقیت اضافه شدند.",
+    "depositPending": "در حال انتقال به زرین پال...",
+    "depositSuccessDescription": "موجودی سکه های شما به روز شد.",
+    "depositFailedTitle": "شارژ کیف پول ناموفق بود",
+    "depositFailedDescription": "شارژ کیف پول تکمیل نشد. دوباره از صفحه کیف پول تلاش کنید.",
+    "callbackTitle": "وضعیت شارژ کیف پول",
+    "callbackDescription": "در حال بررسی خرید سکه های شما هستیم.",
+    "verifying": "در حال تایید شارژ کیف پول...",
+    "invalidRequestTitle": "درخواست کیف پول نامعتبر",
+    "invalidRequestDescription": "تراکنش کیف پول پیدا نشد.",
+    "backToWallet": "بازگشت به کیف پول",
+    "nonRefundableNote": "سکه های گفتگو برای ثبت نام و اشتراک استفاده می شوند و غیرقابل استرداد هستند.",
+    "insufficientBalance": "موجودی سکه های شما کافی نیست. ابتدا کیف پول را شارژ کنید.",
     "txType": {
       "DEPOSIT": "خریداری شده",
       "WITHDRAWAL": "استفاده شده",
@@ -429,6 +513,7 @@
       "registrations": "ثبت نام ها",
       "users": "کاربران",
       "payments": "پرداخت ها",
+      "wallet": "کیف پول",
       "discounts": "تخفیف ها",
       "messaging": "پیام رسانی",
       "ideas": "ایده ها",
@@ -466,6 +551,18 @@
     "events": {
       "title": "مدیریت رویدادها",
       "subtitle": "ایجاد و ویرایش نشستها",
+      "create": {
+        "title": "ایجاد رویداد",
+        "subtitle": "یک رویداد جدید با جزئیات عمومی آن بسازید.",
+        "successTitle": "رویداد ایجاد شد",
+        "successDescription": "{eventName} در دسترس قرار گرفت."
+      },
+      "edit": {
+        "title": "ویرایش رویداد",
+        "subtitle": "به روزرسانی {eventName}.",
+        "successTitle": "رویداد به روز شد",
+        "successDescription": "{eventName} به روزرسانی شد."
+      },
       "createNew": "ایجاد رویداد جدید",
       "archiveSuccess": "رویداد آرشیو شد",
       "unarchiveSuccess": "رویداد بازگردانی شد",
@@ -530,6 +627,9 @@
         "noPublicDiscounts": "تخفیف عمومی تعریف نشده است",
         "saveChanges": "ذخیره تغییرات",
         "createEvent": "ایجاد رویداد"
+      },
+      "validation": {
+        "nonNegative": "مقدار نمی تواند منفی باشد."
       }
     },
     "registrations": {
@@ -620,6 +720,9 @@
     "payments": {
       "title": "پرداخت ها",
       "subtitle": "رهگیری تراکنشهای سکه گفتگو",
+      "totalRevenue": "سکه مصرف شده برای ثبت نام",
+      "paidTransactions": "ثبت نام های نهایی",
+      "failedTransactions": "پرداخت های ناموفق",
       "noPaymentsFound": "تراکنشی با معیارهای شما یافت نشد",
       "status": {
         "success": "موفق",
@@ -641,9 +744,43 @@
         "viewRegistration": "مشاهده سفارش"
       }
     },
+    "wallet": {
+      "title": "تراکنش های کیف پول",
+      "subtitle": "شارژها و مصرف سکه ها را در کل سیستم بررسی کنید.",
+      "eyebrow": "دفتر سکه",
+      "totalSold": "شارژهای موفق",
+      "totalSpent": "سکه های مصرف شده",
+      "spentDescription": "سکه هایی که برای ثبت نام و اشتراک از کیف پول ها کم شده اند.",
+      "pendingTopups": "شارژهای در انتظار",
+      "pendingDescription": "شارژهایی که هنوز تایید نشده اند.",
+      "coinRate": "ارزش هر سکه",
+      "coinRateDescription": "هر سکه گفتگو معادل ۱۰,۰۰۰ تومان است.",
+      "empty": "تراکنشی برای کیف پول ثبت نشده است.",
+      "table": {
+        "title": "دفتر کیف پول",
+        "subtitle": "بررسی کنید چه کسی سکه خریده، چقدر پرداخت کرده و سکه ها کجا مصرف شده اند.",
+        "type": "نوع",
+        "coins": "سکه",
+        "tomanValue": "ارزش تومانی",
+        "referenceId": "شناسه مرجع"
+      }
+    },
     "discounts": {
       "title": "تخفیف ها و پیشنهادها",
       "subtitle": "مدیریت کدهای تخفیف و جشنواره ها",
+      "applyButton": "اعمال",
+      "create": {
+        "title": "ایجاد تخفیف",
+        "subtitle": "یک کد تخفیف یا تخفیف عمومی جدید اضافه کنید.",
+        "successTitle": "تخفیف ایجاد شد",
+        "successDescription": "{discountName} آماده استفاده است."
+      },
+      "edit": {
+        "title": "ویرایش تخفیف",
+        "subtitle": "به روزرسانی {discountName}.",
+        "successTitle": "تخفیف به روز شد",
+        "successDescription": "{discountName} به روزرسانی شد."
+      },
       "createNew": "ایجاد تخفیف جدید",
       "statusUpdateSuccess": "وضعیت تغییر کرد",
       "statusUpdateSuccessDesc": "تخفیف اکنون {status} است",
@@ -673,6 +810,12 @@
         "fixed": "مبلغ ثابت"
       },
       "status": {
+        "active": "فعال",
+        "inactive": "غیرفعال"
+      },
+      "filters": {
+        "statusPlaceholder": "فیلتر وضعیت",
+        "typePlaceholder": "فیلتر نوع",
         "active": "فعال",
         "inactive": "غیرفعال"
       },
@@ -920,9 +1063,84 @@
     },
     "filters": {
       "all": "همه",
+      "title": "فیلترها",
+      "archived": {
+        "placeholder": "وضعیت آرشیو",
+        "active": "فقط فعال",
+        "archived": "فقط آرشیو شده",
+        "all": "فعال و آرشیوی"
+      },
+      "deleted": {
+        "placeholder": "وضعیت حذف",
+        "active": "حذف نشده",
+        "deleted": "فقط حذف شده",
+        "all": "همه رکوردها"
+      },
       "status": {
-        "all": "همه وضعیت ها"
+        "all": "همه وضعیت ها",
+        "placeholder": "وضعیت",
+        "upcoming": "پیش رو",
+        "past": "گذشته"
+      },
+      "type": {
+        "placeholder": "نوع رویداد"
       }
+    },
+    "resources": {
+      "title": "منابع",
+      "subtitle": "فایلها و لینک های {eventName} را مدیریت کنید.",
+      "addNew": "افزودن منبع",
+      "noResources": "هنوز منبعی اضافه نشده است.",
+      "delete": "حذف منبع",
+      "deleteConfirmTitle": "حذف منبع؟",
+      "deleteConfirmText": "این منبع از رویداد حذف خواهد شد.",
+      "form": {
+        "add": "افزودن منبع",
+        "addTitle": "منبع جدید",
+        "editTitle": "ویرایش منبع",
+        "save": "ذخیره تغییرات",
+        "cancel": "لغو",
+        "resourceTitle": "عنوان",
+        "description": "توضیحات",
+        "url": "لینک",
+        "currentUrl": "لینک فعلی",
+        "fileUploaded": "فایل با موفقیت بارگذاری شد.",
+        "accessLevel": "سطح دسترسی",
+        "accessPublic": "عمومی",
+        "accessRegistered": "فقط ثبت نام شدگان"
+      },
+      "table": {
+        "title": "عنوان",
+        "accessLevel": "دسترسی",
+        "actions": "عملیات"
+      }
+    },
+    "tickets": {
+      "title": "تنظیمات بلیت",
+      "subtitle": "موجودی و بازه فروش بلیت های {eventName} را مدیریت کنید.",
+      "enable": "این بلیت فعال باشد",
+      "price": "قیمت",
+      "quantity": "تعداد",
+      "startDate": "شروع فروش",
+      "endDate": "پایان فروش",
+      "endDateDesc": "برای باز بودن بلیت تا پایان رویداد، این فیلد را خالی بگذارید.",
+      "saveChanges": "ذخیره تنظیمات بلیت",
+      "saveSuccessTitle": "تنظیمات بلیت ذخیره شد",
+      "saveSuccessDescription": "تنظیمات بلیت های {eventName} به روز شد.",
+      "validationError": "تنظیمات بلیت را اصلاح کرده و دوباره تلاش کنید."
+    },
+    "export": {
+      "exportCsv": "خروجی CSV",
+      "paymentId": "شناسه پرداخت",
+      "registrationId": "شناسه ثبت نام",
+      "event": "رویداد",
+      "ticketType": "نوع بلیت",
+      "status": "وضعیت",
+      "amount": "مبلغ",
+      "currency": "واحد",
+      "date": "تاریخ",
+      "registrationDate": "تاریخ ثبت نام",
+      "mobile": "موبایل"
     }
   },
   "errors": {
@@ -981,11 +1199,34 @@
       }
     }
   },
+  "evaluation": {
+    "title": "بازخورد رویداد",
+    "subtitle": "بازخورد خود را برای {eventName} ثبت کنید.",
+    "textPlaceholder": "پاسخ خود را اینجا بنویسید...",
+    "successTitle": "بازخورد ثبت شد",
+    "successDescription": "از اینکه نظر خود را با ما به اشتراک گذاشتید ممنونیم.",
+    "alreadySubmittedTitle": "بازخورد قبلا ثبت شده است",
+    "alreadySubmittedDescription": "شما قبلا این فرم ارزیابی را تکمیل کرده اید.",
+    "validation": {
+      "required": "پاسخ به این سوال الزامی است."
+    },
+    "errors": {
+      "notAuthenticated": "نیاز به ورود",
+      "loginPrompt": "برای ثبت بازخورد رویداد ابتدا وارد شوید.",
+      "notEligibleTitle": "ثبت بازخورد در دسترس نیست",
+      "notEligibleDescription": "فقط شرکت کنندگان رویدادهای پایان یافته می توانند بازخورد ثبت کنند.",
+      "formNotFound": "فرم ارزیابی برای این رویداد در دسترس نیست."
+    }
+  },
   "sponsorship": {
     "title": "فرصت های حمایت مالی",
     "subtitle": "با Think Then Talk شریک شوید و با یک جامعه فعال از زبان آموزان و متخصصان در ارتباط باشید.",
     "successTitle": "درخواست دریافت شد",
     "successDescription": "از علاقه شما به حمایت مالی از Think Then Talk سپاسگزاریم. تیم ما درخواست شما را بررسی کرده و به زودی با شما تماس خواهد گرفت.",
+    "panel": {
+      "loginTitle": "نیاز به ورود",
+      "loginDescription": "برای ثبت درخواست حمایت مالی و پیگیری وضعیت آن از پنل کاربری، ابتدا وارد حساب خود شوید."
+    },
     "plans": {
       "BRONZE": {
         "name": "طرح برنزی",
@@ -1038,6 +1279,10 @@
     "subtitle": "Are you passionate about community building? We are always looking for volunteers.",
     "successTitle": "درخواست ارسال شد!",
     "successDescription": "ما درخواست شما برای پیوستن به تیم Think Then Talk را دریافت کردیم. آن را بررسی کرده و به زودی با شما تماس خواهیم گرفت.",
+    "panel": {
+      "loginTitle": "نیاز به ورود",
+      "loginDescription": "برای ثبت درخواست همکاری و دیدن وضعیت آن در پنل کاربری، ابتدا وارد حساب خود شوید."
+    },
     "terms": {
       "title": "شرایط همکاری",
       "content": "<p>با پیوستن به تیم داوطلبان Think Then Talk، شما موافقت می کنید:</p><ul><li>حمایت از فضای فراگیر جامعه.</li><li>رعایت استانداردهای حرفه ای برند.</li><li>حفظ محرمانگی اطلاعات حساس جامعه.</li></ul>"
@@ -1062,6 +1307,14 @@
     "subtitle": "ایده ای برای نشست های آینده Think Then Talk دارید? با ما در میان بگذارید!",
     "successTitle": "ایده دریافت شد!",
     "successDescription": "از مشارکت شما در جامعه سپاسگزاریم! تیم ما پیشنهاد شما را بررسی خواهد کرد.",
+    "panel": {
+      "navLabel": "ایده های من",
+      "title": "ایده های من",
+      "description": "ایده هایی که ارسال کرده اید را همراه با وضعیت آنها ببینید؛ در انتظار بررسی، بررسی شده، برنامه ریزی شده یا رد شده.",
+      "empty": "هنوز ایده ای ثبت نکرده اید.",
+      "submitNew": "ثبت ایده جدید",
+      "loadError": "بارگذاری ایده های شما انجام نشد."
+    },
     "status": {
       "PENDING": "در انتظار",
       "REVIEWED": "بررسی شده",
@@ -1127,6 +1380,24 @@
     }
   },
   "partnership": {
+    "panel": {
+      "navLabel": "درخواست های من",
+      "title": "درخواست های من",
+      "description": "درخواست های همکاری و حمایت مالی خود را همراه با تمام تغییر وضعیت ها و یادداشت های تیم مدیریت پیگیری کنید.",
+      "tabs": {
+        "collaborations": "همکاری ها",
+        "sponsorships": "حمایت های مالی"
+      },
+      "collaborationsTitle": "درخواست های همکاری من",
+      "collaborationsDescription": "درخواست هایی که برای پیوستن به تیم Think Then Talk ارسال کرده اید.",
+      "sponsorshipsTitle": "درخواست های حمایت مالی من",
+      "sponsorshipsDescription": "درخواست های همکاری تجاری و حمایت مالی که ثبت کرده اید.",
+      "emptyCollaborations": "هنوز هیچ درخواست همکاری ثبت نکرده اید.",
+      "emptySponsorships": "هنوز هیچ درخواست حمایت مالی ثبت نکرده اید.",
+      "loadError": "بارگذاری درخواست های شما انجام نشد.",
+      "requestMeta": "آخرین به روزرسانی در {updatedAt}",
+      "adminNote": "یادداشت مدیریت"
+    },
     "status": {
       "PENDING": "در انتظار",
       "REVIEWING": "در حال بررسی",

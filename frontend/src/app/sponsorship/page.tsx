@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -62,6 +63,24 @@ export default function SponsorshipPage() {
     });
   };
 
+  if (!currentUser) {
+    return (
+      <div className="container max-w-2xl py-20 px-4">
+        <Card className="rounded-[2rem] border-none shadow-xl">
+          <CardHeader className="text-center">
+            <CardTitle>{t('sponsorship.panel.loginTitle')}</CardTitle>
+            <CardDescription>{t('sponsorship.panel.loginDescription')}</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button asChild className="h-12 w-full rounded-xl font-bold">
+              <Link href="/login">{t('auth.loginButton')}</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
   const selectedPlan = form.watch('plan');
 
   if (step === 3) {
@@ -72,9 +91,14 @@ export default function SponsorshipPage() {
         <p className="text-lg text-muted-foreground leading-relaxed mb-8">
           {t('sponsorship.successDescription')}
         </p>
-        <Button asChild size="lg">
-          <a href="/">{t('actions.backToDashboard')}</a>
-        </Button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button asChild size="lg" className="rounded-full font-bold">
+            <Link href="/my-requests">{t('partnership.panel.navLabel')}</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="rounded-full font-bold">
+            <Link href="/dashboard">{t('actions.backToDashboard')}</Link>
+          </Button>
+        </div>
       </div>
     );
   }

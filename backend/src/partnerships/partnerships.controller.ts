@@ -22,15 +22,33 @@ export class PartnershipsController {
   constructor(private readonly partnershipsService: PartnershipsService) {}
 
   @Post('collaborate')
+  @ApiBearerAuth('bearerAuth')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Submit a team/moderator application' })
   async collaborate(@Body() dto: any, @CurrentUser() user: any) {
     return this.partnershipsService.submitCollaboration(dto, user?.sub);
   }
 
   @Post('sponsor')
+  @ApiBearerAuth('bearerAuth')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Submit a sponsorship request' })
   async sponsor(@Body() dto: any, @CurrentUser() user: any) {
     return this.partnershipsService.submitSponsorship(dto, user?.sub);
+  }
+
+  @Get('me/collaborations')
+  @ApiBearerAuth('bearerAuth')
+  @UseGuards(JwtAuthGuard)
+  async listMyCollaborations(@CurrentUser() user: { sub: string }) {
+    return this.partnershipsService.listUserCollaborations(user.sub);
+  }
+
+  @Get('me/sponsorships')
+  @ApiBearerAuth('bearerAuth')
+  @UseGuards(JwtAuthGuard)
+  async listMySponsorships(@CurrentUser() user: { sub: string }) {
+    return this.partnershipsService.listUserSponsorships(user.sub);
   }
 
   @Get('admin/collaborations')

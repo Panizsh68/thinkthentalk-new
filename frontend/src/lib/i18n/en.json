@@ -137,6 +137,12 @@
       "eventDate": "Date",
       "ticketType": "Ticket Type",
       "price": "Price",
+      "finalPriceTitle": "Final Price",
+      "requiredCoins": "Required Coins",
+      "currentCoins": "Your Wallet Balance",
+      "coinRate": "Coin Value",
+      "balanceEnough": "You have enough coins to complete this registration.",
+      "balanceNotEnough": "You need {coins} more coins before checkout.",
       "edit": "Edit",
       "yes": "Yes",
       "no": "No",
@@ -271,6 +277,7 @@
     "welcomeBack": "Welcome back!",
     "personalIntro": "Your personal space for Think Then Talk activities.",
     "myRegistrations": "My Events",
+    "overviewDescription": "Track your registrations, wallet balance, membership status, and the next actions you need to take in one place.",
     "upcomingSection": "Upcoming",
     "pastSection": "Past Events",
     "noUpcoming": "No upcoming registrations.",
@@ -278,6 +285,46 @@
     "browseEvents": "Browse Events",
     "nextStepTitle": "Next Step",
     "nextStepDesc": "Ready for more conversations?",
+    "eventsTitle": "My Events",
+    "eventsDescription": "This page is your event center. Review your upcoming registrations, revisit past events, and keep track of what you have already joined.",
+    "eventsHelper": "All your event registrations are collected here so you can clearly see what is coming next and what has already been completed.",
+    "summary": {
+      "upcoming": "Upcoming Events",
+      "totalEvents": "Total Registrations",
+      "walletBalance": "Talk Coins Balance",
+      "subscription": "Pass Status"
+    },
+    "activeSubscription": "Active",
+    "inactiveSubscription": "Not Active",
+    "quickActionsTitle": "Your Main Sections",
+    "quickActionsDescription": "Use the user panel to manage each part of your account without searching around the site.",
+    "quickActions": {
+      "events": "Review all of your registered events and their status.",
+      "wallet": "Charge your Coin Center and inspect wallet transactions.",
+      "subscription": "See your current pass and purchase a new one if needed.",
+      "profile": "Complete and update your account information."
+    },
+    "activityTitle": "Recent Activity",
+    "activityDescription": "A quick timeline of the latest things you have done in Think Then Talk.",
+    "activity": {
+      "registration": "Event registration",
+      "walletDeposit": "Wallet top-up",
+      "walletSpend": "Wallet usage",
+      "empty": "No activity has been recorded yet."
+    },
+    "attentionTitle": "Needs Your Attention",
+    "attentionDescription": "These are the items that usually block a smooth registration flow.",
+    "attention": {
+      "completeProfile": "Complete your profile before your next registration.",
+      "chargeWallet": "Charge your Coin Center so checkout works without interruption.",
+      "buyPass": "Activate your pass to unlock subscription benefits.",
+      "bookEvent": "You do not have any upcoming events yet. Book one now.",
+      "ready": "Your account looks ready. You can continue with your next event."
+    },
+    "profileCardTitle": "Account Snapshot",
+    "profileCardDescription": "Your basic identity and contact status, directly inside the user panel.",
+    "profileStatusComplete": "Complete",
+    "profileStatusIncomplete": "Incomplete",
     "table": {
       "event": "Event",
       "date": "Date",
@@ -389,16 +436,53 @@
   },
   "wallet": {
     "title": "Coin Center",
+    "heroEyebrow": "Talk Coins",
+    "heroDescription": "Charge your wallet once, then use Talk Coins for event registrations and community passes with a clearer, faster checkout flow.",
     "balance": "Talk Coins",
+    "coinValueLabel": "1 Coin Value",
+    "pendingTopups": "Pending Top-ups",
     "deposit": "Get Coins",
     "withdraw": "History",
     "depositTitle": "Get Talk Coins",
     "depositDesc": "Coins are used for registrations and passes. They are non-refundable.",
+    "depositHelper": "Choose how many coins you want. The system will show the exact Zarinpal charge before redirecting you.",
+    "coinInputLabel": "How many coins do you want?",
+    "receivedCoins": "Coins to receive",
+    "gatewayCharge": "Zarinpal charge",
+    "confirmTitle": "Confirm Wallet Charge",
+    "confirmDescription": "You will be redirected to Zarinpal to complete the purchase.",
+    "confirmAndContinue": "Continue to Zarinpal",
     "payAndCharge": "Purchase",
+    "steps": {
+      "buyTitle": "1. Buy Coins",
+      "buyDescription": "Choose a coin amount and pay the exact toman value through Zarinpal.",
+      "useTitle": "2. Use Coins",
+      "useDescription": "Registrations and community passes deduct coins directly from your wallet.",
+      "noteTitle": "3. Stay In Control",
+      "noteDescription": "Before each checkout, you will see both the toman value and the required coin count."
+    },
+    "overviewTitle": "Wallet Overview",
+    "overviewDescription": "A quick snapshot of your coin activity.",
+    "totalPurchased": "Total Purchased",
+    "totalSpent": "Total Spent",
+    "guidance": "Use your Talk Coins for event registrations and community passes. Event prices may be shown in toman, but checkout will always tell you exactly how many coins are needed.",
     "history": "Transaction History",
+    "historyDescription": "Every top-up and deduction is listed here with both coin and gateway values.",
     "noTransactions": "No coins used yet.",
-    "minDepositError": "Minimum purchase is 100 coins.",
+    "minDepositError": "Minimum purchase is 1 coin.",
     "depositSuccess": "Coins added to your account.",
+    "depositPending": "Redirecting to Zarinpal...",
+    "depositSuccessDescription": "Your Talk Coins balance has been updated.",
+    "depositFailedTitle": "Wallet Charge Failed",
+    "depositFailedDescription": "The wallet top-up was not completed. You can try again from the wallet page.",
+    "callbackTitle": "Wallet Charge Status",
+    "callbackDescription": "We are checking your Talk Coins purchase.",
+    "verifying": "Verifying your wallet charge...",
+    "invalidRequestTitle": "Invalid Wallet Request",
+    "invalidRequestDescription": "We could not find this wallet transaction.",
+    "backToWallet": "Back to Wallet",
+    "nonRefundableNote": "Talk Coins are non-refundable tokens used for registrations and passes.",
+    "insufficientBalance": "Insufficient Talk Coins balance. Charge your wallet first.",
     "txType": {
       "DEPOSIT": "Purchased",
       "WITHDRAWAL": "Used",
@@ -429,6 +513,7 @@
       "registrations": "Registrations",
       "users": "Users",
       "payments": "Payments",
+      "wallet": "Wallet",
       "discounts": "Discounts",
       "messaging": "Messaging",
       "ideas": "Ideas",
@@ -466,6 +551,18 @@
     "events": {
       "title": "Events Management",
       "subtitle": "Manage community gatherings",
+      "create": {
+        "title": "Create Event",
+        "subtitle": "Set up a new event and its public details.",
+        "successTitle": "Event Created",
+        "successDescription": "{eventName} is now available."
+      },
+      "edit": {
+        "title": "Edit Event",
+        "subtitle": "Update {eventName}.",
+        "successTitle": "Event Updated",
+        "successDescription": "{eventName} has been updated."
+      },
       "createNew": "Create New Event",
       "archiveSuccess": "Event archived",
       "unarchiveSuccess": "Event unarchived",
@@ -530,6 +627,9 @@
         "noPublicDiscounts": "No public discounts available",
         "saveChanges": "Save Event",
         "createEvent": "Create Event"
+      },
+      "validation": {
+        "nonNegative": "Value cannot be negative."
       }
     },
     "registrations": {
@@ -620,6 +720,9 @@
     "payments": {
       "title": "Financial Ledger",
       "subtitle": "Tracking all Talk Coin transactions",
+      "totalRevenue": "Coins Spent on Registrations",
+      "paidTransactions": "Completed Registrations",
+      "failedTransactions": "Failed Payments",
       "noPaymentsFound": "No payments matching criteria",
       "status": {
         "success": "Success",
@@ -641,9 +744,43 @@
         "viewRegistration": "View Order"
       }
     },
+    "wallet": {
+      "title": "Wallet Transactions",
+      "subtitle": "Monitor top-ups and Talk Coins usage across the system.",
+      "eyebrow": "Coin Ledger",
+      "totalSold": "Successful Top-ups",
+      "totalSpent": "Coins Spent",
+      "spentDescription": "Coins deducted from wallets for registrations and passes.",
+      "pendingTopups": "Pending Top-ups",
+      "pendingDescription": "Top-ups that have not been verified yet.",
+      "coinRate": "Coin Value",
+      "coinRateDescription": "Each Talk Coin equals 10,000 toman.",
+      "empty": "No wallet transactions found.",
+      "table": {
+        "title": "Wallet Ledger",
+        "subtitle": "Track who bought coins, how much was charged, and where coins were spent.",
+        "type": "Type",
+        "coins": "Coins",
+        "tomanValue": "Toman Value",
+        "referenceId": "Reference"
+      }
+    },
     "discounts": {
       "title": "Discounts & Offers",
       "subtitle": "Manage promo codes and automatic discounts",
+      "applyButton": "Apply",
+      "create": {
+        "title": "Create Discount",
+        "subtitle": "Add a new promo code or public discount.",
+        "successTitle": "Discount Created",
+        "successDescription": "{discountName} is ready to use."
+      },
+      "edit": {
+        "title": "Edit Discount",
+        "subtitle": "Update {discountName}.",
+        "successTitle": "Discount Updated",
+        "successDescription": "{discountName} has been updated."
+      },
       "createNew": "New Discount",
       "statusUpdateSuccess": "Status updated",
       "statusUpdateSuccessDesc": "Discount is now {status}",
@@ -673,6 +810,12 @@
         "fixed": "Fixed Amount"
       },
       "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "filters": {
+        "statusPlaceholder": "Filter by status",
+        "typePlaceholder": "Filter by type",
         "active": "Active",
         "inactive": "Inactive"
       },
@@ -920,9 +1063,84 @@
     },
     "filters": {
       "all": "All",
+      "title": "Filters",
+      "archived": {
+        "placeholder": "Archive State",
+        "active": "Active Only",
+        "archived": "Archived Only",
+        "all": "Active + Archived"
+      },
+      "deleted": {
+        "placeholder": "Deletion State",
+        "active": "Not Deleted",
+        "deleted": "Deleted Only",
+        "all": "All Records"
+      },
       "status": {
-        "all": "All Statuses"
+        "all": "All Statuses",
+        "placeholder": "Status",
+        "upcoming": "Upcoming",
+        "past": "Past"
+      },
+      "type": {
+        "placeholder": "Event Type"
       }
+    },
+    "resources": {
+      "title": "Resources",
+      "subtitle": "Manage files and links for {eventName}.",
+      "addNew": "Add Resource",
+      "noResources": "No resources have been added yet.",
+      "delete": "Delete Resource",
+      "deleteConfirmTitle": "Delete Resource?",
+      "deleteConfirmText": "This resource will be removed from the event.",
+      "form": {
+        "add": "Add Resource",
+        "addTitle": "New Resource",
+        "editTitle": "Edit Resource",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "resourceTitle": "Title",
+        "description": "Description",
+        "url": "URL",
+        "currentUrl": "Current URL",
+        "fileUploaded": "File uploaded successfully.",
+        "accessLevel": "Access Level",
+        "accessPublic": "Public",
+        "accessRegistered": "Registered Members"
+      },
+      "table": {
+        "title": "Title",
+        "accessLevel": "Access",
+        "actions": "Actions"
+      }
+    },
+    "tickets": {
+      "title": "Ticket Settings",
+      "subtitle": "Configure ticket inventory and sale windows for {eventName}.",
+      "enable": "Enable this ticket",
+      "price": "Price",
+      "quantity": "Quantity",
+      "startDate": "Sale Start",
+      "endDate": "Sale End",
+      "endDateDesc": "Leave empty to keep the ticket available until the event ends.",
+      "saveChanges": "Save Ticket Settings",
+      "saveSuccessTitle": "Ticket Settings Saved",
+      "saveSuccessDescription": "{eventName} ticket settings have been updated.",
+      "validationError": "Please fix the ticket settings and try again."
+    },
+    "export": {
+      "exportCsv": "Export CSV",
+      "paymentId": "Payment ID",
+      "registrationId": "Registration ID",
+      "event": "Event",
+      "ticketType": "Ticket Type",
+      "status": "Status",
+      "amount": "Amount",
+      "currency": "Currency",
+      "date": "Date",
+      "registrationDate": "Registration Date",
+      "mobile": "Mobile"
     }
   },
   "errors": {
@@ -981,11 +1199,34 @@
       }
     }
   },
+  "evaluation": {
+    "title": "Event Feedback",
+    "subtitle": "Share your feedback for {eventName}.",
+    "textPlaceholder": "Write your answer here...",
+    "successTitle": "Feedback Submitted",
+    "successDescription": "Thanks for sharing your thoughts.",
+    "alreadySubmittedTitle": "Feedback Already Submitted",
+    "alreadySubmittedDescription": "You have already completed this evaluation.",
+    "validation": {
+      "required": "This question is required."
+    },
+    "errors": {
+      "notAuthenticated": "Login Required",
+      "loginPrompt": "Please log in to submit event feedback.",
+      "notEligibleTitle": "Feedback Not Available",
+      "notEligibleDescription": "Only attendees of completed events can submit feedback.",
+      "formNotFound": "No evaluation form is available for this event."
+    }
+  },
   "sponsorship": {
     "title": "Sponsorship Opportunities",
     "subtitle": "Partner with Think Then Talk and connect with an engaged community of lifelong learners and professionals.",
     "successTitle": "Application Received",
     "successDescription": "Thank you for your interest in sponsoring Think Then Talk. Our team will review your application and contact you shortly.",
+    "panel": {
+      "loginTitle": "Login Required",
+      "loginDescription": "Please log in to submit a sponsorship request and track its status from your user panel."
+    },
     "plans": {
       "BRONZE": {
         "name": "Bronze Plan",
@@ -1038,6 +1279,10 @@
     "subtitle": "Are you passionate about community building? We are always looking for volunteers.",
     "successTitle": "Application Submitted!",
     "successDescription": "We’ve received your application to join the Think Then Talk team. We’ll review it and get in touch with you soon.",
+    "panel": {
+      "loginTitle": "Login Required",
+      "loginDescription": "Please log in to submit a collaboration request and follow its status from your user panel."
+    },
     "terms": {
       "title": "Collaboration Terms",
       "content": "<p>By joining the Think Then Talk volunteer team, you agree to:</p><ul><li>Support the community's inclusive environment.</li><li>Uphold the brand's professional standards.</li><li>Maintain confidentiality of sensitive community data.</li></ul>"
@@ -1062,6 +1307,14 @@
     "subtitle": "Have a great idea for a future Think Then Talk session? Let us know!",
     "successTitle": "Idea Received!",
     "successDescription": "Thank you for contributing to the community! Our team will review your suggestion.",
+    "panel": {
+      "navLabel": "My Ideas",
+      "title": "My Ideas",
+      "description": "Track the ideas you have submitted and see whether they are pending review, reviewed, planned, or rejected.",
+      "empty": "You have not submitted any ideas yet.",
+      "submitNew": "Submit a New Idea",
+      "loadError": "Could not load your ideas."
+    },
     "status": {
       "PENDING": "Pending",
       "REVIEWED": "Reviewed",
@@ -1127,6 +1380,24 @@
     }
   },
   "partnership": {
+    "panel": {
+      "navLabel": "My Requests",
+      "title": "My Requests",
+      "description": "Track your collaboration and sponsorship requests, including every status update and note shared by the admin team.",
+      "tabs": {
+        "collaborations": "Collaborations",
+        "sponsorships": "Sponsorships"
+      },
+      "collaborationsTitle": "My Collaboration Requests",
+      "collaborationsDescription": "Applications you have sent to join the Think Then Talk team.",
+      "sponsorshipsTitle": "My Sponsorship Requests",
+      "sponsorshipsDescription": "Business partnership and sponsorship requests you have submitted.",
+      "emptyCollaborations": "You have not submitted any collaboration requests yet.",
+      "emptySponsorships": "You have not submitted any sponsorship requests yet.",
+      "loadError": "Could not load your requests.",
+      "requestMeta": "Last updated on {updatedAt}",
+      "adminNote": "Admin Note"
+    },
     "status": {
       "PENDING": "Pending",
       "REVIEWING": "Reviewing",

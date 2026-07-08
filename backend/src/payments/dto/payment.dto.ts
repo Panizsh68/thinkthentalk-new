@@ -41,6 +41,21 @@ export class PaymentDto {
   @IsString()
   redirectUrl?: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  eventTitle?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  userName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  userMobile?: string;
+
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt!: string;
 

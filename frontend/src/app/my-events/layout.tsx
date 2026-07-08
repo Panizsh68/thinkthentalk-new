@@ -1,7 +1,8 @@
 'use client';
+
 import { UserPanelLayout } from '@/components/user-panel-layout';
 
-export default function DashboardLayout({
+export default function MyEventsLayout({
   children,
 }: {
   children: React.ReactNode;

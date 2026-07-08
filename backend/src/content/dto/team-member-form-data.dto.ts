@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUrl } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
+
+const MEDIA_URL_PATTERN = /^(https?:\/\/\S+|\/\S+)$/;
 
 export class TeamMemberFormDataDto {
   @ApiProperty({ type: String })
@@ -11,7 +17,9 @@ export class TeamMemberFormDataDto {
   role!: string;
 
   @ApiProperty({ type: String, format: 'uri' })
-  @IsUrl()
+  @Matches(MEDIA_URL_PATTERN, {
+    message: 'photoUrl must be an absolute URL or an uploaded file path',
+  })
   photoUrl!: string;
 }
 
@@ -28,6 +36,8 @@ export class UpdateTeamMemberFormDataDto {
 
   @ApiPropertyOptional({ type: String, format: 'uri' })
   @IsOptional()
-  @IsUrl()
+  @Matches(MEDIA_URL_PATTERN, {
+    message: 'photoUrl must be an absolute URL or an uploaded file path',
+  })
   photoUrl?: string;
 }

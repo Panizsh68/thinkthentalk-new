@@ -3,12 +3,21 @@ import { getApiUrl } from '../config/api';
 const MAX_RETRIES = 1;
 const RETRY_DELAY_MS = 1000;
 
+const isAdminApiPath = (path: string) =>
+  /(^\/admin(?:\/|$))|(?:\/admin(?:\/|$))/.test(path);
+
+type AuthMode = 'auto' | 'admin' | 'user' | 'either';
+
+type ApiRequestOptions = RequestInit & {
+  authMode?: AuthMode;
+};
+
 const apiClient = {
   async request<T>(
     method: string,
     path: string,
     data?: any,
-    options?: RequestInit,
+    options?: ApiRequestOptions,
     retries = MAX_RETRIES
   ): Promise<{ data: T; token?: string }> {
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -38,16 +47,35 @@ const apiClient = {
       const adminToken = localStorage.getItem('adminAccessToken');
       const userToken = localStorage.getItem('accessToken');
 
-      if (normalizedPath.startsWith('/admin')) {
+      const onAdminPage = window.location.pathname.startsWith('/admin');
+      const resolvedAuthMode =
+        options?.authMode ??
+        (isAdminApiPath(normalizedPath) ? 'admin' : normalizedPath.includes('/upload') ? 'either' : 'user');
+
+      if (resolvedAuthMode === 'admin') {
         if (adminToken) headers.append('Authorization', `Bearer ${adminToken}`);
         usedTokenType = 'admin';
-      } else if (normalizedPath.includes('/upload')) {
-        const token = userToken || adminToken;
+      } else if (resolvedAuthMode === 'either') {
+        const token = onAdminPage ? adminToken || userToken : userToken || adminToken;
         if (token) headers.append('Authorization', `Bearer ${token}`);
-        usedTokenType = userToken ? 'user' : (adminToken ? 'admin' : null);
-      } else {
+        usedTokenType = onAdminPage
+          ? adminToken
+            ? 'admin'
+            : userToken
+              ? 'user'
+              : null
+          : userToken
+            ? 'user'
+            : adminToken
+              ? 'admin'
+              : null;
+      } else if (resolvedAuthMode === 'user') {
         if (userToken) headers.append('Authorization', `Bearer ${userToken}`);
         usedTokenType = userToken ? 'user' : null;
+      } else {
+        const token = userToken || adminToken;
+        if (token) headers.append('Authorization', `Bearer ${token}`);
+        usedTokenType = userToken ? 'user' : adminToken ? 'admin' : null;
       }
     }
 
@@ -63,7 +91,7 @@ const apiClient = {
       const token = response.headers.get('Authorization')?.split(' ')[1];
 
       if (response.status === 401 && typeof window !== 'undefined') {
-        const isAdminRequest = normalizedPath.startsWith('/admin') || usedTokenType === 'admin';
+        const isAdminRequest = resolvedAuthMode === 'admin' || usedTokenType === 'admin';
         const onAdminPage = window.location.pathname.startsWith('/admin');
 
         if (isAdminRequest || usedTokenType === 'admin') {
@@ -134,23 +162,23 @@ const apiClient = {
     }
   },
 
-  get<T>(path: string, options?: RequestInit): Promise<{ data: T; token?: string }> {
+  get<T>(path: string, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('GET', path, undefined, options);
   },
 
-  post<T>(path: string, data: any, options?: RequestInit): Promise<{ data: T; token?: string }> {
+  post<T>(path: string, data: any, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('POST', path, data, options);
   },
 
-  put<T>(path: string, data: any, options?: RequestInit): Promise<{ data: T; token?: string }> {
+  put<T>(path: string, data: any, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('PUT', path, data, options);
   },
 
-  patch<T>(path: string, data: any, options?: RequestInit): Promise<{ data: T; token?: string }> {
+  patch<T>(path: string, data: any, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('PATCH', path, data, options);
   },
 
-  delete<T>(path: string, options?: RequestInit): Promise<{ data: T; token?: string }> {
+  delete<T>(path: string, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('DELETE', path, undefined, options);
   },
 };

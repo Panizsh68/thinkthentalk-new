@@ -15,6 +15,9 @@ export type Payment = {
   status: PaymentStatus;
   gatewayTransactionId?: string;
   redirectUrl?: string;
+  eventTitle?: string;
+  userName?: string;
+  userMobile?: string;
   createdAt: string;
   updatedAt: string;
 };

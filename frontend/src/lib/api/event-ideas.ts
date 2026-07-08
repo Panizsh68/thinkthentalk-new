@@ -7,6 +7,11 @@ export async function submitEventIdea(dto: CreateEventIdeaDto): Promise<EventIde
   return data;
 }
 
+export async function getMyEventIdeas(): Promise<EventIdea[]> {
+  const { data } = await apiClient.get<EventIdea[]>('/event-ideas/me');
+  return data;
+}
+
 export async function getAdminEventIdeas(params: {
   status?: EventIdeaStatus;
   type?: EventIdeaType;
@@ -19,15 +24,19 @@ export async function getAdminEventIdeas(params: {
   if (params.page) query.append('page', String(params.page));
   if (params.limit) query.append('limit', String(params.limit));
 
-  const { data } = await apiClient.get<PaginatedEventIdeas>(`/event-ideas/admin?${query.toString()}`);
+  const { data } = await apiClient.get<PaginatedEventIdeas>(`/event-ideas/admin?${query.toString()}`, {
+    authMode: 'admin',
+  });
   return data;
 }
 
 export async function updateIdeaStatus(id: string, status: EventIdeaStatus): Promise<EventIdea> {
-  const { data } = await apiClient.patch<EventIdea>(`/event-ideas/admin/${id}/status`, { status });
+  const { data } = await apiClient.patch<EventIdea>(`/event-ideas/admin/${id}/status`, { status }, {
+    authMode: 'admin',
+  });
   return data;
 }
 
 export async function deleteEventIdea(id: string): Promise<void> {
-  await apiClient.delete(`/event-ideas/admin/${id}`);
+  await apiClient.delete(`/event-ideas/admin/${id}`, { authMode: 'admin' });
 }

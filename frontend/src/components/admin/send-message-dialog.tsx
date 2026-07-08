@@ -18,35 +18,51 @@ import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Loader2, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useSendBulkMessageMutation } from '@/hooks/use-messaging-queries';
 
 interface SendMessageDialogProps {
   user: User;
+  registrationId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function SendMessageDialog({ user, open, onOpenChange }: SendMessageDialogProps) {
+export function SendMessageDialog({ user, registrationId, open, onOpenChange }: SendMessageDialogProps) {
   const { t } = useLanguage();
   const [message, setMessage] = useState('');
   const [sendSms, setSendSms] = useState(true);
   const [sendEmail, setSendEmail] = useState(false);
-  const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
+  const { mutate: sendBulkMessage, isPending: isSending } = useSendBulkMessageMutation();
 
   const handleSend = async () => {
     if (!message || (!sendSms && !sendEmail)) return;
-    
-    setIsSending(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Mock API call
-    
-    toast({
-        title: t('admin.registrations.sendMessage.successTitle'),
-        description: t('admin.registrations.sendMessage.successDescription'),
-    });
 
-    setIsSending(false);
-    onOpenChange(false);
-    setMessage('');
+    sendBulkMessage(
+      {
+        registrationIds: [registrationId],
+        subject: '',
+        body: message,
+        channels: [sendSms ? 'sms' : null, sendEmail ? 'email' : null].filter(Boolean) as Array<'sms' | 'email'>,
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: t('admin.registrations.sendMessage.successTitle'),
+            description: t('admin.registrations.sendMessage.successDescription'),
+          });
+          onOpenChange(false);
+          setMessage('');
+        },
+        onError: (error: any) => {
+          toast({
+            variant: 'destructive',
+            title: t('errors.genericTitle'),
+            description: error.message,
+          });
+        },
+      },
+    );
   };
 
   return (

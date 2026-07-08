@@ -1,13 +1,15 @@
 
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { submitCollaboration, submitSponsorship, getAdminCollaborations, getAdminSponsorships, updateCollabStatus, updateSponsorStatus } from '@/lib/api/partnership';
+import { submitCollaboration, submitSponsorship, getAdminCollaborations, getAdminSponsorships, updateCollabStatus, updateSponsorStatus, getMyCollaborations, getMySponsorships } from '@/lib/api/partnership';
 import type { CreateCollaborationDto, CreateSponsorshipDto, PartnershipStatus, SponsorshipPlan } from '@/lib/types';
 
 export const partnershipKeys = {
   all: ['partnerships'] as const,
   collabs: () => [...partnershipKeys.all, 'collabs'] as const,
   sponsors: () => [...partnershipKeys.all, 'sponsors'] as const,
+  myCollabs: () => [...partnershipKeys.all, 'my-collabs'] as const,
+  mySponsors: () => [...partnershipKeys.all, 'my-sponsors'] as const,
 };
 
 export function useSubmitCollabMutation() {
@@ -53,5 +55,21 @@ export function useUpdateSponsorStatusMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: partnershipKeys.sponsors() });
     },
+  });
+}
+
+export function useMyCollaborationsQuery(enabled = true) {
+  return useQuery({
+    queryKey: partnershipKeys.myCollabs(),
+    queryFn: getMyCollaborations,
+    enabled,
+  });
+}
+
+export function useMySponsorshipsQuery(enabled = true) {
+  return useQuery({
+    queryKey: partnershipKeys.mySponsors(),
+    queryFn: getMySponsorships,
+    enabled,
   });
 }

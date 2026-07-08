@@ -21,9 +21,21 @@ function AppShell({ children }: { children: React.ReactNode }) {
   
   const isAdminRoute = pathname?.startsWith('/admin') ?? false;
   const isDashboardRoute = pathname?.startsWith('/dashboard') ?? false;
+  const isMyEventsRoute = pathname?.startsWith('/my-events') ?? false;
+  const isMyIdeasRoute = pathname?.startsWith('/my-ideas') ?? false;
+  const isMyRequestsRoute = pathname?.startsWith('/my-requests') ?? false;
   const isProfileRoute = pathname?.startsWith('/profile') ?? false;
   const isWalletRoute = pathname?.startsWith('/wallet') ?? false;
-  const isPanelRoute = isAdminRoute || isDashboardRoute || isProfileRoute || isWalletRoute;
+  const isSubscriptionRoute = pathname?.startsWith('/subscription') ?? false;
+  const isPanelRoute =
+    isAdminRoute ||
+    isDashboardRoute ||
+    isMyEventsRoute ||
+    isMyIdeasRoute ||
+    isMyRequestsRoute ||
+    isProfileRoute ||
+    isWalletRoute ||
+    isSubscriptionRoute;
 
   useEffect(() => {
     setMounted(true);

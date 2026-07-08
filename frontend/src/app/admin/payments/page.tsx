@@ -2,10 +2,8 @@
 'use client';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useAllRegistrationsQuery } from '@/hooks/use-admin-registration-queries';
 import { useEventsQuery } from '@/hooks/use-event-queries';
 import { useLanguage } from '@/lib/i18n/language-provider';
-import type { UserRegistrationDetails } from '@/lib/types';
 import { getFormattedPrice, getFormattedDateTime } from '@/lib/event-helpers';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,9 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { Loader2, Filter, X, Calendar as CalendarIcon, DollarSign, ListChecks, TrendingUp, Eye, Download } from 'lucide-react';
+import { Loader2, Filter, X, DollarSign, ListChecks, TrendingUp, Eye, Download } from 'lucide-react';
 import { withRoleGuard } from '@/components/admin/with-role-guard';
 import { exportToCsv } from '@/lib/csv-export';
 import { format } from 'date-fns';
@@ -46,12 +42,13 @@ function AdminPaymentsPage() {
   const { data: payments, isLoading, error } = useAdminPaymentsQuery(filters);
   const { data: events, isLoading: isLoadingEvents } = useEventsQuery({ showPastEvents: true });
 
-  
+
   const summaryStats = useMemo(() => {
-    if (!payments) return { totalRevenue: 0, paidTransactions: 0 };
+    if (!payments) return { totalRevenue: 0, paidTransactions: 0, failedTransactions: 0 };
     const totalRevenue = payments.filter(p => p.status === 'SUCCESS').reduce((acc, p) => acc + p.amount, 0);
     const paidTransactions = payments.filter(p => p.status === 'SUCCESS').length;
-    return { totalRevenue, paidTransactions };
+    const failedTransactions = payments.filter(p => p.status === 'FAILED').length;
+    return { totalRevenue, paidTransactions, failedTransactions };
   }, [payments]);
 
   const handleFilterChange = (key: keyof PaymentFilters, value: any) => {
@@ -73,7 +70,8 @@ function AdminPaymentsPage() {
     if (!payments) return;
     const dataToExport = payments.map(p => ({
         paymentId: p.id,
-        event: p.eventId, // We don't have event title directly on payment
+        user: p.userName ?? p.userMobile ?? '',
+        event: p.eventTitle ?? p.eventId,
         registrationId: p.registrationId,
         amount: p.amount,
         currency: p.currency,
@@ -83,6 +81,7 @@ function AdminPaymentsPage() {
 
     const headers = {
         paymentId: t('admin.export.paymentId'),
+        user: t('admin.payments.table.user'),
         event: t('admin.export.event'),
         registrationId: t('admin.export.registrationId'),
         amount: t('admin.export.amount'),
@@ -111,7 +110,7 @@ function AdminPaymentsPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <StatCard title={t('admin.payments.totalRevenue')} value={getFormattedPrice(summaryStats.totalRevenue, 'TOMAN', t)} icon={DollarSign} />
         <StatCard title={t('admin.payments.paidTransactions')} value={summaryStats.paidTransactions} icon={ListChecks} />
-        <StatCard title={t('admin.payments.mockRefunds')} value={getFormattedPrice(0, 'TOMAN', t)} icon={TrendingUp} />
+        <StatCard title={t('admin.payments.failedTransactions')} value={summaryStats.failedTransactions} icon={TrendingUp} />
       </div>
 
       <Card>
@@ -199,13 +198,14 @@ function AdminPaymentsPage() {
 export default withRoleGuard(AdminPaymentsPage, ['ADMIN', 'FINANCE']);
 
 function PaymentTableRow({ payment: p, t, language }: { payment: any, t: (key: string, options?: any) => string, language: 'fa' | 'en' }) {
-    const formattedDate = getFormattedDateTime(new Date(p.createdAt), language, 'card');
+    const formattedDate = getFormattedDateTime(new Date(p.createdAt), language);
     return (
         <TableRow>
             <TableCell>
-                <div className="font-medium">User {p.registrationId.slice(-4)}</div>
+                <div className="font-medium">{p.userName ?? p.userMobile ?? '—'}</div>
+                <div className="text-xs text-muted-foreground">{p.userMobile ?? ''}</div>
             </TableCell>
-            <TableCell>Event {p.eventId.slice(-4)}</TableCell>
+            <TableCell>{p.eventTitle ?? p.eventId}</TableCell>
             <TableCell>{getFormattedPrice(p.amount, p.currency, t)}</TableCell>
             <TableCell><Badge variant={getStatusVariant(p.status)}>{t(`admin.payments.status.${p.status.toLowerCase()}`)}</Badge></TableCell>
             <TableCell>{formattedDate}</TableCell>
@@ -222,13 +222,13 @@ function PaymentTableRow({ payment: p, t, language }: { payment: any, t: (key: s
 }
 
 function PaymentCardAdmin({ payment: p, t, language }: { payment: any, t: (key: string, options?: any) => string, language: 'fa' | 'en' }) {
-    const formattedDate = getFormattedDateTime(new Date(p.createdAt), language, 'card');
+    const formattedDate = getFormattedDateTime(new Date(p.createdAt), language);
     
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-base">Payment for Event {p.eventId.slice(-4)}</CardTitle>
-                <CardDescription>User {p.registrationId.slice(-4)}</CardDescription>
+                <CardTitle className="text-base">{p.eventTitle ?? p.eventId}</CardTitle>
+                <CardDescription>{p.userName ?? p.userMobile ?? '—'}</CardDescription>
             </CardHeader>
             <CardContent className="text-sm space-y-2">
                 <div className="flex justify-between items-center">
