@@ -210,7 +210,7 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
         toast({
           variant: 'destructive',
           title: t('errors.genericTitle'),
-          description: error.message || t('wallet.insufficientBalance')
+          description: error.message || t('payment.failedDescription')
         })
         console.error("Payment creation failed", error);
       }
@@ -261,8 +261,8 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
         ))}
       </CardContent>
       <Separator />
-      <CardFooter className="flex justify-between py-4">
-        <div className="flex items-center gap-2">
+      <CardFooter className="flex flex-col gap-3 py-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
           <Button variant="outline" onClick={prevStep} disabled={currentStep === 0 || isCreatingPayment} data-testid="wizard-back-button">
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('actions.back')}
@@ -273,12 +273,12 @@ export function RegistrationWizard({ eventId, ticketType, jumpToStep }: { eventI
           </Button>
         </div>
         {currentStep < steps.length - 1 ? (
-          <Button onClick={handleNext} disabled={isCreatingPayment} data-testid="wizard-next-button">
+          <Button className="w-full md:w-auto" onClick={handleNext} disabled={isCreatingPayment} data-testid="wizard-next-button">
             {t('actions.next')}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         ) : (
-          <Button onClick={handleFinish} disabled={isCreatingPayment} data-testid="wizard-finish-button">
+          <Button className="w-full md:w-auto" onClick={handleFinish} disabled={isCreatingPayment} data-testid="wizard-finish-button">
             {isCreatingPayment && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('registration.summary.paymentButton')}
           </Button>

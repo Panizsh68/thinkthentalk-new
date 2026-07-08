@@ -76,8 +76,6 @@ export function SummaryStep() {
 
     const requiredCoins = Math.max(0, Math.ceil(finalPrice / TOMAN_PER_COIN));
     const currentCoins = Number(wallet?.balance || 0);
-    const hasEnoughCoins = currentCoins >= requiredCoins;
-
     // Update finalAmount in parent component when price changes
     useEffect(() => {
         setFinalAmount(finalPrice);
@@ -242,11 +240,14 @@ export function SummaryStep() {
                                     <dd>{getFormattedPrice(finalPrice, selectedTicket.currency, t)}</dd>
                                 </div>
                                 <div className="flex justify-between font-bold text-primary">
-                                    <dt>{t('registration.summary.requiredCoins')}</dt>
+                                    <dt>{t('registration.summary.coinEquivalent')}</dt>
                                     <dd>{requiredCoins.toLocaleString()} {t('admin.currency.COIN')}</dd>
                                 </div>
                                 <Separator />
-                                <div className="rounded-xl border bg-muted/30 p-4 space-y-2 text-sm">
+                                <div className="rounded-xl border bg-muted/30 p-4 space-y-3 text-sm">
+                                    <p className="text-muted-foreground">
+                                        {t('registration.summary.directPaymentNote')}
+                                    </p>
                                     <div className="flex justify-between">
                                         <span className="text-muted-foreground">{t('registration.summary.currentCoins')}</span>
                                         <span className="font-semibold">{currentCoins.toLocaleString()} {t('admin.currency.COIN')}</span>
@@ -255,16 +256,9 @@ export function SummaryStep() {
                                         <span className="text-muted-foreground">{t('registration.summary.coinRate')}</span>
                                         <span className="font-semibold">{new Intl.NumberFormat(t('lng')).format(TOMAN_PER_COIN)} {t('admin.currency.TOMAN')}</span>
                                     </div>
-                                    <p className={hasEnoughCoins ? 'text-emerald-600' : 'text-amber-600'}>
-                                        {hasEnoughCoins
-                                            ? t('registration.summary.balanceEnough')
-                                            : t('registration.summary.balanceNotEnough', { coins: requiredCoins - currentCoins })}
-                                    </p>
-                                    {!hasEnoughCoins && (
-                                        <Button asChild variant="outline" className="w-full">
-                                            <Link href="/wallet">{t('wallet.deposit')}</Link>
-                                        </Button>
-                                    )}
+                                    <Button asChild variant="outline" className="w-full">
+                                        <Link href="/wallet">{t('wallet.deposit')}</Link>
+                                    </Button>
                                 </div>
                             </dl>
                         </CardContent>
