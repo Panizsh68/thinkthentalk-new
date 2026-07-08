@@ -33,16 +33,20 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Loader2, PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { getUploadedFilePath, isUploadUrl, normalizeUploadedFileUrl, sameUploadedFilePath } from '@/lib/uploads';
+import { useDeleteUploadedFile } from '@/hooks/use-upload';
 
 const getResourceSchema = (t: (key: string) => string) => z.object({
   id: z.string().optional(),
   title: z.object({
     fa: z.string().min(1, t('registration.validation.required')),
-    en: z.string().optional(),
+    en: z.string().min(1, t('registration.validation.required')),
   }),
   description: z.string().optional(),
   accessLevel: z.enum(['PUBLIC', 'REGISTERED_ONLY']),
-  url: z.string().url({ message: "Please enter a valid URL." }),
+  url: z.string().trim().refine((value) => isUploadUrl(value) || /^https?:\/\/\S+$/i.test(value), {
+    message: "Please enter a valid URL or uploaded file path.",
+  }),
 });
 
 type ResourceFormValues = z.infer<ReturnType<typeof getResourceSchema>>;
@@ -55,6 +59,7 @@ export default function ManageResourcesPage() {
   const { data: event, isLoading: isLoadingEvent, error } = useAdminEventQuery(eventId);
   const { mutate: updateResources, isPending: isSaving } = useUpdateEventResourcesMutation();
   const { mutate: uploadResourceFile, isPending: isUploading } = useUploadEventResource();
+  const { mutateAsync: deleteUploadedFile, isPending: isDeletingFile } = useDeleteUploadedFile();
   
   const [resources, setResources] = useState<Partial<EventResource>[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -86,7 +91,7 @@ export default function ManageResourcesPage() {
         title: resource.title || { fa: '', en: '' },
         description: resource.description || '',
         accessLevel: resource.accessLevel || 'PUBLIC',
-        url: resource.url || '',
+        url: normalizeUploadedFileUrl(resource.url || ''),
       });
     } else {
       form.reset({
@@ -100,41 +105,61 @@ export default function ManageResourcesPage() {
     setIsDialogOpen(true);
   };
   
-  const onSubmit = (data: ResourceFormValues) => {
+  const onSubmit = async (data: ResourceFormValues) => {
     let updatedResources;
     if (editingResource) {
       updatedResources = resources.map(r => r.id === editingResource.id ? data : r);
     } else {
       updatedResources = [...resources, data];
     }
-    
+
     updateResources({ eventId, resources: updatedResources }, {
-        onSuccess: (updatedEvent) => {
-            setResources(updatedEvent.resources);
-            toast({ title: editingResource ? 'Resource updated' : 'Resource added' });
-            setIsDialogOpen(false);
-        },
-        onError: (err) => {
-             toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+      onSuccess: async (updatedEvent) => {
+        const previousPath = getUploadedFilePath(editingResource?.url);
+        const nextPath = getUploadedFilePath(data.url);
+        if (previousPath && !sameUploadedFilePath(previousPath, nextPath)) {
+          try {
+            await deleteUploadedFile(previousPath);
+          } catch {
+            // Best-effort cleanup only.
+          }
         }
-    })
+        setResources(updatedEvent.resources);
+        toast({ title: editingResource ? 'Resource updated' : 'Resource added' });
+        setIsDialogOpen(false);
+      },
+      onError: (err) => {
+        toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+      }
+    });
   };
   
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!resourceToDeleteId) return;
 
+    const resource = resources.find((r) => r.id === resourceToDeleteId);
     const updatedResources = resources.filter(r => r.id !== resourceToDeleteId);
     
     updateResources({ eventId, resources: updatedResources }, {
-        onSuccess: (updatedEvent) => {
-            setResources(updatedEvent.resources);
-            toast({ title: 'Resource deleted' });
-            setIsDeleteAlertOpen(false);
-            setResourceToDeleteId(null);
-        },
-        onError: (err) => {
-             toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+      onSuccess: async (updatedEvent) => {
+        if (resource?.url) {
+          const previousPath = getUploadedFilePath(resource.url);
+          if (previousPath) {
+            try {
+              await deleteUploadedFile(previousPath);
+            } catch {
+              // Best-effort cleanup only.
+            }
+          }
         }
+        setResources(updatedEvent.resources);
+        toast({ title: 'Resource deleted' });
+        setIsDeleteAlertOpen(false);
+        setResourceToDeleteId(null);
+      },
+      onError: (err) => {
+        toast({ variant: 'destructive', title: t('errors.genericTitle'), description: err.message });
+      }
     });
   }
 
@@ -155,7 +180,7 @@ export default function ManageResourcesPage() {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-             <Button onClick={() => handleOpenDialog()}>
+             <Button onClick={() => handleOpenDialog()} disabled={isDeletingFile}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 {t('admin.resources.addNew')}
              </Button>
@@ -214,7 +239,7 @@ export default function ManageResourcesPage() {
                                       if (!file) return;
                                       uploadResourceFile(file, {
                                         onSuccess: (data) => {
-                                          field.onChange(data.url);
+                                          field.onChange(normalizeUploadedFileUrl(data.url));
                                           toast({ title: t('admin.resources.form.fileUploaded') });
                                           e.target.value = '';
                                         },
@@ -223,7 +248,7 @@ export default function ManageResourcesPage() {
                                         },
                                       });
                                     }}
-                                    disabled={isUploading}
+                                    disabled={isUploading || isDeletingFile}
                                   />
                                   {isUploading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                                 </div>
@@ -254,7 +279,7 @@ export default function ManageResourcesPage() {
 
                     <DialogFooter>
                         <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>{t('admin.resources.form.cancel')}</Button>
-                        <Button type="submit" disabled={isSaving}>
+                        <Button type="submit" disabled={isSaving || isDeletingFile}>
                             {(isSaving || isUploading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {editingResource ? t('admin.resources.form.save') : t('admin.resources.form.add')}
                         </Button>

@@ -7,8 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import type { TeamMember, TeamMemberFormData } from '@/lib/types';
-import { useUploadTeamMember } from '@/hooks/use-upload';
+import { useDeleteUploadedFile, useUploadTeamMember } from '@/hooks/use-upload';
 import { X } from 'lucide-react';
+import { getUploadedFilePath, isUploadUrl, normalizeUploadedFileUrl, sameUploadedFilePath } from '@/lib/uploads';
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
@@ -20,7 +21,7 @@ const getTeamMemberSchema = (t: (key: string) => string) => z.object({
   name: z.string().min(1, t('registration.validation.required')),
   role: z.string().min(1, t('registration.validation.required')),
   photoUrl: z.string().min(1, t('registration.validation.required')).refine(
-    (value) => /^(https?:\/\/\S+|\/\S+)$/.test(value),
+    (value) => isUploadUrl(value),
     t('admin.sponsors.validation.invalidUrl'),
   ),
 });
@@ -36,6 +37,7 @@ interface TeamMemberFormDialogProps {
 export function TeamMemberFormDialog({ open, onOpenChange, member, isSubmitting, onSubmit }: TeamMemberFormDialogProps) {
   const { t } = useLanguage();
   const { mutate: uploadPhoto, isPending: isUploading } = useUploadTeamMember();
+  const { mutateAsync: deleteUploadedFile, isPending: isDeletingFile } = useDeleteUploadedFile();
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const form = useForm<TeamMemberFormData>({
@@ -50,7 +52,10 @@ export function TeamMemberFormDialog({ open, onOpenChange, member, isSubmitting,
   useEffect(() => {
     if (!open) return;
     if (member) {
-      form.reset(member);
+      form.reset({
+        ...member,
+        photoUrl: normalizeUploadedFileUrl(member.photoUrl),
+      });
     } else {
       form.reset({
         name: '',
@@ -100,7 +105,12 @@ export function TeamMemberFormDialog({ open, onOpenChange, member, isSubmitting,
                         setUploadError(null);
                         uploadPhoto(file, {
                           onSuccess: (data) => {
-                            field.onChange(data.url);
+                            const previousPath = getUploadedFilePath(field.value);
+                            const nextPath = getUploadedFilePath(data.url);
+                            if (previousPath && !sameUploadedFilePath(previousPath, nextPath)) {
+                              void deleteUploadedFile(previousPath).catch(() => undefined);
+                            }
+                            field.onChange(normalizeUploadedFileUrl(data.url));
                             e.target.value = '';
                           },
                           onError: (error) => setUploadError(error.message),
@@ -117,7 +127,17 @@ export function TeamMemberFormDialog({ open, onOpenChange, member, isSubmitting,
                           variant="destructive"
                           size="icon"
                           className="absolute top-1 right-1 h-6 w-6"
-                          onClick={() => form.setValue('photoUrl', '')}
+                          onClick={async () => {
+                            const previousPath = getUploadedFilePath(field.value);
+                            if (previousPath) {
+                              try {
+                                await deleteUploadedFile(previousPath);
+                              } catch {
+                                // Best effort cleanup.
+                              }
+                            }
+                            form.setValue('photoUrl', '');
+                          }}
                         >
                           <X className="h-3 w-3" />
                         </Button>
@@ -131,10 +151,10 @@ export function TeamMemberFormDialog({ open, onOpenChange, member, isSubmitting,
             )} />
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>{t('admin.resources.form.cancel')}</Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {member ? t('admin.resources.form.save') : t('admin.resources.form.add')}
-              </Button>
+                <Button type="submit" disabled={isSubmitting || isDeletingFile}>
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {member ? t('admin.resources.form.save') : t('admin.resources.form.add')}
+                </Button>
             </DialogFooter>
           </form>
         </Form>

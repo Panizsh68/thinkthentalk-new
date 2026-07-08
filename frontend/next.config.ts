@@ -1,5 +1,23 @@
 import type { NextConfig } from 'next';
 
+const getBackendOrigin = (): string => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    return 'http://localhost:3000';
+  }
+
+  try {
+    return new URL(apiUrl).origin;
+  } catch {
+    if (apiUrl.startsWith('/')) {
+      return 'http://localhost:3000';
+    }
+    return apiUrl.replace(/\/api\/?$/, '');
+  }
+};
+
+const backendOrigin = getBackendOrigin();
+
 const config: NextConfig = {
   /* config options here */
   typescript: {
@@ -9,12 +27,6 @@ const config: NextConfig = {
     ignoreDuringBuilds: true,
   },
   async rewrites() {
-    if (process.env.NODE_ENV !== 'development') {
-      return [];
-    }
-
-    const backendOrigin = 'http://localhost:3000';
-
     return [
       {
         source: '/api/:path*',
@@ -22,11 +34,11 @@ const config: NextConfig = {
       },
       {
         source: '/images/:path*',
-        destination: `${backendOrigin}/uploads/:path*`,
+        destination: '/api/upload/files/:path*',
       },
       {
         source: '/uploads/:path*',
-        destination: `${backendOrigin}/uploads/:path*`,
+        destination: '/api/upload/files/:path*',
       },
     ];
   },

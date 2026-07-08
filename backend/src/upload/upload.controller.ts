@@ -101,11 +101,7 @@ export class UploadController {
       category: FileCategory.EVENT_POSTER,
     });
 
-    return {
-      id: stored.id,
-      url: stored.url,
-      filename: stored.filename,
-    };
+    return this.toUploadResponse(stored);
   }
 
   /*
@@ -172,11 +168,7 @@ export class UploadController {
       category: FileCategory.EVENT_RESOURCE,
     });
 
-    return {
-      id: stored.id,
-      url: stored.url,
-      filename: stored.filename,
-    };
+    return this.toUploadResponse(stored);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -226,11 +218,7 @@ export class UploadController {
       category: FileCategory.DOCUMENT,
     });
 
-    return {
-      id: stored.id,
-      url: stored.url,
-      filename: stored.filename,
-    };
+    return this.toUploadResponse(stored);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -288,11 +276,7 @@ export class UploadController {
       category: FileCategory.TEAM_MEMBER,
     });
 
-    return {
-      id: stored.id,
-      url: stored.url,
-      filename: stored.filename,
-    };
+    return this.toUploadResponse(stored);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -350,11 +334,7 @@ export class UploadController {
       category: FileCategory.SPONSOR_LOGO,
     });
 
-    return {
-      id: stored.id,
-      url: stored.url,
-      filename: stored.filename,
-    };
+    return this.toUploadResponse(stored);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -404,11 +384,7 @@ export class UploadController {
       category: FileCategory.ATTACHMENT,
     });
 
-    return {
-      id: stored.id,
-      url: stored.url,
-      filename: stored.filename,
-    };
+    return this.toUploadResponse(stored);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -481,5 +457,15 @@ export class UploadController {
     }
 
     throw new NotFoundException('File not found');
+  }
+
+  private toUploadResponse(stored: StoredFile): Partial<StoredFile> {
+    return {
+      id: stored.id,
+      url: stored.url,
+      filename: stored.filename,
+      originalName: stored.originalName,
+      size: stored.size,
+    };
   }
 }

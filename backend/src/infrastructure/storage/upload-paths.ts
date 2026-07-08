@@ -2,6 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const normalizeDir = (dir: string): string => path.resolve(dir);
+const normalizeRelativeFilePath = (filePath: string): string =>
+  path.posix
+    .normalize(filePath.replace(/\\/g, '/'))
+    .replace(/^\/+/, '');
 
 export const getUploadDirCandidates = (
   configuredUploadDir?: string,
@@ -28,7 +32,7 @@ export const resolveExistingUploadFile = (
   relativeFilePath: string,
   configuredUploadDir?: string,
 ): string | null => {
-  const normalizedRelativePath = path.normalize(relativeFilePath);
+  const normalizedRelativePath = normalizeRelativeFilePath(relativeFilePath);
 
   for (const dir of getUploadDirCandidates(configuredUploadDir)) {
     const absolutePath = path.join(dir, normalizedRelativePath);

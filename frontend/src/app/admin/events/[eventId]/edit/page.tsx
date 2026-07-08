@@ -30,50 +30,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Checkbox } from '@/components/ui/checkbox';
 import { Archive, ArchiveRestore, Trash2 } from 'lucide-react';
 import { useUploadEventPoster, useDeleteUploadedFile } from '@/hooks/use-upload';
+import { getUploadedFilePath, isUploadUrl, normalizeUploadedFileUrl, sameUploadedFilePath } from '@/lib/uploads';
 
 const formatDateTimeLocal = (value?: Date) => value ? format(value, "yyyy-MM-dd'T'HH:mm") : '';
-const legacyCategoryMap: Record<string, string> = {
-  events: 'event-poster',
-  'event-posters': 'event-poster',
-  'event-resources': 'event-resource',
-};
-
-const getUploadPathFromUrl = (url?: string) => {
-  if (!url) return null;
-  try {
-    const parsed = new URL(url, 'http://localhost');
-    const pathname = parsed.pathname;
-    if (pathname.startsWith('/uploads/')) {
-      const parts = pathname.replace(/^\/uploads\//, '').split('/');
-      if (parts.length < 2) return null;
-      return { category: parts[0], filename: parts.slice(1).join('/') };
-    }
-    if (pathname.startsWith('/api/upload/files/')) {
-      const parts = pathname.replace(/^\/api\/upload\/files\//, '').split('/');
-      if (parts.length < 2) return null;
-      const legacyCategory = parts[0];
-      return {
-        category: legacyCategoryMap[legacyCategory] ?? legacyCategory,
-        filename: parts.slice(1).join('/'),
-      };
-    }
-  } catch {
-    return null;
-  }
-  return null;
-};
-
-const normalizeUploadUrl = (url?: string) => {
-  if (!url) return '';
-  const parsed = getUploadPathFromUrl(url);
-  if (!parsed) return url;
-  const isAbsolute = /^https?:\/\//i.test(url);
-  if (!isAbsolute) {
-    return `/uploads/${parsed.category}/${parsed.filename}`;
-  }
-  const origin = new URL(url).origin;
-  return `${origin}/uploads/${parsed.category}/${parsed.filename}`;
-};
 
 const getEventFormSchema = (t: (key: string) => string) => {
   const localizedSchema = z.object({
@@ -84,7 +43,14 @@ const getEventFormSchema = (t: (key: string) => string) => {
   return z.object({
     title: localizedSchema,
     categories: z.string().optional(),
-    posterUrl: z.string().url().optional().or(z.literal('')),
+    posterUrl: z
+      .string()
+      .trim()
+      .refine((value) => value === '' || isUploadUrl(value), {
+        message: t('admin.sponsors.validation.invalidUrl'),
+      })
+      .optional()
+      .or(z.literal('')),
     summary: localizedSchema,
     description: localizedSchema,
     type: z.enum(['ONLINE', 'OFFLINE']),
@@ -156,7 +122,7 @@ export default function EditEventPage() {
         summary: event.summary,
         description: event.description,
         categories: event.categories.join(', '),
-        posterUrl: normalizeUploadUrl(event.posterUrl || ''),
+        posterUrl: normalizeUploadedFileUrl(event.posterUrl || ''),
         type: event.type,
         city: event.city ?? { fa: '', en: '' },
         address: event.address,
@@ -356,16 +322,17 @@ export default function EditEventPage() {
                   setUploadError(null);
                   const previousUrl = form.getValues('posterUrl');
                   uploadPoster(file, {
-                    onSuccess: async (data) => {
-                      const previousPath = getUploadPathFromUrl(previousUrl);
-                      if (previousPath) {
+                  onSuccess: async (data) => {
+                      const previousPath = getUploadedFilePath(previousUrl);
+                      const nextPath = getUploadedFilePath(data.url);
+                      if (previousPath && !sameUploadedFilePath(previousPath, nextPath)) {
                         try {
                           await deleteUploadedFile(previousPath);
                         } catch {
                           // Best-effort cleanup; continue updating poster URL.
                         }
                       }
-                      form.setValue('posterUrl', data.url);
+                      form.setValue('posterUrl', normalizeUploadedFileUrl(data.url));
                     },
                     onError: (error: any) => {
                       setUploadError(error.message || 'Upload failed');
@@ -387,7 +354,7 @@ export default function EditEventPage() {
                   className="absolute top-2 right-2 h-7 w-7"
                   disabled={isDeletingFile}
                   onClick={async () => {
-                    const previousPath = getUploadPathFromUrl(posterUrl);
+                    const previousPath = getUploadedFilePath(posterUrl);
                     if (previousPath) {
                       try {
                         await deleteUploadedFile(previousPath);

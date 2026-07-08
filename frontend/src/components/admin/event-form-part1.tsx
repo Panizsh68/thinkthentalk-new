@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Textarea } from '../ui/textarea';
+import { isUploadUrl, normalizeUploadedFileUrl } from '@/lib/uploads';
 
 const formatDateTimeLocal = (value?: Date) => value ? format(value, "yyyy-MM-dd'T'HH:mm") : '';
 
@@ -33,7 +34,14 @@ const getEventFormSchema = (t: (key: string) => string) => {
   return z.object({
     title: localizedSchema,
     categories: z.string().optional(),
-    posterUrl: z.string().url().optional(),
+    posterUrl: z
+      .string()
+      .trim()
+      .refine((value) => value === '' || isUploadUrl(value), {
+        message: t('admin.sponsors.validation.invalidUrl'),
+      })
+      .optional()
+      .or(z.literal('')),
     summary: localizedSchema,
     description: localizedSchema,
     type: z.enum(['ONLINE', 'OFFLINE']),
@@ -180,7 +188,7 @@ export function EventFormPart1({ initialData, onSubmit, isSubmitting }: EventFor
                           setUploadError(null);
                           uploadPoster(file, {
                             onSuccess: (data) => {
-                              field.onChange(data.url);
+                              field.onChange(normalizeUploadedFileUrl(data.url));
                             },
                             onError: (error: any) => {
                               setUploadError(error.message || 'Upload failed');

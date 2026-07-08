@@ -4,8 +4,8 @@ export interface UploadResponse {
   id: string;
   url: string;
   filename: string;
-  originalName: string;
-  size: number;
+  originalName?: string;
+  size?: number;
 }
 
 /**

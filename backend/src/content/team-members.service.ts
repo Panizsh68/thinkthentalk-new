@@ -30,7 +30,7 @@ export class TeamMembersService {
     if (cached) return cached;
     const members = await this.prisma.teamMember.findMany({
       where: { isActive: true },
-      orderBy: { order: 'asc' },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
     });
     const dtos = members.map(this.toDto);
     await this.redis.setJson(cacheKey, dtos, this.cacheTtl);
@@ -39,7 +39,7 @@ export class TeamMembersService {
 
   async listAdmin(): Promise<TeamMemberDto[]> {
     const members = await this.prisma.teamMember.findMany({
-      orderBy: { order: 'asc' },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
     });
     return members.map(this.toDto);
   }
@@ -81,7 +81,7 @@ export class TeamMembersService {
 
   async reorder({ memberId, direction }: ReorderTeamMembersDto): Promise<TeamMemberDto[]> {
     const members = await this.prisma.teamMember.findMany({
-      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
     });
     const currentIndex = members.findIndex((member) => member.id === memberId);
     if (currentIndex === -1) {
@@ -93,23 +93,22 @@ export class TeamMembersService {
       return members.map(this.toDto);
     }
 
-    const current = members[currentIndex];
-    const target = members[targetIndex];
+    const reordered = [...members];
+    const [moved] = reordered.splice(currentIndex, 1);
+    reordered.splice(targetIndex, 0, moved);
 
-    await this.prisma.$transaction([
-      this.prisma.teamMember.update({
-        where: { id: current.id },
-        data: { order: target.order },
-      }),
-      this.prisma.teamMember.update({
-        where: { id: target.id },
-        data: { order: current.order },
-      }),
-    ]);
+    await this.prisma.$transaction(
+      reordered.map((member, order) =>
+        this.prisma.teamMember.update({
+          where: { id: member.id },
+          data: { order },
+        }),
+      ),
+    );
 
     await this.redis.del('team:list');
     const refreshed = await this.prisma.teamMember.findMany({
-      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
     });
     return refreshed.map(this.toDto);
   }
@@ -132,7 +131,7 @@ export class TeamMembersService {
 
   private async getNextOrder(): Promise<number> {
     const last = await this.prisma.teamMember.findFirst({
-      orderBy: [{ order: 'desc' }, { createdAt: 'desc' }],
+      orderBy: [{ order: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
       select: { order: true },
     });
     return (last?.order ?? -1) + 1;

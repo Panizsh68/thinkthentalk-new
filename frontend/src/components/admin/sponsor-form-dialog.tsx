@@ -7,8 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import type { Sponsor, SponsorFormData } from '@/lib/types';
-import { useUploadSponsorLogo } from '@/hooks/use-upload';
+import { useDeleteUploadedFile, useUploadSponsorLogo } from '@/hooks/use-upload';
 import Image from 'next/image';
+import { getUploadedFilePath, isUploadUrl, normalizeUploadedFileUrl, sameUploadedFilePath } from '@/lib/uploads';
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
@@ -19,7 +20,7 @@ import { Loader2, X } from 'lucide-react';
 const getSponsorSchema = (t: (key: string) => string) => z.object({
   name: z.string().min(1, t('registration.validation.required')),
   productOrTagline: z.string().min(1, t('registration.validation.required')),
-  logoUrl: z.string().url(t('admin.sponsors.validation.invalidUrl')),
+  logoUrl: z.string().trim().refine((value) => isUploadUrl(value), t('admin.sponsors.validation.invalidUrl')),
   websiteUrl: z.string().url(t('admin.sponsors.validation.invalidUrl')).optional().or(z.literal('')),
 });
 
@@ -34,6 +35,7 @@ interface SponsorFormDialogProps {
 export function SponsorFormDialog({ open, onOpenChange, sponsor, isSubmitting, onSubmit }: SponsorFormDialogProps) {
   const { t } = useLanguage();
   const { mutate: uploadLogo, isPending: isUploading } = useUploadSponsorLogo();
+  const { mutateAsync: deleteUploadedFile, isPending: isDeletingFile } = useDeleteUploadedFile();
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const form = useForm<SponsorFormData>({
@@ -49,7 +51,10 @@ export function SponsorFormDialog({ open, onOpenChange, sponsor, isSubmitting, o
   useEffect(() => {
     if (!open) return;
     if (sponsor) {
-      form.reset(sponsor);
+      form.reset({
+        ...sponsor,
+        logoUrl: normalizeUploadedFileUrl(sponsor.logoUrl),
+      });
     } else {
       form.reset({
         name: '',
@@ -100,7 +105,12 @@ export function SponsorFormDialog({ open, onOpenChange, sponsor, isSubmitting, o
                         setUploadError(null);
                         uploadLogo(file, {
                           onSuccess: (data) => {
-                            field.onChange(data.url);
+                            const previousPath = getUploadedFilePath(field.value);
+                            const nextPath = getUploadedFilePath(data.url);
+                            if (previousPath && !sameUploadedFilePath(previousPath, nextPath)) {
+                              void deleteUploadedFile(previousPath).catch(() => undefined);
+                            }
+                            field.onChange(normalizeUploadedFileUrl(data.url));
                             e.target.value = '';
                           },
                           onError: (error: any) => {
@@ -120,7 +130,17 @@ export function SponsorFormDialog({ open, onOpenChange, sponsor, isSubmitting, o
                           variant="destructive"
                           size="icon"
                           className="absolute top-1 right-1 h-6 w-6"
-                          onClick={() => form.setValue('logoUrl', '')}
+                          onClick={async () => {
+                            const previousPath = getUploadedFilePath(field.value);
+                            if (previousPath) {
+                              try {
+                                await deleteUploadedFile(previousPath);
+                              } catch {
+                                // Best effort cleanup.
+                              }
+                            }
+                            form.setValue('logoUrl', '');
+                          }}
                         >
                           <X className="h-3 w-3" />
                         </Button>
@@ -141,10 +161,10 @@ export function SponsorFormDialog({ open, onOpenChange, sponsor, isSubmitting, o
             )} />
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>{t('admin.resources.form.cancel')}</Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {sponsor ? t('admin.resources.form.save') : t('admin.resources.form.add')}
-              </Button>
+                <Button type="submit" disabled={isSubmitting || isDeletingFile}>
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {sponsor ? t('admin.resources.form.save') : t('admin.resources.form.add')}
+                </Button>
             </DialogFooter>
           </form>
         </Form>
