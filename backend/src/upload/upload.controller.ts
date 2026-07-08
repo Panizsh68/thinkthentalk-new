@@ -33,12 +33,17 @@ import {
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import type { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { resolveExistingUploadFile } from '../infrastructure/storage/upload-paths';
 
 @ApiTags('Upload')
 @ApiBearerAuth('bearerAuth')
 @Controller({ path: 'upload' })
 export class UploadController {
-  constructor(private readonly storageService: StorageService) {}
+  constructor(
+    private readonly storageService: StorageService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('event-poster')
@@ -459,13 +464,19 @@ export class UploadController {
     };
 
     const candidates = [category, legacyMap[category]].filter(Boolean);
+    const configuredUploadDir = this.configService.get<string>('UPLOADS_DIR');
 
     for (const candidate of candidates) {
       const candidatePath = path.posix.join(candidate, filename);
-      if (!(await this.storageService.exists(candidatePath))) {
+      const existingFile = resolveExistingUploadFile(
+        candidatePath,
+        configuredUploadDir,
+      );
+
+      if (!existingFile) {
         continue;
       }
-      res.redirect(this.storageService.getUrl(candidatePath));
+      res.sendFile(existingFile);
       return;
     }
 

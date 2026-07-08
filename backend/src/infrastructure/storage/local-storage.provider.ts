@@ -98,9 +98,8 @@ export class LocalStorageProvider implements StorageProvider {
 
   getUrl(filePath: string): string {
     const normalizedBase = this.normalizeBaseUrl(this.baseUrl);
-    const normalizedPublicDir = this.normalizePublicDir(this.publicDir);
     const normalizedPath = this.normalizeFilePath(filePath);
-    return `${normalizedBase}${normalizedPublicDir}/${normalizedPath}`;
+    return `${normalizedBase}/api/upload/files/${normalizedPath}`;
   }
 
   async getTemporaryUrl(

@@ -23,3 +23,19 @@ export const resolvePrimaryUploadDir = (
   const existingDir = candidates.find((dir) => fs.existsSync(dir));
   return existingDir ?? candidates[0] ?? normalizeDir('./uploads');
 };
+
+export const resolveExistingUploadFile = (
+  relativeFilePath: string,
+  configuredUploadDir?: string,
+): string | null => {
+  const normalizedRelativePath = path.normalize(relativeFilePath);
+
+  for (const dir of getUploadDirCandidates(configuredUploadDir)) {
+    const absolutePath = path.join(dir, normalizedRelativePath);
+    if (fs.existsSync(absolutePath)) {
+      return absolutePath;
+    }
+  }
+
+  return null;
+};
