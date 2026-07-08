@@ -80,7 +80,7 @@ export const normalizeUploadedFileUrl = (value?: string | null): string => {
     return trimmed;
   }
 
-  const canonicalPath = `/uploads/${uploadedPath.category}/${uploadedPath.filename}`;
+  const canonicalPath = `/api/upload/files/${uploadedPath.category}/${uploadedPath.filename}`;
   return ABSOLUTE_URL_PATTERN.test(trimmed)
     ? `${new URL(trimmed).origin}${canonicalPath}`
     : canonicalPath;

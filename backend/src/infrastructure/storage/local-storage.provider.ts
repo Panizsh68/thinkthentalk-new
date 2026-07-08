@@ -15,7 +15,6 @@ import { resolvePrimaryUploadDir } from './upload-paths';
 @Injectable()
 export class LocalStorageProvider implements StorageProvider {
   private uploadDir: string;
-  private publicDir: string;
   private maxFileSize: number;
   private baseUrl: string;
 
@@ -26,10 +25,6 @@ export class LocalStorageProvider implements StorageProvider {
 
     this.uploadDir = resolvePrimaryUploadDir(configuredUploadDir);
 
-    const normalizedPublicPath = configuredPublicPath ?? '/uploads';
-    this.publicDir = normalizedPublicPath.startsWith('/')
-      ? normalizedPublicPath
-      : `/${normalizedPublicPath}`;
     this.maxFileSize = 50 * 1024 * 1024; // 50MB default
     this.baseUrl =
       this.configService.get<string>('APP_URL') || 'http://localhost:3000';
@@ -98,9 +93,8 @@ export class LocalStorageProvider implements StorageProvider {
 
   getUrl(filePath: string): string {
     const normalizedBase = this.normalizeBaseUrl(this.baseUrl);
-    const normalizedPublicDir = this.normalizePublicDir(this.publicDir);
     const normalizedPath = this.normalizeFilePath(filePath);
-    return `${normalizedBase}${normalizedPublicDir}/${normalizedPath}`;
+    return `${normalizedBase}/api/upload/files/${normalizedPath}`;
   }
 
   async getTemporaryUrl(
@@ -136,18 +130,6 @@ export class LocalStorageProvider implements StorageProvider {
 
   private normalizeBaseUrl(baseUrl: string): string {
     return baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-  }
-
-  private normalizePublicDir(publicDir: string): string {
-    if (!publicDir) {
-      return '';
-    }
-    const withLeadingSlash = publicDir.startsWith('/')
-      ? publicDir
-      : `/${publicDir}`;
-    return withLeadingSlash.endsWith('/')
-      ? withLeadingSlash.slice(0, -1)
-      : withLeadingSlash;
   }
 
   private normalizeFilePath(filePath: string): string {

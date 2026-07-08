@@ -65,6 +65,12 @@ const config: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'thinkthentalk.ir',
+        port: '',
+        pathname: '/api/upload/files/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'www.thinkthentalk.ir',
         port: '',
         pathname: '/images/**',
@@ -74,6 +80,12 @@ const config: NextConfig = {
         hostname: 'www.thinkthentalk.ir',
         port: '',
         pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.thinkthentalk.ir',
+        port: '',
+        pathname: '/api/upload/files/**',
       },
       {
         protocol: 'https',
