@@ -16,6 +16,7 @@ import { useValidateDiscountMutation, useDiscountsQuery } from '@/hooks/use-disc
 import { useMyWalletQuery } from '@/hooks/use-wallet-queries';
 import type { Discount } from '@/lib/types';
 import { useAuth } from '@/lib/auth/auth-provider';
+import { isCoinCenterEnabled } from '@/lib/config/features';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
 
 const TOMAN_PER_COIN = 10000;
@@ -24,7 +25,8 @@ export function SummaryStep() {
     const { t, language } = useLanguage();
     const { formData, eventId, ticketType, setStep, setFinalAmount } = useRegistrationWizardStore();
     const { currentUser } = useAuth();
-    const { data: wallet } = useMyWalletQuery();
+    const coinCenterEnabled = isCoinCenterEnabled();
+    const { data: wallet } = useMyWalletQuery({ enabled: coinCenterEnabled });
     const { data: event, isLoading: isLoadingEvent } = useEventQuery(eventId);
     const { toast } = useToast();
 
@@ -248,17 +250,27 @@ export function SummaryStep() {
                                     <p className="text-muted-foreground">
                                         {t('registration.summary.directPaymentNote')}
                                     </p>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">{t('registration.summary.currentCoins')}</span>
-                                        <span className="font-semibold">{currentCoins.toLocaleString()} {t('admin.currency.COIN')}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">{t('registration.summary.coinRate')}</span>
-                                        <span className="font-semibold">{new Intl.NumberFormat(t('lng')).format(TOMAN_PER_COIN)} {t('admin.currency.TOMAN')}</span>
-                                    </div>
-                                    <Button asChild variant="outline" className="w-full">
-                                        <Link href="/wallet">{t('wallet.deposit')}</Link>
-                                    </Button>
+                                    {coinCenterEnabled ? (
+                                      <>
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">{t('registration.summary.currentCoins')}</span>
+                                            <span className="font-semibold">{currentCoins.toLocaleString()} {t('admin.currency.COIN')}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">{t('registration.summary.coinRate')}</span>
+                                            <span className="font-semibold">{new Intl.NumberFormat(t('lng')).format(TOMAN_PER_COIN)} {t('admin.currency.TOMAN')}</span>
+                                        </div>
+                                        <Button asChild variant="outline" className="w-full">
+                                            <Link href="/wallet">{t('wallet.deposit')}</Link>
+                                        </Button>
+                                      </>
+                                    ) : (
+                                      <p className="font-medium text-muted-foreground">
+                                        {language === 'fa'
+                                          ? 'این بخش موقتاً در دسترس نیست و بعداً دوباره فعال می‌شود.'
+                                          : 'This section is temporarily unavailable and will return later.'}
+                                      </p>
+                                    )}
                                 </div>
                             </dl>
                         </CardContent>

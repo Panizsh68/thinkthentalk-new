@@ -18,6 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/auth/auth-provider';
+import { isCoinCenterEnabled } from '@/lib/config/features';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useUserRegistrationsQuery } from '@/hooks/use-registration-queries';
 import { getMyWallet } from '@/lib/api/wallet';
@@ -41,22 +42,30 @@ export default function UserDashboardPage() {
     currentUser?.id,
   );
 
+  const coinCenterEnabled = isCoinCenterEnabled();
   const [wallet, setWallet] = useState<WalletWithTransactions | null>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [metaLoading, setMetaLoading] = useState(true);
   const isRTL = language === 'fa';
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      setMetaLoading(false);
+      return;
+    }
 
-    Promise.all([getMyWallet(), getMySubscription()])
-      .then(([walletData, subscriptionData]) => {
-        setWallet(walletData);
+    setMetaLoading(true);
+    Promise.all([
+      getMySubscription(),
+      coinCenterEnabled ? getMyWallet() : Promise.resolve(null),
+    ])
+      .then(([subscriptionData, walletData]) => {
         setSubscription(subscriptionData);
+        setWallet(walletData);
       })
       .catch(console.error)
       .finally(() => setMetaLoading(false));
-  }, [currentUser]);
+  }, [coinCenterEnabled, currentUser]);
 
   const isLoading = isAuthLoading || registrationsLoading || metaLoading;
 
@@ -86,10 +95,10 @@ export default function UserDashboardPage() {
     new Date(subscription.endDate) > new Date()
   );
 
-  const lowBalance = Number(wallet?.balance || 0) < 3;
+  const lowBalance = coinCenterEnabled ? Number(wallet?.balance || 0) < 3 : false;
 
   const activity = useMemo<ActivityItem[]>(() => {
-    const registrationItems =
+    const registrationItems: ActivityItem[] =
       registrations?.map((reg) => ({
         id: `registration-${reg.id}`,
         date: new Date(reg.createdAt),
@@ -98,24 +107,25 @@ export default function UserDashboardPage() {
         tone: reg.status === 'PAID' ? 'success' : 'default',
       })) ?? [];
 
-    const walletItems =
-      wallet?.transactions.map((tx) => ({
-        id: `wallet-${tx.id}`,
-        date: new Date(tx.createdAt),
-        title:
-          tx.type === 'DEPOSIT'
-            ? t('dashboard.activity.walletDeposit')
-            : tx.type === 'PURCHASE'
-              ? t('dashboard.activity.walletSpend')
-              : t(`wallet.txType.${tx.type}`),
-        description: `${Number(tx.amount).toLocaleString()} ${t('admin.currency.COIN')}`,
-        tone: tx.status === 'FAILED' ? 'warning' : tx.type === 'DEPOSIT' ? 'success' : 'default',
-      })) ?? [];
+    const walletItems: ActivityItem[] = coinCenterEnabled
+      ? wallet?.transactions.map((tx) => ({
+          id: `wallet-${tx.id}`,
+          date: new Date(tx.createdAt),
+          title:
+            tx.type === 'DEPOSIT'
+              ? t('dashboard.activity.walletDeposit')
+              : tx.type === 'PURCHASE'
+                ? t('dashboard.activity.walletSpend')
+                : t(`wallet.txType.${tx.type}`),
+          description: `${Number(tx.amount).toLocaleString()} ${t('admin.currency.COIN')}`,
+          tone: tx.status === 'FAILED' ? 'warning' : tx.type === 'DEPOSIT' ? 'success' : 'default',
+        })) ?? []
+      : [];
 
     return [...registrationItems, ...walletItems]
       .sort((a, b) => b.date.getTime() - a.date.getTime())
       .slice(0, 6);
-  }, [language, registrations, t, wallet?.transactions]);
+  }, [coinCenterEnabled, language, registrations, t, wallet?.transactions]);
 
   if (isLoading) {
     return (
@@ -167,18 +177,28 @@ export default function UserDashboardPage() {
           href="/my-events"
           isRTL={isRTL}
         />
-        <SummaryCard
-          icon={Coins}
-          label={t('dashboard.summary.walletBalance')}
-          value={`${Number(wallet?.balance || 0).toLocaleString()} ${t('admin.currency.COIN')}`}
-          href="/wallet"
-          isRTL={isRTL}
-        />
+        {coinCenterEnabled ? (
+          <SummaryCard
+            icon={Coins}
+            label={t('dashboard.summary.walletBalance')}
+            value={`${Number(wallet?.balance || 0).toLocaleString()} ${t('admin.currency.COIN')}`}
+            href="/wallet"
+            isRTL={isRTL}
+          />
+        ) : (
+          <SummaryCard
+            icon={CreditCard}
+            label={t('dashboard.summary.subscription')}
+            value={isSubscriptionActive ? t('dashboard.activeSubscription') : t('dashboard.inactiveSubscription')}
+            href="/subscription"
+            isRTL={isRTL}
+          />
+        )}
         <SummaryCard
           icon={ShieldCheck}
-          label={t('dashboard.summary.subscription')}
-          value={isSubscriptionActive ? t('dashboard.activeSubscription') : t('dashboard.inactiveSubscription')}
-          href="/subscription"
+          label={t('profile.title')}
+          value={isProfileIncomplete ? t('dashboard.profileStatusIncomplete') : t('dashboard.profileStatusComplete')}
+          href="/profile"
           isRTL={isRTL}
         />
       </div>
@@ -197,12 +217,21 @@ export default function UserDashboardPage() {
                 title={t('dashboard.myRegistrations')}
                 description={t('dashboard.quickActions.events')}
               />
-              <QuickActionCard
-                href="/wallet"
-                icon={Coins}
-                title={t('nav.wallet')}
-                description={t('dashboard.quickActions.wallet')}
-              />
+              {coinCenterEnabled ? (
+                <QuickActionCard
+                  href="/wallet"
+                  icon={Coins}
+                  title={t('nav.wallet')}
+                  description={t('dashboard.quickActions.wallet')}
+                />
+              ) : (
+                <QuickActionCard
+                  href="/events"
+                  icon={LayoutDashboard}
+                  title={t('nav.events')}
+                  description={t('dashboard.quickActions.events')}
+                />
+              )}
               <QuickActionCard
                 href="/subscription"
                 icon={CreditCard}
@@ -266,11 +295,13 @@ export default function UserDashboardPage() {
                 href="/profile"
                 label={t('dashboard.attention.completeProfile')}
               />
-              <AttentionItem
-                show={lowBalance}
-                href="/wallet"
-                label={t('dashboard.attention.chargeWallet')}
-              />
+              {coinCenterEnabled ? (
+                <AttentionItem
+                  show={lowBalance}
+                  href="/wallet"
+                  label={t('dashboard.attention.chargeWallet')}
+                />
+              ) : null}
               <AttentionItem
                 show={!isSubscriptionActive}
                 href="/subscription"
@@ -281,7 +312,7 @@ export default function UserDashboardPage() {
                 href="/events"
                 label={t('dashboard.attention.bookEvent')}
               />
-              {!isProfileIncomplete && !lowBalance && isSubscriptionActive && upcoming.length > 0 ? (
+              {!isProfileIncomplete && (!coinCenterEnabled || !lowBalance) && isSubscriptionActive && upcoming.length > 0 ? (
                 <div className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm font-medium text-emerald-800">
                   {t('dashboard.attention.ready')}
                 </div>

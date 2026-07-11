@@ -25,10 +25,11 @@ export const walletKeys = {
     ] as const,
 };
 
-export function useMyWalletQuery() {
+export function useMyWalletQuery(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: walletKeys.me(),
     queryFn: getMyWallet,
+    enabled: options?.enabled ?? true,
   });
 }
 

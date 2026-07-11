@@ -12,6 +12,7 @@ import { useLanguage } from '@/lib/i18n/language-provider';
 import { AddToCalendarButton } from '@/components/add-to-calendar-button';
 import { getRegistrationWizardUrl, getFormattedDateTime } from '@/lib/event-helpers';
 import { getLocalizedTextValue } from '@/lib/i18n/get-localized-text';
+import { isCoinCenterEnabled } from '@/lib/config/features';
 
 function PaymentCallbackContent() {
   const searchParams = useSearchParams();
@@ -122,56 +123,84 @@ function PaymentCallbackContent() {
                 </CardContent>
             </Card>
 
-            <Card className="mt-6 overflow-hidden border-cyan-500/20 bg-[radial-gradient(circle_at_top_right,_rgba(34,211,238,0.18),_transparent_35%),linear-gradient(135deg,#07111f_0%,#0f172a_55%,#111827_100%)] text-white shadow-xl">
-                <CardContent className="grid gap-6 p-6 md:grid-cols-[1.2fr_0.8fr] md:p-8">
-                    <div className="space-y-4 text-left">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100">
-                            <Sparkles className="h-3.5 w-3.5" />
-                            {t('payment.coinPromoEyebrow')}
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="text-2xl font-black tracking-tight">{t('payment.coinPromoTitle')}</h3>
-                            <p className="max-w-lg text-sm text-slate-300">
-                                {t('payment.coinPromoDescription')}
-                            </p>
-                        </div>
-                        <ul className="space-y-2 text-sm text-slate-200">
-                            <li className="flex items-start gap-2">
-                                <span className="mt-1 h-2 w-2 rounded-full bg-cyan-300" />
-                                {t('payment.coinPromoPointOne')}
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="mt-1 h-2 w-2 rounded-full bg-cyan-300" />
-                                {t('payment.coinPromoPointTwo')}
-                            </li>
-                        </ul>
-                        <div className="flex flex-col gap-3 sm:flex-row">
-                            <Button asChild className="bg-cyan-300 font-black text-slate-950 hover:bg-cyan-200">
-                                <Link href="/wallet">
-                                    <Coins className="h-4 w-4" />
-                                    {t('payment.goToWallet')}
-                                </Link>
-                            </Button>
-                            <Button variant="outline" asChild className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white">
-                                <Link href="/events">
-                                    {t('payment.browseMoreEvents')}
-                                    <ArrowRight className="h-4 w-4" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center">
-                        <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 text-center backdrop-blur">
-                            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-300 text-slate-950">
-                                <Coins className="h-8 w-8" />
-                            </div>
-                            <p className="text-sm text-slate-300">{t('payment.coinPromoCardLabel')}</p>
-                            <p className="mt-2 text-3xl font-black">{t('payment.coinPromoCardTitle')}</p>
-                            <p className="mt-3 text-sm text-slate-300">{t('payment.coinPromoCardDescription')}</p>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+            {isCoinCenterEnabled() ? (
+              <Card className="mt-6 overflow-hidden border-cyan-500/20 bg-[radial-gradient(circle_at_top_right,_rgba(34,211,238,0.18),_transparent_35%),linear-gradient(135deg,#07111f_0%,#0f172a_55%,#111827_100%)] text-white shadow-xl">
+                  <CardContent className="grid gap-6 p-6 md:grid-cols-[1.2fr_0.8fr] md:p-8">
+                      <div className="space-y-4 text-left">
+                          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100">
+                              <Sparkles className="h-3.5 w-3.5" />
+                              {t('payment.coinPromoEyebrow')}
+                          </div>
+                          <div className="space-y-2">
+                              <h3 className="text-2xl font-black tracking-tight">{t('payment.coinPromoTitle')}</h3>
+                              <p className="max-w-lg text-sm text-slate-300">
+                                  {t('payment.coinPromoDescription')}
+                              </p>
+                          </div>
+                          <ul className="space-y-2 text-sm text-slate-200">
+                              <li className="flex items-start gap-2">
+                                  <span className="mt-1 h-2 w-2 rounded-full bg-cyan-300" />
+                                  {t('payment.coinPromoPointOne')}
+                              </li>
+                              <li className="flex items-start gap-2">
+                                  <span className="mt-1 h-2 w-2 rounded-full bg-cyan-300" />
+                                  {t('payment.coinPromoPointTwo')}
+                              </li>
+                          </ul>
+                          <div className="flex flex-col gap-3 sm:flex-row">
+                              <Button asChild className="bg-cyan-300 font-black text-slate-950 hover:bg-cyan-200">
+                                  <Link href="/wallet">
+                                      <Coins className="h-4 w-4" />
+                                      {t('payment.goToWallet')}
+                                  </Link>
+                              </Button>
+                              <Button variant="outline" asChild className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white">
+                                  <Link href="/events">
+                                      {t('payment.browseMoreEvents')}
+                                      <ArrowRight className="h-4 w-4" />
+                                  </Link>
+                              </Button>
+                          </div>
+                      </div>
+                      <div className="flex items-center justify-center">
+                          <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 text-center backdrop-blur">
+                              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-300 text-slate-950">
+                                  <Coins className="h-8 w-8" />
+                              </div>
+                              <p className="text-sm text-slate-300">{t('payment.coinPromoCardLabel')}</p>
+                              <p className="mt-2 text-3xl font-black">{t('payment.coinPromoCardTitle')}</p>
+                              <p className="mt-3 text-sm text-slate-300">{t('payment.coinPromoCardDescription')}</p>
+                          </div>
+                      </div>
+                  </CardContent>
+              </Card>
+            ) : (
+              <Card className="mt-6 border-border/40 bg-muted/30 shadow-sm">
+                  <CardContent className="grid gap-6 p-6 md:grid-cols-[1.2fr_0.8fr] md:p-8">
+                      <div className="space-y-3 text-left">
+                          <p className="text-xs font-black uppercase tracking-[0.24em] text-muted-foreground">
+                              {language === 'fa' ? 'مسیر بعدی' : 'Next steps'}
+                          </p>
+                          <h3 className="text-2xl font-black tracking-tight">
+                              {language === 'fa' ? 'ادامه دهید' : 'Keep going'}
+                          </h3>
+                          <p className="max-w-lg text-sm text-muted-foreground">
+                              {language === 'fa'
+                                ? 'می‌توانید رویدادهای بیشتری را بررسی کنید یا به داشبورد خود برگردید.'
+                                : 'You can browse more events or head back to your dashboard.'}
+                          </p>
+                      </div>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                          <Button variant="outline" asChild>
+                              <Link href="/events">{t('payment.browseMoreEvents')}</Link>
+                          </Button>
+                          <Button asChild>
+                              <Link href="/dashboard">{t('payment.viewMyRegistrations')}</Link>
+                          </Button>
+                      </div>
+                  </CardContent>
+              </Card>
+            )}
 
             <div className="mt-8 flex flex-col gap-4 justify-center sm:flex-row">
                 <Button variant="outline" asChild><Link href="/events">{t('payment.browseMoreEvents')}</Link></Button>

@@ -4,6 +4,7 @@ import { Briefcase, CalendarCheck, Coins, LayoutDashboard, Lightbulb, Ticket, Us
 import { SidebarLayout } from '@/components/sidebar-layout';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useAuth } from '@/lib/auth/auth-provider';
+import { isCoinCenterEnabled } from '@/lib/config/features';
 
 export function UserPanelLayout({ children }: { children: React.ReactNode }) {
   const { t } = useLanguage();
@@ -14,7 +15,7 @@ export function UserPanelLayout({ children }: { children: React.ReactNode }) {
     { href: '/my-events', label: t('dashboard.myRegistrations'), icon: CalendarCheck },
     { href: '/my-ideas', label: t('ideas.panel.navLabel'), icon: Lightbulb },
     { href: '/my-requests', label: t('partnership.panel.navLabel'), icon: Briefcase },
-    { href: '/wallet', label: t('nav.wallet'), icon: Coins },
+    ...(isCoinCenterEnabled() ? [{ href: '/wallet', label: t('nav.wallet'), icon: Coins }] : []),
     { href: '/subscription', label: t('subscription.title'), icon: Ticket },
     { href: '/profile', label: t('profile.title'), icon: User },
   ];
