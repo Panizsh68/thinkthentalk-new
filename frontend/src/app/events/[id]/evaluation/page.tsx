@@ -1,7 +1,7 @@
 
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useAuth } from '@/lib/auth/auth-provider';
@@ -20,6 +20,8 @@ import type { EvaluationQuestion } from '@/lib/types';
 import { useParams } from 'next/navigation';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { getTextDirection } from '@/lib/text/direction';
 
 
 export default function EvaluationPage() {
@@ -130,82 +132,107 @@ export default function EvaluationPage() {
   }
 
   return (
-    <div className="container py-12">
-        <Card className="max-w-3xl mx-auto">
+    <div className="container py-10 md:py-12">
+        <div className="mx-auto max-w-3xl space-y-4">
+          <div className="space-y-2 text-center md:text-start">
+            <h1 className="text-3xl font-black tracking-tight text-foreground">{t('evaluation.title')}</h1>
+            <p className="text-muted-foreground">{t('evaluation.subtitle', { eventName: event?.title })}</p>
+          </div>
+
+          <Card className="overflow-hidden border-border/60 shadow-sm">
             <CardHeader>
                 <CardTitle className="text-h2">{t('evaluation.title')}</CardTitle>
                 <CardDescription>{t('evaluation.subtitle', { eventName: event?.title })}</CardDescription>
             </CardHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <CardContent className="space-y-8">
+                    <CardContent className="space-y-6 md:space-y-8">
                         {evaluation.questions.map((question, index) => (
-                           <div key={question.id}>
-                             <FormField
+                           <div
+                             key={question.id}
+                             className="space-y-4 rounded-2xl border border-border/60 bg-muted/20 p-4 shadow-sm md:p-6"
+                           >
+                            <FormField
                                 control={form.control}
                                 name={question.id}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-base">
+                                render={({ field }: any) => (
+                                    <FormItem className="space-y-3">
+                                        <FormLabel
+                                          className={cn(
+                                            'text-base font-semibold leading-7',
+                                            getTextDirection(question.label) === 'rtl'
+                                              ? 'text-right'
+                                              : 'text-left',
+                                          )}
+                                          dir={getTextDirection(question.label)}
+                                        >
                                             {index + 1}. {question.label} {question.required && '*'}
                                         </FormLabel>
                                         <FormControl>
                                             {question.type === 'RATING' ? (
-                                                <Controller
-                                                    name={question.id}
-                                                    control={form.control}
-                                                    render={({ field: controllerField }) => (
-                                                        <RadioGroup
-                                                          onValueChange={(val) => controllerField.onChange(parseInt(val, 10))}
-                                                          value={String(controllerField.value || '')}
-                                                          className="flex items-center gap-4 pt-2"
-                                                        >
-                                                            {[1,2,3,4,5].map(v => (
-                                                                <FormItem key={v} className="flex flex-col items-center space-y-1">
-                                                                    <FormControl>
-                                                                        <RadioGroupItem value={String(v)} id={`${question.id}-${v}`} />
-                                                                    </FormControl>
-                                                                    <FormLabel htmlFor={`${question.id}-${v}`} className="font-normal text-sm">{v}</FormLabel>
-                                                                </FormItem>
-                                                            ))}
-                                                        </RadioGroup>
-                                                    )}
-                                                />
-                                            ) : question.type === 'YES_NO' ? (
-                                                <Controller
-                                                  name={question.id}
-                                                  control={form.control}
-                                                  render={({ field: controllerField }) => (
-                                                    <RadioGroup
-                                                      className="flex items-center gap-4 pt-2"
-                                                      onValueChange={(val) => controllerField.onChange(val === 'yes')}
-                                                      value={
-                                                        controllerField.value === undefined
-                                                          ? ''
-                                                          : controllerField.value
-                                                            ? 'yes'
-                                                            : 'no'
-                                                      }
-                                                    >
-                                                      {[
-                                                        { value: 'yes', label: t('actions.yes') },
-                                                        { value: 'no', label: t('actions.no') },
-                                                      ].map(({ value, label }) => (
-                                                        <FormItem key={value} className="flex flex-col items-center space-y-1">
-                                                          <FormControl>
-                                                            <RadioGroupItem value={value} id={`${question.id}-${value}`} />
-                                                          </FormControl>
-                                                          <FormLabel htmlFor={`${question.id}-${value}`} className="font-normal text-sm">
-                                                            {label}
-                                                          </FormLabel>
-                                                        </FormItem>
-                                                      ))}
-                                                    </RadioGroup>
+                                                <RadioGroup
+                                                  dir={getTextDirection(question.label)}
+                                                  onValueChange={(val) => field.onChange(parseInt(val, 10))}
+                                                  value={String(field.value || '')}
+                                                  className={cn(
+                                                    'flex flex-wrap items-center gap-3 pt-1',
+                                                    getTextDirection(question.label) === 'rtl'
+                                                      ? 'flex-row-reverse justify-end'
+                                                      : 'justify-start',
                                                   )}
-                                                />
+                                                >
+                                                    {[1,2,3,4,5].map(v => (
+                                                        <FormItem
+                                                          key={v}
+                                                          className="flex flex-col items-center space-y-2 rounded-xl border border-border/70 bg-background px-3 py-2 shadow-sm"
+                                                        >
+                                                            <FormControl>
+                                                                <RadioGroupItem value={String(v)} id={`${question.id}-${v}`} />
+                                                            </FormControl>
+                                                            <FormLabel htmlFor={`${question.id}-${v}`} className="font-normal text-sm">{v}</FormLabel>
+                                                        </FormItem>
+                                                    ))}
+                                                </RadioGroup>
+                                            ) : question.type === 'YES_NO' ? (
+                                                <RadioGroup
+                                                  dir={getTextDirection(question.label)}
+                                                  className={cn(
+                                                    'flex items-center gap-3 pt-1',
+                                                    getTextDirection(question.label) === 'rtl'
+                                                      ? 'flex-row-reverse justify-end'
+                                                      : 'justify-start',
+                                                  )}
+                                                  onValueChange={(val) => field.onChange(val === 'yes')}
+                                                  value={
+                                                    field.value === undefined
+                                                      ? ''
+                                                      : field.value
+                                                        ? 'yes'
+                                                        : 'no'
+                                                  }
+                                                >
+                                                  {[
+                                                    { value: 'yes', label: t('actions.yes') },
+                                                    { value: 'no', label: t('actions.no') },
+                                                  ].map(({ value, label }) => (
+                                                    <FormItem
+                                                      key={value}
+                                                      className="flex flex-col items-center space-y-2 rounded-xl border border-border/70 bg-background px-4 py-2 shadow-sm"
+                                                    >
+                                                      <FormControl>
+                                                        <RadioGroupItem value={value} id={`${question.id}-${value}`} />
+                                                      </FormControl>
+                                                      <FormLabel htmlFor={`${question.id}-${value}`} className="font-normal text-sm">
+                                                        {label}
+                                                      </FormLabel>
+                                                    </FormItem>
+                                                  ))}
+                                                </RadioGroup>
                                             ) : (
                                                 <Textarea
                                                     placeholder={t('evaluation.textPlaceholder')}
+                                                    dir="auto"
+                                                    className="min-h-32 resize-y bg-background"
                                                     {...field}
                                                 />
                                             )}
@@ -217,8 +244,8 @@ export default function EvaluationPage() {
                            </div>
                         ))}
                     </CardContent>
-                    <CardFooter>
-                         <Button type="submit" disabled={isSubmitting}>
+                    <CardFooter className="justify-end border-t border-border/60 bg-muted/10 px-6 py-4">
+                         <Button type="submit" disabled={isSubmitting} size="lg">
                             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                              <Send className="mr-2 h-4 w-4" />
                             {t('actions.submitFeedback')}
@@ -226,7 +253,8 @@ export default function EvaluationPage() {
                     </CardFooter>
                 </form>
             </Form>
-        </Card>
+          </Card>
+        </div>
         {isSubmitSuccess && (
           <Alert className="mt-6" variant="default">
             <AlertTitle>{t('evaluation.successTitle')}</AlertTitle>

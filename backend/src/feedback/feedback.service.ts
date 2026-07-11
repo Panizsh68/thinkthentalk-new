@@ -356,13 +356,20 @@ export class FeedbackService {
             ? JSON.parse(sub.answers)
             : sub.answers
         ) as Record<string, unknown>;
-        ratingQuestionIds.forEach((id: string) => {
-          const value = answers[id];
-          if (typeof value === 'number') {
-            total += value;
-            count += 1;
-          }
-        });
+        const ratingValues = ratingQuestionIds
+          .map((id: string) => answers[id])
+          .filter((value): value is number => typeof value === 'number');
+
+        if (ratingValues.length === 0) {
+          continue;
+        }
+
+        const submissionAverage =
+          ratingValues.reduce((sum, value) => sum + value, 0) /
+          ratingValues.length;
+
+        total += submissionAverage;
+        count += 1;
       } catch (err: unknown) {
         // ignore
       }

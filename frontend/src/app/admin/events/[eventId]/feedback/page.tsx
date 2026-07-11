@@ -101,7 +101,7 @@ export default function EventFeedbackFormBuilderPage() {
       ) : (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {fields.map((field, index) => (
+                {fields.map((field: FormValues['questions'][number], index: number) => (
                     <Card key={field.id} className="relative">
                         <CardHeader>
                             <CardTitle>{t('admin.feedback.questionNumber', { num: index + 1 })}</CardTitle>
@@ -110,10 +110,10 @@ export default function EventFeedbackFormBuilderPage() {
                              <FormField
                                 control={form.control}
                                 name={`questions.${index}.label`}
-                                render={({ field }) => (
+                                render={({ field }: any) => (
                                     <FormItem className="md:col-span-2">
                                         <FormLabel>{t('admin.feedback.form.label')}</FormLabel>
-                                        <FormControl><Input {...field} /></FormControl>
+                                        <FormControl><Input {...field} dir="auto" /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -121,7 +121,7 @@ export default function EventFeedbackFormBuilderPage() {
                             <FormField
                                 control={form.control}
                                 name={`questions.${index}.type`}
-                                render={({ field }) => (
+                                render={({ field }: any) => (
                                     <FormItem>
                                         <FormLabel>{t('admin.feedback.form.type')}</FormLabel>
                                          <Select onValueChange={field.onChange} value={field.value}>
@@ -139,7 +139,7 @@ export default function EventFeedbackFormBuilderPage() {
                              <FormField
                                 control={form.control}
                                 name={`questions.${index}.required`}
-                                render={({ field }) => (
+                                render={({ field }: any) => (
                                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                         <FormLabel>{t('admin.feedback.form.required')}</FormLabel>
                                         <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
