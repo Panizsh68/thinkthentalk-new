@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../infrastructure/database/prisma.service';
@@ -15,6 +16,8 @@ const TOMAN_PER_COIN = 10000;
 
 @Injectable()
 export class WalletService {
+  private readonly logger = new Logger(WalletService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
@@ -119,8 +122,23 @@ export class WalletService {
     }
 
     const coinAmount = Number(transaction.amount);
+    const authority = dto.authority ?? transaction.referenceId;
+    if (!this.zarinpalGateway.isValidAuthority(authority)) {
+      this.logger.warn(
+        `Skipping wallet verification for ${transaction.id}: missing or invalid gateway authority`,
+      );
+      return this.toWalletTransactionDto(transaction);
+    }
+
+    if (!transaction.referenceId || authority !== transaction.referenceId) {
+      this.logger.warn(
+        `Skipping wallet verification for ${transaction.id}: callback authority does not match stored authority`,
+      );
+      return this.toWalletTransactionDto(transaction);
+    }
+
     const verification = await this.zarinpalGateway.verifyPayment({
-      authority: dto.authority ?? transaction.referenceId ?? transaction.id,
+      authority,
       amount: this.coinsToToman(coinAmount),
     });
 

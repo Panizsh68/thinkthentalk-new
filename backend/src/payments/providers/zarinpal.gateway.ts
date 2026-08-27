@@ -12,6 +12,7 @@ import ZarinPal from 'zarinpal-node-sdk';
 
 @Injectable()
 export class ZarinpalGateway implements PaymentGateway {
+  private static readonly AUTHORITY_PATTERN = /^[AS][0-9a-zA-Z]{35}$/;
   private readonly logger = new Logger(ZarinpalGateway.name);
   private readonly merchantId: string;
   private readonly callbackUrl: string;
@@ -71,7 +72,7 @@ export class ZarinpalGateway implements PaymentGateway {
       const authority = response.data?.authority as string | undefined;
       const code = response.data?.code;
 
-      if (!authority || (code !== 100 && code !== 101)) {
+      if (!this.isValidAuthority(authority) || (code !== 100 && code !== 101)) {
         this.logger.error(
           `Zarinpal requestPayment unexpected response: ${JSON.stringify(response.data)}`,
         );
@@ -81,7 +82,7 @@ export class ZarinpalGateway implements PaymentGateway {
       const url = this.getPaymentUrl(authority);
 
       this.logger.debug(
-        `Requesting Zarinpal payment for amount=${input.amount}, callback=${callbackUrl}, authority=${authority}`,
+        `Requesting Zarinpal payment for amount=${input.amount}, callback=${callbackUrl}, authority=${this.maskAuthority(authority)}`,
       );
       return { authority, url };
     } catch (error) {
@@ -93,6 +94,15 @@ export class ZarinpalGateway implements PaymentGateway {
   async verifyPayment(input: VerifyPaymentInput): Promise<VerifyPaymentResult> {
     if (!this.merchantId) {
       throw new Error('Zarinpal merchant configuration missing');
+    }
+
+    // Never pass a payment UUID, an empty value, or arbitrary query-string data
+    // to the SDK. Its validator throws for anything other than A/S + 35 chars.
+    if (!this.isValidAuthority(input.authority)) {
+      this.logger.warn(
+        'Skipping Zarinpal verification: invalid or missing authority',
+      );
+      return { success: false };
     }
 
     try {
@@ -110,7 +120,7 @@ export class ZarinpalGateway implements PaymentGateway {
 
       this.logger.warn(`Zarinpal verifyPayment failed with code=${data?.code}`);
       this.logger.debug(
-        `Verifying Zarinpal payment for amount=${input.amount}, authority=${input.authority}`,
+        `Verifying Zarinpal payment for amount=${input.amount}, authority=${this.maskAuthority(input.authority)}`,
       );
       return { success: false };
     } catch (error) {
@@ -121,5 +131,16 @@ export class ZarinpalGateway implements PaymentGateway {
 
   getPaymentUrl(authority: string): string {
     return `${this.startPayBase}/${authority}`;
+  }
+
+  isValidAuthority(authority: unknown): authority is string {
+    return (
+      typeof authority === 'string' &&
+      ZarinpalGateway.AUTHORITY_PATTERN.test(authority)
+    );
+  }
+
+  private maskAuthority(authority: string): string {
+    return `${authority.slice(0, 2)}…${authority.slice(-6)}`;
   }
 }

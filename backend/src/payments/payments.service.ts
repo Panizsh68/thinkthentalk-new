@@ -228,7 +228,9 @@ export class PaymentsService {
                   ticketType: dto.ticketType,
                   amount,
                   currency: dto.currency,
-                  status: isFree ? PaymentStatus.SUCCESS : PaymentStatus.PENDING,
+                  status: isFree
+                    ? PaymentStatus.SUCCESS
+                    : PaymentStatus.PENDING,
                 },
               });
 
@@ -306,8 +308,26 @@ export class PaymentsService {
       return this.toPaymentDto(updated);
     }
 
+    const authority = dto.authority ?? payment.gatewayTransactionId;
+    if (!this.zarinpalGateway.isValidAuthority(authority)) {
+      this.logger.warn(
+        `Skipping payment verification for ${payment.id}: missing or invalid gateway authority`,
+      );
+      return this.toPaymentDto(payment);
+    }
+
+    if (
+      !payment.gatewayTransactionId ||
+      authority !== payment.gatewayTransactionId
+    ) {
+      this.logger.warn(
+        `Skipping payment verification for ${payment.id}: callback authority does not match stored authority`,
+      );
+      return this.toPaymentDto(payment);
+    }
+
     const verification = await this.zarinpalGateway.verifyPayment({
-      authority: dto.authority ?? payment.gatewayTransactionId ?? payment.id,
+      authority,
       amount,
     });
 
@@ -396,8 +416,16 @@ export class PaymentsService {
       return this.toPaymentDto(updated);
     }
 
+    const authority = payment.gatewayTransactionId;
+    if (!this.zarinpalGateway.isValidAuthority(authority)) {
+      this.logger.warn(
+        `Skipping payment verification for ${payment.id}: missing or invalid stored gateway authority`,
+      );
+      return this.toPaymentDto(payment);
+    }
+
     const verification = await this.zarinpalGateway.verifyPayment({
-      authority: payment.gatewayTransactionId ?? payment.id,
+      authority,
       amount,
     });
 
