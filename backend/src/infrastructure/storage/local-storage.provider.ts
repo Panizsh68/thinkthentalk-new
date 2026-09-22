@@ -20,9 +20,6 @@ export class LocalStorageProvider implements StorageProvider {
 
   constructor(private configService: ConfigService) {
     const configuredUploadDir = this.configService.get<string>('UPLOADS_DIR');
-    const configuredPublicPath =
-      this.configService.get<string>('PUBLIC_UPLOAD_PATH');
-
     this.uploadDir = resolvePrimaryUploadDir(configuredUploadDir);
 
     this.maxFileSize = 50 * 1024 * 1024; // 50MB default
@@ -57,8 +54,17 @@ export class LocalStorageProvider implements StorageProvider {
     await this.ensureDirectoryExists(categoryDir);
 
     // Generate filename
-    const fileExtension = path.extname(file.originalname);
-    const filename = options.filename || `${randomUUID()}${fileExtension}`;
+    const fileExtension = path.extname(file.originalname).toLowerCase();
+    const requestedFilename = options.filename?.trim();
+    if (
+      requestedFilename &&
+      (requestedFilename !== path.basename(requestedFilename) ||
+        requestedFilename.includes('..') ||
+        !/^[A-Za-z0-9][A-Za-z0-9._-]{0,254}$/.test(requestedFilename))
+    ) {
+      throw new BadRequestException('Invalid storage filename');
+    }
+    const filename = requestedFilename || `${randomUUID()}${fileExtension}`;
     const filePath = path.join(categoryDir, filename);
     const relativePath = path.posix.join(options.category, filename);
 
@@ -79,12 +85,12 @@ export class LocalStorageProvider implements StorageProvider {
   }
 
   async delete(filePath: string): Promise<void> {
-    const fullPath = path.join(this.uploadDir, filePath);
+    const fullPath = this.resolveSafePath(filePath);
 
     try {
       await fs.unlink(fullPath);
-    } catch (error: any) {
-      if (error.code !== 'ENOENT') {
+    } catch (error: unknown) {
+      if ((error as { code?: string }).code !== 'ENOENT') {
         throw error;
       }
       // File doesn't exist, ignore
@@ -97,16 +103,17 @@ export class LocalStorageProvider implements StorageProvider {
     return `${normalizedBase}/api/upload/files/${normalizedPath}`;
   }
 
-  async getTemporaryUrl(
+  getTemporaryUrl(
     filePath: string,
-    expirationHours: number = 24,
+    _expirationHours: number = 24,
   ): Promise<string> {
     // Local storage doesn't support temporary URLs, return permanent URL
-    return this.getUrl(filePath);
+    void _expirationHours;
+    return Promise.resolve(this.getUrl(filePath));
   }
 
   async exists(filePath: string): Promise<boolean> {
-    const fullPath = path.join(this.uploadDir, filePath);
+    const fullPath = this.resolveSafePath(filePath);
 
     try {
       await fs.access(fullPath);
@@ -121,8 +128,8 @@ export class LocalStorageProvider implements StorageProvider {
   private async ensureDirectoryExists(dirPath: string): Promise<void> {
     try {
       await fs.mkdir(dirPath, { recursive: true });
-    } catch (error: any) {
-      if (error.code !== 'EEXIST') {
+    } catch (error: unknown) {
+      if ((error as { code?: string }).code !== 'EEXIST') {
         throw error;
       }
     }
@@ -135,6 +142,19 @@ export class LocalStorageProvider implements StorageProvider {
   private normalizeFilePath(filePath: string): string {
     const normalized = filePath.replace(/\\/g, '/');
     return path.posix.normalize(normalized).replace(/^\/+/, '');
+  }
+
+  private resolveSafePath(filePath: string): string {
+    const normalized = this.normalizeFilePath(filePath);
+    if (
+      !normalized ||
+      normalized === '..' ||
+      normalized.startsWith('../') ||
+      path.posix.isAbsolute(filePath.replace(/\\/g, '/'))
+    ) {
+      throw new BadRequestException('Invalid storage path');
+    }
+    return path.join(this.uploadDir, normalized);
   }
 
   private getValidMimeTypes(category: FileCategory): string[] {

@@ -3,9 +3,7 @@ import * as path from 'path';
 
 const normalizeDir = (dir: string): string => path.resolve(dir);
 const normalizeRelativeFilePath = (filePath: string): string =>
-  path.posix
-    .normalize(filePath.replace(/\\/g, '/'))
-    .replace(/^\/+/, '');
+  path.posix.normalize(filePath.replace(/\\/g, '/')).replace(/^\/+/, '');
 
 export const getUploadDirCandidates = (
   configuredUploadDir?: string,
@@ -33,6 +31,18 @@ export const resolveExistingUploadFile = (
   configuredUploadDir?: string,
 ): string | null => {
   const normalizedRelativePath = normalizeRelativeFilePath(relativeFilePath);
+
+  // Never allow a normalized path to escape the configured upload root. This
+  // helper is used by legacy public-file resolution as well as by storage
+  // callers, so traversal must be rejected at this boundary too.
+  if (
+    !normalizedRelativePath ||
+    normalizedRelativePath === '..' ||
+    normalizedRelativePath.startsWith('../') ||
+    path.posix.isAbsolute(relativeFilePath.replace(/\\/g, '/'))
+  ) {
+    return null;
+  }
 
   for (const dir of getUploadDirCandidates(configuredUploadDir)) {
     const absolutePath = path.join(dir, normalizedRelativePath);

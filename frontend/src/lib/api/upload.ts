@@ -15,7 +15,7 @@ export async function uploadEventPoster(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await apiClient.post<UploadResponse>('/upload/event-poster', formData);
+  const response = await apiClient.post<UploadResponse>('/upload/event-poster', formData, { authMode: 'admin' });
 
   return response.data;
 }
@@ -27,7 +27,7 @@ export async function uploadTeamMember(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await apiClient.post<UploadResponse>('/upload/team-member', formData);
+  const response = await apiClient.post<UploadResponse>('/upload/team-member', formData, { authMode: 'admin' });
 
   return response.data;
 }
@@ -39,7 +39,7 @@ export async function uploadSponsorLogo(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await apiClient.post<UploadResponse>('/upload/sponsor-logo', formData);
+  const response = await apiClient.post<UploadResponse>('/upload/sponsor-logo', formData, { authMode: 'admin' });
 
   return response.data;
 }
@@ -51,7 +51,7 @@ export async function uploadEventResource(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await apiClient.post<UploadResponse>('/upload/event-resource', formData);
+  const response = await apiClient.post<UploadResponse>('/upload/event-resource', formData, { authMode: 'admin' });
 
   return response.data;
 }
@@ -60,5 +60,5 @@ export async function uploadEventResource(file: File): Promise<UploadResponse> {
  * Delete uploaded file
  */
 export async function deleteUploadedFile(category: string, filename: string): Promise<void> {
-  await apiClient.delete(`/upload/${category}/${filename}`);
+  await apiClient.delete(`/upload/${category}/${filename}`, { authMode: 'admin' });
 }

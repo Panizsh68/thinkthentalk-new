@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  ForbiddenException,
   UseGuards,
   NotFoundException,
   Res,
@@ -24,13 +25,19 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger';
+import { AdminRole } from '@prisma/client';
 import { StorageService } from '../infrastructure/storage/storage.service';
 import {
   FileCategory,
   StoredFile,
 } from '../infrastructure/storage/storage.types';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import type { JwtPayload } from '../auth/jwt.strategy';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import type { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -45,7 +52,8 @@ export class UploadController {
     private readonly configService: ConfigService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER)
   @Post('event-poster')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -90,6 +98,10 @@ export class UploadController {
     description: 'Not authenticated',
     type: ErrorResponseDto,
   })
+  @ApiForbiddenResponse({
+    description: 'Only event administrators may upload event posters',
+    type: ErrorResponseDto,
+  })
   async uploadEventPoster(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Partial<StoredFile>> {
@@ -111,7 +123,8 @@ export class UploadController {
    * async uploadUserAvatar(...) { ... }
    */
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER)
   @Post('event-resource')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -157,6 +170,10 @@ export class UploadController {
     description: 'Not authenticated',
     type: ErrorResponseDto,
   })
+  @ApiForbiddenResponse({
+    description: 'Only event administrators may upload event resources',
+    type: ErrorResponseDto,
+  })
   async uploadEventResource(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Partial<StoredFile>> {
@@ -171,7 +188,8 @@ export class UploadController {
     return this.toUploadResponse(stored);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER, AdminRole.FINANCE)
   @Post('document')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -207,6 +225,10 @@ export class UploadController {
       },
     },
   })
+  @ApiForbiddenResponse({
+    description: 'Only authorized administrators may upload documents',
+    type: ErrorResponseDto,
+  })
   async uploadDocument(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Partial<StoredFile>> {
@@ -221,7 +243,8 @@ export class UploadController {
     return this.toUploadResponse(stored);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AdminRole.ADMIN)
   @Post('team-member')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -265,11 +288,27 @@ export class UploadController {
     description: 'Not authenticated',
     type: ErrorResponseDto,
   })
+  @ApiForbiddenResponse({
+    description: 'Only administrators may upload team member images',
+    type: ErrorResponseDto,
+  })
   async uploadTeamMember(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Partial<StoredFile>> {
     if (!file) {
       throw new BadRequestException('No file provided');
+    }
+
+    const extension = path.extname(file.originalname).toLowerCase();
+    const allowedExtensions: Record<string, string> = {
+      'image/jpeg': '.jpg',
+      'image/png': '.png',
+      'image/webp': '.webp',
+    };
+    if (allowedExtensions[file.mimetype] !== extension) {
+      throw new BadRequestException(
+        'Team member image extension does not match its MIME type',
+      );
     }
 
     const stored = await this.storageService.uploadFile(file, {
@@ -279,7 +318,8 @@ export class UploadController {
     return this.toUploadResponse(stored);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AdminRole.ADMIN)
   @Post('sponsor-logo')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -323,6 +363,10 @@ export class UploadController {
     description: 'Not authenticated',
     type: ErrorResponseDto,
   })
+  @ApiForbiddenResponse({
+    description: 'Only administrators may upload sponsor logos',
+    type: ErrorResponseDto,
+  })
   async uploadSponsorLogo(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Partial<StoredFile>> {
@@ -337,7 +381,8 @@ export class UploadController {
     return this.toUploadResponse(stored);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER, AdminRole.FINANCE)
   @Post('attachment')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -360,7 +405,8 @@ export class UploadController {
   })
   @ApiOperation({
     summary: 'Upload attachment',
-    description: 'Upload a general-purpose attachment for content and admin workflows.',
+    description:
+      'Upload a general-purpose attachment for content and admin workflows.',
   })
   @ApiCreatedResponse({
     description: 'Attachment uploaded successfully',
@@ -372,6 +418,10 @@ export class UploadController {
         filename: { type: 'string' },
       },
     },
+  })
+  @ApiForbiddenResponse({
+    description: 'Only authorized administrators may upload attachments',
+    type: ErrorResponseDto,
   })
   async uploadAttachment(
     @UploadedFile() file: Express.Multer.File,
@@ -392,7 +442,7 @@ export class UploadController {
   @ApiOperation({
     summary: 'Delete uploaded file',
     description:
-      'Delete a previously uploaded file. Requires admin or owner authorization.',
+      'Delete an uploaded file within a role-scoped administrative storage category. File paths are never treated as ownership proof.',
   })
   @ApiCreatedResponse({ description: 'File deleted successfully' })
   @ApiBadRequestResponse({
@@ -403,15 +453,56 @@ export class UploadController {
     description: 'Not authenticated',
     type: ErrorResponseDto,
   })
+  @ApiForbiddenResponse({
+    description: 'The authenticated role cannot delete this storage category',
+    type: ErrorResponseDto,
+  })
   async deleteFile(
     @Param('category') category: string,
     @Param('filename') filename: string,
+    @CurrentUser() user: JwtPayload,
   ): Promise<{ success: boolean }> {
-    const normalizedPath = path.posix.normalize(`${category}/${filename}`);
-    if (normalizedPath.startsWith('..') || path.isAbsolute(normalizedPath)) {
+    if (user.type !== 'ADMIN') {
+      throw new ForbiddenException(
+        'Only administrative roles may delete uploaded files',
+      );
+    }
+
+    const allowedCategories: Partial<Record<FileCategory, AdminRole[]>> = {
+      [FileCategory.EVENT_POSTER]: [AdminRole.ADMIN, AdminRole.EVENT_MANAGER],
+      [FileCategory.EVENT_RESOURCE]: [AdminRole.ADMIN, AdminRole.EVENT_MANAGER],
+      [FileCategory.SPONSOR_LOGO]: [AdminRole.ADMIN],
+      [FileCategory.DOCUMENT]: [
+        AdminRole.ADMIN,
+        AdminRole.EVENT_MANAGER,
+        AdminRole.FINANCE,
+      ],
+      [FileCategory.ATTACHMENT]: [
+        AdminRole.ADMIN,
+        AdminRole.EVENT_MANAGER,
+        AdminRole.FINANCE,
+      ],
+      [FileCategory.TEAM_MEMBER]: [AdminRole.ADMIN],
+    };
+    const categoryRoles = allowedCategories[category as FileCategory];
+    if (!categoryRoles)
+      throw new BadRequestException('Invalid storage category');
+    if (!user.role || !categoryRoles.includes(user.role as AdminRole)) {
+      throw new ForbiddenException(
+        'The authenticated role cannot delete this file category',
+      );
+    }
+
+    if (
+      filename !== path.posix.basename(filename) ||
+      filename !== path.basename(filename) ||
+      !/^[A-Za-z0-9][A-Za-z0-9._-]{0,254}$/.test(filename) ||
+      filename.includes('..')
+    ) {
       throw new BadRequestException('Invalid file path');
     }
-    const filePath = normalizedPath;
+
+    const filePath = path.posix.join(category, filename);
     await this.storageService.deleteFile(filePath);
 
     return { success: true };
@@ -423,11 +514,11 @@ export class UploadController {
     description:
       'Redirect legacy upload URLs to the current public upload location.',
   })
-  async getLegacyFile(
+  getLegacyFile(
     @Param('category') category: string,
     @Param('filename') filename: string,
     @Res() res: Response,
-  ): Promise<void> {
+  ): void {
     const normalizedPath = path.posix.normalize(`${category}/${filename}`);
     if (normalizedPath.startsWith('..') || path.isAbsolute(normalizedPath)) {
       throw new BadRequestException('Invalid file path');
