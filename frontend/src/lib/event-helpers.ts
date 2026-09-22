@@ -49,7 +49,7 @@ export const getFormattedDateTime = (
         const month = formatJalali(dateObj, 'MMMM', { locale: faIR });
         const year = formatJalali(dateObj, 'yyyy', { locale: faIR });
         const weekday = formatJalali(dateObj, 'eeee', { locale: faIR });
-        const time = formatInTimeZone(dateObj, TIME_ZONE, 'HH:mm', { locale: faIR });
+        const time = formatInTimeZone(dateObj, TIME_ZONE, 'HH:mm');
 
         return `${weekday} ${toPersianDigits(day)} ${month} ${toPersianDigits(year)}، ساعت ${toPersianDigits(time)}`;
     }
@@ -69,7 +69,7 @@ export const formatEventDateTimeForCard = (
     const month = formatJalali(dateObj, 'MMMM', { locale: faIR });
     const year = formatJalali(dateObj, 'yyyy', { locale: faIR });
     const weekday = formatJalali(dateObj, 'eeee', { locale: faIR });
-    const time = formatInTimeZone(dateObj, TIME_ZONE, 'HH:mm', { locale: faIR });
+    const time = formatInTimeZone(dateObj, TIME_ZONE, 'HH:mm');
 
     return `${weekday} ${toPersianDigits(day)} ${month} ${toPersianDigits(year)} · ${toPersianDigits(time)}`;
   }
@@ -87,12 +87,12 @@ const formatDateFa = (date: Date, includeTime: boolean) => {
   if (!includeTime) {
     return dateLabel;
   }
-  const time = formatInTimeZone(date, TIME_ZONE, 'HH:mm', { locale: faIR });
+  const time = formatInTimeZone(date, TIME_ZONE, 'HH:mm');
   return `${dateLabel} · ${toPersianDigits(time)}`;
 };
 
 const formatTimeFa = (date: Date) =>
-  toPersianDigits(formatInTimeZone(date, TIME_ZONE, 'HH:mm', { locale: faIR }));
+  toPersianDigits(formatInTimeZone(date, TIME_ZONE, 'HH:mm'));
 
 const formatDateEn = (date: Date, includeTime: boolean) => {
   const datePart = formatInTimeZone(date, TIME_ZONE, 'EEEE, MMMM d, yyyy', { locale: enUS });

@@ -102,13 +102,13 @@ export async function getEvents(params: GetEventsParams = {}): Promise<Event[]> 
     queryParams.append('forHomepage', 'true');
   }
 
-  const { data } = await apiClient.get<any[]>(`/events?${queryParams.toString()}`);
+  const { data } = await apiClient.get<any[]>(`/events?${queryParams.toString()}`, { authMode: 'public' });
   return data.map(transformEvent);
 }
 
 export async function getEventById(id: string): Promise<Event | null> {
   try {
-    const { data } = await apiClient.get<any>(`/events/${id}`);
+    const { data } = await apiClient.get<any>(`/events/${id}`, { authMode: 'public' });
     if (!data) return null;
     return transformEvent(data);
   } catch (error: any) {
