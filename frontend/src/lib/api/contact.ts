@@ -14,6 +14,6 @@ export interface SendContactResponse {
 }
 
 export async function sendContactMessage(payload: SendContactPayload): Promise<SendContactResponse> {
-  const { data } = await apiClient.post<SendContactResponse>('/contact', payload);
+  const { data } = await apiClient.post<SendContactResponse>('/contact', payload, { authMode: 'public' });
   return data;
 }

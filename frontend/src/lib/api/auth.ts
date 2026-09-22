@@ -3,7 +3,7 @@ import type { User } from '@/lib/types';
 
 export async function requestOtp(mobile: string): Promise<{ success: true }> {
   try {
-    await apiClient.post('/auth/request-otp', { mobile });
+    await apiClient.post('/auth/request-otp', { mobile }, { authMode: 'public' });
     return { success: true };
   } catch (error: any) {
     if (error.status === 429) {
@@ -18,7 +18,7 @@ export async function requestOtp(mobile: string): Promise<{ success: true }> {
 
 export async function verifyOtp(mobile: string, otp: string): Promise<{ user: User; token: string }> {
   try {
-    const { data, token } = await apiClient.post<{ user: User }>('/auth/verify-otp', { mobile, otp });
+    const { data, token } = await apiClient.post<{ user: User }>('/auth/verify-otp', { mobile, otp }, { authMode: 'public' });
 
     if (!token) {
       throw new Error('Authentication failed: No token provided.');

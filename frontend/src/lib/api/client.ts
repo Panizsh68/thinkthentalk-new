@@ -6,17 +6,26 @@ const RETRY_DELAY_MS = 1000;
 const isAdminApiPath = (path: string) =>
   /(^\/admin(?:\/|$))|(?:\/admin(?:\/|$))/.test(path);
 
-type AuthMode = 'auto' | 'admin' | 'user' | 'either';
+type AuthMode = 'auto' | 'admin' | 'user' | 'either' | 'public';
 
 type ApiRequestOptions = RequestInit & {
   authMode?: AuthMode;
 };
 
+export interface ApiError extends Error {
+  status?: number;
+  data?: unknown;
+  isNetworkError?: boolean;
+}
+
+const isApiError = (error: unknown): error is ApiError =>
+  error instanceof Error && ('status' in error || 'data' in error);
+
 const apiClient = {
   async request<T>(
     method: string,
     path: string,
-    data?: any,
+    data?: unknown,
     options?: ApiRequestOptions,
     retries = MAX_RETRIES
   ): Promise<{ data: T; token?: string }> {
@@ -28,9 +37,16 @@ const apiClient = {
       ? `${baseUrl}${normalizedPath}`
       : `${normalizedPath.startsWith(baseUrl) ? '' : baseUrl}${normalizedPath}`;
     
-    console.log(`API Request: ${method} ${url}`);
-
     const isFormData = data instanceof FormData;
+
+    const onAdminPage = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+    const resolvedAuthMode =
+      options?.authMode ??
+      (isAdminApiPath(normalizedPath)
+        ? 'admin'
+        : normalizedPath.includes('/upload')
+          ? 'either'
+          : 'user');
 
     const headers = new Headers(
       isFormData
@@ -46,11 +62,6 @@ const apiClient = {
     if (typeof window !== 'undefined') {
       const adminToken = localStorage.getItem('adminAccessToken');
       const userToken = localStorage.getItem('accessToken');
-
-      const onAdminPage = window.location.pathname.startsWith('/admin');
-      const resolvedAuthMode =
-        options?.authMode ??
-        (isAdminApiPath(normalizedPath) ? 'admin' : normalizedPath.includes('/upload') ? 'either' : 'user');
 
       if (resolvedAuthMode === 'admin') {
         if (adminToken) headers.append('Authorization', `Bearer ${adminToken}`);
@@ -72,6 +83,8 @@ const apiClient = {
       } else if (resolvedAuthMode === 'user') {
         if (userToken) headers.append('Authorization', `Bearer ${userToken}`);
         usedTokenType = userToken ? 'user' : null;
+      } else if (resolvedAuthMode === 'public') {
+        // Deliberately do not attach either browser token to a public request.
       } else {
         const token = userToken || adminToken;
         if (token) headers.append('Authorization', `Bearer ${token}`);
@@ -79,45 +92,54 @@ const apiClient = {
       }
     }
 
+    const { authMode: _authMode, ...fetchOptions } = options ?? {};
     const config: RequestInit = {
+      ...fetchOptions,
       method,
       headers,
       body: isFormData ? data : (data ? JSON.stringify(data) : undefined),
-      ...options,
     };
 
     try {
       const response = await fetch(url, config);
       const token = response.headers.get('Authorization')?.split(' ')[1];
 
-      if (response.status === 401 && typeof window !== 'undefined') {
-        const isAdminRequest = resolvedAuthMode === 'admin' || usedTokenType === 'admin';
-        const onAdminPage = window.location.pathname.startsWith('/admin');
+      if (response.status === 401) {
+        const unauthorizedError = new Error('Unauthorized') as ApiError;
+        unauthorizedError.status = 401;
 
-        if (isAdminRequest || usedTokenType === 'admin') {
-          localStorage.removeItem('adminAccessToken');
-          localStorage.removeItem('currentAdminUser');
+        // Public endpoints must remain usable on login/public pages. A 401
+        // from an explicitly public request is returned to the caller and
+        // never starts an authentication redirect.
+        if (resolvedAuthMode !== 'public' && typeof window !== 'undefined') {
+          const isAdminRequest = resolvedAuthMode === 'admin' || usedTokenType === 'admin';
+          const currentPathIsAdmin = window.location.pathname.startsWith('/admin');
+
+          if (usedTokenType === 'admin' || isAdminRequest) {
+            localStorage.removeItem('adminAccessToken');
+            localStorage.removeItem('currentAdminUser');
+          }
+          if (usedTokenType === 'user' || resolvedAuthMode === 'user') {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('currentUser');
+          }
+
+          const loginPath = currentPathIsAdmin || isAdminRequest ? '/admin/login' : '/login';
+          const currentUrl = window.location.pathname + window.location.search;
+          const isAlreadyOnLoginPage = window.location.pathname === loginPath;
+
+          if (!isAlreadyOnLoginPage) {
+            window.location.replace(`${loginPath}?redirect=${encodeURIComponent(currentUrl)}`);
+          }
         }
 
-        if (usedTokenType === 'user') {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('currentUser');
-        }
-
-        const loginPath = onAdminPage || isAdminRequest ? '/admin/login' : '/login';
-        const redirectUrl = window.location.pathname + window.location.search;
-        
-        if (window.location.pathname !== loginPath) {
-          window.location.href = `${loginPath}?redirect=${encodeURIComponent(redirectUrl)}`;
-        }
-
-        throw new Error('Unauthorized');
+        throw unauthorizedError;
       }
 
       const responseText = await response.text();
 
       if (!response.ok) {
-        let errorData: any;
+        let errorData: unknown;
         try {
           errorData = JSON.parse(responseText);
         } catch {
@@ -129,8 +151,11 @@ const apiClient = {
         
         console.error(`API Error for ${method} ${normalizedPath}:`, errorData);
         
-        const errorMessage = errorData?.message || errorData?.error || `HTTP error! Status: ${response.status}`;
-        const error: any = new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
+        const errorRecord = typeof errorData === 'object' && errorData !== null
+          ? errorData as { message?: unknown; error?: unknown }
+          : undefined;
+        const errorMessage = errorRecord?.message || errorRecord?.error || `HTTP error! Status: ${response.status}`;
+        const error = new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage)) as ApiError;
         error.status = response.status;
         error.data = errorData;
         throw error;
@@ -148,15 +173,24 @@ const apiClient = {
         return { data: responseText as unknown as T, token };
       }
 
-    } catch (error: any) {
-      console.error(`API request failed for ${method} ${normalizedPath}:`, error.message);
-      
-      const isNetworkError = error.message === 'Failed to fetch';
-      const isUserError = error.status >= 400 && error.status < 500;
+    } catch (error: unknown) {
+      const apiError = isApiError(error) ? error : undefined;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown API error';
+      console.error(`API request failed for ${method} ${normalizedPath}:`, errorMessage);
+
+      const isNetworkError = error instanceof TypeError || errorMessage === 'Failed to fetch';
+      if (isNetworkError && apiError) apiError.isNetworkError = true;
+      const status = apiError?.status;
+      const isUserError = typeof status === 'number' && status >= 400 && status < 500;
       
       if (retries > 0 && !isUserError && !isNetworkError) {
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
         return this.request(method, normalizedPath, data, options, retries - 1);
+      }
+      if (isNetworkError && !apiError) {
+        const networkError = new Error(errorMessage) as ApiError;
+        networkError.isNetworkError = true;
+        throw networkError;
       }
       throw error;
     }
@@ -166,15 +200,15 @@ const apiClient = {
     return this.request<T>('GET', path, undefined, options);
   },
 
-  post<T>(path: string, data: any, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
+  post<T>(path: string, data: unknown, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('POST', path, data, options);
   },
 
-  put<T>(path: string, data: any, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
+  put<T>(path: string, data: unknown, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('PUT', path, data, options);
   },
 
-  patch<T>(path: string, data: any, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
+  patch<T>(path: string, data: unknown, options?: ApiRequestOptions): Promise<{ data: T; token?: string }> {
     return this.request<T>('PATCH', path, data, options);
   },
 

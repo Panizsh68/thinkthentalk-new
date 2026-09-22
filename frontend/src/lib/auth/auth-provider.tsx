@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const loginWithEmail = useCallback(async (email: string, password: string) => {
-    const response = await apiClient.post<any>('/auth/login-email', { email, password });
+    const response = await apiClient.post<{ user: User }>('/auth/login-email', { email, password }, { authMode: 'public' });
     if (response.token) {
       handleLogin(response.data.user, response.token);
     }

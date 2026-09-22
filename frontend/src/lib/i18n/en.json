@@ -1,9 +1,13 @@
 {
   "lng": "en-US",
+  "footer": {
+    "tagline": "Built for thoughtful conversations"
+  },
   "nav": {
     "home": "Home",
     "events": "Events",
     "about": "About",
+    "team": "Team",
     "contact": "Contact",
     "faq": "FAQ",
     "privacy": "Privacy",
@@ -15,8 +19,15 @@
     "wallet": "Coin Center",
     "subscription": "Pass"
   },
+  "legal": {
+    "termsTitle": "Terms of Service",
+    "termsDescription": "Please read these terms before submitting a collaboration request.",
+    "termsContent": "By joining the Think Then Talk volunteer team, you agree to support an inclusive community, follow professional standards, and keep sensitive community information confidential.",
+    "continueToCollaboration": "Continue to collaboration form"
+  },
   "actions": {
     "login": "Login",
+    "loading": "Loading",
     "logout": "Logout",
     "register": "Register",
     "retry": "Retry",
@@ -57,6 +68,7 @@
     "noEventsFound": "No events found matching your criteria."
   },
   "event": {
+    "posterUnavailable": "The event poster could not be loaded.",
     "online": "Online",
     "offline": "In-person",
     "limitedSeats": "Limited seats",
@@ -109,6 +121,7 @@
     "otpSentTitle": "Code Sent",
     "otpSentDescription": "Check your messages for the verification code",
     "loginSuccessTitle": "Login Successful!",
+    "loginButton": "Log in to continue",
     "errors": {
       "invalidMobile": "Please enter a valid mobile number.",
       "otpRequired": "Verification code is required."
@@ -406,9 +419,11 @@
       }
     },
     "collaborate": {
+      "badge": "Work with us",
       "title": "Work With Us",
       "subtitle": "Passionate about hosting, photography, or content? Join our volunteer team.",
-      "cta": "Apply to Join"
+      "cta": "Apply to Join",
+      "imageAlt": "Community collaboration"
     },
     "sponsorship": {
       "title": "Brand Partnerships",
@@ -440,7 +455,8 @@
     "team": {
       "title": "Meet the Team",
       "subtitle": "The people behind the scenes of our community.",
-      "noMembers": "Team info coming soon."
+      "noMembers": "No team members are currently listed.",
+      "loadError": "We could not load the team right now. Please try again."
     }
   },
   "wallet": {
@@ -910,7 +926,29 @@
         "content": "Motivation/Message",
         "updateStatus": "Triage Application",
         "notes": "Internal Admin Notes",
-        "notesPlaceholder": "e.g. Needs interview"
+        "notesPlaceholder": "e.g. Needs interview",
+        "privateNoteHelp": "This note is visible only to authorized administrators."
+      },
+      "filters": {
+        "status": "Filter by status",
+        "all": "All statuses"
+      },
+      "empty": "No requests exist yet.",
+      "emptyFiltered": "No requests match this status filter.",
+      "errors": {
+        "load": "Could not load requests.",
+        "network": "The server could not be reached. Check your connection.",
+        "server": "The server returned an unexpected error. Please try again.",
+        "unauthorized": "Your administrator session has expired.",
+        "forbidden": "Your role cannot access this operation.",
+        "notFound": "The request no longer exists.",
+        "update": "The status could not be updated. Please try again."
+      },
+      "pagination": {
+        "label": "Request pagination",
+        "page": "Page {page} of {totalPages}",
+        "previous": "Previous",
+        "next": "Next"
       }
     },
     "contact": {
@@ -1012,13 +1050,20 @@
         "title": "Delete Sponsor",
         "successTitle": "Sponsor removed",
         "confirmTitle": "Delete Sponsor?",
-        "confirmText": "Are you sure you want to remove {name}?"
+        "confirmText": "Are you sure you want to remove {name}?",
+        "cleanupWarning": "The sponsor was removed, but old media cleanup needs attention."
       },
       "form": {
         "name": "Brand Name",
         "tagline": "Tagline (Optional)",
         "logoUrl": "Logo Image",
-        "websiteUrl": "Link"
+        "logoDescription": "JPG, PNG, WebP, or SVG. The file is uploaded only when you save.",
+        "websiteUrl": "Link",
+        "uploading": "Uploading…",
+        "imageAlt": "Sponsor logo",
+        "removeLogo": "Remove logo",
+        "saveError": "The sponsor could not be saved. Your changes are still here.",
+        "cleanupWarning": "The sponsor was saved, but old media cleanup needs attention."
       },
       "table": {
         "logo": "Logo",
@@ -1028,6 +1073,10 @@
       },
       "actions": {
         "visit": "Visit"
+      },
+      "accessibility": {
+        "edit": "Edit sponsor",
+        "delete": "Delete sponsor"
       },
       "validation": {
         "invalidUrl": "Please enter a valid URL"
@@ -1054,9 +1103,31 @@
         "confirmText": "Remove {name} from the public team list?"
       },
       "form": {
-        "name": "Full Name",
-        "role": "Role (e.g. Founder)",
-        "photoUrl": "Profile Photo"
+        "firstNameFa": "First name (Persian)",
+        "lastNameFa": "Last name (Persian)",
+        "roleFa": "Role (Persian)",
+        "firstNameEn": "First name (English)",
+        "lastNameEn": "Last name (English)",
+        "roleEn": "Role (English)",
+        "photoUrl": "Profile Photo",
+        "photoDescription": "Optional. JPG, PNG, or WebP up to 10 MB. The file is uploaded only when you save.",
+        "displayOrder": "Display order",
+        "isActive": "Visible on the public website",
+        "isActiveDescription": "Turn this off to keep the member in the admin directory without publishing them.",
+        "uploading": "Uploading…",
+        "imageAlt": "Team member profile",
+        "removePhoto": "Remove profile photo",
+        "saveError": "The member could not be saved. Your changes are still here.",
+        "cleanupWarning": "The member was saved, but old media cleanup needs attention."
+      },
+      "validation": {
+        "invalidImage": "Choose a valid uploaded image."
+      },
+      "accessibility": {
+        "moveUp": "Move member up",
+        "moveDown": "Move member down",
+        "edit": "Edit team member",
+        "delete": "Delete team member"
       },
       "table": {
         "photo": "Photo",
@@ -1231,7 +1302,7 @@
     "title": "Sponsorship Opportunities",
     "subtitle": "Partner with Think Then Talk and connect with an engaged community of lifelong learners and professionals.",
     "successTitle": "Application Received",
-    "successDescription": "Thank you for your interest in sponsoring Think Then Talk. Our team will review your application and contact you shortly.",
+    "successDescription": "Thank you for your interest in sponsoring Think Then Talk. Our team will review your application and contact you manually if we need more information.",
     "panel": {
       "loginTitle": "Login Required",
       "loginDescription": "Please log in to submit a sponsorship request and track its status from your user panel."
@@ -1278,16 +1349,32 @@
       "subtitle": "Apply for the {plan}",
       "companyLabel": "Company Name",
       "nameLabel": "Representative Name",
+      "planLabel": "Sponsorship Plan",
+      "companyPlaceholder": "e.g. Acme Corporation",
       "notes": "Tell us about your brand",
       "notesPlaceholder": "What are your goals for this partnership?",
       "submit": "Submit Application"
+    },
+    "validation": {
+      "companyTooLong": "Company name must be 200 characters or fewer.",
+      "nameTooLong": "Name must be 200 characters or fewer.",
+      "emailTooLong": "Email must be 255 characters or fewer.",
+      "descriptionTooLong": "Description must be 5,000 characters or fewer."
+    },
+    "errors": {
+      "duplicate": "This sponsorship request could not be duplicated.",
+      "validation": "Please review the form fields and try again.",
+      "unauthorized": "Your session has expired. Please log in again.",
+      "forbidden": "You are not allowed to submit this request.",
+      "server": "The request could not be submitted right now. Please try again later.",
+      "network": "We could not reach the server. Check your connection and try again."
     }
   },
   "collaborate": {
     "title": "Join the Team",
     "subtitle": "Are you passionate about community building? We are always looking for volunteers.",
     "successTitle": "Application Submitted!",
-    "successDescription": "We’ve received your application to join the Think Then Talk team. We’ll review it and get in touch with you soon.",
+    "successDescription": "We’ve received your application to join the Think Then Talk team. Our team will review it and contact you manually if we need more information.",
     "panel": {
       "loginTitle": "Login Required",
       "loginDescription": "Please log in to submit a collaboration request and follow its status from your user panel."
@@ -1297,18 +1384,47 @@
       "content": "<p>By joining the Think Then Talk volunteer team, you agree to:</p><ul><li>Support the community's inclusive environment.</li><li>Uphold the brand's professional standards.</li><li>Maintain confidentiality of sensitive community data.</li></ul>"
     },
     "actions": {
-      "acceptAndContinue": "Accept and Continue"
+      "readAndContinue": "Read and Continue"
     },
     "form": {
       "title": "Collaboration Form",
       "subtitle": "To help us get to know you better.",
+      "firstNamePlaceholder": "e.g., Sara",
+      "lastNamePlaceholder": "e.g., Ahmadi",
+      "mobilePlaceholder": "09xx xxx xxxx",
       "expertise": "Field of Expertise",
       "expertisePlaceholder": "e.g., Hosting, Photography, Content Creation",
       "experience": "Relevant Experience",
+      "experienceHelp": "Briefly describe related work, skills, or projects.",
+      "experiencePlaceholder": "e.g., Three years of content production and event hosting",
       "whyJoin": "Why do you want to join Think Then Talk?",
+      "whyJoinPlaceholder": "Tell us what motivates you and how you would like to contribute.",
       "availability": "Your Weekly Availability",
+      "availabilityHelp": "Tell us which days or time windows you can usually help.",
+      "availabilityPlaceholder": "e.g., Thursday evenings and Friday afternoons",
+      "optional": "optional",
       "acceptTerms": "I accept the collaboration terms",
+      "acceptTermsHelp": "Your explicit consent is recorded with this collaboration request.",
+      "termsStatus": "Terms consent",
+      "accepted": "Accepted",
+      "notAccepted": "Not accepted",
       "submit": "Send Application"
+    },
+    "validation": {
+      "nameTooLong": "Name must be 100 characters or fewer.",
+      "emailTooLong": "Email must be 255 characters or fewer.",
+      "expertiseTooLong": "This field must be 200 characters or fewer.",
+      "experienceTooLong": "Experience must be 5,000 characters or fewer.",
+      "whyJoinTooLong": "This answer must be 5,000 characters or fewer.",
+      "availabilityTooLong": "Availability must be 500 characters or fewer."
+    },
+    "errors": {
+      "duplicate": "You already have an active collaboration request. Please wait until it is resolved.",
+      "validation": "Please review the form fields and try again.",
+      "unauthorized": "Your session has expired. Please log in again.",
+      "forbidden": "You are not allowed to submit this request.",
+      "server": "The request could not be submitted right now. Please try again later.",
+      "network": "We could not reach the server. Check your connection and try again."
     }
   },
   "ideas": {
@@ -1392,7 +1508,7 @@
     "panel": {
       "navLabel": "My Requests",
       "title": "My Requests",
-      "description": "Track your collaboration and sponsorship requests, including every status update and note shared by the admin team.",
+      "description": "Track your collaboration and sponsorship requests and follow their status history.",
       "tabs": {
         "collaborations": "Collaborations",
         "sponsorships": "Sponsorships"
@@ -1404,8 +1520,17 @@
       "emptyCollaborations": "You have not submitted any collaboration requests yet.",
       "emptySponsorships": "You have not submitted any sponsorship requests yet.",
       "loadError": "Could not load your requests.",
+      "loading": "Loading your requests…",
+      "forbidden": "You do not have permission to view these requests.",
+      "unauthorized": "Your session has expired. Please log in again.",
+      "networkError": "The server could not be reached. Check your connection.",
+      "serverError": "The server returned an unexpected error. Please try again.",
+      "submittedAt": "Submitted",
+      "processedAt": "Processed",
+      "noHistory": "No status changes have been recorded yet.",
       "requestMeta": "Last updated on {updatedAt}",
-      "adminNote": "Admin Note"
+      "adminNote": "Admin Note",
+      "statusHistory": "Status History"
     },
     "status": {
       "PENDING": "Pending",

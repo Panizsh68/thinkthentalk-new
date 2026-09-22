@@ -56,7 +56,7 @@ export async function getPaymentPublic(
   if (params?.authority) query.append('Authority', params.authority);
 
   try {
-    const { data } = await apiClient.get<any>(`/payments/public/${paymentId}${query.toString() ? `?${query.toString()}` : ''}`);
+        const { data } = await apiClient.get<any>(`/payments/public/${paymentId}${query.toString() ? `?${query.toString()}` : ''}`, { authMode: 'public' });
     if (!data) return null;
     return transformPayment(data);
   } catch (error: any) {
