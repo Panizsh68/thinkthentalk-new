@@ -9,9 +9,10 @@ import { AdminTeamController } from './admin-team.controller';
 import { TeamMembersService } from './team-members.service';
 import { PrismaModule } from '../infrastructure/database/prisma.module';
 import { RedisModule } from '../infrastructure/cache/redis.module';
+import { StorageModule } from '../infrastructure/storage/storage.module';
 
 @Module({
-  imports: [PrismaModule, RedisModule],
+  imports: [PrismaModule, RedisModule, StorageModule],
   providers: [ContentService, SponsorsService, TeamMembersService],
   controllers: [
     ContentController,

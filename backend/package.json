@@ -23,6 +23,7 @@
     "prisma:validate": "prisma validate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:fresh": "PRISMA_MIGRATIONS_PATH=prisma/migrations-fresh prisma migrate deploy",
     "prisma:migrate:status": "prisma migrate status",
     "prisma:studio": "prisma studio",
     "prisma:db:push": "prisma db push",

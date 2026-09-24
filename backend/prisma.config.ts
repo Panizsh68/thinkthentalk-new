@@ -12,6 +12,9 @@ for (const path of envFilePath) {
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
+const migrationsPath =
+  process.env.PRISMA_MIGRATIONS_PATH ?? 'prisma/migrations';
+
 let databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
@@ -26,7 +29,7 @@ if (!databaseUrl) {
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   migrations: {
-    path: 'prisma/migrations',
+    path: migrationsPath,
     seed: 'ts-node prisma/seed.ts',
   },
   datasource: {

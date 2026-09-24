@@ -38,7 +38,7 @@ import {
 @ApiTags('Content Management')
 @ApiBearerAuth('bearerAuth')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER, AdminRole.FINANCE)
+@Roles(AdminRole.ADMIN)
 @Controller({ path: 'admin/sponsors', version: '1' })
 export class AdminSponsorsController {
   constructor(private readonly sponsorsService: SponsorsService) {}

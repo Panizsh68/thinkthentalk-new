@@ -23,11 +23,16 @@ git pull --ff-only origin main
 
 echo "📦 Installing and building backend..."
 pnpm --dir backend install --frozen-lockfile
+pnpm --dir backend run prisma:generate
 pnpm --dir backend run build
 
 echo "📦 Installing and building frontend..."
 pnpm --dir frontend install --frozen-lockfile
 pnpm --dir frontend run build
+
+echo "🗄️ Applying production Prisma migrations..."
+unset PRISMA_MIGRATIONS_PATH
+env -u PRISMA_MIGRATIONS_PATH NODE_ENV=production pnpm --dir backend run prisma:migrate:deploy
 
 echo "🔁 Restarting PM2 processes..."
 pm2 restart "$BACKEND_PROCESS" --update-env

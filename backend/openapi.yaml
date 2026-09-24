@@ -27,6 +27,8 @@ tags:
     description: Admin tools for bulk messaging
   - name: Admin
     description: General admin utilities like statistics and exports
+  - name: Partnerships
+    description: User collaboration and sponsorship requests
 paths:
   /auth/request-otp:
     post:
@@ -137,7 +139,7 @@ paths:
           description: Invalid data provided.
         '401':
           description: Not authenticated.
-  /admin/login:
+  /auth/admin/login:
     post:
       tags:
         - Auth
@@ -633,13 +635,13 @@ paths:
           required: false
           schema:
             type: integer
-          description: Page number (default: 1)
+          description: 'Page number (default: 1)'
         - name: limit
           in: query
           required: false
           schema:
             type: integer
-          description: Items per page (default: 20)
+          description: 'Items per page (default: 20)'
       responses:
         '200':
           description: A list of registrations.
@@ -963,6 +965,362 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /partnerships/collaborate:
+    post:
+      tags:
+        - Partnerships
+      summary: Submit a request to join the team
+      description: Requires a USER bearer token. acceptedTerms must be true; Iranian mobile numbers may use Persian or Arabic digits and are normalized by the server.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCollaborationRequest'
+      responses:
+        '201':
+          description: Collaboration request created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollaborationUserResponse'
+        '400':
+          description: Validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: A user bearer token is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: The user already has an active collaboration request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/sponsor:
+    post:
+      tags:
+        - Partnerships
+      summary: Submit a sponsorship request
+      description: Requires a USER bearer token.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSponsorshipRequest'
+      responses:
+        '201':
+          description: Sponsorship request created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipUserResponse'
+        '400':
+          description: Validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: A user bearer token is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/me/collaborations:
+    get:
+      tags:
+        - Partnerships
+      summary: List my collaboration requests
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Requests owned by the authenticated user; private admin notes are omitted.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CollaborationUserResponse'
+        '401':
+          description: A user bearer token is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/me/collaborations/{id}/history:
+    get:
+      tags:
+        - Partnerships
+      summary: Read my collaboration status history
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Public status transitions for the owned request.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CollaborationStatusHistory'
+        '401':
+          description: A user bearer token is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Request not found for this user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/me/sponsorships:
+    get:
+      tags:
+        - Partnerships
+      summary: List my sponsorship requests
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Sponsorship requests owned by the authenticated user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SponsorshipUserResponse'
+        '401':
+          description: A user bearer token is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/admin/collaborations:
+    get:
+      tags:
+        - Partnerships
+      summary: List collaboration requests (ADMIN)
+      description: ADMIN only. EVENT_MANAGER and FINANCE do not have access to collaboration applications.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/PartnershipStatus'
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated collaboration requests with safe linked-user fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollaborationAdminPage'
+        '400':
+          description: Invalid query or enum value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: ADMIN role required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/admin/sponsorships:
+    get:
+      tags:
+        - Partnerships
+      summary: List sponsorship requests (ADMIN or FINANCE)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/PartnershipStatus'
+        - name: plan
+          in: query
+          schema:
+            $ref: '#/components/schemas/SponsorshipPlan'
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated sponsorship requests with safe linked-user fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipAdminPage'
+        '400':
+          description: Invalid query or enum value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: ADMIN or FINANCE role required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/admin/collaborations/{id}/status:
+    patch:
+      tags:
+        - Partnerships
+      summary: Update collaboration status (ADMIN)
+      description: Updates current status and private admin note, and creates a status-history row atomically.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePartnershipStatus'
+      responses:
+        '200':
+          description: Updated collaboration request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollaborationAdminResponse'
+        '400':
+          description: Invalid status or note.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: ADMIN role required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Collaboration request not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /partnerships/admin/sponsorships/{id}/status:
+    patch:
+      tags:
+        - Partnerships
+      summary: Update sponsorship status (ADMIN or FINANCE)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePartnershipStatus'
+      responses:
+        '200':
+          description: Updated sponsorship request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipAdminResponse'
+        '400':
+          description: Invalid status or note.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: ADMIN or FINANCE role required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Sponsorship request not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /sponsors:
     get:
       tags:
@@ -1223,7 +1581,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TeamMemberFormData'
+              $ref: '#/components/schemas/UpdateTeamMemberFormData'
       responses:
         '200':
           description: Team member updated.
@@ -1302,8 +1660,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EvaluationForm'
-        '403':
+        '400':
           description: User is not eligible to submit feedback for this event.
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Event or form not found.
   '/evaluations/{evaluationId}/submit':
@@ -1583,6 +1947,147 @@ paths:
                 type: string
 components:
   schemas:
+    PartnershipStatus:
+      type: string
+      enum: [PENDING, REVIEWING, CONTACTED, ACCEPTED, REJECTED]
+    SponsorshipPlan:
+      type: string
+      enum: [BRONZE, SILVER, GOLD, PLATINUM]
+    CreateCollaborationRequest:
+      type: object
+      required: [firstName, lastName, email, mobile, fieldOfExpertise, whyJoin, acceptedTerms]
+      properties:
+        firstName: { type: string, minLength: 1, maxLength: 100 }
+        lastName: { type: string, minLength: 1, maxLength: 100 }
+        email: { type: string, format: email, maxLength: 255 }
+        mobile:
+          type: string
+          pattern: '^09[0-9]{9}$'
+          description: Canonical Iranian mobile number; Persian and Arabic digits are accepted on input.
+        fieldOfExpertise: { type: string, minLength: 1, maxLength: 200 }
+        experience: { type: string, nullable: true, maxLength: 5000 }
+        whyJoin: { type: string, minLength: 1, maxLength: 5000 }
+        availability: { type: string, nullable: true, maxLength: 500 }
+        acceptedTerms: { type: boolean, enum: [true] }
+    CreateSponsorshipRequest:
+      type: object
+      required: [companyName, representativeName, email, mobile, plan]
+      properties:
+        companyName: { type: string, minLength: 1, maxLength: 200 }
+        representativeName: { type: string, minLength: 1, maxLength: 200 }
+        email: { type: string, format: email, maxLength: 255 }
+        mobile: { type: string, pattern: '^09[0-9]{9}$' }
+        plan: { $ref: '#/components/schemas/SponsorshipPlan' }
+        description: { type: string, nullable: true, maxLength: 5000 }
+    UpdatePartnershipStatus:
+      type: object
+      required: [status]
+      properties:
+        status: { $ref: '#/components/schemas/PartnershipStatus' }
+        notes:
+          type: string
+          nullable: true
+          maxLength: 5000
+          description: Private administrator note.
+    SafeUserSummary:
+      type: object
+      required: [id, firstName, lastName, mobile]
+      properties:
+        id: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string, format: email, nullable: true }
+        mobile: { type: string }
+    CollaborationStatusHistory:
+      type: object
+      required: [id, toStatus, createdAt]
+      properties:
+        id: { type: string }
+        fromStatus: { allOf: [{ $ref: '#/components/schemas/PartnershipStatus' }], nullable: true }
+        toStatus: { $ref: '#/components/schemas/PartnershipStatus' }
+        createdAt: { type: string, format: date-time }
+    CollaborationAdminStatusHistory:
+      allOf:
+        - $ref: '#/components/schemas/CollaborationStatusHistory'
+        - type: object
+          properties:
+            note: { type: string, nullable: true }
+            changedByAdminId: { type: string, nullable: true }
+    CollaborationUserResponse:
+      type: object
+      required: [id, name, firstName, lastName, email, mobile, fieldOfExpertise, whyJoin, acceptedTerms, status, createdAt, updatedAt, history]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string, format: email }
+        mobile: { type: string }
+        fieldOfExpertise: { type: string }
+        experience: { type: string, nullable: true }
+        whyJoin: { type: string }
+        availability: { type: string, nullable: true }
+        acceptedTerms: { type: boolean }
+        acceptedTermsAt: { type: string, format: date-time, nullable: true }
+        status: { $ref: '#/components/schemas/PartnershipStatus' }
+        processedAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        history:
+          type: array
+          items: { $ref: '#/components/schemas/CollaborationStatusHistory' }
+    CollaborationAdminResponse:
+      allOf:
+        - $ref: '#/components/schemas/CollaborationUserResponse'
+        - type: object
+          properties:
+            user: { allOf: [{ $ref: '#/components/schemas/SafeUserSummary' }], nullable: true }
+            adminNote: { type: string, nullable: true }
+            history:
+              type: array
+              items: { $ref: '#/components/schemas/CollaborationAdminStatusHistory' }
+    SponsorshipUserResponse:
+      type: object
+      required: [id, companyName, representativeName, email, mobile, plan, status, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        companyName: { type: string }
+        representativeName: { type: string }
+        email: { type: string, format: email }
+        mobile: { type: string }
+        plan: { $ref: '#/components/schemas/SponsorshipPlan' }
+        description: { type: string, nullable: true }
+        status: { $ref: '#/components/schemas/PartnershipStatus' }
+        processedAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    SponsorshipAdminResponse:
+      allOf:
+        - $ref: '#/components/schemas/SponsorshipUserResponse'
+        - type: object
+          properties:
+            user: { allOf: [{ $ref: '#/components/schemas/SafeUserSummary' }], nullable: true }
+            adminNote: { type: string, nullable: true }
+    CollaborationAdminPage:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/CollaborationAdminResponse' }
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+    SponsorshipAdminPage:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/SponsorshipAdminResponse' }
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
     Error:
       type: object
       properties:
@@ -2337,7 +2842,7 @@ components:
           type: string
         logoUrl:
           type: string
-          format: uri
+          description: Absolute URL or canonical uploaded media path.
         websiteUrl:
           type: string
           format: uri
@@ -2354,7 +2859,7 @@ components:
           type: string
         logoUrl:
           type: string
-          format: uri
+          description: Absolute URL or canonical uploaded media path.
         websiteUrl:
           type: string
           format: uri
@@ -2362,33 +2867,101 @@ components:
       type: object
       required:
         - id
-        - name
-        - role
-        - photoUrl
+        - firstNameFa
+        - lastNameFa
+        - roleFa
+        - displayOrder
+        - isActive
+        - createdAt
+        - updatedAt
       properties:
         id:
           type: string
-        name:
+        firstNameFa:
           type: string
-        role:
+        lastNameFa:
           type: string
-        photoUrl:
+        roleFa:
           type: string
-          format: uri
+        firstNameEn:
+          type: string
+          nullable: true
+        lastNameEn:
+          type: string
+          nullable: true
+        roleEn:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+          description: Absolute URL or canonical uploaded media path.
+        displayOrder:
+          type: integer
+          minimum: 0
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     TeamMemberFormData:
       type: object
       required:
-        - name
-        - role
-        - photoUrl
+        - firstNameFa
+        - lastNameFa
+        - roleFa
+        - firstNameEn
+        - lastNameEn
+        - roleEn
       properties:
-        name:
+        firstNameFa:
           type: string
-        role:
+        lastNameFa:
           type: string
-        photoUrl:
+        roleFa:
           type: string
-          format: uri
+        firstNameEn:
+          type: string
+        lastNameEn:
+          type: string
+        roleEn:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+          description: Absolute URL or canonical uploaded media path.
+        displayOrder:
+          type: integer
+          minimum: 0
+        isActive:
+          type: boolean
+    UpdateTeamMemberFormData:
+      type: object
+      properties:
+        firstNameFa:
+          type: string
+        lastNameFa:
+          type: string
+        roleFa:
+          type: string
+        firstNameEn:
+          type: string
+        lastNameEn:
+          type: string
+        roleEn:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+          description: Absolute URL or canonical uploaded media path.
+        displayOrder:
+          type: integer
+          minimum: 0
+        isActive:
+          type: boolean
     UserRegistration:
       type: object
       required:

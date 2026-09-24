@@ -1,2 +1,2 @@
 ALTER TABLE `CollaborationRequest`
-    ADD COLUMN `acceptedTerms` BOOLEAN NOT NULL DEFAULT false;
+    ADD COLUMN IF NOT EXISTS `acceptedTerms` BOOLEAN NOT NULL DEFAULT false;

@@ -7,12 +7,13 @@ datasource db {
 }
 
 model AdminUser {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  role      AdminRole @default(ADMIN)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id                         String                              @id @default(uuid())
+  email                      String                              @unique
+  password                   String
+  role                       AdminRole                           @default(ADMIN)
+  createdAt                  DateTime                            @default(now())
+  updatedAt                  DateTime                            @updatedAt
+  collaborationStatusChanges CollaborationRequestStatusHistory[]
 }
 
 model User {
@@ -268,24 +269,28 @@ model EventIdea {
 }
 
 model CollaborationRequest {
-  id               String            @id @default(uuid())
+  id               String                              @id @default(uuid())
   userId           String?
   name             String
   email            String
   mobile           String
   fieldOfExpertise String
-  experience       String?           @db.Text
-  whyJoin          String            @db.Text
+  experience       String?                             @db.Text
+  whyJoin          String                              @db.Text
   availability     String?
-  acceptedTerms    Boolean           @default(false)
-  status           PartnershipStatus @default(PENDING)
-  notes            String?           @db.Text
+  acceptedTerms    Boolean                             @default(false)
+  acceptedTermsAt  DateTime?
+  status           PartnershipStatus                   @default(PENDING)
+  adminNotes       String?                             @map("notes") @db.Text
   processedAt      DateTime?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  user             User?             @relation(fields: [userId], references: [id])
+  createdAt        DateTime                            @default(now())
+  updatedAt        DateTime                            @updatedAt
+  user             User?                               @relation(fields: [userId], references: [id])
+  statusHistory    CollaborationRequestStatusHistory[]
 
   @@index([userId], map: "CollaborationRequest_userId_fkey")
+  @@index([status])
+  @@index([createdAt])
 }
 
 model SponsorshipRequest {
@@ -298,13 +303,31 @@ model SponsorshipRequest {
   plan               SponsorshipPlan
   description        String?           @db.Text
   status             PartnershipStatus @default(PENDING)
-  notes              String?           @db.Text
+  adminNotes         String?           @map("notes") @db.Text
   processedAt        DateTime?
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
   user               User?             @relation(fields: [userId], references: [id])
 
   @@index([userId], map: "SponsorshipRequest_userId_fkey")
+  @@index([status])
+  @@index([createdAt])
+}
+
+model CollaborationRequestStatusHistory {
+  id                     String               @id @default(uuid())
+  collaborationRequestId String
+  fromStatus             PartnershipStatus?
+  toStatus               PartnershipStatus
+  note                   String?              @db.Text
+  changedByAdminId       String?
+  createdAt              DateTime             @default(now())
+  collaborationRequest   CollaborationRequest @relation(fields: [collaborationRequestId], references: [id], onDelete: Cascade)
+  changedByAdmin         AdminUser?           @relation(fields: [changedByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([collaborationRequestId, createdAt])
+  @@index([changedByAdminId])
+  @@index([createdAt])
 }
 
 model Wallet {
@@ -370,12 +393,13 @@ model Subscription {
 }
 
 model Sponsor {
-  id         String   @id @default(uuid())
-  nameFa     String
-  logoUrl    String
-  websiteUrl String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id               String   @id @default(uuid())
+  nameFa           String
+  productOrTagline String   @default("")
+  logoUrl          String
+  websiteUrl       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model TeamMember {
@@ -383,13 +407,16 @@ model TeamMember {
   firstNameFa String
   lastNameFa  String
   roleFa      String
+  firstNameEn String?
+  lastNameEn  String?
+  roleEn      String?
   avatarUrl   String?
-  order       Int      @default(0)
+  displayOrder Int     @default(0) @map("order")
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@index([order])
+  @@index([displayOrder])
 }
 
 enum AdminRole {

@@ -39,7 +39,7 @@ import {
 @ApiTags('Content Management')
 @ApiBearerAuth('bearerAuth')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(AdminRole.ADMIN, AdminRole.EVENT_MANAGER, AdminRole.FINANCE)
+@Roles(AdminRole.ADMIN)
 @Controller({ path: 'admin/team', version: '1' })
 export class AdminTeamController {
   constructor(private readonly teamMembersService: TeamMembersService) {}
@@ -79,9 +79,7 @@ export class AdminTeamController {
     type: ErrorResponseDto,
   })
   @ApiForbiddenResponse({ description: 'Forbidden.', type: ErrorResponseDto })
-  async reorder(
-    @Body() dto: ReorderTeamMembersDto,
-  ): Promise<TeamMemberDto[]> {
+  async reorder(@Body() dto: ReorderTeamMembersDto): Promise<TeamMemberDto[]> {
     return this.teamMembersService.reorder(dto);
   }
 
