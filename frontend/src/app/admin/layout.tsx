@@ -25,7 +25,7 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
     { href: '/admin/discounts', labelKey: 'admin.nav.discounts', icon: Tag, permission: 'discounts' },
     { href: '/admin/messaging', labelKey: 'admin.nav.messaging', icon: MessageCircle, permission: 'messaging' },
     { href: '/admin/ideas', labelKey: 'admin.nav.ideas', icon: Lightbulb, permission: 'events' },
-    { href: '/admin/partnerships', labelKey: 'admin.nav.partnerships', icon: Handshake, permission: 'contact' },
+    { href: '/admin/partnerships', labelKey: 'admin.nav.partnerships', icon: Handshake, permission: 'partnerships' },
     { href: '/admin/contact', labelKey: 'admin.nav.contact', icon: Mail, permission: 'contact' },
     { href: '/admin/feedback', labelKey: 'admin.nav.feedback', icon: Briefcase, permission: 'feedback' },
     { href: '/admin/sponsors', labelKey: 'admin.nav.sponsors', icon: Building, permission: 'sponsors' },

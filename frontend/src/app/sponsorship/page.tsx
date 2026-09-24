@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -18,50 +18,88 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2, Building, Trophy, Rocket, Star, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { normalizeIranianMobile, trimOptional } from '@/lib/partnership/normalization';
+import type { ApiError } from '@/lib/api/client';
+import type { SponsorshipPlan } from '@/lib/types';
 
-const plans = [
+const plans: Array<{ id: SponsorshipPlan; icon: typeof Rocket; color: string; bg: string }> = [
   { id: 'BRONZE', icon: Rocket, color: 'text-amber-600', bg: 'bg-amber-50' },
   { id: 'SILVER', icon: ShieldCheck, color: 'text-slate-400', bg: 'bg-slate-50' },
   { id: 'GOLD', icon: Trophy, color: 'text-yellow-500', bg: 'bg-yellow-50' },
   { id: 'PLATINUM', icon: Star, color: 'text-purple-600', bg: 'bg-purple-50' },
 ];
 
-const getSponsorSchema = (t: any) => z.object({
-  companyName: z.string().min(2, t('registration.validation.required')),
-  representativeName: z.string().min(2, t('registration.validation.required')),
-  email: z.string().email(t('contact.errors.emailInvalid')),
-  mobile: z.string().regex(/^09\d{9}$/, t('auth.errors.invalidMobile')),
+type Translate = (key: string, options?: Record<string, unknown>) => string;
+
+const getSponsorSchema = (t: Translate) => z.object({
+  companyName: z.string().trim().min(1, t('registration.validation.required')).max(200, t('sponsorship.validation.companyTooLong')),
+  representativeName: z.string().trim().min(1, t('registration.validation.required')).max(200, t('sponsorship.validation.nameTooLong')),
+  email: z.string().trim().min(1, t('registration.validation.required')).email(t('contact.errors.emailInvalid')).max(255, t('sponsorship.validation.emailTooLong')),
+  mobile: z.string().trim().transform(normalizeIranianMobile).refine((value) => /^09\d{9}$/.test(value), t('auth.errors.invalidMobile')),
   plan: z.enum(['BRONZE', 'SILVER', 'GOLD', 'PLATINUM']),
-  description: z.string().optional(),
+  description: z.string().transform(trimOptional).refine((value) => !value || value.length <= 5000, t('sponsorship.validation.descriptionTooLong')),
 });
 
 export default function SponsorshipPage() {
   const { t, language } = useLanguage();
-  const { currentUser } = useAuth();
+  const { currentUser, isLoading: isAuthLoading } = useAuth();
   const { toast } = useToast();
   const [step, setStep] = useState(1); // 1: Plans, 2: Form, 3: Success
   const { mutate: submit, isPending } = useSubmitSponsorMutation();
+  const schema = getSponsorSchema(t);
+  type FormValues = z.input<typeof schema>;
 
-  const form = useForm({
-    resolver: zodResolver(getSponsorSchema(t)),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
       companyName: '',
       representativeName: currentUser ? `${currentUser.firstNameFa} ${currentUser.lastNameFa}` : '',
       email: currentUser?.email || '',
       mobile: currentUser?.mobile || '',
-      plan: 'BRONZE' as any,
+      plan: 'BRONZE',
       description: '',
     },
   });
 
-  const onSubmit = (values: any) => {
+  useEffect(() => {
+    if (!currentUser) return;
+    const dirtyFields = form.formState.dirtyFields;
+    if (!dirtyFields.representativeName) form.setValue('representativeName', `${currentUser.firstNameFa} ${currentUser.lastNameFa}`.trim(), { shouldDirty: false, shouldValidate: false });
+    if (!dirtyFields.email) form.setValue('email', currentUser.email || '', { shouldDirty: false, shouldValidate: false });
+    if (!dirtyFields.mobile) form.setValue('mobile', currentUser.mobile || '', { shouldDirty: false, shouldValidate: false });
+  }, [currentUser, form]);
+
+  const onSubmit = (values: z.output<typeof schema>) => {
     submit(values, {
       onSuccess: () => {
         setStep(3);
         toast({ title: t('sponsorship.successTitle') });
       },
+      onError: (error: unknown) => {
+        const status = error instanceof Error ? (error as ApiError).status : undefined;
+        const title = status === 409
+          ? t('sponsorship.errors.duplicate')
+          : status === 401
+            ? t('sponsorship.errors.unauthorized')
+            : status === 403
+              ? t('sponsorship.errors.forbidden')
+              : status === 400
+                ? t('sponsorship.errors.validation')
+                : status && status >= 500
+                  ? t('sponsorship.errors.server')
+                  : t('sponsorship.errors.network');
+        toast({ variant: 'destructive', title });
+      },
     });
   };
+
+  if (isAuthLoading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!currentUser) {
     return (
@@ -73,7 +111,7 @@ export default function SponsorshipPage() {
           </CardHeader>
           <CardFooter>
             <Button asChild className="h-12 w-full rounded-xl font-bold">
-              <Link href="/login">{t('auth.loginButton')}</Link>
+              <Link href={`/login?redirect=${encodeURIComponent('/sponsorship')}`}>{t('auth.loginButton')}</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -144,7 +182,7 @@ export default function SponsorshipPage() {
                     variant={selectedPlan === p.id ? 'default' : 'outline'} 
                     className="w-full"
                     onClick={() => {
-                      form.setValue('plan', p.id as any);
+                      form.setValue('plan', p.id);
                       setStep(2);
                     }}
                   >
@@ -166,21 +204,21 @@ export default function SponsorshipPage() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="companyName" render={({ field }) => (
-                    <FormItem><FormLabel>{t('sponsorship.form.companyLabel')}</FormLabel><FormControl><Input placeholder="e.g. Acme Corp" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('sponsorship.form.companyLabel')} *</FormLabel><FormControl><Input placeholder={t('sponsorship.form.companyPlaceholder')} {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name="representativeName" render={({ field }) => (
-                    <FormItem><FormLabel>{t('sponsorship.form.nameLabel')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>{t('sponsorship.form.nameLabel')} *</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>{t('contact.form.emailLabel')}</FormLabel><FormControl><Input dir="ltr" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>{t('contact.form.emailLabel')} *</FormLabel><FormControl><Input dir="ltr" type="email" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                    <FormField control={form.control} name="mobile" render={({ field }) => (
-                    <FormItem><FormLabel>{t('auth.mobileLabel')}</FormLabel><FormControl><Input dir="ltr" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>{t('auth.mobileLabel')} *</FormLabel><FormControl><Input dir="ltr" type="tel" inputMode="tel" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                 </div>
 
                 <FormField control={form.control} name="description" render={({ field }) => (
-                  <FormItem><FormLabel>{t('sponsorship.form.notes')}</FormLabel><FormControl><Textarea rows={4} placeholder={t('sponsorship.form.notesPlaceholder')} {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('sponsorship.form.notes')} <span className="font-normal text-muted-foreground">({t('collaborate.form.optional')})</span></FormLabel><FormControl><Textarea rows={4} placeholder={t('sponsorship.form.notesPlaceholder')} {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
 
                 <div className="flex gap-4 pt-4">
@@ -199,7 +237,7 @@ export default function SponsorshipPage() {
   );
 }
 
-function CheckIcon(props: any) {
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
   );

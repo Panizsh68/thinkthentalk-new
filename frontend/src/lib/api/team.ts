@@ -1,59 +1,63 @@
+"use client";
+import apiClient from "./client";
+import type {
+  TeamMember,
+  TeamMemberFormData,
+  UpdateTeamMemberData,
+} from "@/lib/types";
 
-'use client';
-import apiClient from './client';
-import type { TeamMember, TeamMemberFormData } from '@/lib/types';
-
-const transformTeamMember = (member: any): TeamMember => ({
-  ...member,
-});
-
-export async function getTeamMembers({ isAdmin = false } = {}): Promise<TeamMember[]> {
-  const url = isAdmin ? '/admin/team' : '/team';
-   try {
-    const { data } = await apiClient.get<TeamMember[]>(url);
-    return data.map(transformTeamMember);
-  } catch (error: any) {
-    console.error(`Failed to fetch team members (isAdmin: ${isAdmin}):`, error);
-    throw new Error(error.message || "Failed to fetch team members.");
-  }
+export async function getTeamMembers({ isAdmin = false } = {}): Promise<
+  TeamMember[]
+> {
+  const url = isAdmin ? "/admin/team" : "/team";
+  const { data } = await apiClient.get<TeamMember[]>(url, {
+    authMode: isAdmin ? "admin" : "public",
+  });
+  return data;
 }
 
-export async function createTeamMember(data: TeamMemberFormData): Promise<TeamMember> {
-  try {
-    const { data: newMember } = await apiClient.post<TeamMember>('/admin/team', data);
-    return transformTeamMember(newMember);
-  } catch (error: any) {
-    console.error("Failed to create team member:", error);
-    throw new Error(error.message || "Failed to create team member.");
-  }
+export async function createTeamMember(
+  data: TeamMemberFormData,
+): Promise<TeamMember> {
+  const { data: newMember } = await apiClient.post<TeamMember>(
+    "/admin/team",
+    data,
+    {
+      authMode: "admin",
+    },
+  );
+  return newMember;
 }
 
-export async function updateTeamMember(id: string, data: Partial<TeamMemberFormData>): Promise<TeamMember> {
-  try {
-    const { data: updatedMember } = await apiClient.patch<TeamMember>(`/admin/team/${id}`, data);
-    return transformTeamMember(updatedMember);
-  } catch (error: any) {
-    console.error(`Failed to update team member ${id}:`, error);
-    throw new Error(error.message || "Failed to update team member.");
-  }
+export async function updateTeamMember(
+  id: string,
+  data: UpdateTeamMemberData,
+): Promise<TeamMember> {
+  const { data: updatedMember } = await apiClient.patch<TeamMember>(
+    `/admin/team/${id}`,
+    data,
+    {
+      authMode: "admin",
+    },
+  );
+  return updatedMember;
 }
 
 export async function deleteTeamMember(id: string): Promise<{ id: string }> {
-  try {
-    await apiClient.delete(`/admin/team/${id}`);
-    return { id };
-  } catch (error: any) {
-    console.error(`Failed to delete team member ${id}:`, error);
-    throw new Error(error.message || "Failed to delete team member.");
-  }
+  await apiClient.delete(`/admin/team/${id}`, { authMode: "admin" });
+  return { id };
 }
 
-export async function reorderTeamMember(memberId: string, direction: 'up' | 'down'): Promise<TeamMember[]> {
-  try {
-    const { data } = await apiClient.patch<TeamMember[]>('/admin/team/reorder', { memberId, direction });
-    return data.map(transformTeamMember);
-  } catch (error: any) {
-    console.error(`Failed to reorder team member ${memberId}:`, error);
-    throw new Error(error.message || 'Failed to reorder team member.');
-  }
+export async function reorderTeamMember(
+  memberId: string,
+  direction: "up" | "down",
+): Promise<TeamMember[]> {
+  const { data } = await apiClient.patch<TeamMember[]>(
+    "/admin/team/reorder",
+    { memberId, direction },
+    {
+      authMode: "admin",
+    },
+  );
+  return data;
 }

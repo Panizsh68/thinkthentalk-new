@@ -24,24 +24,26 @@ export function useSubmitSponsorMutation() {
   });
 }
 
-export function useAdminCollabsQuery(status?: PartnershipStatus) {
+export function useAdminCollabsQuery(status?: PartnershipStatus, page = 1, limit = 20, enabled = true) {
   return useQuery({
-    queryKey: [...partnershipKeys.collabs(), status],
-    queryFn: () => getAdminCollaborations(status),
+    queryKey: [...partnershipKeys.collabs(), status, page, limit],
+    queryFn: () => getAdminCollaborations(status, page, limit),
+    enabled,
   });
 }
 
-export function useAdminSponsorsQuery(status?: PartnershipStatus, plan?: SponsorshipPlan) {
+export function useAdminSponsorsQuery(status?: PartnershipStatus, plan?: SponsorshipPlan, page = 1, limit = 20, enabled = true) {
   return useQuery({
-    queryKey: [...partnershipKeys.sponsors(), status, plan],
-    queryFn: () => getAdminSponsorships(status, plan),
+    queryKey: [...partnershipKeys.sponsors(), status, plan, page, limit],
+    queryFn: () => getAdminSponsorships(status, plan, page, limit),
+    enabled,
   });
 }
 
 export function useUpdateCollabStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status, notes }: { id: string, status: PartnershipStatus, notes?: string }) => updateCollabStatus(id, status, notes),
+    mutationFn: ({ id, status, notes }: { id: string, status: PartnershipStatus, notes?: string }) => updateCollabStatus(id, { status, notes }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: partnershipKeys.collabs() });
     },
@@ -51,7 +53,7 @@ export function useUpdateCollabStatusMutation() {
 export function useUpdateSponsorStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status, notes }: { id: string, status: PartnershipStatus, notes?: string }) => updateSponsorStatus(id, status, notes),
+    mutationFn: ({ id, status, notes }: { id: string, status: PartnershipStatus, notes?: string }) => updateSponsorStatus(id, { status, notes }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: partnershipKeys.sponsors() });
     },

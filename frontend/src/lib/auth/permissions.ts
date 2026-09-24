@@ -10,6 +10,7 @@ export const pagePermissions = {
   discounts: ['ADMIN', 'FINANCE'],
   messaging: ['ADMIN', 'EVENT_MANAGER'],
   contact: ['ADMIN', 'EVENT_MANAGER', 'FINANCE'],
+  partnerships: ['ADMIN', 'FINANCE'],
   feedback: ['ADMIN', 'EVENT_MANAGER'],
   sponsors: ['ADMIN'],
   team: ['ADMIN'],
