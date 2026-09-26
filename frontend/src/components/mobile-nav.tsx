@@ -36,13 +36,13 @@ export function MobileNav() {
     <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label={t('sidebar.toggle')}>
             <Menu className="h-6 w-6" />
-            <span className="sr-only">Toggle Navigation</span>
+            <span className="sr-only">{t('sidebar.toggle')}</span>
             </Button>
         </SheetTrigger>
-        <SheetContent side="left">
-            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+        <SheetContent side="left" closeLabel={t('sidebar.close')}>
+            <SheetTitle className="sr-only">{t('sidebar.title')}</SheetTitle>
             <div className="p-4">
             <Link href="/" className="flex items-center gap-2 mb-8" onClick={() => setOpen(false)}>
                 <Logo className="h-8 w-auto text-primary" />

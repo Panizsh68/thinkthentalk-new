@@ -148,7 +148,7 @@ function DetailRow({ label, value, preserveWhitespace = false }: { label: string
   return <div className="space-y-1"><div className="text-xs font-semibold text-muted-foreground">{label}</div><div className={preserveWhitespace ? 'whitespace-pre-wrap text-sm leading-7' : 'text-sm'}>{value}</div></div>;
 }
 
-function RequestSection<T extends { id: string; status: keyof typeof statusStyles; createdAt: string; updatedAt: string; history?: Array<{ id: string; fromStatus: string | null; toStatus: string; createdAt: string }> }>({
+function RequestSection<T extends { id: string; status: keyof typeof statusStyles; createdAt: string; updatedAt: string; history?: Array<{ id: string; fromStatus: string | null; toStatus: string; note: string | null; createdAt: string }> }>({
   title,
   description,
   empty,
@@ -182,7 +182,7 @@ function RequestSection<T extends { id: string; status: keyof typeof statusStyle
           </CardHeader>
           <CardContent className="space-y-4">
             {renderBody(item)}
-            {item.history?.length ? <div className="rounded-2xl border border-border/50 bg-muted/20 p-4"><div className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t('partnership.panel.statusHistory')}</div><div className="mt-3 space-y-2">{item.history.map((history) => <div key={history.id} className="flex items-center justify-between gap-3 text-sm"><span>{history.fromStatus ? `${t(`partnership.status.${history.fromStatus}`)} → ` : ''}{t(`partnership.status.${history.toStatus}`)}</span><span className="shrink-0 text-xs text-muted-foreground">{formatLocalizedDate(history.createdAt, language, true)}</span></div>)}</div></div> : null}
+            {item.history?.length ? <div className="rounded-2xl border border-border/50 bg-muted/20 p-4"><div className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t('partnership.panel.statusHistory')}</div><div className="mt-3 space-y-3">{item.history.map((history) => <div key={history.id} className="flex items-start justify-between gap-3 text-sm"><div className="min-w-0"><div>{history.fromStatus ? `${t(`partnership.status.${history.fromStatus}`)} → ` : ''}{t(`partnership.status.${history.toStatus}`)}</div>{history.note ? <div className="mt-1 rounded-xl border border-primary/15 bg-primary/5 px-3 py-2 text-sm leading-6 text-foreground"><span className="font-semibold">{t('partnership.panel.statusMessage')}:</span> {history.note}</div> : null}</div><span className="shrink-0 text-xs text-muted-foreground">{formatLocalizedDate(history.createdAt, language, true)}</span></div>)}</div></div> : null}
             <div className="grid gap-3 border-t pt-4 text-xs text-muted-foreground sm:grid-cols-2"><span>{t('partnership.panel.submittedAt')}: {formatLocalizedDate(item.createdAt, language, true)}</span><span>{t('partnership.panel.processedAt')}: {formatLocalizedDate((item as T & { processedAt?: string | null }).processedAt, language, true)}</span></div>
           </CardContent>
         </Card>

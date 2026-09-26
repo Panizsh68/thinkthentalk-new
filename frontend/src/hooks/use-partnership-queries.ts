@@ -65,6 +65,8 @@ export function useMyCollaborationsQuery(enabled = true) {
     queryKey: partnershipKeys.myCollabs(),
     queryFn: getMyCollaborations,
     enabled,
+    refetchOnWindowFocus: true,
+    refetchInterval: 60_000,
   });
 }
 

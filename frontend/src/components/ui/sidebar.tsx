@@ -170,7 +170,7 @@ const Sidebar = React.forwardRef<
     ref
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
-    const { language } = useLanguage();
+    const { language, t } = useLanguage();
     const side = sideProp ?? (language === 'fa' ? 'right' : 'left');
 
     if (collapsible === "none") {
@@ -194,7 +194,8 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden border-none"
+            className="w-[--sidebar-width] border-sidebar-border bg-sidebar p-0 text-sidebar-foreground"
+            closeLabel={t('sidebar.close')}
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -202,7 +203,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-            <SheetTitle className="sr-only">Sidebar Menu</SheetTitle>
+            <SheetTitle className="sr-only">{t('sidebar.title')}</SheetTitle>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -258,6 +259,8 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = useSidebar()
+  const { t } = useLanguage()
+  const ariaLabel = props['aria-label'] ?? t('sidebar.toggle')
 
   return (
     <Button
@@ -265,6 +268,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
+      aria-label={ariaLabel}
       className={cn("h-9 w-9 hover:bg-accent hover:text-accent-foreground transition-colors duration-200", className)}
       onClick={(event) => {
         onClick?.(event)
@@ -273,7 +277,7 @@ const SidebarTrigger = React.forwardRef<
       {...props}
     >
       <PanelLeft className="h-5 w-5" />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">{ariaLabel}</span>
     </Button>
   )
 })
@@ -542,12 +546,13 @@ const SidebarMenuButton = React.forwardRef<
       size = "default",
       tooltip,
       className,
+      onClick,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button"
-    const { isMobile, state } = useSidebar()
+    const { isMobile, state, setOpenMobile } = useSidebar()
     const { language } = useLanguage();
 
     const button = (
@@ -557,6 +562,10 @@ const SidebarMenuButton = React.forwardRef<
         data-size={size}
         data-active={isActive}
         className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        onClick={(event) => {
+          onClick?.(event)
+          if (isMobile) setOpenMobile(false)
+        }}
         {...props}
       />
     )

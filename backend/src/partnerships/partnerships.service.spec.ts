@@ -43,6 +43,7 @@ function makePrisma() {
             id: 'history-1',
             fromStatus: null,
             toStatus: PartnershipStatus.PENDING,
+            note: null,
             createdAt: now,
           },
         ],
@@ -154,7 +155,7 @@ describe('PartnershipsService', () => {
     tx.collaborationRequest.findUniqueOrThrow.mockResolvedValue({
       ...collaborationRecord,
       status: PartnershipStatus.REVIEWING,
-      adminNotes: 'Private note',
+      adminNotes: 'Status update message',
       user: {
         id: 'user-1',
         firstNameFa: 'Sara',
@@ -167,7 +168,7 @@ describe('PartnershipsService', () => {
           id: 'history-2',
           fromStatus: PartnershipStatus.PENDING,
           toStatus: PartnershipStatus.REVIEWING,
-          note: 'Private note',
+          note: 'Status update message',
           changedByAdminId: 'admin-1',
           createdAt: now,
         },
@@ -176,7 +177,7 @@ describe('PartnershipsService', () => {
     const service = new PartnershipsService(prisma as never);
     const dto = plainToInstance(UpdatePartnershipStatusDto, {
       status: PartnershipStatus.REVIEWING,
-      notes: 'Private note',
+      notes: 'Status update message',
     });
 
     const result = await service.updateCollaborationStatus(
@@ -194,7 +195,10 @@ describe('PartnershipsService', () => {
         }),
       }),
     );
-    expect(result.adminNote).toBe('Private note');
+    expect(result.adminNote).toBe('Status update message');
+    expect(result.history[0]).toEqual(
+      expect.objectContaining({ note: 'Status update message' }),
+    );
     expect(result.user).toEqual({
       id: 'user-1',
       firstName: 'Sara',
@@ -227,6 +231,7 @@ describe('PartnershipsService', () => {
             id: 'history-1',
             fromStatus: null,
             toStatus: PartnershipStatus.PENDING,
+            note: 'Welcome — your request is in the queue.',
             createdAt: now,
           },
         ],
@@ -239,6 +244,11 @@ describe('PartnershipsService', () => {
       expect.objectContaining({ where: { userId: 'user-1' } }),
     );
     expect(userItems[0]).not.toHaveProperty('adminNote');
+    expect(userItems[0].history[0]).toEqual(
+      expect.objectContaining({
+        note: 'Welcome — your request is in the queue.',
+      }),
+    );
     expect(JSON.stringify(userItems)).not.toContain('password');
 
     prisma.collaborationRequest.findMany.mockResolvedValue([

@@ -29,6 +29,7 @@ const userHistorySelect = {
   id: true,
   fromStatus: true,
   toStatus: true,
+  note: true,
   createdAt: true,
 } satisfies Prisma.CollaborationRequestStatusHistorySelect;
 
@@ -347,6 +348,7 @@ export class PartnershipsService {
         id: history.id,
         fromStatus: history.fromStatus,
         toStatus: history.toStatus,
+        note: history.note,
         createdAt: history.createdAt,
       })),
     };

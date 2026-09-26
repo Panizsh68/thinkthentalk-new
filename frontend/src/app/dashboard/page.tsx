@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   AlertTriangle,
   ArrowRight,
+  Briefcase,
   CalendarCheck,
   Coins,
   CreditCard,
@@ -21,11 +22,13 @@ import { useAuth } from '@/lib/auth/auth-provider';
 import { isCoinCenterEnabled } from '@/lib/config/features';
 import { useLanguage } from '@/lib/i18n/language-provider';
 import { useUserRegistrationsQuery } from '@/hooks/use-registration-queries';
+import { useMyCollaborationsQuery } from '@/hooks/use-partnership-queries';
 import { getMyWallet } from '@/lib/api/wallet';
 import { getMySubscription } from '@/lib/api/subscriptions';
 import { isEventPast } from '@/lib/event-helpers';
+import { formatLocalizedDate } from '@/lib/format-date';
 import { cn } from '@/lib/utils';
-import type { WalletWithTransactions } from '@/lib/types';
+import type { CollaborationUserRequest, WalletWithTransactions } from '@/lib/types';
 
 type ActivityItem = {
   id: string;
@@ -41,6 +44,12 @@ export default function UserDashboardPage() {
   const { data: registrations, isLoading: registrationsLoading, error, refetch } = useUserRegistrationsQuery(
     currentUser?.id,
   );
+  const {
+    data: collaborationRequests,
+    isLoading: collaborationRequestsLoading,
+    isError: collaborationRequestsError,
+    refetch: refetchCollaborationRequests,
+  } = useMyCollaborationsQuery(Boolean(currentUser));
 
   const coinCenterEnabled = isCoinCenterEnabled();
   const [wallet, setWallet] = useState<WalletWithTransactions | null>(null);
@@ -96,6 +105,18 @@ export default function UserDashboardPage() {
   );
 
   const lowBalance = coinCenterEnabled ? Number(wallet?.balance || 0) < 3 : false;
+
+  const latestCollaborationUpdate = useMemo(() => {
+    const updates = (collaborationRequests ?? []).flatMap((request: CollaborationUserRequest) =>
+      request.history
+        .filter((history) => history.fromStatus !== null || Boolean(history.note))
+        .map((history) => ({ request, history })),
+    );
+
+    return updates.sort(
+      (left, right) => new Date(right.history.createdAt).getTime() - new Date(left.history.createdAt).getTime(),
+    )[0] ?? null;
+  }, [collaborationRequests]);
 
   const activity = useMemo<ActivityItem[]>(() => {
     const registrationItems: ActivityItem[] =
@@ -244,8 +265,56 @@ export default function UserDashboardPage() {
                 title={t('profile.title')}
                 description={t('dashboard.quickActions.profile')}
               />
+              <QuickActionCard
+                href="/my-requests"
+                icon={Briefcase}
+                title={t('partnership.panel.navLabel')}
+                description={t('dashboard.quickActions.requests')}
+              />
             </CardContent>
           </Card>
+
+          {collaborationRequestsError ? (
+            <Card className="rounded-[2rem] border-destructive/30">
+              <CardContent className="flex flex-wrap items-center justify-between gap-4 p-6" role="alert">
+                <p className="text-sm text-destructive">{t('partnership.panel.serverError')}</p>
+                <Button variant="outline" onClick={() => void refetchCollaborationRequests()}>{t('actions.retry')}</Button>
+              </CardContent>
+            </Card>
+          ) : collaborationRequestsLoading ? (
+            <Card className="rounded-[2rem] border-border/40">
+              <CardContent className="flex items-center gap-3 p-6 text-sm text-muted-foreground" role="status">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t('partnership.panel.loading')}
+              </CardContent>
+            </Card>
+          ) : latestCollaborationUpdate ? (
+            <Card className="rounded-[2rem] border-primary/30 bg-primary/5">
+              <CardHeader className="flex flex-row items-start justify-between gap-4">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-xl font-black">
+                    <Briefcase className="h-5 w-5 text-primary" />
+                    {t('dashboard.requestUpdateTitle')}
+                  </CardTitle>
+                  <CardDescription>{t('dashboard.requestUpdateDescription')}</CardDescription>
+                </div>
+                <Badge>{t(`partnership.status.${latestCollaborationUpdate.request.status}`)}</Badge>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-xs text-muted-foreground">
+                  {formatLocalizedDate(latestCollaborationUpdate.history.createdAt, language, true)}
+                </p>
+                {latestCollaborationUpdate.history.note ? (
+                  <p className="rounded-2xl border border-primary/20 bg-background/70 px-4 py-3 text-sm leading-7">
+                    {latestCollaborationUpdate.history.note}
+                  </p>
+                ) : null}
+                <Button asChild variant="outline" className="rounded-xl font-bold">
+                  <Link href="/my-requests">{t('dashboard.viewRequestUpdate')}</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ) : null}
 
           <Card className="rounded-[2rem] border-border/40">
             <CardHeader>

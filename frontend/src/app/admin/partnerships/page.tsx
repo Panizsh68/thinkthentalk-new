@@ -72,7 +72,10 @@ function AdminPartnershipsPage() {
   const openRequest = (item: SelectedRequest, type: RequestType) => {
     setSelectedRequest(item);
     setSelectedType(type);
-    setStatusNote(item.adminNote ?? '');
+    const latestPublicMessage = type === 'collabs' && 'history' in item
+      ? item.history[item.history.length - 1]?.note ?? ''
+      : item.adminNote ?? '';
+    setStatusNote(latestPublicMessage);
     setNewStatus(item.status);
   };
 
@@ -167,7 +170,7 @@ function AdminPartnershipsPage() {
 
             <Detail label={t('admin.registrations.table.status')} value={t(`partnership.status.${selectedRequest.status}`)} />
             {'fieldOfExpertise' in selectedRequest && <div className="space-y-2 rounded-md border bg-muted/30 p-3"><Label className="text-muted-foreground">{t('partnership.panel.statusHistory')}</Label>{selectedRequest.history.length ? <div className="space-y-2 text-sm">{selectedRequest.history.map((history) => <div key={history.id} className="flex items-start justify-between gap-3"><span>{history.fromStatus ? `${t(`partnership.status.${history.fromStatus}`)} → ` : ''}{t(`partnership.status.${history.toStatus}`)}{history.note ? <span className="block text-xs text-muted-foreground">{history.note}</span> : null}</span><span className="shrink-0 text-xs text-muted-foreground">{formatLocalizedDate(history.createdAt, language, true)}</span></div>)}</div> : <p className="text-sm text-muted-foreground">{t('partnership.panel.noHistory')}</p>}</div>}
-            <div className="space-y-4 border-t pt-4"><h4 className="text-sm font-semibold">{t('admin.partnerships.detail.updateStatus')}</h4><div className="grid gap-4 md:grid-cols-2"><div className="space-y-1"><Label htmlFor="partnership-new-status">{t('admin.registrations.table.status')}</Label><Select value={newStatus} onValueChange={handleStatusChange}><SelectTrigger id="partnership-new-status"><SelectValue /></SelectTrigger><SelectContent>{PARTNERSHIP_STATUSES.map((status) => <SelectItem key={status} value={status}>{t(`partnership.status.${status}`)}</SelectItem>)}</SelectContent></Select></div><div className="space-y-1"><Label htmlFor="partnership-status-note">{t('admin.partnerships.detail.notes')}</Label><Textarea id="partnership-status-note" placeholder={t('admin.partnerships.detail.notesPlaceholder')} value={statusNote} onChange={(event) => setStatusNote(event.target.value)} /></div></div><p className="text-xs text-muted-foreground">{t('admin.partnerships.detail.privateNoteHelp')}</p></div>
+            <div className="space-y-4 border-t pt-4"><h4 className="text-sm font-semibold">{t('admin.partnerships.detail.updateStatus')}</h4><div className="grid gap-4 md:grid-cols-2"><div className="space-y-1"><Label htmlFor="partnership-new-status">{t('admin.registrations.table.status')}</Label><Select value={newStatus} onValueChange={handleStatusChange}><SelectTrigger id="partnership-new-status"><SelectValue /></SelectTrigger><SelectContent>{PARTNERSHIP_STATUSES.map((status) => <SelectItem key={status} value={status}>{t(`partnership.status.${status}`)}</SelectItem>)}</SelectContent></Select></div><div className="space-y-1"><Label htmlFor="partnership-status-note">{selectedType === 'collabs' ? t('admin.partnerships.detail.publicMessage') : t('admin.partnerships.detail.notes')}</Label><Textarea id="partnership-status-note" placeholder={t('admin.partnerships.detail.notesPlaceholder')} value={statusNote} onChange={(event) => setStatusNote(event.target.value)} /></div></div><p className="text-xs text-muted-foreground">{selectedType === 'collabs' ? t('admin.partnerships.detail.publicMessageHelp') : t('admin.partnerships.detail.privateNoteHelp')}</p></div>
           </div>}
           <DialogFooter><Button variant="ghost" onClick={closeDialog}>{t('actions.cancel')}</Button><Button onClick={handleUpdateStatus} disabled={updatingCollab || updatingSponsor || !newStatus}>{(updatingCollab || updatingSponsor) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t('actions.confirm')}</Button></DialogFooter>
         </DialogContent>

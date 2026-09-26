@@ -12,7 +12,8 @@ export class UpdatePartnershipStatusDto {
   status!: PartnershipStatus;
 
   @ApiPropertyOptional({
-    description: 'Private note visible only to authorized administrators.',
+    description:
+      'Optional status message shown to the request submitter and recorded in the status history.',
   })
   @TrimOptionalText()
   @IsOptional()

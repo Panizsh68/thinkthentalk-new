@@ -23,11 +23,11 @@ export interface CollaborationStatusHistory {
   id: string;
   fromStatus: PartnershipStatus | null;
   toStatus: PartnershipStatus;
+  note: string | null;
   createdAt: string;
 }
 
 export interface CollaborationAdminStatusHistory extends CollaborationStatusHistory {
-  note: string | null;
   changedByAdminId: string | null;
 }
 

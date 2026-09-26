@@ -57,6 +57,11 @@
     "submitFeedback": "Submit Feedback",
     "backToDashboard": "Back to Dashboard"
   },
+  "sidebar": {
+    "title": "Panel navigation",
+    "toggle": "Toggle navigation menu",
+    "close": "Close navigation menu"
+  },
   "language": {
     "en": "English",
     "fa": "Persian"
@@ -324,7 +329,8 @@
       "events": "Review all of your registered events and their status.",
       "wallet": "Charge your Coin Center and inspect wallet transactions.",
       "subscription": "See your current pass and purchase a new one if needed.",
-      "profile": "Complete and update your account information."
+      "profile": "Complete and update your account information.",
+      "requests": "Follow the status and messages for your collaboration requests."
     },
     "activityTitle": "Recent Activity",
     "activityDescription": "A quick timeline of the latest things you have done in Think Then Talk.",
@@ -347,6 +353,9 @@
     "profileCardDescription": "Your basic identity and contact status, directly inside the user panel.",
     "profileStatusComplete": "Complete",
     "profileStatusIncomplete": "Incomplete",
+    "requestUpdateTitle": "Your request was updated",
+    "requestUpdateDescription": "The team has reviewed your collaboration request.",
+    "viewRequestUpdate": "View request details",
     "table": {
       "event": "Event",
       "date": "Date",
@@ -925,8 +934,10 @@
         "subtitle": "Review application data",
         "content": "Motivation/Message",
         "updateStatus": "Triage Application",
+        "publicMessage": "Message for the applicant",
         "notes": "Internal Admin Notes",
         "notesPlaceholder": "e.g. Needs interview",
+        "publicMessageHelp": "This message is shown to the person who submitted the request.",
         "privateNoteHelp": "This note is visible only to authorized administrators."
       },
       "filters": {
@@ -1529,6 +1540,7 @@
       "processedAt": "Processed",
       "noHistory": "No status changes have been recorded yet.",
       "requestMeta": "Last updated on {updatedAt}",
+      "statusMessage": "Message from the team",
       "adminNote": "Admin Note",
       "statusHistory": "Status History"
     },

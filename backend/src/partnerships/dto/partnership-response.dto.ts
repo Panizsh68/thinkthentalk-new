@@ -14,11 +14,15 @@ export class CollaborationStatusHistoryDto {
   @ApiPropertyOptional({ enum: PartnershipStatus, nullable: true })
   fromStatus?: PartnershipStatus | null;
   @ApiProperty({ enum: PartnershipStatus }) toStatus!: PartnershipStatus;
+  @ApiPropertyOptional({
+    nullable: true,
+    description: 'Status message visible to the request submitter.',
+  })
+  note!: string | null;
   @ApiProperty() createdAt!: Date;
 }
 
 export class CollaborationAdminStatusHistoryDto extends CollaborationStatusHistoryDto {
-  @ApiPropertyOptional({ nullable: true }) note?: string | null;
   @ApiPropertyOptional({ nullable: true }) changedByAdminId?: string | null;
 }
 
